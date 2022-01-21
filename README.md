@@ -1,2 +1,2 @@
 # 4XM
-A 4X game about me. 
+A 4X game about life. 
