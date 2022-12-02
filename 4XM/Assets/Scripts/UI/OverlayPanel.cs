@@ -24,13 +24,13 @@ public class OverlayPanel : UIPanel
    
     private void Awake()
     {
-        DisablePrompt();
-        tooltip.gameObject.SetActive(false);
+        //DisablePrompt();
+        //tooltip.gameObject.SetActive(false);
     }
     public override void Activate()
     {
         base.Activate();
-        DisablePrompt();
+        //DisablePrompt();
     }
 
     public void EnableOverlayPrompt(GameObject _target, float _offset, bool _placementOverlay)
@@ -85,8 +85,8 @@ public class OverlayPanel : UIPanel
     {
         
         showPrompt = false;
-        interactOverlayPrompt.gameObject.SetActive(false);
-        ClosePrompts();
+        //interactOverlayPrompt.gameObject.SetActive(false);
+        //ClosePrompts();
     }
 
     public override void Disable()

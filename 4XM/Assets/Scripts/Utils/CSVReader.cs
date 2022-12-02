@@ -8,8 +8,8 @@ public class CSVReader : MonoBehaviour
 	public string[,] loadedDialogues;
 	public void Start()
 	{
-		string[,] loadedDialogues = SplitCsvGrid(csvFile.text);
-		Debug.Log("size = " + (1 + loadedDialogues.GetUpperBound(0)) + "," + (1 + loadedDialogues.GetUpperBound(1)));
+		//string[,] loadedDialogues = SplitCsvGrid(csvFile.text);
+		//Debug.Log("size = " + (1 + loadedDialogues.GetUpperBound(0)) + "," + (1 + loadedDialogues.GetUpperBound(1)));
 
 		//DebugOutputGrid(grid);
 	}

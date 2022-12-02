@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class SI_Initializer : MonoBehaviour
 {
-    MapGenerator mapGenerator;
-    //UnitGenerator unitGenerator;
+    [SerializeField] MapGenerator mapGenerator;
+    [SerializeField] SI_DataHandler dataHandler;
+    [SerializeField] PlayerManager playerManager;
     SI_CameraController cameraController;
 
     bool mapGenerated;
     bool dataLoaded;
     bool unitsPlaced;
-
+    bool processing;
     void Start()
     {
 #if UNTIY_ANDROID || UNITY_IOS
@@ -24,21 +25,31 @@ public class SI_Initializer : MonoBehaviour
         SI_EventManager.Instance.onDataLoaded += OnDataLoaded;
         SI_EventManager.Instance.onMapGenerated += OnMapGenerated;
         SI_EventManager.Instance.onUnitsPlaced += OnUnitsPlaced;
-        StartCoroutine(Initilization());
+
+        InitializeGame();
     }
 
-    IEnumerator Initilization()
+    void InitializeGame()
     {
         ResetChecks();
-        SI_UIManager.Instance.ToggleUIPanel(SI_UIManager.Instance.initializerPanel, true);
+        SI_UIManager.Instance.ToggleUIPanel(SI_UIManager.Instance.initializerPanel, true, false);
         mapGenerator.GenerateMap();
-        while (!mapGenerated || !dataLoaded || !unitsPlaced)
-        {
-            yield return new WaitForSeconds(0.1f);
-        }
+        dataHandler.FetchData();
+        playerManager.InitializeUnits();
+        processing = true;
+    }
 
-        SI_UIManager.Instance.ToggleUIPanel(SI_UIManager.Instance.initializerPanel, true);
-        //SI_GameManager.Instance.gameReady = true;
+    private void Update()
+    {
+        if (processing)
+        {
+            if (mapGenerated && dataLoaded && unitsPlaced) 
+            {
+                processing = false;
+                SI_UIManager.Instance.ToggleUIPanel(SI_UIManager.Instance.initializerPanel, false, false);
+                SI_GameManager.Instance.gameReady = true;
+            }
+        }
     }
 
     void ResetChecks()

@@ -6,12 +6,11 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using TMPro;
-public class MainMenu : UIPanel
+public class MenuPanel : UIPanel
 {
     [SerializeField] GameObject settingsPanel;
     public override void Activate()
     {
-       
         base.Activate();
         settingsPanel.SetActive(false);
     }

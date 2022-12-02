@@ -51,10 +51,6 @@ public class SI_UIManager : MonoBehaviour
     { 
         if (state)
         {
-            if (subPanelActive)
-            {
-                return;
-            }
             SI_GameManager.Instance.menuActive = true;
             currentSubpanel = targetPanel;
             if (fadeGamePanel)
@@ -188,13 +184,13 @@ public class SI_UIManager : MonoBehaviour
 
     public void ShowTooltip(string body, string header = "")
     {
-        overlayPanel.tooltip.SetData(body, header);
-        overlayPanel.tooltip.gameObject.SetActive(true);
+        //overlayPanel.tooltip.SetData(body, header);
+       // overlayPanel.tooltip.gameObject.SetActive(true);
     }
 
     public void HideTooltip()
     {
-        overlayPanel.tooltip.gameObject.SetActive(false);
+        //overlayPanel.tooltip.gameObject.SetActive(false);
     }
 
     /// <summary>

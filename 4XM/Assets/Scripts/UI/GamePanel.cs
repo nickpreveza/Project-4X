@@ -20,7 +20,7 @@ public class GamePanel : UIPanel
             SI_UIManager.Instance.gamePanel = this.GetComponent<UIPanel>();
             SI_UIManager.Instance.AddPanel(this);
         }
-        textbox.EndTextbox();
+        //textbox.EndTextbox();
     }
 
     public void UpdateCurrencies()
@@ -31,8 +31,7 @@ public class GamePanel : UIPanel
     }
 
     private void Update()
-    {
-       
+    {/*
         if (SI_GameManager.Instance.devMode)
         {
             devText.text = "devMode";
@@ -41,7 +40,7 @@ public class GamePanel : UIPanel
         else
         {
             devText.text = "";
-        }
+        }*/
     }
 
     public override void Setup()

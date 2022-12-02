@@ -178,13 +178,6 @@ public class SI_GameManager : MonoBehaviour
         LoadGame();
     }
 
-    private void Start()
-    {
-        SI_UIManager.Instance.OpenMainMenu();
-    }
-
-
-
     public void OnDataReady()
     {
        
