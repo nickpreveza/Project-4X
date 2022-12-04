@@ -5,5 +5,5 @@ using UnityEngine;
 public class MapData 
 {
     public int mapSize;
-    public List<Tile> generatedMap;
+    public List<TileData> generatedMap;
 }

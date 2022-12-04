@@ -162,33 +162,16 @@ PrefabInstance:
     - target: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_Name
-      value: TileGrass
+      value: TileGrass Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672906, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 7ef0a97d2230431448f8fa7d9eeba064, type: 2}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3684345973511078615, guid: facaeb7e9f501c545b91b06c6c7686a8, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: facaeb7e9f501c545b91b06c6c7686a8, type: 3}
---- !u!1 &662094774728741350 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
-    type: 3}
-  m_PrefabInstance: {fileID: 6741829209744968110}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &3296768187240326810
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 662094774728741350}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40cada04b4989104484fd219cc7f9529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &662094774728741354 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,

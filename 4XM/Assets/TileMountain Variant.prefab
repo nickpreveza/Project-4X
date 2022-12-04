@@ -209,7 +209,7 @@ PrefabInstance:
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
@@ -219,7 +219,7 @@ PrefabInstance:
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
@@ -259,7 +259,7 @@ PrefabInstance:
     - target: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_Name
-      value: TileMountain
+      value: TileMountain Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672906, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
@@ -286,6 +286,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40cada04b4989104484fd219cc7f9529, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  data:
+    x: 0
+    y: 0
+    movePoints: 0
+    type: 0
+    occupied: 0
 --- !u!4 &3090742744073375455 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,

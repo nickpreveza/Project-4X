@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class SI_CameraController : MonoBehaviour
 {
+    public static SI_CameraController Instance;
+   
     [SerializeField] float scrollSpeed = 0.01f;
     [SerializeField] float zoomSpeed = 0.01f;
     Vector2 touchDeltaPosition;
@@ -25,17 +27,67 @@ public class SI_CameraController : MonoBehaviour
     [SerializeField] bool outOfBoundsX;
     [SerializeField] bool outOfBoundsY;
     bool movingBack;
-    private void Start()
+
+    Vector2 internalBoundsX;
+    Vector2 internalBoundsY;
+    WorldTile selectedTile;
+
+    [SerializeField] float internalTouchTimer;
+    [SerializeField] float timeToRegisterTap;
+    [SerializeField] float timeToRegisterHold;
+
+    bool tapValid;
+    int layerAccessor;
+    [SerializeField] int internalMapHeight;
+    [SerializeField] int internalMapWidth;
+    void Awake()
     {
-        mainCamera = GetComponent<Camera>();
-        playerCamera = transform.GetChild(0).GetComponent<Camera>();
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+        mainCamera = transform.GetChild(0).GetComponent<Camera>();
+        playerCamera = transform.GetChild(0).GetChild(0).GetComponent<Camera>();
+        internalBoundsX = xBounds;
+        internalBoundsY = yBounds;
     }
+
+    public void UpdateBounds(int mapWidth, int mapHeight)
+    {
+        internalMapHeight = mapHeight;
+        internalMapWidth = mapWidth;
+        UpdateBounds();
+    }
+
+    public void UpdateBounds()
+    {
+        internalBoundsX.x = xBounds.x - internalMapHeight;
+        internalBoundsX.y = internalMapWidth - xBounds.y;
+        internalBoundsY.x = yBounds.x;
+        internalBoundsY.y = (yBounds.y + xBounds.x) + internalMapHeight;
+    }
+
     void Update()
     {
         if (Input.touchCount > 0)
         {
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                internalTouchTimer = 0f;
+                tapValid = true;
+            }
+
+            internalTouchTimer += 1 * Time.deltaTime;
+
             if (Input.touchCount < 2 && Input.GetTouch(0).phase == TouchPhase.Moved)
             {
+                tapValid = false;
+
                 if (outOfBoundsX || outOfBoundsY)
                 {
                     editedScrollSpeed = scrollSpeed * 0.1f;
@@ -49,12 +101,12 @@ public class SI_CameraController : MonoBehaviour
                 editedPosition = transform.position;
                 editedPosition.z = -5;
                 transform.position = editedPosition;
-                if (transform.position.x > xBounds.y || transform.position.x < xBounds.x)
+                if (transform.position.x > internalBoundsX.y || transform.position.x < internalBoundsX.x)
                 {
                     outOfBoundsX = true;
                 }
 
-                if (transform.position.y > yBounds.y || transform.position.y < yBounds.x)
+                if (transform.position.y > internalBoundsY.y || transform.position.y < internalBoundsY.x)
                 {
                     outOfBoundsY = true;
                 }
@@ -66,6 +118,8 @@ public class SI_CameraController : MonoBehaviour
 
             if (Input.touchCount == 2)
             {
+                tapValid = false;
+
                 Touch touchZero = Input.GetTouch(0);
                 Touch touchOne = Input.GetTouch(1);
 
@@ -81,6 +135,74 @@ public class SI_CameraController : MonoBehaviour
                 playerCamera.orthographicSize = mainCamera.orthographicSize;
 
             }
+
+            if (Input.touches[0].phase == TouchPhase.Ended && tapValid)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.CompareTag("Unit"))
+                    {
+                        WorldTile newTile = hit.transform.gameObject.GetComponent<WorldUnit>().parentTile;
+                        SelectTile(newTile);
+                    }
+                    if (hit.transform.CompareTag("Tile"))
+                    {
+                        if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
+                        {
+                            WorldTile newTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            SelectTile(newTile);
+                            return;
+                        }
+
+                        if (internalTouchTimer >= timeToRegisterHold)
+                        {
+                            selectedTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            if (selectedTile != null)
+                            {
+                                selectedTile.Hold();
+                                internalTouchTimer = 0;
+                                tapValid = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        layerAccessor = 0;
+                        selectedTile = null;
+                    }
+                }
+                else
+                {
+                    layerAccessor = 0;
+                    selectedTile = null;
+                }
+            }
+
+            if (Input.touches[0].phase == TouchPhase.Stationary && tapValid)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.CompareTag("Tile"))
+                    {
+                        if (internalTouchTimer >= timeToRegisterHold)
+                        {
+                            selectedTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            if (selectedTile != null)
+                            {
+                                selectedTile.Hold();
+                                internalTouchTimer = 0;
+                                tapValid = false;
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         if (Input.touchCount == 0 && !movingBack)
@@ -94,8 +216,8 @@ public class SI_CameraController : MonoBehaviour
 
         if (Input.touchCount == 0 && movingBack)
         {
-            editedPosition.x = Mathf.Clamp(transform.position.x, xBounds.x, xBounds.y);
-            editedPosition.y = Mathf.Clamp(transform.position.y, yBounds.x, yBounds.y);
+            editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
+            editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
             editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
 
             var step = scrollSpeed * Time.deltaTime;
@@ -111,12 +233,31 @@ public class SI_CameraController : MonoBehaviour
         }
     }
 
+    void SelectTile(WorldTile newTile)
+    {
+        if (newTile == selectedTile)
+        {
+            layerAccessor = 2;
+        }
+        else
+        {
+            layerAccessor = 1;
+        }
+        selectedTile = newTile;
+        if (selectedTile != null)
+        {
+            selectedTile.Tap(layerAccessor);
+            internalTouchTimer = 0;
+            tapValid = false;
+        }
+    }
+
     IEnumerator ReturnToBounds()
     {
       
         yield return new WaitForSeconds(0.1f);
-        editedPosition.x = Mathf.Clamp(transform.position.x, xBounds.x, xBounds.y);
-        editedPosition.y = Mathf.Clamp(transform.position.y, yBounds.x, yBounds.y);
+        editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
+        editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
         editedPosition.z = 0;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
         movingBack = true;
        

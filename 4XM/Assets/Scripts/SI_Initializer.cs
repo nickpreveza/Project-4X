@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class SI_Initializer : MonoBehaviour
 {
-    [SerializeField] MapGenerator mapGenerator;
+    [SerializeField] MapManager mapGenerator;
     [SerializeField] SI_DataHandler dataHandler;
-    [SerializeField] PlayerManager playerManager;
-    SI_CameraController cameraController;
+    [SerializeField] UnitManager playerManager;
+    [SerializeField] SI_CameraController cameraController;
 
     bool mapGenerated;
     bool dataLoaded;
@@ -33,9 +33,7 @@ public class SI_Initializer : MonoBehaviour
     {
         ResetChecks();
         SI_UIManager.Instance.ToggleUIPanel(SI_UIManager.Instance.initializerPanel, true, false);
-        mapGenerator.GenerateMap();
         dataHandler.FetchData();
-        playerManager.InitializeUnits();
         processing = true;
     }
 
@@ -62,16 +60,19 @@ public class SI_Initializer : MonoBehaviour
     void OnDataLoaded()
     {
         dataLoaded = true;
+        mapGenerator.GenerateMap();
     }
 
     void OnMapGenerated()
     {
         mapGenerated = true;
+        UnitManager.Instance.InitializeUnits();
     }
 
     void OnUnitsPlaced()
     {
         unitsPlaced = true;
+        //give turn order here
     }
 
 }

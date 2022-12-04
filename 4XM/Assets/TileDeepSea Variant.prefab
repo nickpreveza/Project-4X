@@ -7,6 +7,46 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: x
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: y
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.type
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: lowPoint.y
+      value: -0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: highPoint.y
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.moveCost
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.occupied
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.requirment
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_RootOrder
@@ -30,7 +70,7 @@ PrefabInstance:
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
@@ -70,7 +110,7 @@ PrefabInstance:
     - target: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_Name
-      value: TileDeepSea
+      value: TileDeepSea Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672906, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
@@ -79,21 +119,3 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 25258f1fc5aece947b9514b5b9e45277, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: facaeb7e9f501c545b91b06c6c7686a8, type: 3}
---- !u!1 &9046751519280555515 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
-    type: 3}
-  m_PrefabInstance: {fileID: 2968847223508155827}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &4126045492504755333
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9046751519280555515}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40cada04b4989104484fd219cc7f9529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
