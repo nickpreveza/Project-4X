@@ -10,12 +10,12 @@ PrefabInstance:
     - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: x
-      value: 18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: y
-      value: 18
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}

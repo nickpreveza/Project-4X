@@ -7,6 +7,31 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.moveCost
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -5793763618962152926, guid: facaeb7e9f501c545b91b06c6c7686a8,
+        type: 3}
+      propertyPath: data.requirment
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6106865988247672900, guid: facaeb7e9f501c545b91b06c6c7686a8,
         type: 3}
       propertyPath: m_RootOrder
@@ -74,27 +99,3 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 74a97788bd519de408ac0f1a467a3581, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: facaeb7e9f501c545b91b06c6c7686a8, type: 3}
---- !u!1 &7349660565833667392 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8,
-    type: 3}
-  m_PrefabInstance: {fileID: 3549064220943092488}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &7760118345289069048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7349660565833667392}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40cada04b4989104484fd219cc7f9529, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    x: 0
-    y: 0
-    movePoints: 0
-    type: 0
-    occupied: 0

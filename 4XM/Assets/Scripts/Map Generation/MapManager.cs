@@ -9,13 +9,19 @@ public class MapManager : MonoBehaviour
     private TileData[,] gridArray;
     public int width;
     public int height;
-    public float noiseScale;
+    public int octaves;
+    public int seed;
+    public Vector2 offset;
+    [Range(0,1)]
+    public float persistance;
+    public float lacunarity;
+    public float noiseScale = 1;
 
+    [SerializeField] TerrainType[] regions;
     [SerializeField] GameObject tileParent;
     [SerializeField] GameObject[] tilePrefabs;
-
-    public List<GameObject> tileIdentifier = new List<GameObject>(); //converted positions from 2D array
-
+    public List<GameObject> worldTiles = new List<GameObject>(); //converted positions from 2D array
+    float[,] noiseMap;
     //float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, noiseScale);
     void Awake()
     {
@@ -29,29 +35,64 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    private void OnValidate()
+    {
+        if (width < 1)
+        {
+            width = 1;
+        }
+        if(height < 1)
+        {
+            height = 1;
+        }
+
+        if (lacunarity < 1)
+        {
+            lacunarity = 1;
+        }
+        if (octaves < 0)
+        {
+            octaves = 0;
+        }
+    }
+
     public void GenerateMap()
     {
         ClearMap();
+        worldTiles.Clear();
+
+        noiseMap = Noise.GenerateNoiseMap(width, height, noiseScale, seed, octaves, persistance, lacunarity, offset);
+        TileType[] regionMap = new TileType[width * height];
         gridArray = new TileData[width, height];
-        //tileIdentifier = new List<WorldTile>(gridArray.GetLength(0) * gridArray.GetLength(1));
-        //tileIdentifier = new WorldTile[];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                GameObject chosenTile = TileSelect(x, y);
-                WorldTile tile = chosenTile.GetComponent<WorldTile>();
+                float currentHeight = noiseMap[x, y];
+                for(int i = 0; i < regions.Length; i++)
+                {
+                    if (currentHeight <= regions[i].height)
+                    {
+                        regionMap[x * width + y] = regions[i].type;
+                        break;
+                    }
+                }
+
+                //Create the actual world Tile;
+                GameObject prefab = GetTilePrefab(regionMap[x * width + y]); //short this based on region.
+                GameObject obj = Instantiate(prefab, tileParent.transform);
+                WorldTile tile = obj.GetComponent<WorldTile>();
                 tile.SetData(x, y);
                 RegisterTile(x, y, tile);
-                GameObject obj = Instantiate(chosenTile, tileParent.transform);
                 obj.transform.SetParent(tileParent.transform);
                 Vector3 position = new Vector3(x, 0, y);
                 obj.transform.localPosition = position;
-                tileIdentifier.Add(obj);
+                worldTiles.Add(obj);
             }
         }
-        SI_EventManager.Instance.OnMapGenerated();
-        SI_CameraController.Instance.UpdateBounds(width, height);
+
+        SI_EventManager.Instance?.OnMapGenerated();
+        SI_CameraController.Instance?.UpdateBounds(width, height);
     }
 
     public void RegisterTile(int x, int y, WorldTile value)
@@ -64,6 +105,29 @@ public class MapManager : MonoBehaviour
         {
             Debug.LogWarning("RegisterTile: Value outside of grid bounds");
         }
+    }
+
+    public GameObject GetTilePrefab(TileType type)
+    {
+        switch (type)
+        {
+            case TileType.ICE:
+                return tilePrefabs[0];
+            case TileType.DEEPSEA:
+                return tilePrefabs[1];
+            case TileType.SEA:
+                return tilePrefabs[2];
+            case TileType.SAND:
+                return tilePrefabs[3];
+            case TileType.GRASS:
+                return tilePrefabs[4];
+            case TileType.HILL:
+                return tilePrefabs[5];
+            case TileType.MOUNTAIN:
+                return tilePrefabs[6];
+        }
+
+        return tilePrefabs[0];
     }
 
     public TileData GetTileData(int x, int y)
@@ -83,9 +147,9 @@ public class MapManager : MonoBehaviour
     {
         int index2D = x * width + y;
         Debug.Log(index2D);
-        if (index2D >= 0 && index2D < tileIdentifier.Count)
+        if (index2D >= 0 && index2D < worldTiles.Count)
         {
-            return tileIdentifier[index2D].GetComponent<WorldTile>();
+            return worldTiles[index2D].GetComponent<WorldTile>();
         }
         else
         {
@@ -110,17 +174,6 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    GameObject TileSelect(int x, int y)
-    {
-        if (x == 0 || y == 0 || x == width -1 || y == height -1)
-        {
-            return tilePrefabs[(int)TileType.ICE];
-        }
-        else
-        {
-            return tilePrefabs[(int)TileType.DEEPSEA];
-        }
-    }
     public void SetTileAtCoords(int x, int y, TileType type)
     {
         SetTileAtCoords(x, y, (int)type);
@@ -129,6 +182,13 @@ public class MapManager : MonoBehaviour
     {
 
     }
+}
+
+[System.Serializable]
+public struct TerrainType
+{
+    public TileType type;
+    public float height;
 }
 
 
