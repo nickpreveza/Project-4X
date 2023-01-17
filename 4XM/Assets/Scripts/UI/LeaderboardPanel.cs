@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SignedInitiative;
 
 public class LeaderboardPanel : UIPanel
 {
@@ -18,6 +19,6 @@ public class LeaderboardPanel : UIPanel
 
     public void BackToMenu()
     {
-        SI_UIManager.Instance.OpenMainMenu();
+        UIManager.Instance.OpenMainMenu();
     }
 }

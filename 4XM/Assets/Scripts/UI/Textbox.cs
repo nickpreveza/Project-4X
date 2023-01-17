@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using SignedInitiative;
 
 public class Textbox : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class Textbox : MonoBehaviour
     bool hasOpenedMenu;
     private void Update()
     {
-        if (textboxActive && !SI_GameManager.Instance.isPaused)
+        if (textboxActive && !GameManager.Instance.isPaused)
         {
             if ((Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.F)))
             {
@@ -42,7 +43,7 @@ public class Textbox : MonoBehaviour
     public void StartTextbox(string _characterName, List<string> _dialogContent, ConversationType _convoType, Quest quest =null)
     {
         if (textboxActive) { return; }
-        SI_UIManager.Instance.menuActive = true;
+        UIManager.Instance.menuActive = true;
         if (characterName != _characterName)
         {
             characterName = _characterName;
@@ -100,7 +101,7 @@ public class Textbox : MonoBehaviour
 
     public void EndTextbox()
      {
-        SI_UIManager.Instance.menuActive = false;
+        UIManager.Instance.menuActive = false;
         textboxActive = false;
         textbox.SetActive(false);
         if (!hasOpenedMenu) //why is this here wtf

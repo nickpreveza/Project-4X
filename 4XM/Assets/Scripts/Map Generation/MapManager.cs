@@ -19,9 +19,15 @@ public class MapManager : MonoBehaviour
 
     [SerializeField] TerrainType[] regions;
     [SerializeField] GameObject tileParent;
+    [SerializeField] GameObject cityPrefab;
     [SerializeField] GameObject[] tilePrefabs;
     public List<GameObject> worldTiles = new List<GameObject>(); //converted positions from 2D array
     float[,] noiseMap;
+  
+    public List<GameObject> landTiles = new List<GameObject>();
+
+    public bool useFalloff;
+    float[,] falloffMap;
     //float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, noiseScale);
     void Awake()
     {
@@ -33,6 +39,8 @@ public class MapManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        falloffMap = FalloffGenerator.GenerateFallofMap(width, height);
     }
 
     private void OnValidate()
@@ -60,14 +68,19 @@ public class MapManager : MonoBehaviour
     {
         ClearMap();
         worldTiles.Clear();
-
+        landTiles.Clear();
         noiseMap = Noise.GenerateNoiseMap(width, height, noiseScale, seed, octaves, persistance, lacunarity, offset);
+        falloffMap = FalloffGenerator.GenerateFallofMap(width, height);
         TileType[] regionMap = new TileType[width * height];
         gridArray = new TileData[width, height];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
+                if (useFalloff)
+                {
+                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x,y]);
+                }
                 float currentHeight = noiseMap[x, y];
                 for(int i = 0; i < regions.Length; i++)
                 {
@@ -82,6 +95,10 @@ public class MapManager : MonoBehaviour
                 GameObject prefab = GetTilePrefab(regionMap[x * width + y]); //short this based on region.
                 GameObject obj = Instantiate(prefab, tileParent.transform);
                 WorldTile tile = obj.GetComponent<WorldTile>();
+                if (tile.data.type == TileType.GRASS)
+                {
+                    landTiles.Add(tile.gameObject);
+                }
                 tile.SetData(x, y);
                 RegisterTile(x, y, tile);
                 obj.transform.SetParent(tileParent.transform);
@@ -90,9 +107,17 @@ public class MapManager : MonoBehaviour
                 worldTiles.Add(obj);
             }
         }
-
+        AllocateStartingCities();
         SI_EventManager.Instance?.OnMapGenerated();
         SI_CameraController.Instance?.UpdateBounds(width, height);
+    }
+
+    public void AllocateStartingCities()
+    {
+        int randomTileIndex = Random.Range(0, landTiles.Count);
+        landTiles[randomTileIndex].GetComponent<WorldTile>().SpawnCity(cityPrefab);
+        UnitManager.Instance?.SetStartingCity(landTiles[randomTileIndex]);
+
     }
 
     public void RegisterTile(int x, int y, WorldTile value)

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SignedInitiative;
 
 public abstract class Interactable : MonoBehaviour
 {
@@ -14,7 +15,7 @@ public abstract class Interactable : MonoBehaviour
     public virtual void Interact()
     {
         isInteractable = false;
-        SI_UIManager.Instance.overlayPanel.GetComponent<OverlayPanel>().DisablePrompt();
+        UIManager.Instance.overlayPanel.GetComponent<OverlayPanel>().DisablePrompt();
         if (destroyAfterInteraction)
         {
             StartCoroutine(DestroyWithDelay());

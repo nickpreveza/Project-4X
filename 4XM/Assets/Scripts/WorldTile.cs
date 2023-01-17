@@ -31,11 +31,18 @@ public class WorldTile : MonoBehaviour
         data.occupied = false;
         associatedUnit = null;
     }
+
+    public void SpawnCity(GameObject cityPrefab)
+    {
+        GameObject obj = Instantiate(cityPrefab, transform);
+        data.hasCity = true;
+    }
     public void Tap(int layer)
     {
         if (UnitManager.Instance.movementSelectMode)
         {
             UnitManager.Instance.MoveTargetTile(x, y);
+            wiggler?.Wiggle();
             return;
         }
         switch (layer)
@@ -45,6 +52,7 @@ public class WorldTile : MonoBehaviour
                 if (data.occupied && associatedUnit != null)
                 {
                     associatedUnit.Select();
+                    wiggler?.Wiggle();
                     return;
                 }
                 else

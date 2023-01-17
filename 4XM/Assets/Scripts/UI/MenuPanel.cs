@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using TMPro;
+using SignedInitiative;
 public class MenuPanel : UIPanel
 {
     [SerializeField] GameObject settingsPanel;
@@ -33,7 +34,7 @@ public class MenuPanel : UIPanel
 
     public void ActionPlay()
     {
-        SI_GameManager.Instance.NewGame();
-        SI_UIManager.Instance.OpenGamePanel();
+        GameManager.Instance.NewGame();
+        UIManager.Instance.OpenGamePanel();
     }
 }

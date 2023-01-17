@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using SignedInitiative;
 
 public class GamePanel : UIPanel
 {
@@ -15,10 +16,10 @@ public class GamePanel : UIPanel
     void Start()
     {
       
-        if (SI_UIManager.Instance != null)
+        if (UIManager.Instance != null)
         {
-            SI_UIManager.Instance.gamePanel = this.GetComponent<UIPanel>();
-            SI_UIManager.Instance.AddPanel(this);
+            UIManager.Instance.gamePanel = this.GetComponent<UIPanel>();
+            UIManager.Instance.AddPanel(this);
         }
         //textbox.EndTextbox();
     }

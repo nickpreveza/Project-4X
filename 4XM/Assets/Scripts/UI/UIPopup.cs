@@ -1,22 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SignedInitiative;
 
 public abstract class UIPopup : MonoBehaviour
 {
     void OnEnable()
     {
-        if (SI_UIManager.Instance != null)
+        if (UIManager.Instance != null)
         {
-            SI_UIManager.Instance.latestPopup = this;
+            UIManager.Instance.latestPopup = this;
         }
         Setup();
     }
     public virtual void Close()
     {
-        if (SI_UIManager.Instance != null) 
+        if (UIManager.Instance != null) 
         {
-            SI_UIManager.Instance.popupActive = false;
+            UIManager.Instance.popupActive = false;
         }
         this.gameObject.SetActive(false);
     }

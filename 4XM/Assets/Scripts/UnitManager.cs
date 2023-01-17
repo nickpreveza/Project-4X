@@ -5,7 +5,8 @@ using UnityEngine;
 public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
-
+    public GameObject startingCity;
+    public List<WorldTile> playerCities;
     public List<WorldUnit> worldUnits = new List<WorldUnit>();
     [SerializeField] GameObject unitParent;
     [SerializeField] GameObject[] unitPrefabs;
@@ -24,10 +25,17 @@ public class UnitManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public void SetStartingCity(GameObject obj)
+    {
+        startingCity = obj;
+        playerCities.Clear();
+        playerCities.Add(obj.GetComponent<WorldTile>());
+    }
     public void InitializeUnits()
     {
         ClearUnits();
-        SpawnUnit(1, 1);
+        SpawnUnit(playerCities[0].x, playerCities[0].y);
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 

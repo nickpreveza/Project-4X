@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
+using SignedInitiative;
 
 public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -41,13 +42,13 @@ public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     IEnumerator WaitForTooltip()
     {
         yield return new WaitForSeconds(0.5f);
-        SI_UIManager.Instance.ShowTooltip(data.description, data.displayName);
+        UIManager.Instance.ShowTooltip(data.description, data.displayName);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
         StopAllCoroutines();
-        SI_UIManager.Instance.HideTooltip();
+        UIManager.Instance.HideTooltip();
     }
 
     public void UpdateData(GameObject _handler, bool showAmount)
@@ -168,12 +169,12 @@ public class ItemUI : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void OnSelect()
     {
-        GetComponent<Image>().color = SI_UIManager.Instance.itemUIselected;
+        GetComponent<Image>().color = UIManager.Instance.itemUIselected;
     }
 
     public void OnDeselect()
     {
-        GetComponent<Image>().color = SI_UIManager.Instance.itemUIDeselected;
+        GetComponent<Image>().color = UIManager.Instance.itemUIDeselected;
     }
 
     public void SetSelected()//When is in factory

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using SignedInitiative;
 
 public class SkillUpgradableUI : MonoBehaviour
 {
@@ -79,11 +80,11 @@ public class SkillUpgradableUI : MonoBehaviour
         {
             if (i <= statData.statLevel)
             {
-                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = SI_UIManager.Instance.skillbarEnabled;
+                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = UIManager.Instance.skillbarEnabled;
             }
             else
             {
-                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = SI_UIManager.Instance.skillbarDisabled;
+                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = UIManager.Instance.skillbarDisabled;
             }
         }
 
@@ -144,11 +145,11 @@ public class SkillUpgradableUI : MonoBehaviour
         {
             if (i <= weaponLevels[statData.statLevel])
             {
-                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = SI_UIManager.Instance.skillbarEnabled;
+                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = UIManager.Instance.skillbarEnabled;
             }
             else
             {
-                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = SI_UIManager.Instance.skillbarDisabled;
+                levelBarParent.transform.GetChild(i).GetComponent<Image>().color = UIManager.Instance.skillbarDisabled;
             }
         }
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
+using SignedInitiative;
 public class GameOverPanel : UIPanel
 {
     [SerializeField] Volume globalVolume;
@@ -17,13 +18,13 @@ public class GameOverPanel : UIPanel
     }
     void Start()
     {
-        if (SI_UIManager.Instance != null)
+        if (UIManager.Instance != null)
         {
-            SI_UIManager.Instance.gameOverPanel = this;
-            SI_UIManager.Instance.AddPanel(this);
+            UIManager.Instance.gameOverPanel = this;
+            UIManager.Instance.AddPanel(this);
         }
 
-        globalVolume = SI_GameManager.Instance.globalVolume;
+        globalVolume = GameManager.Instance.globalVolume;
 
        
     }
@@ -94,6 +95,6 @@ public class GameOverPanel : UIPanel
 
     public void ActionStartover()
     {
-        SI_GameManager.Instance.ReloadScene();    
+        GameManager.Instance.ReloadScene();    
     }
 }

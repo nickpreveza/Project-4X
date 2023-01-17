@@ -6,6 +6,7 @@ using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.UI;
 using TMPro;
+using SignedInitiative;
 
 public class PausePanel : UIPanel
 {
@@ -17,10 +18,10 @@ public class PausePanel : UIPanel
 
     private void Start()
     {
-        if (SI_UIManager.Instance != null)
+        if (UIManager.Instance != null)
         {
-            SI_UIManager.Instance.pausePanel = this;
-            SI_UIManager.Instance.AddPanel(this);
+            UIManager.Instance.pausePanel = this;
+            UIManager.Instance.AddPanel(this);
         }
 
     }
@@ -28,7 +29,7 @@ public class PausePanel : UIPanel
     public override void Activate()
     {
         DepthOfField dof;
-        if (SI_GameManager.Instance.globalVolume.profile.TryGet<DepthOfField>(out dof))
+        if (GameManager.Instance.globalVolume.profile.TryGet<DepthOfField>(out dof))
         {
             dof.active = true;
         }
@@ -50,12 +51,12 @@ public class PausePanel : UIPanel
 
     public void ActionResume()
     {
-        SI_GameManager.Instance.SetPause = false;
+        GameManager.Instance.SetPause = false;
     }
 
     public void ActionExit()
     {
-        SI_UIManager.Instance.OpenMainMenu();
+        UIManager.Instance.OpenMainMenu();
     }
 
 
