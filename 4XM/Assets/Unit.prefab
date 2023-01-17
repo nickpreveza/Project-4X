@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 797af350484768f4182c752fd594cc44, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -112,6 +112,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d64e395b91c3547a5fc7a4a2e70e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parentTile: {fileID: 0}
+  data:
+    healthPoints: 0
+    attackPoints: 0
+    defensePoints: 0
+    movementPoints: 0
+    movePossible: 0
+    attackPossible: 0
 --- !u!114 &2372723646175858760
 MonoBehaviour:
   m_ObjectHideFlags: 0
