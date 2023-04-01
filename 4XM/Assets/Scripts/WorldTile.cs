@@ -4,20 +4,13 @@ using UnityEngine;
 
 public class WorldTile : MonoBehaviour
 {
-    public int x;
-    public int y;
+    public Hex hex;
     public TileData data;
     Wiggler wiggler;
     [SerializeField] WorldUnit associatedUnit;
     void Start()
     {
         wiggler = GetComponent<Wiggler>();
-    }
-
-    public void SetData(int tX, int tY)
-    {
-        x = tX;
-        y = tY;
     }
 
     public void UnitIn(WorldUnit newUnit)
@@ -41,7 +34,7 @@ public class WorldTile : MonoBehaviour
     {
         if (UnitManager.Instance.movementSelectMode)
         {
-            UnitManager.Instance.MoveTargetTile(x, y);
+            //UnitManager.Instance.MoveTargetTile(x, y);
             wiggler?.Wiggle();
             return;
         }

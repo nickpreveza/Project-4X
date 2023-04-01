@@ -46,7 +46,7 @@ namespace SignedInitiative
                 if (mapGenerated && dataLoaded && unitsPlaced)
                 {
                     processing = false;
-                    UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, false);
+                    UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
                     GameManager.Instance.gameReady = true;
                 }
             }

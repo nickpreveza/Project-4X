@@ -35,7 +35,7 @@ public class UnitManager : MonoBehaviour
     public void InitializeUnits()
     {
         ClearUnits();
-        SpawnUnit(playerCities[0].x, playerCities[0].y);
+        //SpawnUnit(playerCities[0].x, playerCities[0].y);
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 

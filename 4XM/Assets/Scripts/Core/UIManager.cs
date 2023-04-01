@@ -49,8 +49,15 @@ namespace SignedInitiative
 
         }
 
-        public void ToggleUIPanel(UIPanel targetPanel, bool state, bool fadeGamePanel = true)
+        public void ToggleUIPanel(UIPanel targetPanel, bool state, bool fadeGamePanel = true, float delayAmount = 0.0f)
         {
+            StartCoroutine(ToggleUIPanelEnum(targetPanel, state, fadeGamePanel, delayAmount));
+        }
+
+        IEnumerator ToggleUIPanelEnum(UIPanel targetPanel, bool state, bool fadeGamePanel = true, float delayAmount = 0.0f)
+        {
+            yield return new WaitForSeconds(delayAmount);
+
             if (state)
             {
                 GameManager.Instance.menuActive = true;
@@ -73,7 +80,6 @@ namespace SignedInitiative
                 HideTooltip();
             }
         }
-
         public void CloseCurrentSubpanel()
         {
             if (currentSubpanel == null)
