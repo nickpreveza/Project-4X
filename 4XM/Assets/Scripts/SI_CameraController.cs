@@ -5,14 +5,13 @@ using UnityEngine;
 public class SI_CameraController : MonoBehaviour
 {
     public static SI_CameraController Instance;
-   
+
     [SerializeField] float scrollSpeed = 0.01f;
     [SerializeField] float zoomSpeed = 0.01f;
     Vector2 touchDeltaPosition;
-    public Vector2 xBounds;
-    public Vector2 yBounds;
-    public Vector2 zBounds;
+
     public Vector2 orthoSizeBounds;
+
     [SerializeField] Vector3 editedPosition;
 
     Camera mainCamera;
@@ -30,7 +29,8 @@ public class SI_CameraController : MonoBehaviour
 
     Vector2 internalBoundsX;
     Vector2 internalBoundsY;
-    WorldTile selectedTile;
+
+    WorldHex selectedTile;
 
     [SerializeField] float internalTouchTimer;
     [SerializeField] float timeToRegisterTap;
@@ -38,8 +38,26 @@ public class SI_CameraController : MonoBehaviour
 
     bool tapValid;
     int layerAccessor;
-    [SerializeField] int internalMapHeight;
-    [SerializeField] int internalMapWidth;
+
+
+    [SerializeField] float internalMapHeight;
+    [SerializeField] float internalMapWidth;
+
+    Vector3 oldPosition;
+
+
+    [SerializeField] float moveSpeed;
+    bool isDraggingCamera = false;
+    float rayLenght;
+    Vector3 lastMousePosition;
+    Vector3 hitPos;
+    Vector3 diff;
+    Vector3 zoomDir;
+
+    public bool keyboardControls;
+    public bool touchControls;
+    public bool zoomEnabled;
+    public bool dragEnabled;
     void Awake()
     {
         if (Instance == null)
@@ -51,28 +69,77 @@ public class SI_CameraController : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        oldPosition = this.transform.position;
         mainCamera = transform.GetChild(0).GetComponent<Camera>();
         playerCamera = transform.GetChild(0).GetChild(0).GetComponent<Camera>();
-        internalBoundsX = xBounds;
-        internalBoundsY = yBounds;
     }
 
-    public void UpdateBounds(int mapWidth, int mapHeight)
+    public void UpdateBounds(int numRows, int numColumns)
     {
+        float radius = 1;
+        float HexHeight = radius * 2;
+        float HexWidth = (Mathf.Sqrt(3) / 2) * HexHeight;
+        float HexVerticalSpacing = HexHeight * 0.75f;
+        float HexHorizontalSpacing = HexWidth;
+
+        float mapHeight = numRows * HexVerticalSpacing;
+        float mapWidth = numColumns * HexHorizontalSpacing;
+
         internalMapHeight = mapHeight;
         internalMapWidth = mapWidth;
-        UpdateBounds();
-    }
-
-    public void UpdateBounds()
-    {
-        internalBoundsX.x = xBounds.x - internalMapHeight;
-        internalBoundsX.y = internalMapWidth - xBounds.y;
-        internalBoundsY.x = yBounds.x;
-        internalBoundsY.y = (yBounds.y + xBounds.x) + internalMapHeight;
     }
 
     void Update()
+    {
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (mouseRay.direction.y >= 0)
+        {
+            Debug.LogError("Why is mouse pointing up?");
+            return;
+        }
+        rayLenght = mouseRay.origin.y / mouseRay.direction.y;
+        hitPos = mouseRay.origin + (mouseRay.direction * rayLenght);
+
+        MouseInput();
+
+        if (touchControls)
+        {
+            TouchInput();
+        }
+
+        if (keyboardControls)
+        {
+            KeyboardInput();
+        }
+        if (zoomEnabled)
+        {
+            ZoomInput();
+        }
+
+        if (dragEnabled)
+        {
+            DragInput(mouseRay);
+        }
+      
+
+
+        CheckifCameraMoved();
+    }
+
+
+    public void PanToHex(Hex hex)
+    {
+        //TODO: Move camera to hex
+    }
+
+
+    void KeyboardInput()
+    {
+        Vector3 translate = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        this.transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+    }
+
+    void TouchInput()
     {
         if (Input.touchCount > 0)
         {
@@ -145,21 +212,21 @@ public class SI_CameraController : MonoBehaviour
                 {
                     if (hit.transform.CompareTag("Unit"))
                     {
-                        WorldTile newTile = hit.transform.gameObject.GetComponent<WorldUnit>().parentTile;
+                        WorldHex newTile = hit.transform.gameObject.GetComponentInParent<WorldUnit>().parentTile;
                         SelectTile(newTile);
                     }
                     if (hit.transform.CompareTag("Tile"))
                     {
                         if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
                         {
-                            WorldTile newTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            WorldHex newTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
                             SelectTile(newTile);
                             return;
                         }
 
                         if (internalTouchTimer >= timeToRegisterHold)
                         {
-                            selectedTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
                             if (selectedTile != null)
                             {
                                 selectedTile.Hold();
@@ -192,7 +259,7 @@ public class SI_CameraController : MonoBehaviour
                     {
                         if (internalTouchTimer >= timeToRegisterHold)
                         {
-                            selectedTile = hit.transform.gameObject.GetComponent<WorldTile>();
+                            selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
                             if (selectedTile != null)
                             {
                                 selectedTile.Hold();
@@ -222,18 +289,138 @@ public class SI_CameraController : MonoBehaviour
 
             var step = scrollSpeed * Time.deltaTime;
             transform.position = editedPosition; //= editedPosition;
-           
+
             if (transform.position == editedPosition)
             {
                 movingBack = false;
                 outOfBoundsY = false;
                 outOfBoundsX = false;
             }
-           
+
         }
     }
 
-    void SelectTile(WorldTile newTile)
+    void MouseInput()
+    {
+        //Ray
+      
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit))
+            {
+                if (hit.transform.CompareTag("Unit"))
+                {
+                    WorldHex newTile = hit.transform.gameObject.GetComponent<WorldUnit>().parentTile;
+                    SelectTile(newTile);
+                }
+                else if (hit.transform.CompareTag("Tile"))
+                {
+                    WorldHex newTile = hit.transform.parent.parent.GetComponent<WorldHex>();
+                    SelectTile(newTile);
+                    return;
+
+
+                }
+                else
+                {
+                    layerAccessor = 0;
+                    selectedTile = null;
+                }
+            }
+            else
+            {
+                layerAccessor = 0;
+                selectedTile = null;
+            }
+        }
+
+       
+
+        if (outOfBoundsX || outOfBoundsY)
+        {
+            movingBack = true;
+            //StartCoroutine(ReturnToBounds());
+        }
+
+        if (movingBack)
+        {
+            editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
+            editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
+            editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
+
+            var step = scrollSpeed * Time.deltaTime;
+            transform.position = editedPosition; //= editedPosition;
+
+            if (transform.position == editedPosition)
+            {
+                movingBack = false;
+                outOfBoundsY = false;
+                outOfBoundsX = false;
+            }
+
+        }
+    }
+
+
+    void DragInput(Ray mouseRay)
+    {
+        //Dragging
+        if (Input.GetMouseButtonDown(1))
+        {
+            isDraggingCamera = true;
+
+            lastMousePosition = hitPos;
+        }
+        else if (Input.GetMouseButtonUp(1))
+        {
+            isDraggingCamera = false;
+        }
+
+        if (isDraggingCamera)
+        {
+            diff = lastMousePosition - hitPos;
+            this.transform.Translate(diff, Space.World);
+            mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            if (mouseRay.direction.y >= 0)
+            {
+                Debug.LogError("Why is mouse pointing up?");
+                return;
+            }
+
+            rayLenght = mouseRay.origin.y / mouseRay.direction.y;
+            lastMousePosition = mouseRay.origin + (mouseRay.direction * rayLenght);
+        }
+    }
+
+    void ZoomInput()
+    {
+        float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
+        if (Mathf.Abs(scrollAmount) > 0.1f)
+        {
+            mainCamera.orthographicSize -= scrollAmount * zoomSpeed;
+            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
+            playerCamera.orthographicSize = mainCamera.orthographicSize;
+        }
+    }
+  
+
+    void CheckifCameraMoved()
+    {
+        if (oldPosition != this.transform.position)
+        {
+            //Something moved the camera
+            oldPosition = this.transform.position;
+
+            SI_EventManager.Instance.OnCameraMoved();
+        }
+    }
+
+    void SelectTile(WorldHex newTile)
     {
         if (newTile == selectedTile)
         {

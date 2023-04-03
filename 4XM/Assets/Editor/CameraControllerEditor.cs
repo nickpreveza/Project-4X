@@ -13,7 +13,7 @@ public class CameraControllerEditor : Editor
 
         if (GUILayout.Button("Update Bounds"))
         {
-            cameraController.UpdateBounds();
+           // cameraController.UpdateBounds();
         }
     }
 }

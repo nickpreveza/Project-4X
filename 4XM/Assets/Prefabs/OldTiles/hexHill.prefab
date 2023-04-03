@@ -70,7 +70,12 @@ PrefabInstance:
     - target: {fileID: 6884346321158365999, guid: a52f0a67bb6f2cd48a9e584068e7ee0a,
         type: 3}
       propertyPath: m_Name
-      value: hex (1)
+      value: hexHill
+      objectReference: {fileID: 0}
+    - target: {fileID: 6884346321158365999, guid: a52f0a67bb6f2cd48a9e584068e7ee0a,
+        type: 3}
+      propertyPath: m_TagString
+      value: Tile
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a52f0a67bb6f2cd48a9e584068e7ee0a, type: 3}

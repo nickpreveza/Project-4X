@@ -7,9 +7,11 @@ public static class FalloffGenerator
     public static float[,] GenerateFallofMap(int width, int height)
     {
         float[,] map = new float[width, height];
-        for (int i = 0; i < width; i++)
+
+        //loop through the hexes
+        for (int i = 0; i < width; i++) //column
         {
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < height; j++) // row
             {
                 float x = i / (float)width * 2 - 1;
                 float y = j / (float)height * 2 - 1;

@@ -6,7 +6,7 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
     public GameObject startingCity;
-    public List<WorldTile> playerCities;
+    public List<WorldHex> playerCities;
     public List<WorldUnit> worldUnits = new List<WorldUnit>();
     [SerializeField] GameObject unitParent;
     [SerializeField] GameObject[] unitPrefabs;
@@ -30,7 +30,7 @@ public class UnitManager : MonoBehaviour
     {
         startingCity = obj;
         playerCities.Clear();
-        playerCities.Add(obj.GetComponent<WorldTile>());
+        playerCities.Add(obj.GetComponent<WorldHex>());
     }
     public void InitializeUnits()
     {
@@ -49,7 +49,7 @@ public class UnitManager : MonoBehaviour
 
     public void SpawnUnit(int x, int y)
     {
-        WorldTile target = MapManager.Instance.GetWorldTile(x, y);
+        WorldHex target = MapManager.Instance.GetWorldTile(x, y);
         GameObject obj = Instantiate(unitPrefabs[0], unitParent.transform);
         obj.transform.SetParent(unitParent.transform);
         Vector3 position = new Vector3(x, 1, y);

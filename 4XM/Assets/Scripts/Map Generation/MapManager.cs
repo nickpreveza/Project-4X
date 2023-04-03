@@ -5,10 +5,20 @@ using UnityEngine;
 public class MapManager : MonoBehaviour
 {
     public static MapManager Instance;
-    private TileData[,] gridArray;
-    public int width;
-    public int height;
+    private WorldHex[,] hexes;
 
+    public int mapRows;
+    public int mapColumns;
+
+    public bool ShowCoords;
+    public bool useNewMapGeneration;
+    [Header("New Simple Map Generation")]
+    public int numContinents = 2;
+    public int continentSpacing = 20;
+    public bool allowWrapEastWest = true;
+    public bool allowWrapNorthSouth = false;
+
+    [Header("Old Map Generation")]
     public int octaves;
     public int seed;
     public Vector2 offset;
@@ -17,20 +27,25 @@ public class MapManager : MonoBehaviour
     public float lacunarity;
     public float noiseScale = 1;
 
-    [SerializeField] TerrainType[] regions;
+    public TerrainType[] regions;
     [SerializeField] GameObject tileParent;
     [SerializeField] GameObject cityPrefab;
-    [SerializeField] GameObject[] tilePrefabs;
+
     [SerializeField] GameObject[] hexPrefabs;
-    
+    [SerializeField] Material[] materialPrefabs;
+
     float[,] noiseMap;
 
-    public List<GameObject> mapTiles = new List<GameObject>(); //converted positions from 2D array
-    public List<WorldTile> walkableTiles = new List<WorldTile>();
+    public List<WorldHex> mapTiles = new List<WorldHex>(); //converted positions from 2D array
+    public List<WorldHex> walkableTiles = new List<WorldHex>();
 
     public bool useFalloff;
     float[,] falloffMap;
-    //float[,] noiseMap = Noise.GenerateNoiseMap(mapWidth, mapHeight, noiseScale);
+
+    //octaves 7
+    //Persistence = 0.391
+    //Lacunarity = 2;
+    //Noise Scale  = 50;
     void Awake()
     {
         if (Instance == null)
@@ -42,18 +57,18 @@ public class MapManager : MonoBehaviour
             Destroy(this.gameObject);
         }
 
-        falloffMap = FalloffGenerator.GenerateFallofMap(width, height);
+        falloffMap = FalloffGenerator.GenerateFallofMap(mapRows, mapColumns);
     }
 
     private void OnValidate()
     {
-        if (width < 1)
+        if (mapRows < 1)
         {
-            width = 1;
+            mapRows = 1;
         }
-        if(height < 1)
+        if(mapColumns < 1)
         {
-            height = 1;
+            mapColumns = 1;
         }
 
         if (lacunarity < 1)
@@ -66,137 +81,226 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    public void UpdateHexVisuals()
+    {
+        for (int column = 0; column < mapColumns; column++)
+        {
+            for (int row = 0; row < mapRows; row++)
+            {
+                WorldHex tile = hexes[column, row];
+                Hex newHex = tile.hex;
+                GameObject tileObject = tile.gameObject;
+                MeshRenderer meshRenderer = tileObject.GetComponent<MeshRenderer>();
+
+                if (newHex.Elevation >= 0)
+                {
+
+                }
+                else
+                {
+                   // meshRenderer.material = MatOcean;
+                }
+            }
+        }
+           
+    }
     public void GenerateMap()
     {
         ClearMap();
 
         mapTiles.Clear();
         walkableTiles.Clear();
+        hexes = new WorldHex[mapColumns, mapRows];
 
-        noiseMap = Noise.GenerateNoiseMap(width, height, noiseScale, seed, octaves, persistance, lacunarity, offset);
-        falloffMap = FalloffGenerator.GenerateFallofMap(width, height);
-        TileType[] regionMap = new TileType[width * height];
-        gridArray = new TileData[width, height];
-        
-        for (int column = 0; column < height; column++)
+        //old noise generaetion 
+        noiseMap = Noise.GenerateNoiseMap(mapRows, mapColumns, noiseScale, seed, octaves, persistance, lacunarity, offset);
+        falloffMap = FalloffGenerator.GenerateFallofMap(mapRows, mapColumns);
+        TileType[] regionMap = new TileType[mapRows * mapColumns];
+
+       
+
+        //someCol * numRows + someRow
+        //new map generation spawns all the tiles first, and then creates the land masses. 
+        if (useNewMapGeneration)
         {
-            for (int row = 0; row < width; row++)
+            for (int column = 0; column < mapColumns; column++)
             {
-                if (useFalloff)
+                for (int row = 0; row < mapRows; row++)
                 {
-                    noiseMap[row, column] = Mathf.Clamp01(noiseMap[row, column] - falloffMap[row, column]);
-                }
+                    GameObject prefab = hexPrefabs[0];
+                    GameObject spawnedObject = Instantiate(prefab, tileParent.transform);
+                    WorldHex tile = spawnedObject.GetComponent<WorldHex>();
 
-                float currentHeight = noiseMap[row, column];
-
-                for (int i = 0; i < regions.Length; i++)
-                {
-                    if (currentHeight <= regions[i].height)
+                    if (ShowCoords)
                     {
-                        regionMap[row * width + column] = regions[i].type;
-                        break;
+                        tile.UpdateDebugText(string.Format("{0},{1}", column, row));
                     }
+                    else
+                    {
+                        tile.UpdateDebugText("");
+                    }
+                   
+                    tile.hex.SetData(column, row);
+
+                    spawnedObject.transform.position = tile.hex.Position();
+                    spawnedObject.transform.SetParent(tileParent.transform);
+
+                    hexes[column, row] = tile;
+                    mapTiles.Add(tile);
+
+                    tile.hex.Elevation = 0f;
+
+                    //absolute ice in the top and bottom
+                    if (row == 0 || row == mapRows - 1)
+                    {
+                        tile.hex.Elevation = -1f;
+                    }
+
+                    //chance for ice in the top and bottom
+                    if (row < 3 || row >= mapRows - 3)
+                    {
+                        if (Random.Range(0f, 1f) > 0.5f)
+                        {
+                            tile.hex.Elevation = -1f;
+                        }
+                    }
+
+                    tile.RandomizeVisualElevation();
+                    tile.UpdateVisuals();
                 }
+            }
 
-                //Create the actual world Tile;
-                GameObject prefab = GetTilePrefab(regionMap[row * width + column]); //short this based on region.
-                GameObject obj = Instantiate(prefab, tileParent.transform);
+            //seed
+            //Random.InitState(0);
 
-                WorldTile tile = obj.transform.GetChild(0).GetComponent<WorldTile>();
-                tile.hex = new Hex(column, row);
-
-                obj.transform.position = tile.hex.Position();
-                obj.transform.SetParent(tileParent.transform);
-
-                mapTiles.Add(obj);
-
-                switch (tile.data.type)
+            //an alternative map generation with polygon splats
+            for (int c = 0; c < numContinents; c++)
+            {
+                int numSplats = Random.Range(4, 8);
+                for (int i = 0; i < numSplats; i++)
                 {
-                    case TileType.DEEPSEA:
-                        break;
-                    case TileType.SEA:
-                        break;
-                    case TileType.SAND:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.GRASS:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.HILL:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.MOUNTAIN:
-                        break;
-                    case TileType.ICE:
-                        break;
+                    int range = Random.Range(5, 8);
+                    int y = Random.Range(range, mapRows - range);
+                    int x = Random.Range(0, 10) - y/2 + (c * continentSpacing);
 
+                    ElevateArea(x, y, range, 1f);
+                }
+            }
+
+            //Add lumpiness 
+            float noiseResolution = 0.1f;
+            Vector2 noiseOffset = new Vector2(Random.Range(0f, 1f), Random.Range(0f, 1f));
+            float noiseScale = 2f;
+            for(int column = 0; column < mapColumns; column++)
+            {
+                for (int row = 0; row < mapRows; row++)
+                {
+                    WorldHex h = GetHexAt(column, row);
+                    float noise = Mathf.PerlinNoise( 
+                        ((float)column/mapColumns/noiseResolution) + noiseOffset.x, 
+                        ((float)row/mapRows/noiseResolution) + noiseOffset.y)  - 0.5f;
+                    h.hex.Elevation += noise * noiseScale;
+                    h.UpdateVisuals();
                 }
             }
         }
-
-        /*
-        for (int x = 0; x < width; x++)
+        else //old map generation uses data to create the land massses and then creates the appropriate tiles 
         {
-            for (int y = 0; y < height; y++)
+            for (int column = 0; column < mapColumns; column++)
             {
-                if (useFalloff)
+                for (int row = 0; row < mapRows; row++)
                 {
-                    noiseMap[x, y] = Mathf.Clamp01(noiseMap[x, y] - falloffMap[x,y]);
-                }
-                float currentHeight = noiseMap[x, y];
-                for(int i = 0; i < regions.Length; i++)
-                {
-                    if (currentHeight <= regions[i].height)
+
+                    //fetch type of tile based on noiseMap generated
+                    if (useFalloff)
                     {
-                        regionMap[x * width + y] = regions[i].type;
-                        break;
+                        noiseMap[row, column] = Mathf.Clamp01(noiseMap[row, column] - falloffMap[row, column]);
                     }
+
+                    float currentHeight = noiseMap[row, column];
+
+                    //match height with regionType 
+                    for (int i = 0; i < regions.Length; i++)
+                    {
+                        if (currentHeight <= regions[i].height)
+                        {
+                            regionMap[row * mapRows + column] = regions[i].type;
+                            break;
+                        }
+                    }
+
+
+                    //absolute ice in the top and bottom
+                    if (row == 0 || row == mapRows - 1)
+                    {
+                        regionMap[row * mapRows + column] = regions[0].type;
+                    }
+
+                    //chance for ice in the top and bottom
+                    if (row < 3 || row >= mapRows - 3)
+                    {
+                        if (Random.Range(0f, 1f) > 0.5f)
+                        {
+                            regionMap[row * mapRows + column] = regions[0].type;
+                        }
+                    }
+
+                    //Create the actual world Tile;
+                    GameObject prefab = GetTilePrefab(regionMap[row * mapRows + column]);
+
+                    GameObject spawnedObject = Instantiate(prefab, tileParent.transform);
+
+                    WorldHex tile = spawnedObject.GetComponent<WorldHex>();
+
+                    if (ShowCoords)
+                    {
+                        tile.UpdateDebugText(string.Format("{0},{1}", column, row));
+                    }
+                    else
+                    {
+                        tile.UpdateDebugText("");
+                    }
+                    tile.hex.SetData(column, row);
+                    tile.SetElevationFromType();
+                    spawnedObject.transform.position = tile.hex.Position();
+                    spawnedObject.transform.SetParent(tileParent.transform);
+
+                    hexes[column, row] = tile;
+
+                    mapTiles.Add(tile);
+
+                    switch (tile.hex.type)
+                    {
+                        case TileType.DEEPSEA:
+                            break;
+                        case TileType.SEA:
+                            break;
+                        case TileType.SAND:
+                            walkableTiles.Add(tile);
+                            break;
+                        case TileType.GRASS:
+                            walkableTiles.Add(tile);
+                            break;
+                        case TileType.HILL:
+                            walkableTiles.Add(tile);
+                            break;
+                        case TileType.MOUNTAIN:
+                            break;
+                        case TileType.ICE:
+                            break;
+
+                    }
+
+                    tile.RandomizeVisualElevation();
                 }
-
-                //Create the actual world Tile;
-                GameObject prefab = GetTilePrefab(regionMap[x * width + y]); //short this based on region.
-                GameObject obj = Instantiate(prefab, tileParent.transform);
-                WorldTile tile = obj.transform.GetChild(0).GetComponent<WorldTile>();
-
-                tile.SetData(x, y);
-                RegisterTile(x, y, tile);
-                obj.transform.SetParent(tileParent.transform);
-
-                float xPos = x * 1.71f;
-                float yPos = y * 1.71f;
-                Vector3 position = new Vector3(xPos, 0, yPos);
-                obj.transform.localPosition = position;
-
-                mapTiles.Add(obj);
-
-                switch (tile.data.type)
-                {
-                    case TileType.DEEPSEA:
-                        break;
-                    case TileType.SEA:
-                        break;
-                    case TileType.SAND:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.GRASS:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.HILL:
-                        walkableTiles.Add(tile);
-                        break;
-                    case TileType.MOUNTAIN:
-                        break;
-                    case TileType.ICE:
-                        break;
-
-                }
-               
             }
-        }*/
+        }
+       
 
         //AllocateStartingCities();
+        SI_EventManager.Instance?.OnCameraMoved();
         SI_EventManager.Instance?.OnMapGenerated();
-        //SI_CameraController.Instance?.UpdateBounds(width, height);
+        SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
     public void AllocateStartingCities()
@@ -206,15 +310,87 @@ public class MapManager : MonoBehaviour
         UnitManager.Instance?.SetStartingCity(walkableTiles[randomTileIndex].gameObject);
     }
 
-    public void RegisterTile(int x, int y, WorldTile value)
+    public float GetElevationFromType(TileType type)
     {
-        if (x >= 0 && y >= 0 && x < width && y < height)
+        switch (type)
         {
-            gridArray[x, y] = value.data;
+            case TileType.ICE:
+                return regions[0].height;
+            case TileType.DEEPSEA:
+                return regions[1].height;
+            case TileType.SEA:
+                return regions[2].height;
+            case TileType.SAND:
+                return regions[3].height;
+            case TileType.GRASS:
+                return regions[4].height;
+            case TileType.HILL:
+                return regions[5].height;
+            case TileType.MOUNTAIN:
+                return regions[6].height;
+        }
+
+        return 0f;
+    }
+
+
+    void ElevateArea(int q, int r, int radius, float elevation)
+    {
+        Hex centerHex = GetHexAt(q, r).hex;
+        WorldHex[] areaHexes = GetHexesWithinRadiusOf(centerHex, radius);
+
+        foreach(WorldHex worldHex in areaHexes)
+        {
+            if (worldHex.hex.Elevation < 0)
+            {
+                worldHex.hex.Elevation = 0;
+            }
+            //we need a way to find distance from center hex 
+            worldHex.hex.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, worldHex.hex) / radius);
+            worldHex.UpdateVisuals();
+        }
+    }
+
+  
+
+    public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int radius)
+    {
+        List<WorldHex> results = new List<WorldHex>();
+
+        for (int dx = -radius; dx < radius-1; dx++)
+        {
+            //cubic math allows us to fetch the radius this way 
+            for (int dy = Mathf.Max(-radius+1, -dx-radius); dy < Mathf.Min(radius, -dx+radius-1); dy++)
+            {
+                results.Add(GetHexAt(centerHex.C + dx, centerHex.R + dy));
+            }
+        }
+
+        return results.ToArray();
+    }
+
+    public WorldHex GetHexAt(int x, int y)
+    {
+        if (hexes == null)
+        {
+            Debug.LogError("Hexes Array not yet instantiated.");
+            return null;
+        }
+
+        if ( y >= 0 && y < mapRows)
+        {
+            x = x % mapColumns;
+            if (x < 0)
+            {
+                x += mapColumns;
+            }
+
+            return hexes[x, y];
         }
         else
         {
-            Debug.LogWarning("RegisterTile: Value outside of grid bounds");
+            Debug.LogWarning("GetHexAt: Value outside of grid bounds");
+            return null;
         }
     }
 
@@ -241,32 +417,36 @@ public class MapManager : MonoBehaviour
         return hexPrefabs[0];
     }
 
-    public TileData GetTileData(int x, int y)
+    public Material GetTypeMaterial(TileType type)
     {
-        if (x >= 0 && y >= 0 && x < width && y < height)
+        switch (type)
         {
-            return gridArray[x, y];
+            case TileType.ICE:
+                return materialPrefabs[0];
+            case TileType.DEEPSEA:
+                return materialPrefabs[1];
+            case TileType.SEA:
+                return materialPrefabs[2];
+            case TileType.SAND:
+                return materialPrefabs[3];
+            case TileType.GRASS:
+                return materialPrefabs[4];
+            case TileType.HILL:
+                return materialPrefabs[5];
+            case TileType.MOUNTAIN:
+                return materialPrefabs[6];
         }
-        else
-        {
-            Debug.LogWarning("GetTile: Value outside of grid bounds");
-            return null;
-        }
+
+        return materialPrefabs[0];
     }
 
-    public WorldTile GetWorldTile(int x, int y)
+
+    public WorldHex GetWorldTile(int x, int y)
     {
-        int index2D = x * width + y;
-        Debug.Log(index2D);
-        if (index2D >= 0 && index2D < mapTiles.Count)
-        {
-            return mapTiles[index2D].transform.GetChild(0).GetComponent<WorldTile>();
-        }
-        else
-        {
-            Debug.LogWarning("GetWorldTile: Value outside of 2D Array");
-            return null;
-        }
+        //int index2D = x * mapRows + y;
+        //Debug.Log(index2D);
+        return GetHexAt(x, y);
+       
     }
 
 

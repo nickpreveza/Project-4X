@@ -16,6 +16,7 @@ public class SI_EventManager : MonoBehaviour
     public event Action<string> onQuestCompleted;
     public event Action<string> onQuestRewarded;
 
+    public event Action onCameraMoved;
 
     void Awake()
     {
@@ -42,6 +43,12 @@ public class SI_EventManager : MonoBehaviour
     public void OnUnitsPlaced()
     {
         onUnitsPlaced?.Invoke();
+    }
+
+    public void OnCameraMoved()
+    {
+        Debug.Log("Camera Moved");
+        onCameraMoved?.Invoke();
     }
 
     public void OnQuestRewarded(string questKey)

@@ -6,7 +6,7 @@ public class WorldUnit : MonoBehaviour
 {
     int x;
     int y;
-    public WorldTile parentTile;
+    public WorldHex parentTile;
     [SerializeField] UnitData data;
     Wiggler wiggler;
     void Start()
@@ -14,7 +14,7 @@ public class WorldUnit : MonoBehaviour
         wiggler = GetComponent<Wiggler>();
     }
 
-    public void SetData(int tX, int tY, WorldTile tTile)
+    public void SetData(int tX, int tY, WorldHex tTile)
     {
         x = tX;
         y = tY;
