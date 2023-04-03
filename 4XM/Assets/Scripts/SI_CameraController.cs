@@ -399,13 +399,43 @@ public class SI_CameraController : MonoBehaviour
 
     void ZoomInput()
     {
+        //TODO: Smooth zoom 
         float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
         if (Mathf.Abs(scrollAmount) > 0.1f)
         {
             mainCamera.orthographicSize -= scrollAmount * zoomSpeed;
             mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
             playerCamera.orthographicSize = mainCamera.orthographicSize;
+
+
+            float lowZoom = orthoSizeBounds.x + 3; //dunno don't ask
+            float highZoom = orthoSizeBounds.y - 3;
+
+            if (mainCamera.orthographicSize < lowZoom)
+            {
+                this.transform.rotation = Quaternion.Euler(
+    Mathf.Lerp(30, 60, ((mainCamera.orthographicSize - orthoSizeBounds.x) / (lowZoom - orthoSizeBounds.x))),
+    this.transform.rotation.eulerAngles.y,
+    this.transform.rotation.eulerAngles.z);
+            }
+
+            else if (mainCamera.orthographicSize > highZoom)
+            {
+                this.transform.rotation = Quaternion.Euler(
+    Mathf.Lerp(60, 90, ((mainCamera.orthographicSize - highZoom) / (orthoSizeBounds.y - highZoom))),
+    this.transform.rotation.eulerAngles.y,
+    this.transform.rotation.eulerAngles.z);
+            }
+            else
+            {
+                this.transform.rotation = Quaternion.Euler(
+  60,
+   this.transform.rotation.eulerAngles.y,
+   this.transform.rotation.eulerAngles.z);
+            }
+               
         }
+
     }
   
 
