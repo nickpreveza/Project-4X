@@ -7,13 +7,15 @@ public class UnitManager : MonoBehaviour
     public static UnitManager Instance;
     public GameObject startingCity;
     public List<WorldHex> playerCities;
-    public List<WorldUnit> worldUnits = new List<WorldUnit>();
+    public List<GameObject> worldUnits = new List<GameObject>();
     [SerializeField] GameObject unitParent;
     [SerializeField] GameObject[] unitPrefabs;
 
     public bool movementSelectMode;
     public bool attackSelectMode;
     public WorldUnit selectedUnit;
+
+    public GameObject unitTestPrefab;
     void Awake()
     {
         if (Instance == null)
@@ -35,7 +37,7 @@ public class UnitManager : MonoBehaviour
     public void InitializeUnits()
     {
         ClearUnits();
-        //SpawnUnit(playerCities[0].x, playerCities[0].y);
+        SpawnUnitAt(unitTestPrefab, playerCities[0]);
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 
@@ -47,16 +49,24 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SpawnUnit(int x, int y)
+    public void SpawnUnitAt(GameObject prefab, WorldHex targetHex)
     {
-        WorldHex target = MapManager.Instance.GetWorldTile(x, y);
-        GameObject obj = Instantiate(unitPrefabs[0], unitParent.transform);
-        obj.transform.SetParent(unitParent.transform);
-        Vector3 position = new Vector3(x, 1, y);
-        obj.transform.localPosition = position;
-        obj.GetComponent<WorldUnit>().SetData(x, y, target);
+        int c = targetHex.hex.C;
+        int r = targetHex.hex.R;
+
+        GameObject obj = Instantiate(prefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+        targetHex.UnitIn(obj);
+        obj.transform.localPosition = Vector3.zero;
+        obj.GetComponent<WorldUnit>().SetData(c, r, targetHex);
+
+        worldUnits.Add(obj);
     }
 
+    public void OnUnitMoved(WorldHex oldHex, WorldHex newHex)
+    {
+
+    }
+     
     public void SelectUnit(WorldUnit newUnit)
     {
         if (selectedUnit != null)
@@ -68,9 +78,9 @@ public class UnitManager : MonoBehaviour
         movementSelectMode = true;
     }
 
-    public void MoveTargetTile(int newX, int newY)
+    public void MoveTargetTile(WorldHex hex)
     {
-        selectedUnit.Move(newX, newY);
+        selectedUnit.Move(hex);
         movementSelectMode = false;
     }
 }

@@ -46,6 +46,10 @@ public class MapManager : MonoBehaviour
     //Persistence = 0.391
     //Lacunarity = 2;
     //Noise Scale  = 50;
+
+    //move these out 
+
+
     void Awake()
     {
         if (Instance == null)
@@ -297,14 +301,15 @@ public class MapManager : MonoBehaviour
         }
        
 
-        //AllocateStartingCities();
+        GenerateCities();
         SI_EventManager.Instance?.OnCameraMoved();
         SI_EventManager.Instance?.OnMapGenerated();
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
-    public void AllocateStartingCities()
+    public void GenerateCities()
     {
+        //TODO: Spawn a set amount of cities based on map size and player count. 
         int randomTileIndex = Random.Range(0, walkableTiles.Count);
         walkableTiles[randomTileIndex].SpawnCity(cityPrefab);
         UnitManager.Instance?.SetStartingCity(walkableTiles[randomTileIndex].gameObject);
@@ -480,6 +485,14 @@ public struct TerrainType
 {
     public TileType type;
     public float height;
+    public Resource[] resources;
+}
+
+[System.Serializable]
+public struct Resource
+{
+    public string name;
+    public GameObject prefab;
 }
 
 

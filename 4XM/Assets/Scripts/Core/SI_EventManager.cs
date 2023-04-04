@@ -18,6 +18,9 @@ public class SI_EventManager : MonoBehaviour
 
     public event Action onCameraMoved;
 
+
+    public event Action onTurnEnded;
+
     void Awake()
     {
         if (Instance == null)

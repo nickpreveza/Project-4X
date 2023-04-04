@@ -58,6 +58,11 @@ public class Hex
         return HexWidth();
     }
 
+    public void SpawnUnitAt(GameObject prefab, int q, int r)
+    {
+
+    }
+
     public static float Distance(Hex a, Hex b)
     {
         int NumColumns = MapManager.Instance.mapColumns;

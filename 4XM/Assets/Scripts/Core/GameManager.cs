@@ -43,6 +43,9 @@ namespace SignedInitiative
 
         [HideInInspector] public CSVReader csvReader;
 
+        public Player[] sessionPlayers;
+        public Player activePlayer;
+        public int activePlayerIndex;
         void Awake()
         {
             if (Instance == null)
@@ -180,6 +183,49 @@ namespace SignedInitiative
             LoadGame();
         }
 
+        public void StartGame()
+        {
+            UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
+            gameReady = true;
+            activePlayerIndex = 0;
+            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+            UIManager.Instance.OpenGamePanel();
+        }
+        public void SetActivePlayer(Player player)
+        {
+            activePlayer = player;
+            UIManager.Instance.UpdateHUD();
+            activePlayer.StartTurn();
+        }
+
+        public void LocalEndTurn()
+        {
+            activePlayer.EndTurn();
+            activePlayerIndex++;
+            if (activePlayerIndex >= sessionPlayers.Length)
+            {
+                activePlayerIndex = 0;
+            }
+
+            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+        }
+        public void EndTurn(Player player)
+        {
+            //TODO: Stuff about ending turn and checkign movement;
+            activePlayerIndex++;
+            if (activePlayerIndex >= sessionPlayers.Length)
+            {
+                activePlayerIndex = 0;
+            }
+
+            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+        }
+
+        public void UndoMove()
+        {
+
+        }
+
         public void OnDataReady()
         {
 
@@ -188,7 +234,7 @@ namespace SignedInitiative
         public void RewardScore(int amount)
         {
             data.hbscore += amount;
-            UIManager.Instance.UpdateScore();
+            UIManager.Instance.UpdateHUD();
         }
 
         public void LoadGame()

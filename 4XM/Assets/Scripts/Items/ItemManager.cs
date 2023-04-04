@@ -87,11 +87,11 @@ public class ItemManager : MonoBehaviour
     public void EquipItem(string itemName)
     {
         UnlockWeapon(itemName);
-       // HB_PlayerController.Instance.SetWeapon(itemName);
+        // HB_PlayerController.Instance.SetWeapon(itemName);
         //ApplyItemEffects(itemDatabase[itemName].item.ability, itemDatabase[itemName].item.effectAmount);
 
         //SI_UIManager.Instance.UpdateBackpack(false);
-        UIManager.Instance.UpdatePlayerCurrencies();
+        UIManager.Instance.UpdateHUD();
     }
 
     //function to mass remove items from cafting here
@@ -128,7 +128,7 @@ public class ItemManager : MonoBehaviour
         }
 
         //SI_UIManager.Instance.UpdateBackpack(false);
-        UIManager.Instance.UpdatePlayerCurrencies();
+        UIManager.Instance.UpdateHUD();
     }
    
     //this is fucked up, will fix, just want the functionallity now
@@ -182,8 +182,8 @@ public class ItemManager : MonoBehaviour
                 //SI_UIManager.Instance.UpdateBackpack(false);
                 break;
         }
-        
-        UIManager.Instance.UpdatePlayerCurrencies();
+
+        UIManager.Instance.UpdateHUD();
     }
 
     public bool DoesPlayerHaveItem(string itemName, int amount)

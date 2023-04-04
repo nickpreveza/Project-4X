@@ -32,6 +32,10 @@ public class Wiggler : MonoBehaviour
 
     public void Wiggle()
     {
+        if (wiggling)
+        {
+            return;
+        }
         initPos = transform.localPosition;
         targetIndex = 0;
         SetDestination(targetPoints[targetIndex], animationTimes[targetIndex], false);

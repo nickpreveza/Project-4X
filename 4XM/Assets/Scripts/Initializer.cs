@@ -34,6 +34,7 @@ namespace SignedInitiative
         void InitializeGame()
         {
             ResetChecks();
+            UIManager.Instance.ClosePanels();
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, true, false);
             dataHandler.FetchData();
             processing = true;
@@ -46,8 +47,8 @@ namespace SignedInitiative
                 if (mapGenerated && dataLoaded && unitsPlaced)
                 {
                     processing = false;
-                    UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
-                    GameManager.Instance.gameReady = true;
+                    GameManager.Instance.StartGame();
+                   
                 }
             }
         }

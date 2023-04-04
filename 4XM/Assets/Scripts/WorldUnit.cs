@@ -7,7 +7,7 @@ public class WorldUnit : MonoBehaviour
     int x;
     int y;
     public WorldHex parentTile;
-    [SerializeField] UnitData data;
+    [SerializeField] Unit data;
     Wiggler wiggler;
     void Start()
     {
@@ -19,20 +19,19 @@ public class WorldUnit : MonoBehaviour
         x = tX;
         y = tY;
         parentTile = tTile;
-        parentTile.UnitIn(this);
         data.movePossible = true;
     }
 
-    public void Move(int tX, int tY)
+    public void Move(WorldHex hex)
     {
-        x = tX;
-        y = tY;
+        x = hex.hex.C;
+        y = hex.hex.R;
         parentTile.UnitOut(this);
-        parentTile = MapManager.Instance.GetWorldTile(x, y);
-        parentTile.UnitIn(this);
+        parentTile = hex;
+        parentTile.UnitIn(this.gameObject);
         data.movePossible = false;
-        wiggler?.AnimatedMove(parentTile.transform.localPosition);
-        //check if attack possible
+        //wiggler?.AnimatedMove(parentTile.transform.localPosition);
+        //check if attack possibled
     }
 
     public void Select()

@@ -122,9 +122,9 @@ namespace SignedInitiative
         public void ClosePanels()
         {
             onboardingPanel?.Disable();
-            mainMenuPanel.Disable();
-            pausePanel.Disable();
-            gamePanel.Disable();
+            mainMenuPanel?.Disable();
+            pausePanel?.Disable();
+            gamePanel?.Disable();
         }
 
         public void OpenGamePanel()
@@ -170,12 +170,7 @@ namespace SignedInitiative
             gameOverPanel.Activate();
         }
 
-
-        public void UpdateScore()
-        {
-            gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
-        }
-        public void UpdatePlayerCurrencies()
+        public void UpdateHUD()
         {
             gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
         }

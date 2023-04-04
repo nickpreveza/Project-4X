@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class UnitData
+public class Unit
 {
-    public int healthPoints;
-    public int attackPoints;
-    public int defensePoints;
-    public int movementPoints;
+    public int health;
+    public int attack;
+    public int range;
+
     public bool movePossible;
     public bool attackPossible;
+    public bool canAttackAfterMove;
+    public bool canMoveAfterAttack;
+
 }

@@ -13,6 +13,8 @@ public class GamePanel : UIPanel
     public TextMeshProUGUI devText;
     public Textbox textbox;
 
+    [SerializeField] TextMeshProUGUI playerName;
+
     void Start()
     {
       
@@ -26,9 +28,14 @@ public class GamePanel : UIPanel
 
     public void UpdateCurrencies()
     {
+        playerName.text = GameManager.Instance.activePlayer.name;
+        scoreValue.text = "SCORE: " + GameManager.Instance.activePlayer.score;
+        starValue.text = "STARS: " + GameManager.Instance.activePlayer.stars;
+        turnValue.text = "TURN: " + GameManager.Instance.activePlayer.turnCount;
+        /*
         scoreValue.text = ItemManager.Instance.GetItemAmount("hempseeds").ToString();
         starValue.text = ItemManager.Instance.GetItemAmount("hempfibers").ToString();
-        scoreValue.text = ItemManager.Instance.GetItemAmount("hemppebbles").ToString();
+        scoreValue.text = ItemManager.Instance.GetItemAmount("hemppebbles").ToString(); */
     }
 
     private void Update()

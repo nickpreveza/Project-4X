@@ -58,6 +58,8 @@ public class SI_CameraController : MonoBehaviour
     public bool touchControls;
     public bool zoomEnabled;
     public bool dragEnabled;
+
+    Vector3 cameraTargetOffset;
     void Awake()
     {
         if (Instance == null)
@@ -114,6 +116,7 @@ public class SI_CameraController : MonoBehaviour
         if (zoomEnabled)
         {
             ZoomInput();
+            //Update_ScrollZoom();
         }
 
         if (dragEnabled)
@@ -212,14 +215,14 @@ public class SI_CameraController : MonoBehaviour
                 {
                     if (hit.transform.CompareTag("Unit"))
                     {
-                        WorldHex newTile = hit.transform.gameObject.GetComponentInParent<WorldUnit>().parentTile;
+                        WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldUnit>().parentTile;
                         SelectTile(newTile);
                     }
                     if (hit.transform.CompareTag("Tile"))
                     {
                         if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
                         {
-                            WorldHex newTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
+                            WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                             SelectTile(newTile);
                             return;
                         }
@@ -312,18 +315,10 @@ public class SI_CameraController : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit))
             {
-                if (hit.transform.CompareTag("Unit"))
+                if (hit.transform.CompareTag("Tile"))
                 {
-                    WorldHex newTile = hit.transform.gameObject.GetComponent<WorldUnit>().parentTile;
+                    WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                     SelectTile(newTile);
-                }
-                else if (hit.transform.CompareTag("Tile"))
-                {
-                    WorldHex newTile = hit.transform.parent.parent.GetComponent<WorldHex>();
-                    SelectTile(newTile);
-                    return;
-
-
                 }
                 else
                 {
@@ -401,9 +396,16 @@ public class SI_CameraController : MonoBehaviour
     {
         //TODO: Smooth zoom 
         float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
+
+        Vector3 currentOrthoSize = new Vector3(mainCamera.orthographicSize, 0,0);
+        Vector3 adjustedOrthoSize = new Vector3(mainCamera.orthographicSize - scrollAmount * zoomSpeed, 0, 0);
+        currentOrthoSize = Vector3.Lerp(currentOrthoSize, adjustedOrthoSize, Time.deltaTime * 5f);
+     
+
         if (Mathf.Abs(scrollAmount) > 0.1f)
         {
-            mainCamera.orthographicSize -= scrollAmount * zoomSpeed;
+            //mainCamera.orthographicSize -= scrollAmount * zoomSpeed * Time.deltaTime * 5f;
+            mainCamera.orthographicSize = currentOrthoSize.x;
             mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
             playerCamera.orthographicSize = mainCamera.orthographicSize;
 
@@ -414,7 +416,7 @@ public class SI_CameraController : MonoBehaviour
             if (mainCamera.orthographicSize < lowZoom)
             {
                 this.transform.rotation = Quaternion.Euler(
-    Mathf.Lerp(30, 60, ((mainCamera.orthographicSize - orthoSizeBounds.x) / (lowZoom - orthoSizeBounds.x))),
+    Mathf.Lerp(45, 50, ((mainCamera.orthographicSize - orthoSizeBounds.x) / (lowZoom - orthoSizeBounds.x))),
     this.transform.rotation.eulerAngles.y,
     this.transform.rotation.eulerAngles.z);
             }
@@ -422,7 +424,7 @@ public class SI_CameraController : MonoBehaviour
             else if (mainCamera.orthographicSize > highZoom)
             {
                 this.transform.rotation = Quaternion.Euler(
-    Mathf.Lerp(60, 90, ((mainCamera.orthographicSize - highZoom) / (orthoSizeBounds.y - highZoom))),
+    Mathf.Lerp(50, 60, ((mainCamera.orthographicSize - highZoom) / (orthoSizeBounds.y - highZoom))),
     this.transform.rotation.eulerAngles.y,
     this.transform.rotation.eulerAngles.z);
             }
@@ -437,7 +439,65 @@ public class SI_CameraController : MonoBehaviour
         }
 
     }
-  
+
+    Vector3 MouseToGroundPlane(Vector3 mousePos)
+    {
+        Ray mouseRay = Camera.main.ScreenPointToRay(mousePos);
+        // What is the point at which the mouse ray intersects Y=0
+        if (mouseRay.direction.y >= 0)
+        {
+            //Debug.LogError("Why is mouse pointing up?");
+            return Vector3.zero;
+        }
+        float rayLength = (mouseRay.origin.y / mouseRay.direction.y);
+        return mouseRay.origin - (mouseRay.direction * rayLength);
+    }
+
+    void Update_ScrollZoom()
+    {
+        // Zoom to scrollwheel
+        float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
+        float minHeight = 2;
+        float maxHeight = 20;
+        // Move camera towards hitPos
+        Vector3 hitPos = MouseToGroundPlane(Input.mousePosition);
+        Vector3 dir = hitPos - Camera.main.transform.position;
+
+        Vector3 p = Camera.main.transform.position;
+
+        // Stop zooming out at a certain distance.
+        // TODO: Maybe you should still slide around at 20 zoom?
+        if (scrollAmount > 0 || p.y < (maxHeight - 0.1f))
+        {
+            cameraTargetOffset += dir * scrollAmount;
+        }
+        Vector3 lastCameraPosition = Camera.main.transform.position;
+        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.transform.position + cameraTargetOffset, Time.deltaTime * 5f);
+        cameraTargetOffset -= Camera.main.transform.position - lastCameraPosition;
+
+
+        p = Camera.main.transform.position;
+        if (p.y < minHeight)
+        {
+            p.y = minHeight;
+        }
+        if (p.y > maxHeight)
+        {
+            p.y = maxHeight;
+        }
+        Camera.main.transform.position = p;
+
+        // Change camera angle
+        Camera.main.transform.rotation = Quaternion.Euler(
+            Mathf.Lerp(30, 75, Camera.main.transform.position.y / maxHeight),
+            Camera.main.transform.rotation.eulerAngles.y,
+            Camera.main.transform.rotation.eulerAngles.z
+        );
+
+
+    }
+
+
 
     void CheckifCameraMoved()
     {
