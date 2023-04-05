@@ -7,13 +7,14 @@ using SignedInitiative;
 public class Player
 {
     public PlayerType type;
-    public int turnOrder;
+    public int index;
     public string name;
 
     public int score;
     public int turnCount;
     public int stars;
 
+    public Color playerColor;
 
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
@@ -25,7 +26,11 @@ public class Player
 
     public void StartTurn()
     {
-       
+        List<TurnAction> activeTurnActions = new List<TurnAction>();
+        turnCount++;
+        //TODO: Calculate Stars
+        //TODO: Recalculate Score
+
         //GameManager.Instance.SetActivePlayer(this);
     }
 
@@ -38,6 +43,17 @@ public class Player
         activeTurnActions.Clear();
 
        // GameManager.Instance.EndTurn(this);
+    }
+
+    public void AddUnit(WorldUnit newUnit)
+    {
+        playerUnits.Add(newUnit);
+    }
+
+    public void AddCity(WorldHex cityHex)
+    {
+        //TODO: Some security checks to make sure this is the correct tile;
+        playerCities.Add(cityHex);
     }
 }
 

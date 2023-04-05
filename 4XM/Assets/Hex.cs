@@ -22,6 +22,8 @@ public class Hex
     public bool occupied;
     public bool hasCity;
 
+    public int playerOwnerIndex;
+
     //Data for map generation and in-game effects
     public float Elevation;
     public float Moisture;

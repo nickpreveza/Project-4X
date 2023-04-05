@@ -1,15 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SignedInitiative;
 
 public class WorldHex : MonoBehaviour
 {
     public Hex hex;
-    public GameObject go;
+    public GameObject hexGameObject;
     TextMesh debugText;
     Wiggler wiggler;
     [SerializeField] WorldUnit associatedUnit;
     public Transform unitParent;
+    public Transform resourceParent;
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
@@ -17,7 +19,8 @@ public class WorldHex : MonoBehaviour
 
     private void Awake()
     {
-        go = transform.GetChild(0).GetChild(0).gameObject;
+        hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
+        resourceParent = transform.GetChild(1);
         unitParent = transform.GetChild(2);
         debugText = transform.GetChild(3).GetComponent<TextMesh>();
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
@@ -48,7 +51,7 @@ public class WorldHex : MonoBehaviour
             }
         }
 
-        go.GetComponent<MeshRenderer>().material = MapManager.Instance.GetTypeMaterial(hex.type);
+        hexGameObject.GetComponent<MeshRenderer>().material = MapManager.Instance.GetTypeMaterial(hex.type);
        
     }
     public void UpdateDebugText(string newText)
@@ -61,12 +64,10 @@ public class WorldHex : MonoBehaviour
         this.transform.position = hex.PositionFromCamera();
     }
 
-    public void UnitIn(GameObject newUnit)
+    public void UnitIn(WorldUnit newUnit)
     {
         hex.occupied = true;
-        newUnit.transform.SetParent(unitParent);
-        //newUnit.transform.localPosition = new Vector3(0,0.5f,0);
-        associatedUnit = newUnit.GetComponent<WorldUnit>();
+        associatedUnit = newUnit;
     }
 
     public void UnitOut(WorldUnit newUnit)
@@ -75,10 +76,18 @@ public class WorldHex : MonoBehaviour
         associatedUnit = null;
     }
 
-    public void SpawnCity(GameObject cityPrefab)
+    public void SpawnCity(int playerIndex, GameObject cityPrefab)
     {
         GameObject obj = Instantiate(cityPrefab, transform);
+        obj.transform.SetParent(resourceParent);
+        obj.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerByIndex(playerIndex).playerColor;
+        hex.playerOwnerIndex = playerIndex;
         hex.hasCity = true;
+
+        //TODO: Remove resourced that may have been spawned on Hex
+        //TODO: Filter out of tiles able to have cities;
+
+
     }
     public void Tap(int layer)
     {

@@ -24,8 +24,8 @@ public class Wiggler : MonoBehaviour
 
     public void AnimatedMove(Vector3 targetPoint)
     {
-        initPos = transform.localPosition;
-        targetPoint.y = 1;
+        initPos = transform.position;
+        //targetPoint.y = 1;
         SetDestination(targetPoint,.5f, true);
        
     }
@@ -48,7 +48,7 @@ public class Wiggler : MonoBehaviour
         animationTime = time;
         if (useWorldPosition)
         {
-            currentPosition = transform.localPosition;
+            currentPosition = transform.position;
             targetPosition = destination;
             moving = true;
         }
@@ -85,9 +85,9 @@ public class Wiggler : MonoBehaviour
         if (moving)
         {
             timeElapsed += Time.deltaTime / animationTime;
-            transform.localPosition = Vector3.Lerp(currentPosition, targetPosition, timeElapsed);
+            transform.position = Vector3.Lerp(currentPosition, targetPosition, timeElapsed);
 
-            if (Vector3.Distance(transform.localPosition, targetPosition) <= 0.001f)
+            if (Vector3.Distance(transform.position, targetPosition) <= 0.001f)
             {
                 moving = false;
                 initPos = transform.localPosition;

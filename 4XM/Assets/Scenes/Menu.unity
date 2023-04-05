@@ -2585,10 +2585,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f43513c8d2a9d4faf80ee69321de02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingCity: {fileID: 0}
-  playerCities: []
-  worldUnits: []
-  unitParent: {fileID: 912387631}
   unitPrefabs:
   - {fileID: 500447415083812173, guid: 8247784e89bf16e4996a03c591124bde, type: 3}
   movementSelectMode: 0
@@ -2596,6 +2592,8 @@ MonoBehaviour:
   selectedUnit: {fileID: 0}
   unitTestPrefab: {fileID: 500447415083812173, guid: 8247784e89bf16e4996a03c591124bde,
     type: 3}
+  unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
+  unitUsed: {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -3367,21 +3365,33 @@ MonoBehaviour:
   csvReader: {fileID: 0}
   sessionPlayers:
   - type: 0
-    turnOrder: 0
+    index: 0
     name: Nick
+    score: 0
+    turnCount: 0
+    stars: 0
+    playerColor: {r: 1, g: 0, b: 0, a: 1}
     playerUnits: []
     playerCities: []
     playerBorders: []
   - type: 0
-    turnOrder: 0
+    index: 1
     name: BobbyDick
+    score: 0
+    turnCount: 0
+    stars: 0
+    playerColor: {r: 0.2838149, g: 1, b: 0, a: 1}
     playerUnits: []
     playerCities: []
     playerBorders: []
   activePlayer:
     type: 0
-    turnOrder: 0
+    index: 0
     name: 
+    score: 0
+    turnCount: 0
+    stars: 0
+    playerColor: {r: 0, g: 0, b: 0, a: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
@@ -3428,6 +3438,7 @@ GameObject:
   - component: {fileID: 1333327146}
   - component: {fileID: 1333327145}
   - component: {fileID: 1333327144}
+  - component: {fileID: 1333327149}
   m_Layer: 5
   m_Name: Button (4)
   m_TagString: Untagged
@@ -3603,6 +3614,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1333327142}
   m_CullTransparentMesh: 0
+--- !u!114 &1333327149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1333327142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a348cca165782e44be22095474021ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1376641848
 GameObject:
   m_ObjectHideFlags: 0

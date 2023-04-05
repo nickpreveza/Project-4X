@@ -43,7 +43,7 @@ public class QuestManager : MonoBehaviour
         switch (activeQuest.listenerType)
         {
             case QuestListener.EnemiesKilled:
-                SI_EventManager.Instance.onEnemyKilled += OnEnemyKilled;
+                SI_EventManager.Instance.onUnitKilled += OnEnemyKilled;
                 break;
             case QuestListener.HempCollected:
                 //SI_EventManager.Instance.onHempCollected += OnHempCollected;

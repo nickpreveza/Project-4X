@@ -1,14 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using SignedInitiative;
 public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
-    public GameObject startingCity;
-    public List<WorldHex> playerCities;
-    public List<GameObject> worldUnits = new List<GameObject>();
-    [SerializeField] GameObject unitParent;
+
     [SerializeField] GameObject[] unitPrefabs;
 
     public bool movementSelectMode;
@@ -16,6 +13,10 @@ public class UnitManager : MonoBehaviour
     public WorldUnit selectedUnit;
 
     public GameObject unitTestPrefab;
+
+    public Material unitActive;
+    public Material unitUsed;
+
     void Awake()
     {
         if (Instance == null)
@@ -28,38 +29,32 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    public void SetStartingCity(GameObject obj)
-    {
-        startingCity = obj;
-        playerCities.Clear();
-        playerCities.Add(obj.GetComponent<WorldHex>());
-    }
     public void InitializeUnits()
     {
-        ClearUnits();
-        SpawnUnitAt(unitTestPrefab, playerCities[0]);
+        foreach(Player player in GameManager.Instance.sessionPlayers)
+        {
+            if (player.playerUnits.Count > 0)
+            {
+                //TODO: place the units of each players
+            }
+            else
+            {
+                SpawnUnitAt(player.index, unitTestPrefab, player.playerCities[0]);
+            }
+        }
+       
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 
-    public void ClearUnits()
-    {
-        foreach (Transform child in unitParent.transform)
-        {
-            Destroy(child.gameObject);
-        }
-    }
 
-    public void SpawnUnitAt(GameObject prefab, WorldHex targetHex)
+    public void SpawnUnitAt(int playerIndex, GameObject prefab, WorldHex targetHex)
     {
-        int c = targetHex.hex.C;
-        int r = targetHex.hex.R;
-
         GameObject obj = Instantiate(prefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
-        targetHex.UnitIn(obj);
         obj.transform.localPosition = Vector3.zero;
-        obj.GetComponent<WorldUnit>().SetData(c, r, targetHex);
+        WorldUnit unit = obj.GetComponent<WorldUnit>();
+        unit.SpawnSetup(targetHex, playerIndex);
 
-        worldUnits.Add(obj);
+        GameManager.Instance.GetPlayerByIndex(playerIndex).AddUnit(unit);
     }
 
     public void OnUnitMoved(WorldHex oldHex, WorldHex newHex)

@@ -183,6 +183,16 @@ namespace SignedInitiative
             LoadGame();
         }
 
+        public Player GetPlayerByIndex(int index)
+        {
+            return sessionPlayers[index];
+        }
+
+        public Color GetPlayerColor(int index)
+        {
+            return sessionPlayers[index].playerColor;
+        }
+
         public void StartGame()
         {
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
@@ -194,8 +204,8 @@ namespace SignedInitiative
         public void SetActivePlayer(Player player)
         {
             activePlayer = player;
-            UIManager.Instance.UpdateHUD();
             activePlayer.StartTurn();
+            UIManager.Instance.UpdateHUD();
         }
 
         public void LocalEndTurn()

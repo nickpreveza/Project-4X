@@ -28,14 +28,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 500447415083812173}
-  m_LocalRotation: {x: -0.00000009735359, y: 0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: -0.38268343, z: 0, w: 0.92387956}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 0.17455095, y: 0.4272651, z: 0.17455095}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -45, z: 0}
 --- !u!33 &4185525740091609170
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
+  - {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -98,14 +98,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52d64e395b91c3547a5fc7a4a2e70e8e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  parentTile: {fileID: 0}
   data:
-    healthPoints: 0
-    attackPoints: 0
-    defensePoints: 0
-    movementPoints: 0
+    c: 0
+    r: 0
+    health: 10
+    attack: 5
+    range: 1
+    canAttackAfterMove: 0
+    canMoveAfterAttack: 0
+    canBeInteracted: 0
     movePossible: 0
     attackPossible: 0
+    hasMoved: 0
+    hasAttacked: 0
+    associatedPlayerIndex: -1
+  parentHex: {fileID: 0}
 --- !u!114 &5242861388807978967
 MonoBehaviour:
   m_ObjectHideFlags: 0

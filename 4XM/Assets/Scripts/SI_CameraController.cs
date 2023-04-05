@@ -213,11 +213,6 @@ public class SI_CameraController : MonoBehaviour
 
                 if (Physics.Raycast(ray, out hit))
                 {
-                    if (hit.transform.CompareTag("Unit"))
-                    {
-                        WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldUnit>().parentTile;
-                        SelectTile(newTile);
-                    }
                     if (hit.transform.CompareTag("Tile"))
                     {
                         if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)

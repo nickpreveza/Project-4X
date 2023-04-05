@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SignedInitiative;
 
 public class MapManager : MonoBehaviour
 {
@@ -302,6 +303,7 @@ public class MapManager : MonoBehaviour
        
 
         GenerateCities();
+
         SI_EventManager.Instance?.OnCameraMoved();
         SI_EventManager.Instance?.OnMapGenerated();
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
@@ -310,9 +312,14 @@ public class MapManager : MonoBehaviour
     public void GenerateCities()
     {
         //TODO: Spawn a set amount of cities based on map size and player count. 
-        int randomTileIndex = Random.Range(0, walkableTiles.Count);
-        walkableTiles[randomTileIndex].SpawnCity(cityPrefab);
-        UnitManager.Instance?.SetStartingCity(walkableTiles[randomTileIndex].gameObject);
+
+        foreach(Player player in GameManager.Instance.sessionPlayers)
+        {
+            int randomTileIndex = Random.Range(0, walkableTiles.Count);
+           
+            walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
+            player.AddCity(walkableTiles[randomTileIndex]);
+        }
     }
 
     public float GetElevationFromType(TileType type)

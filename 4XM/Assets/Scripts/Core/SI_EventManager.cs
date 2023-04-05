@@ -7,7 +7,7 @@ public class SI_EventManager : MonoBehaviour
 {
     public static SI_EventManager Instance;
 
-    public event Action onEnemyKilled;
+    public event Action onUnitKilled;
     public event Action onDataLoaded;
     public event Action onMapGenerated;
     public event Action onUnitsPlaced;
@@ -19,7 +19,7 @@ public class SI_EventManager : MonoBehaviour
     public event Action onCameraMoved;
 
 
-    public event Action onTurnEnded;
+    public event Action<int> onTurnEnded;
 
     void Awake()
     {
@@ -64,8 +64,13 @@ public class SI_EventManager : MonoBehaviour
         onQuestCompleted?.Invoke(questKey);
     }
 
-    public void OnEnemyKilled()
+    public void OnUnitKilled()
     {
-        onEnemyKilled?.Invoke();
+        onUnitKilled?.Invoke();
+    }
+
+    public void OnTurnEnded(int playerIndex)
+    {
+        onTurnEnded?.Invoke(playerIndex);
     }
 }
