@@ -91,16 +91,17 @@ public class Hex
         return Mathf.Max(dC, dR, Mathf.Abs(a.S - b.S));
     }
 
-  public Vector3 PositionFromCamera(Vector3 cameraPosition, float numRows, float numColumns)
+
+  public Vector3 PositionFromCamera()
     {
-        float mapHeight = numRows * HexVerticalSpacing();
-        float mapWidth = numColumns * HexHorizontalSpacing();
+        float mapHeight = MapManager.Instance.mapRows * HexVerticalSpacing();
+        float mapWidth = MapManager.Instance.mapColumns * HexHorizontalSpacing();
 
         Vector3 position = Position();
 
         if (MapManager.Instance.allowWrapEastWest)
         {
-            float howManyWidthsFromCamera = (position.x - cameraPosition.x) / mapWidth;
+            float howManyWidthsFromCamera = (position.x - Camera.main.transform.position.x) / mapWidth;
             if (howManyWidthsFromCamera > 0)
             {
                 howManyWidthsFromCamera += 0.5f;
@@ -116,7 +117,7 @@ public class Hex
         }
         if (MapManager.Instance.allowWrapNorthSouth)
         {
-            float howManyWidthsFromCamera = (position.z - cameraPosition.z) / mapWidth;
+            float howManyWidthsFromCamera = (position.z - Camera.main.transform.position.z) / mapWidth;
             if (howManyWidthsFromCamera > 0)
             {
                 howManyWidthsFromCamera += 0.5f;

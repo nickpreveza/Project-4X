@@ -58,17 +58,14 @@ public class WorldHex : MonoBehaviour
     }
     public void UpdatePositionInMap()
     {
-           this.transform.position = hex. PositionFromCamera(
-            Camera.main.transform.position,
-            MapManager.Instance.mapRows,
-            MapManager.Instance.mapColumns);
+        this.transform.position = hex.PositionFromCamera();
     }
 
     public void UnitIn(GameObject newUnit)
     {
         hex.occupied = true;
         newUnit.transform.SetParent(unitParent);
-        newUnit.transform.localPosition = new Vector3(0,0.5f,0);
+        //newUnit.transform.localPosition = new Vector3(0,0.5f,0);
         associatedUnit = newUnit.GetComponent<WorldUnit>();
     }
 
