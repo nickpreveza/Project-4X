@@ -408,6 +408,7 @@ public class SI_CameraController : MonoBehaviour
             float lowZoom = orthoSizeBounds.x + 3; //dunno don't ask
             float highZoom = orthoSizeBounds.y - 3;
 
+            /*
             if (mainCamera.orthographicSize < lowZoom)
             {
                 this.transform.rotation = Quaternion.Euler(
@@ -429,7 +430,7 @@ public class SI_CameraController : MonoBehaviour
   60,
    this.transform.rotation.eulerAngles.y,
    this.transform.rotation.eulerAngles.z);
-            }
+            } */
                
         }
 
@@ -484,7 +485,7 @@ public class SI_CameraController : MonoBehaviour
 
         // Change camera angle
         Camera.main.transform.rotation = Quaternion.Euler(
-            Mathf.Lerp(30, 75, Camera.main.transform.position.y / maxHeight),
+            Mathf.Lerp(60, 60,Camera.main.transform.position.y / maxHeight),
             Camera.main.transform.rotation.eulerAngles.y,
             Camera.main.transform.rotation.eulerAngles.z
         );
