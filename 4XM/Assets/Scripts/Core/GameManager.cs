@@ -205,17 +205,22 @@ namespace SignedInitiative
         {
             activePlayer = player;
             activePlayer.StartTurn();
+            activePlayerIndex = player.index;
             UIManager.Instance.UpdateHUD();
         }
 
         public void LocalEndTurn()
         {
             activePlayer.EndTurn();
+            SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
+
             activePlayerIndex++;
             if (activePlayerIndex >= sessionPlayers.Length)
             {
                 activePlayerIndex = 0;
             }
+
+           
 
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
         }

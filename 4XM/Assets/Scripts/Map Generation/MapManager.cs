@@ -363,16 +363,13 @@ public class MapManager : MonoBehaviour
         }
     }
 
-  
-
-    public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int radius)
+        public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int range)
     {
         List<WorldHex> results = new List<WorldHex>();
 
-        for (int dx = -radius; dx < radius-1; dx++)
+        for (int dx = -range; dx <= range; dx++)
         {
-            //cubic math allows us to fetch the radius this way 
-            for (int dy = Mathf.Max(-radius+1, -dx-radius); dy < Mathf.Min(radius, -dx+radius-1); dy++)
+            for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
             {
                 results.Add(GetHexAt(centerHex.C + dx, centerHex.R + dy));
             }
@@ -485,6 +482,7 @@ public class MapManager : MonoBehaviour
     {
 
     }
+
 }
 
 [System.Serializable]

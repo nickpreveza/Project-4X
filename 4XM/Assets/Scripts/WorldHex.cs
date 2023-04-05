@@ -12,10 +12,12 @@ public class WorldHex : MonoBehaviour
     [SerializeField] WorldUnit associatedUnit;
     public Transform unitParent;
     public Transform resourceParent;
+    [SerializeField] GameObject hexHighlight;
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
     //3 - Text mesh (Debug Only)
+    //4 - Hex Highlight
 
     private void Awake()
     {
@@ -23,6 +25,7 @@ public class WorldHex : MonoBehaviour
         resourceParent = transform.GetChild(1);
         unitParent = transform.GetChild(2);
         debugText = transform.GetChild(3).GetComponent<TextMesh>();
+        hexHighlight = transform.GetChild(4).gameObject;
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
         RandomizeVisualElevation();
     }
@@ -34,8 +37,18 @@ public class WorldHex : MonoBehaviour
     void Start()
     {
         wiggler = GetComponent<Wiggler>();
+        HideHighlight();
     }
 
+    public void ShowHighlight()
+    {
+        hexHighlight.SetActive(true);
+    }
+
+    public void HideHighlight()
+    {
+        hexHighlight.SetActive(false);
+    }
     public void SetElevationFromType()
     {
         hex.Elevation = MapManager.Instance.GetElevationFromType(hex.type);
@@ -93,7 +106,11 @@ public class WorldHex : MonoBehaviour
     {
         if (UnitManager.Instance.movementSelectMode)
         {
-            UnitManager.Instance.MoveTargetTile(this);
+            if (UnitManager.Instance.IsHexValidMove(this))
+            {
+                UnitManager.Instance.MoveTargetTile(this);
+            }
+           
             wiggler?.Wiggle();
             return;
         }
@@ -144,16 +161,16 @@ public class WorldHex : MonoBehaviour
                 hex.rndVisualElevation = Random.Range(-0.5f, -0.5f);
                 break;
             case TileType.SAND:
-                hex.rndVisualElevation = Random.Range(-0.3f, -0.3f);
+                hex.rndVisualElevation = Random.Range(-0.4f, -0.4f);
                 break;
             case TileType.GRASS:
-                hex.rndVisualElevation = Random.Range(0.1f, 0.1f);
+                hex.rndVisualElevation = Random.Range(-0.3f, -0.3f);
                 break;
             case TileType.HILL:
-                hex.rndVisualElevation = Random.Range(0.5f, 0.5f);
+                hex.rndVisualElevation = Random.Range(-0.2f, -0.2f);
                 break;
             case TileType.MOUNTAIN:
-                hex.rndVisualElevation = Random.Range(.7f, .7f);
+                hex.rndVisualElevation = Random.Range(-.1f, -.1f);
                 break;
             case TileType.ICE:
                 hex.rndVisualElevation = Random.Range(-.5f, .5f);
