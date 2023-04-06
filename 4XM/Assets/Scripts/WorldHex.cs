@@ -42,18 +42,20 @@ public class WorldHex : MonoBehaviour
 
     public void ShowHighlight()
     {
-        hexHighlight.SetActive(true);
+        if (hexHighlight != null)
+        hexHighlight?.SetActive(true);
     }
 
     public void HideHighlight()
     {
-        hexHighlight.SetActive(false);
+        if (hexHighlight != null)
+            hexHighlight?.SetActive(false);
     }
     public void SetElevationFromType()
     {
         hex.Elevation = MapManager.Instance.GetElevationFromType(hex.type);
     }
-    public void UpdateVisuals() //better name, this updates a lot more
+    public void UpdateVisuals(bool isForced = false) //better name, this updates a lot more
     {
         if (MapManager.Instance == null)
         {
@@ -61,16 +63,7 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
-        for (int i = 0; i < MapManager.Instance.regions.Length; i++)
-        {
-            if (hex.Elevation <= MapManager.Instance.regions[i].height)
-            {
-                hex.type = MapManager.Instance.regions[i].type;
-                break;
-            }
-        }
-
-        hexGameObject.GetComponent<MeshRenderer>().material = MapManager.Instance.GetTypeMaterial(hex.type);
+        UpdateVisualObject();
     }
 
     void UpdateVisualsTool()
@@ -105,8 +98,18 @@ public class WorldHex : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
-       
-        GameObject prefabToSpawn = Instantiate(HexOrganizerTool.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+
+        GameObject prefabToSpawn = null;
+
+        if (MapManager.Instance == null)
+        {
+            prefabToSpawn = Instantiate(HexOrganizerTool.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+        }
+        else
+        {
+            prefabToSpawn = Instantiate(MapManager.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+        }
+
         hexGameObject = prefabToSpawn;
         RandomizeVisualElevation();
     }
@@ -211,16 +214,16 @@ public class WorldHex : MonoBehaviour
                 hex.rndVisualElevation = Random.Range(-0.5f, -0.5f);
                 break;
             case TileType.SAND:
-                hex.rndVisualElevation = Random.Range(-0.4f, -0.4f);
+                hex.rndVisualElevation = Random.Range(-0.25f, -0.25f);
                 break;
             case TileType.GRASS:
-                hex.rndVisualElevation = Random.Range(-0.3f, -0.3f);
+                hex.rndVisualElevation = Random.Range(0f, 0f);
                 break;
             case TileType.HILL:
-                hex.rndVisualElevation = Random.Range(-0.2f, -0.2f);
+                hex.rndVisualElevation = Random.Range(0.25f, 0.25f);
                 break;
             case TileType.MOUNTAIN:
-                hex.rndVisualElevation = Random.Range(-.1f, -.1f);
+                hex.rndVisualElevation = Random.Range(0.25f, 0.25f);
                 break;
             case TileType.ICE:
                 hex.rndVisualElevation = Random.Range(-.5f, .5f);

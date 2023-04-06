@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6573414999108256890}
   - component: {fileID: 5226088856739636346}
   - component: {fileID: 2464531742131735122}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cylinder.002
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -107,7 +107,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2524681499682168682}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Mountain
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 2652263951735211605}
   - component: {fileID: 1907415764219880611}
   - component: {fileID: 292037095865643644}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cone.003
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -192,7 +192,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 516707d3b8911f749a25bcd3153277c5, type: 2}
+  - {fileID: 2100000, guid: 0b2836555b06d624f87cc0f8293589b8, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

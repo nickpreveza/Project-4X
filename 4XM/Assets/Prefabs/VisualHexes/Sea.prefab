@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4952816959916753281}
   - component: {fileID: 7160450184370894155}
   - component: {fileID: 2257755883112214607}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Sea
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 8920927a3eb9b244bbe256a464d58528, type: 2}
+  - {fileID: 2100000, guid: abf8e08e84f632742a248045d67c2976, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

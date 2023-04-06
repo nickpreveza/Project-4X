@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SI_CameraController : MonoBehaviour
 {
@@ -60,6 +61,15 @@ public class SI_CameraController : MonoBehaviour
     public bool dragEnabled;
 
     Vector3 cameraTargetOffset;
+
+    [SerializeField] LayerMask interactableMask;
+
+    delegate void UpdateFunction();
+    UpdateFunction Update_CurrentFunction;// = Update_DetectMode;
+
+    //Threshold of mousemovement to start drag
+    int mouseDragThreshold = 1;
+    Vector3 lastMouseGroundPlanePosition;
     void Awake()
     {
         if (Instance == null)
@@ -74,6 +84,7 @@ public class SI_CameraController : MonoBehaviour
         oldPosition = this.transform.position;
         mainCamera = transform.GetChild(0).GetComponent<Camera>();
         playerCamera = transform.GetChild(0).GetChild(0).GetComponent<Camera>();
+        Update_CurrentFunction = Update_DetectModeStart;
     }
 
     public void UpdateBounds(int numRows, int numColumns)
@@ -91,7 +102,78 @@ public class SI_CameraController : MonoBehaviour
         internalMapWidth = mapWidth;
     }
 
-    void Update()
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            CancelUpdateFunction();
+            return;
+        }
+
+        if (keyboardControls)
+        {
+            KeyboardInput();
+        }
+
+        Update_CurrentFunction();
+
+        if (zoomEnabled)
+        {
+            Update_ScrollZoom();
+        }
+       
+
+        lastMousePosition = Input.mousePosition;
+        lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
+        CheckifCameraMoved();
+    }
+
+    void CancelUpdateFunction()
+    {
+        Update_CurrentFunction = Update_DetectModeStart;
+        //clean up any UI associated with the mode
+    }
+
+    void Update_DetectModeStart()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+        {
+            //Debug.Log("Mouse over gameobject");
+            //cancel out if over UI
+           // return;
+        }
+        if (Input.GetMouseButtonDown(0))
+        {
+           // Update_CurrentFunction;
+            //left mouse button just went down
+
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            if (Vector3.Distance(Input.mousePosition, lastMousePosition) > 1)
+            {
+                Debug.Log("Canceled late click by dragging");
+                return;
+            }
+
+            Update_Tap();
+            //Click here
+            //do something else
+        }
+        else if (Input.GetMouseButton(0) && (Vector3.Distance(Input.mousePosition, lastMousePosition) > mouseDragThreshold))
+        {
+            Update_CurrentFunction = Update_CameraDrag;
+
+            lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);     
+            Update_CurrentFunction();
+        }
+        else if (Input.GetMouseButton(1))
+        {
+
+        }
+    }
+
+    void OLDUpdate() //Still has some functionallity that hasn't been moved 
     {
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (mouseRay.direction.y >= 0)
@@ -102,7 +184,7 @@ public class SI_CameraController : MonoBehaviour
         rayLenght = mouseRay.origin.y / mouseRay.direction.y;
         hitPos = mouseRay.origin + (mouseRay.direction * rayLenght);
 
-        MouseInput();
+        //MouseInput();
 
         if (touchControls)
         {
@@ -115,13 +197,13 @@ public class SI_CameraController : MonoBehaviour
         }
         if (zoomEnabled)
         {
-            ZoomInput();
-            //Update_ScrollZoom();
+            //ZoomInput();
+            Update_ScrollZoom();
         }
 
         if (dragEnabled)
         {
-            DragInput(mouseRay);
+            //DragInput(mouseRay);
         }
       
 
@@ -142,6 +224,7 @@ public class SI_CameraController : MonoBehaviour
         this.transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
     }
 
+    //Needs rework
     void TouchInput()
     {
         if (Input.touchCount > 0)
@@ -298,28 +381,17 @@ public class SI_CameraController : MonoBehaviour
         }
     }
 
-    void MouseInput()
+    void Update_Tap()
     {
-        //Ray
-      
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
 
-        if (Input.GetMouseButtonDown(0))
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask))
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-
-            if (Physics.Raycast(ray, out hit))
+            if (hit.transform.CompareTag("Tile"))
             {
-                if (hit.transform.CompareTag("Tile"))
-                {
-                    WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
-                    SelectTile(newTile);
-                }
-                else
-                {
-                    layerAccessor = 0;
-                    selectedTile = null;
-                }
+                WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
+                SelectTile(newTile);
             }
             else
             {
@@ -327,8 +399,12 @@ public class SI_CameraController : MonoBehaviour
                 selectedTile = null;
             }
         }
+        else
+        {
+            layerAccessor = 0;
+            selectedTile = null;
+        }
 
-       
 
         if (outOfBoundsX || outOfBoundsY)
         {
@@ -356,35 +432,20 @@ public class SI_CameraController : MonoBehaviour
     }
 
 
-    void DragInput(Ray mouseRay)
+    void Update_CameraDrag()
     {
         //Dragging
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonUp(0))
         {
-            isDraggingCamera = true;
-
-            lastMousePosition = hitPos;
-        }
-        else if (Input.GetMouseButtonUp(1))
-        {
-            isDraggingCamera = false;
+            CancelUpdateFunction();
+            return;
         }
 
-        if (isDraggingCamera)
-        {
-            diff = lastMousePosition - hitPos;
-            this.transform.Translate(diff, Space.World);
-            mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        hitPos = MouseToGroundPlane(Input.mousePosition);
+        diff = lastMouseGroundPlanePosition - hitPos;
+        this.transform.Translate(diff, Space.World);
 
-            if (mouseRay.direction.y >= 0)
-            {
-                Debug.LogError("Why is mouse pointing up?");
-                return;
-            }
-
-            rayLenght = mouseRay.origin.y / mouseRay.direction.y;
-            lastMousePosition = mouseRay.origin + (mouseRay.direction * rayLenght);
-        }
+        lastMouseGroundPlanePosition = hitPos = MouseToGroundPlane(Input.mousePosition);
     }
 
     void ZoomInput()
@@ -492,8 +553,6 @@ public class SI_CameraController : MonoBehaviour
 
 
     }
-
-
 
     void CheckifCameraMoved()
     {

@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: f3fcc732e2832884a84d72aa20dd0daf, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18337063, g: 0.22721995, b: 0.29587424, a: 1}
+  m_IndirectSpecularColor: {r: 0.2151844, g: 0.047953695, b: 0.0814046, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -925,6 +925,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Color.r
       value: 0.9716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 5927187451419341760, guid: f63122aeff7339747b763333153e1f9d,
+        type: 3}
+      propertyPath: m_Intensity
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5927187451419341760, guid: f63122aeff7339747b763333153e1f9d,
         type: 3}
@@ -5432,6 +5437,12 @@ PrefabInstance:
       propertyPath: persistance
       value: 0.805
       objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBasePrefab
+      value: 
+      objectReference: {fileID: 4283572920935952471, guid: 1ef965df57d649f468ccff87fb43604e,
+        type: 3}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: mapTiles.Array.size
@@ -41512,6 +41523,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
+      propertyPath: hexVisualPrefabs.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
       propertyPath: walkableTiles.Array.data[0]
       value: 
       objectReference: {fileID: 0}
@@ -41568,17 +41584,17 @@ PrefabInstance:
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: regions.Array.data[1].height
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: regions.Array.data[2].height
-      value: 0.2
+      value: 0.3
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: regions.Array.data[3].height
-      value: 0.3
+      value: 0.4
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
@@ -41588,12 +41604,12 @@ PrefabInstance:
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: regions.Array.data[5].height
-      value: 0.7
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: regions.Array.data[6].height
-      value: 1
+      value: 0.9
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
@@ -46580,6 +46596,48 @@ PrefabInstance:
       propertyPath: walkableTiles.Array.data[999]
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 6777993680153919561, guid: 2a33bc3c6aacccd4b9ddea4c3d464f61,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 6796946291012872061, guid: 4a4fd60b89cee854e900f39cbf9c7a71,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 8673928421755131038, guid: b98ad5b35939253489ff554dab22fc8e,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 9216348200091701431, guid: 5780865a23cfcba489a45304a61ea666,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[4]
+      value: 
+      objectReference: {fileID: 9004857094778249697, guid: c8d2d790f26fcd448b26e992249b9061,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 7945852626180814377, guid: 72ff3f8e667d1d747a7c3e2773770553,
+        type: 3}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexVisualPrefabs.Array.data[6]
+      value: 
+      objectReference: {fileID: 2901066781638395344, guid: 10d2edde6cb6f7c44b562268bd8fea9c,
+        type: 3}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: walkableTiles.Array.data[1000]
@@ -55178,6 +55236,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CameraController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448783926915451347, guid: 1ec539821adaa3e42ba89791983b010b,
+        type: 3}
+      propertyPath: interactableMask.m_Bits
+      value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448783927269960829, guid: 1ec539821adaa3e42ba89791983b010b,
+        type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 567
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ec539821adaa3e42ba89791983b010b, type: 3}

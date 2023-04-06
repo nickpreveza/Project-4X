@@ -78,6 +78,8 @@ public class WorldUnit : MonoBehaviour
         data.c = newHex.hex.C;
         data.r = newHex.hex.R;
 
+        oldPosition = parentHex.hex.PositionFromCamera();
+
         parentHex.UnitOut(this);
 
         parentHex = newHex;
@@ -88,7 +90,19 @@ public class WorldUnit : MonoBehaviour
         data.hasMoved = true;
 
         newPosition = parentHex.hex.PositionFromCamera();
-        shouldMove = true;
+
+        if (Vector3.Distance(oldPosition, newPosition) > 2)
+        {
+            //Skip animation
+            this.transform.position = newPosition;
+            Debug.Log("Animation skipped");
+        }
+        else
+        {
+            //Do animated move
+            shouldMove = true;
+        }
+       
         SetUninteractable();
         //wiggler?.AnimatedMove(newPosition);
 
@@ -101,7 +115,7 @@ public class WorldUnit : MonoBehaviour
         {
             this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
             
-            if (Vector3.Distance(this.transform.localPosition, newPosition) < 0.1)
+            if (Vector3.Distance(this.transform.position, newPosition) < 0.1)
             {
                 shouldMove = false;
                 this.transform.position = newPosition;

@@ -32,8 +32,8 @@ public class MapManager : MonoBehaviour
     [SerializeField] GameObject tileParent;
     [SerializeField] GameObject cityPrefab;
 
-    [SerializeField] GameObject[] hexPrefabs;
-    [SerializeField] Material[] materialPrefabs;
+    public GameObject hexBasePrefab;
+    public GameObject[] hexVisualPrefabs;
 
     float[,] noiseMap;
 
@@ -132,7 +132,7 @@ public class MapManager : MonoBehaviour
             {
                 for (int row = 0; row < mapRows; row++)
                 {
-                    GameObject prefab = hexPrefabs[0];
+                    GameObject prefab = hexBasePrefab;
                     GameObject spawnedObject = Instantiate(prefab, tileParent.transform);
                     WorldHex tile = spawnedObject.GetComponent<WorldHex>();
 
@@ -251,7 +251,7 @@ public class MapManager : MonoBehaviour
                     }
 
                     //Create the actual world Tile;
-                    GameObject prefab = GetTilePrefab(regionMap[row * mapRows + column]);
+                    GameObject prefab = hexBasePrefab; // GetTilePrefab(regionMap[row * mapRows + column]);
 
                     GameObject spawnedObject = Instantiate(prefab, tileParent.transform);
 
@@ -266,6 +266,7 @@ public class MapManager : MonoBehaviour
                         tile.UpdateDebugText("");
                     }
                     tile.hex.SetData(column, row);
+                    tile.hex.type = regionMap[row * mapRows + column];
                     tile.SetElevationFromType();
                     spawnedObject.transform.position = tile.hex.Position();
                     spawnedObject.transform.SetParent(tileParent.transform);
@@ -296,7 +297,7 @@ public class MapManager : MonoBehaviour
 
                     }
 
-                    tile.RandomizeVisualElevation();
+                    tile.UpdateVisuals(true);
                 }
             }
         }
@@ -402,54 +403,6 @@ public class MapManager : MonoBehaviour
             return null;
         }
     }
-
-    public GameObject GetTilePrefab(TileType type)
-    {
-        switch (type)
-        {
-            case TileType.ICE:
-                return hexPrefabs[0];
-            case TileType.DEEPSEA:
-                return hexPrefabs[1];
-            case TileType.SEA:
-                return hexPrefabs[2];
-            case TileType.SAND:
-                return hexPrefabs[3];
-            case TileType.GRASS:
-                return hexPrefabs[4];
-            case TileType.HILL:
-                return hexPrefabs[5];
-            case TileType.MOUNTAIN:
-                return hexPrefabs[6];
-        }
-
-        return hexPrefabs[0];
-    }
-
-    public Material GetTypeMaterial(TileType type)
-    {
-        switch (type)
-        {
-            case TileType.ICE:
-                return materialPrefabs[0];
-            case TileType.DEEPSEA:
-                return materialPrefabs[1];
-            case TileType.SEA:
-                return materialPrefabs[2];
-            case TileType.SAND:
-                return materialPrefabs[3];
-            case TileType.GRASS:
-                return materialPrefabs[4];
-            case TileType.HILL:
-                return materialPrefabs[5];
-            case TileType.MOUNTAIN:
-                return materialPrefabs[6];
-        }
-
-        return materialPrefabs[0];
-    }
-
-
     public WorldHex GetWorldTile(int x, int y)
     {
         //int index2D = x * mapRows + y;

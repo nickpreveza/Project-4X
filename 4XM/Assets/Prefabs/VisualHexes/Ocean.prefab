@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7113314227292762722}
   - component: {fileID: 4995449471993415336}
   - component: {fileID: 4132413649487233964}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Ocean
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -62,7 +62,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 6dc026c3e59754f42a84906d80ae9cd5, type: 2}
+  - {fileID: 2100000, guid: b43f9b6a21d8f3b42a2a4d11324a1b80, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
