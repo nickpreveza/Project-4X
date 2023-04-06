@@ -358,7 +358,7 @@ public class MapManager : MonoBehaviour
                 worldHex.hex.Elevation = 0;
             }
             //we need a way to find distance from center hex 
-            worldHex.hex.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(centerHex, worldHex.hex) / radius);
+            worldHex.hex.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hex) / radius);
             worldHex.UpdateVisuals();
         }
     }

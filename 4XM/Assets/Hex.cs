@@ -65,13 +65,13 @@ public class Hex
 
     }
 
-    public static float Distance(Hex a, Hex b)
+    public static float Distance(int columns, int rows, Hex a, Hex b, bool allowWrapEastWest = true, bool allowWrapNorthSouth = false)
     {
-        int NumColumns = MapManager.Instance.mapColumns;
-        int NumRows = MapManager.Instance.mapRows;
+        int NumColumns = columns;
+        int NumRows = rows;
 
         int dC = Mathf.Abs(a.C - b.C);
-        if (MapManager.Instance.allowWrapEastWest)
+        if (allowWrapEastWest)
         {
             if (dC > NumColumns / 2)
             {
@@ -81,7 +81,7 @@ public class Hex
        
 
         int dR = Mathf.Abs(a.R - b.R);
-        if (MapManager.Instance.allowWrapNorthSouth)
+        if (allowWrapNorthSouth)
         {
             if (dR > NumRows / 2)
             {
@@ -93,9 +93,39 @@ public class Hex
         return Mathf.Max(dC, dR, Mathf.Abs(a.S - b.S));
     }
 
+    public Vector3 PositionFromCameraTool()
+    {
+        float mapHeight = HexOrganizerTool.Instance.mapRows * HexVerticalSpacing();
+        float mapWidth = HexOrganizerTool.Instance.mapColumns * HexHorizontalSpacing();
+
+        Vector3 position = Position();
+
+        float howManyWidthsFromCamera = (position.x - Camera.main.transform.position.x) / mapWidth;
+        if (howManyWidthsFromCamera > 0)
+        {
+            howManyWidthsFromCamera += 0.5f;
+        }
+        else
+        {
+            howManyWidthsFromCamera -= 0.5f;
+        }
+
+        int howManyWidthsToFix = (int)howManyWidthsFromCamera;
+
+        position.x -= howManyWidthsToFix * mapWidth;
+
+        position.y = rndVisualElevation;
+
+        return position;
+    }
+
 
   public Vector3 PositionFromCamera()
     {
+        if (MapManager.Instance == null)
+        {
+            return PositionFromCameraTool();
+        }
         float mapHeight = MapManager.Instance.mapRows * HexVerticalSpacing();
         float mapWidth = MapManager.Instance.mapColumns * HexHorizontalSpacing();
 

@@ -55,6 +55,12 @@ public class WorldHex : MonoBehaviour
     }
     public void UpdateVisuals() //better name, this updates a lot more
     {
+        if (MapManager.Instance == null)
+        {
+            UpdateVisualsTool();
+            return;
+        }
+
         for (int i = 0; i < MapManager.Instance.regions.Length; i++)
         {
             if (hex.Elevation <= MapManager.Instance.regions[i].height)
@@ -65,8 +71,46 @@ public class WorldHex : MonoBehaviour
         }
 
         hexGameObject.GetComponent<MeshRenderer>().material = MapManager.Instance.GetTypeMaterial(hex.type);
+    }
+
+    void UpdateVisualsTool()
+    {
+        TileType newType = TileType.ICE;
+
+        for (int i = 0; i < HexOrganizerTool.Instance.regions.Length; i++)
+        {
+            if (hex.Elevation <= HexOrganizerTool.Instance.regions[i].height)
+            {
+                newType = HexOrganizerTool.Instance.regions[i].type;
+                break;
+            }
+        }
+
+        if (newType != hex.type)
+        {
+            hex.type = newType;
+            UpdateVisualObject();
+        }
+        else
+        {
+            RandomizeVisualElevation();
+        }
+
        
     }
+
+    public void UpdateVisualObject()
+    {
+        foreach(Transform child in transform.GetChild(0))
+        {
+            Destroy(child.gameObject);
+        }
+       
+        GameObject prefabToSpawn = Instantiate(HexOrganizerTool.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+        hexGameObject = prefabToSpawn;
+        RandomizeVisualElevation();
+    }
+
     public void UpdateDebugText(string newText)
     {
         debugText = transform.GetChild(3).GetComponent<TextMesh>();
@@ -104,6 +148,12 @@ public class WorldHex : MonoBehaviour
     }
     public void Tap(int layer)
     {
+        if (UnitManager.Instance == null)
+        {
+            wiggler?.Wiggle();
+            return;
+        }
+
         if (UnitManager.Instance.movementSelectMode)
         {
             if (UnitManager.Instance.IsHexValidMove(this))
