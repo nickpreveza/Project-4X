@@ -70,6 +70,20 @@ public class SI_CameraController : MonoBehaviour
     //Threshold of mousemovement to start drag
     int mouseDragThreshold = 1;
     Vector3 lastMouseGroundPlanePosition;
+
+    //hex panning
+    [SerializeField] Vector3 cameraOffsetFromPanTarget;
+    Vector3 prevCameraPosition;
+    Vector3 targetCameraPosition;
+    WorldHex hex;
+    bool autoMove;
+    Vector3 currentVelocity;
+    float smoothTime = 0.5f;
+
+    //zoom
+   [SerializeField] float minHeight = 2;
+   [SerializeField] float maxHeight = 20;
+
     void Awake()
     {
         if (Instance == null)
@@ -104,6 +118,11 @@ public class SI_CameraController : MonoBehaviour
 
     private void Update()
     {
+        if (autoMove)
+        {
+            AutoHexPan();
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)
         {
             CancelUpdateFunction();
@@ -212,9 +231,24 @@ public class SI_CameraController : MonoBehaviour
     }
 
 
-    public void PanToHex(Hex hex)
+    public void PanToHex(WorldHex hex)
     {
-        //TODO: Move camera to hex
+        prevCameraPosition = this.transform.position;
+        targetCameraPosition = hex.hex.PositionFromCamera() + cameraOffsetFromPanTarget * (this.transform.position.y / 60);
+        targetCameraPosition.y = this.transform.position.y;
+        autoMove = true;
+
+    }
+
+    void AutoHexPan()
+    {
+        this.transform.position = Vector3.SmoothDamp(this.transform.position, targetCameraPosition, ref currentVelocity, smoothTime);
+
+        if (Vector3.Distance(this.transform.position, targetCameraPosition) < 0.1)
+        {
+            autoMove = false;
+            currentVelocity = Vector3.zero;
+        }
     }
 
 
@@ -391,7 +425,9 @@ public class SI_CameraController : MonoBehaviour
             if (hit.transform.CompareTag("Tile"))
             {
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
+               
                 SelectTile(newTile);
+                PanToHex(newTile);
             }
             else
             {
@@ -514,13 +550,12 @@ public class SI_CameraController : MonoBehaviour
     {
         // Zoom to scrollwheel
         float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
-        float minHeight = 2;
-        float maxHeight = 20;
+
         // Move camera towards hitPos
         Vector3 hitPos = MouseToGroundPlane(Input.mousePosition);
-        Vector3 dir = hitPos - Camera.main.transform.position;
+        Vector3 dir = hitPos - this.transform.position;
 
-        Vector3 p = Camera.main.transform.position;
+        Vector3 p = this.transform.position;
 
         // Stop zooming out at a certain distance.
         // TODO: Maybe you should still slide around at 20 zoom?
@@ -528,12 +563,12 @@ public class SI_CameraController : MonoBehaviour
         {
             cameraTargetOffset += dir * scrollAmount;
         }
-        Vector3 lastCameraPosition = Camera.main.transform.position;
-        Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, Camera.main.transform.position + cameraTargetOffset, Time.deltaTime * 5f);
-        cameraTargetOffset -= Camera.main.transform.position - lastCameraPosition;
+        Vector3 lastCameraPosition = this.transform.position;
+        this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + cameraTargetOffset, Time.deltaTime * 5f);
+        cameraTargetOffset -= this.transform.position - lastCameraPosition;
 
 
-        p = Camera.main.transform.position;
+        p = this.transform.position;
         if (p.y < minHeight)
         {
             p.y = minHeight;
@@ -542,10 +577,11 @@ public class SI_CameraController : MonoBehaviour
         {
             p.y = maxHeight;
         }
-        Camera.main.transform.position = p;
+
+        this.transform.position = p;
 
         // Change camera angle
-        Camera.main.transform.rotation = Quaternion.Euler(
+        this.transform.rotation = Quaternion.Euler(
             Mathf.Lerp(60, 60,Camera.main.transform.position.y / maxHeight),
             Camera.main.transform.rotation.eulerAngles.y,
             Camera.main.transform.rotation.eulerAngles.z

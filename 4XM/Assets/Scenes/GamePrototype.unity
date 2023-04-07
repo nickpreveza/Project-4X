@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.2151844, g: 0.047953695, b: 0.0814046, a: 1}
+  m_IndirectSpecularColor: {r: 0.21518438, g: 0.047953695, b: 0.0814046, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -55242,6 +55242,11 @@ PrefabInstance:
         type: 3}
       propertyPath: interactableMask.m_Bits
       value: 512
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448783926915451347, guid: 1ec539821adaa3e42ba89791983b010b,
+        type: 3}
+      propertyPath: cameraOffsetFromPanTarget.z
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 5448783927269960829, guid: 1ec539821adaa3e42ba89791983b010b,
         type: 3}
