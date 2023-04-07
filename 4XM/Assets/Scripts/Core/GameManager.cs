@@ -204,9 +204,12 @@ namespace SignedInitiative
         public void SetActivePlayer(Player player)
         {
             activePlayer = player;
-            activePlayer.StartTurn();
             activePlayerIndex = player.index;
+
+            activePlayer.StartTurn();
             UIManager.Instance.UpdateHUD();
+            SI_CameraController.Instance.PanToHex(player.playerCities[0]);
+            //TODO: Update map and stuff
         }
 
         public void LocalEndTurn()

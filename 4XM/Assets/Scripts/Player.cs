@@ -28,11 +28,18 @@ public class Player
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();
         turnCount++;
+
         //TODO: Calculate Stars
         //TODO: Recalculate Score
 
-        //GameManager.Instance.SetActivePlayer(this);
+
+        if (type == PlayerType.AI)
+        {
+            UnitManager.Instance.PlayRandomTurnForAIUnits(this);
+        }
     }
+
+  
 
     public void EndTurn()
     {

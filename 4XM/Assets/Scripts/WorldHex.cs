@@ -5,6 +5,9 @@ using SignedInitiative;
 
 public class WorldHex : MonoBehaviour
 {
+    //calculated as Column * numberOfRows + row 
+    public int hexIdentifier;
+
     public Hex hex;
     public GameObject hexGameObject;
     TextMesh debugText;
@@ -53,6 +56,17 @@ public class WorldHex : MonoBehaviour
     {
         if (hexHighlight != null)
             hexHighlight?.SetActive(false);
+    }
+
+    public void SetData(int column, int row, TileType newType, bool setElevationFromType)
+    {
+        hex.SetData(column, row);
+        hexIdentifier = column * MapManager.Instance.mapRows + row;
+        hex.type = newType;
+        if (setElevationFromType)
+        {
+            SetElevationFromType();
+        }
     }
     public void SetElevationFromType()
     {

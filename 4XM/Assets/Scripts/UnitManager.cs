@@ -20,6 +20,8 @@ public class UnitManager : MonoBehaviour
     public Material highlightHex;
 
     WorldHex[] highlightedHexes;
+
+    bool waitingForCameraPan;
     void Awake()
     {
         if (Instance == null)
@@ -31,6 +33,13 @@ public class UnitManager : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    private void Start()
+    {
+        SI_EventManager.Instance.onAutopanCompleted += AutoPanCallback;
+    }
+
+  
 
     public void InitializeUnits()
     {
@@ -98,6 +107,39 @@ public class UnitManager : MonoBehaviour
         {
             hex.ShowHighlight();
         }
+    }
+
+    void AutoPanCallback(int hexIdentifier)
+    {
+        waitingForCameraPan = false;
+    }
+
+    public void PlayRandomTurnForAIUnits(Player player)
+    {
+        StartCoroutine(TestRandomAIMove(player));
+    }
+
+    IEnumerator TestRandomAIMove(Player player)
+    {
+        foreach (WorldUnit unit in player.playerUnits)
+        {
+            waitingForCameraPan = true;
+            SI_CameraController.Instance.PanToHex(unit.parentHex);
+            yield return new WaitForSeconds(1);
+            while (waitingForCameraPan)
+            {
+                yield return new WaitForSeconds(.1f);
+            }
+            waitingForCameraPan = true;
+            unit.AutomoveRandomly();
+            yield return new WaitForSeconds(0.5f);
+            while (waitingForCameraPan)
+            {
+                yield return new WaitForSeconds(.1f);
+            }
+        }
+
+        GameManager.Instance.LocalEndTurn();
     }
 
 

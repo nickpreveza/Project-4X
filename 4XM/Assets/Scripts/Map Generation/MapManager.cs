@@ -265,9 +265,7 @@ public class MapManager : MonoBehaviour
                     {
                         tile.UpdateDebugText("");
                     }
-                    tile.hex.SetData(column, row);
-                    tile.hex.type = regionMap[row * mapRows + column];
-                    tile.SetElevationFromType();
+                    tile.SetData(column, row, regionMap[row * mapRows + column], true);
                     spawnedObject.transform.position = tile.hex.Position();
                     spawnedObject.transform.SetParent(tileParent.transform);
 
@@ -364,7 +362,7 @@ public class MapManager : MonoBehaviour
         }
     }
 
-        public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int range)
+    public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int range)
     {
         List<WorldHex> results = new List<WorldHex>();
 
@@ -378,6 +376,22 @@ public class MapManager : MonoBehaviour
 
         return results.ToArray();
     }
+
+    public List<WorldHex> GetHexesListWithinRadius(Hex centerHex, int range)
+    {
+        List<WorldHex> results = new List<WorldHex>();
+
+        for (int dx = -range; dx <= range; dx++)
+        {
+            for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
+            {
+                results.Add(GetHexAt(centerHex.C + dx, centerHex.R + dy));
+            }
+        }
+
+        return results;
+    }
+
 
     public WorldHex GetHexAt(int x, int y)
     {

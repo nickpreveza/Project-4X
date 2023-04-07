@@ -84,6 +84,7 @@ public class SI_CameraController : MonoBehaviour
    [SerializeField] float minHeight = 2;
    [SerializeField] float maxHeight = 20;
 
+    int autoPanHexIdentifier;
     void Awake()
     {
         if (Instance == null)
@@ -233,11 +234,11 @@ public class SI_CameraController : MonoBehaviour
 
     public void PanToHex(WorldHex hex)
     {
+        autoPanHexIdentifier = hex.hexIdentifier;
         prevCameraPosition = this.transform.position;
         targetCameraPosition = hex.hex.PositionFromCamera() + cameraOffsetFromPanTarget * (this.transform.position.y / 60);
         targetCameraPosition.y = this.transform.position.y;
         autoMove = true;
-
     }
 
     void AutoHexPan()
@@ -248,6 +249,7 @@ public class SI_CameraController : MonoBehaviour
         {
             autoMove = false;
             currentVelocity = Vector3.zero;
+            SI_EventManager.Instance.OnAutoPanCompleted(autoPanHexIdentifier);
         }
     }
 
@@ -427,7 +429,7 @@ public class SI_CameraController : MonoBehaviour
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                
                 SelectTile(newTile);
-                PanToHex(newTile);
+               // PanToHex(newTile);
             }
             else
             {

@@ -63,6 +63,7 @@ public class HexOrganizerTool : MonoBehaviour
                 newHex.HideHighlight();
 
                 newHex.hex.SetData(column, row);
+                newHex.hexIdentifier = column * mapRows + row;
 
                 spawnedObject.transform.position = newHex.hex.Position();
                 spawnedObject.transform.SetParent(hexParent.transform);

@@ -48,6 +48,19 @@ public class WorldUnit : MonoBehaviour
         this.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerColor(data.associatedPlayerIndex);
     }
 
+    public void AutomoveRandomly()
+    {
+        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hex, data.range);
+
+        if (hexesInRadius.Contains(parentHex))
+        {
+            hexesInRadius.Remove(parentHex);
+        }
+
+        WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
+        Move(selecedHex, true);
+    }
+
     public void SetUninteractable()
     {
         data.hasMoved = true;
@@ -106,7 +119,7 @@ public class WorldUnit : MonoBehaviour
         return 0f;
     }
 
-    public void Move(WorldHex newHex)
+    public void Move(WorldHex newHex, bool followCamera = false)
     {
         data.c = newHex.hex.C;
         data.r = newHex.hex.R;
@@ -137,6 +150,11 @@ public class WorldUnit : MonoBehaviour
         }
        
         SetUninteractable();
+
+        if (followCamera)
+        {
+            SI_CameraController.Instance.PanToHex(newHex);
+        }
         //wiggler?.AnimatedMove(newPosition);
 
         //check if attack possibled
