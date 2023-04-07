@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2805576632002636852}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: OldMountain
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 7130410348277241174}
   - component: {fileID: 4976681165630300572}
   - component: {fileID: 4114767945303352472}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Mountain
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -142,7 +142,7 @@ GameObject:
   - component: {fileID: 2389350249994482955}
   - component: {fileID: 2278418919367071741}
   - component: {fileID: 138370611795181858}
-  m_Layer: 9
+  m_Layer: 7
   m_Name: Cone.003
   m_TagString: Tile
   m_Icon: {fileID: 0}
