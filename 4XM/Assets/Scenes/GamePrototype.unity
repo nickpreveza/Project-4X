@@ -2491,6 +2491,7 @@ MonoBehaviour:
     type: 3}
   unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
   unitUsed: {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
+  highlightHex: {fileID: 2100000, guid: 2bd3ab025c0d1b440a43e1dbae69c987, type: 2}
 --- !u!1 &994301561
 GameObject:
   m_ObjectHideFlags: 0
@@ -46636,7 +46637,7 @@ PrefabInstance:
         type: 3}
       propertyPath: hexVisualPrefabs.Array.data[6]
       value: 
-      objectReference: {fileID: 2901066781638395344, guid: 10d2edde6cb6f7c44b562268bd8fea9c,
+      objectReference: {fileID: 6777993680153919561, guid: 1ea5c7a5fc9a07b4a9f9f8b3edf3c3d8,
         type: 3}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}

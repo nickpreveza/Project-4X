@@ -104,7 +104,7 @@ public class SI_CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)
         {
             CancelUpdateFunction();
             return;
@@ -575,10 +575,17 @@ public class SI_CameraController : MonoBehaviour
         {
             layerAccessor = 1;
         }
-        selectedTile = newTile;
+
         if (selectedTile != null)
         {
-            selectedTile.Tap(layerAccessor);
+           // selectedTile.Deselect();
+        }
+        
+        selectedTile = newTile;
+
+        if (selectedTile != null)
+        {
+            selectedTile.Select(layerAccessor);
             internalTouchTimer = 0;
             tapValid = false;
         }

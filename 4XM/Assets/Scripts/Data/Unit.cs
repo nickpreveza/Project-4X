@@ -10,6 +10,7 @@ public class Unit
 
     public int health = 10;
     public int attack = 5;
+
     public int range = 1;
     public bool canAttackAfterMove;
     public bool canMoveAfterAttack;
@@ -22,6 +23,9 @@ public class Unit
     public bool hasAttacked;
 
     public int associatedPlayerIndex = -1;
+
+    public int movePoints = 1;
+    public int movePointsRemaining = 1;
 
     public void ActionReset()
     {

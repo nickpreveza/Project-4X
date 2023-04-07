@@ -17,6 +17,7 @@ public class UnitManager : MonoBehaviour
 
     public Material unitActive;
     public Material unitUsed;
+    public Material highlightHex;
 
     WorldHex[] highlightedHexes;
     void Awake()

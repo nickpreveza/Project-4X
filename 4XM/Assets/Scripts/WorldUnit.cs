@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SignedInitiative;
+using System.Linq;
 
 public class WorldUnit : MonoBehaviour
 {
-   
+
     public Unit data;
     Wiggler wiggler;
 
@@ -17,7 +18,7 @@ public class WorldUnit : MonoBehaviour
     float smoothTime = 0.5f;
     bool shouldMove;
 
-    
+    Queue<WorldHex> hexPath;
 
     void Start()
     {
@@ -42,6 +43,7 @@ public class WorldUnit : MonoBehaviour
     public void SetInteractable()
     {
         data.canBeInteracted = true;
+        //TODO: move these to a different function to have better control over visuals
         this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
         this.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerColor(data.associatedPlayerIndex);
     }
@@ -71,6 +73,37 @@ public class WorldUnit : MonoBehaviour
         {
             data.ValidateOptions();
         }
+    }
+    public void SetHexPath(WorldHex[] newHexPath)
+    {
+        hexPath = new Queue<WorldHex>(newHexPath);
+    }
+
+    public void DoQueuedTurn()
+    {
+        if (hexPath == null || hexPath.Count == 0)
+        {
+            return;
+        }
+
+        WorldHex newHex = hexPath.Dequeue();
+
+        Move(newHex);
+    }
+
+    public int MovementCostOfHex(WorldHex hex)
+    {
+        //TODO: Override movement cost based on unit abilities or stats 
+        return hex.hex.moveCost;
+    }
+
+    public float AggregateTurnsToEnterHex(WorldHex hex, float turnsToData)
+    {
+        //return the number of turn required to reach that hex. 
+        //if a cost is greater, autocomplete turns off and user has to manually decide. 
+        float baseTurnsToEnterHex = MovementCostOfHex(hex) / data.movePoints;
+        float turnsRemaining = data.movePointsRemaining / data.movePoints;
+        return 0f;
     }
 
     public void Move(WorldHex newHex)

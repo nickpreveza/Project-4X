@@ -19,6 +19,8 @@ public class WorldHex : MonoBehaviour
     //3 - Text mesh (Debug Only)
     //4 - Hex Highlight
 
+    Material rimMaterial;
+
     private void Awake()
     {
         hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
@@ -37,6 +39,7 @@ public class WorldHex : MonoBehaviour
     void Start()
     {
         wiggler = GetComponent<Wiggler>();
+        rimMaterial = hexGameObject.GetComponent<MeshRenderer>().materials[0];
         HideHighlight();
     }
 
@@ -149,7 +152,12 @@ public class WorldHex : MonoBehaviour
 
 
     }
-    public void Tap(int layer)
+
+    public void Deselect()
+    {
+        hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
+    }
+    public void Select(int layer)
     {
         if (UnitManager.Instance == null)
         {
@@ -194,6 +202,10 @@ public class WorldHex : MonoBehaviour
 
     public void Select()
     {
+        /*
+        var newMaterials = hexGameObject.GetComponent<MeshRenderer>().materials;
+        newMaterials[0] = UnitManager.Instance.highlightHex;
+        hexGameObject.GetComponent<MeshRenderer>().materials = newMaterials; */
         wiggler?.Wiggle();
     }
 

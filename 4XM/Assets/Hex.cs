@@ -16,7 +16,7 @@ public class Hex
     public int R; //Row
     public int S;
 
-    public int moveCost;
+    public int moveCost = 1;
     public TileType type;
     public TraverseRequirment requirment;
     public bool occupied;
@@ -58,11 +58,6 @@ public class Hex
     public float HexHorizontalSpacing()
     {
         return HexWidth();
-    }
-
-    public void SpawnUnitAt(GameObject prefab, int q, int r)
-    {
-
     }
 
     public static float Distance(int columns, int rows, Hex a, Hex b, bool allowWrapEastWest = true, bool allowWrapNorthSouth = false)
