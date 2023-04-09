@@ -122,6 +122,7 @@ public class SI_CameraController : MonoBehaviour
         if (autoMove)
         {
             AutoHexPan();
+            CheckifCameraMoved();
             return;
         }
         if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)

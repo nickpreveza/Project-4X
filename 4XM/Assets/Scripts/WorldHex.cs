@@ -240,16 +240,16 @@ public class WorldHex : MonoBehaviour
                 hex.rndVisualElevation = Random.Range(-0.5f, -0.5f);
                 break;
             case TileType.SAND:
-                hex.rndVisualElevation = Random.Range(-0.25f, -0.25f);
+                hex.rndVisualElevation = Random.Range(-0.3f, -0.3f);
                 break;
             case TileType.GRASS:
-                hex.rndVisualElevation = Random.Range(0f, 0f);
+                hex.rndVisualElevation = Random.Range(-0.2f, -0.2f);
                 break;
             case TileType.HILL:
-                hex.rndVisualElevation = Random.Range(0.25f, 0.25f);
+                hex.rndVisualElevation = Random.Range(-0.1f, -0.1f);
                 break;
             case TileType.MOUNTAIN:
-                hex.rndVisualElevation = Random.Range(0.25f, 0.25f);
+                hex.rndVisualElevation = Random.Range(0f, 0f);
                 break;
             case TileType.ICE:
                 hex.rndVisualElevation = Random.Range(-.5f, .5f);
