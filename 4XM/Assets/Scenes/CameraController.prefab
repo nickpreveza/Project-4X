@@ -170,6 +170,12 @@ MonoBehaviour:
   touchControls: 1
   zoomEnabled: 1
   dragEnabled: 1
+  interactableMask:
+    serializedVersion: 2
+    m_Bits: 656
+  cameraOffsetFromPanTarget: {x: 0, y: 0, z: -35}
+  minHeight: 2
+  maxHeight: 20
 --- !u!1 &5448783927269960831
 GameObject:
   m_ObjectHideFlags: 0
@@ -236,7 +242,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 695
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -277,7 +283,7 @@ MonoBehaviour:
   m_RendererIndex: -1
   m_VolumeLayerMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 17
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
   m_RenderPostProcessing: 1

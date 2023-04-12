@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1554916793438866700
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1554916793438866702}
+  - component: {fileID: 1554916793438866701}
+  m_Layer: 0
+  m_Name: MapManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1554916793438866702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554916793438866700}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1554916793438866701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1554916793438866700}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23c8422b4d73488419e03c71ba9c4e21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  width: 40
+  height: 40
+  octaves: 8
+  seed: 0
+  offset: {x: 0, y: 0}
+  persistance: 0.315
+  lacunarity: 2
+  noiseScale: 50
+  regions:
+  - type: 1
+    height: 0.05
+  - type: 1
+    height: 0.3
+  - type: 2
+    height: 0.4
+  - type: 3
+    height: 0.5
+  - type: 4
+    height: 0.6
+  - type: 5
+    height: 0.8
+  - type: 6
+    height: 1
+  tileParent: {fileID: 0}
+  cityPrefab: {fileID: 6233720909778652194, guid: 9317dd0015289114cbe15e635f338aae,
+    type: 3}
+  tilePrefabs:
+  - {fileID: 6106865988247672904, guid: facaeb7e9f501c545b91b06c6c7686a8, type: 3}
+  - {fileID: 9046751519280555515, guid: a5b29b1ab4b267846b1aef2e42f4b364, type: 3}
+  - {fileID: 7349660565833667392, guid: 6035b66906f56984e92d6dbc3c98c724, type: 3}
+  - {fileID: 7349660565833667392, guid: 197af0cdcc76f384bb00ebd120f3fe7f, type: 3}
+  - {fileID: 662094774728741350, guid: e6e17c0f967d15e48837850e45e6d010, type: 3}
+  - {fileID: 3624815637047710708, guid: 9328e3b59e32d6844b9dee0268811f16, type: 3}
+  - {fileID: 3090742744073375443, guid: 520e3807166a0de48b79ca304059026b, type: 3}
+  hexPrefabs:
+  - {fileID: 4283572920935952471, guid: aa7730c59e32c1849b8fc7ea949127b7, type: 3}
+  - {fileID: 4599795669006735911, guid: f3cdfa02b95167a4d9570de28052165d, type: 3}
+  - {fileID: 7403241867719863102, guid: 409b67807b2e5724e97c970a7e743919, type: 3}
+  - {fileID: 757701945684572398, guid: 491043f6e00901740b2cf60a0af6f052, type: 3}
+  - {fileID: 5431299591559667271, guid: ca3f7443ea952594c9a139312e1fc96a, type: 3}
+  - {fileID: 8169166099983200183, guid: cf28aaf2d3a8b54408993ced4483241c, type: 3}
+  - {fileID: 1549146191023551101, guid: 258e43ad810b1b546adca230ba989475, type: 3}
+  worldTiles: []
+  landTiles: []
+  useFalloff: 1
