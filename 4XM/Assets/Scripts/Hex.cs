@@ -21,7 +21,7 @@ public class Hex
     public TraverseRequirment requirment;
     public bool occupied;
     public bool hasCity;
-
+    public string cityName;
     public int playerOwnerIndex;
 
     //Data for map generation and in-game effects
