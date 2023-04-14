@@ -10,6 +10,7 @@ public class MapManager : MonoBehaviour
 
     public int mapRows;
     public int mapColumns;
+    public int citiesNum; //maybe this should be a variable based on mapsize 
 
     public bool ShowCoords;
     public bool useNewMapGeneration;
@@ -30,10 +31,11 @@ public class MapManager : MonoBehaviour
 
     public TerrainType[] regions;
     [SerializeField] GameObject tileParent;
-    [SerializeField] GameObject cityPrefab;
+   
 
     public GameObject hexBasePrefab;
     public GameObject[] hexVisualPrefabs;
+    public GameObject cityPrefab;
 
     float[,] noiseMap;
 
@@ -43,6 +45,11 @@ public class MapManager : MonoBehaviour
     public bool useFalloff;
     float[,] falloffMap;
 
+
+    public List<WorldHex> hexesWhereCityCanSpawn = new List<WorldHex>();
+    public List<WorldHex> worldCities = new List<WorldHex>();
+
+    public Resource[] hexResources; 
     //octaves 7
     //Persistence = 0.391
     //Lacunarity = 2;
@@ -93,7 +100,7 @@ public class MapManager : MonoBehaviour
             for (int row = 0; row < mapRows; row++)
             {
                 WorldHex tile = hexes[column, row];
-                Hex newHex = tile.hex;
+                Hex newHex = tile.hexData;
                 GameObject tileObject = tile.gameObject;
                 MeshRenderer meshRenderer = tileObject.GetComponent<MeshRenderer>();
 
@@ -145,20 +152,20 @@ public class MapManager : MonoBehaviour
                         tile.UpdateDebugText("");
                     }
                    
-                    tile.hex.SetData(column, row);
+                    tile.hexData.SetData(column, row);
 
-                    spawnedObject.transform.position = tile.hex.Position();
+                    spawnedObject.transform.position = tile.hexData.Position();
                     spawnedObject.transform.SetParent(tileParent.transform);
 
                     hexes[column, row] = tile;
                     mapTiles.Add(tile);
 
-                    tile.hex.Elevation = 0f;
+                    tile.hexData.Elevation = 0f;
 
                     //absolute ice in the top and bottom
                     if (row == 0 || row == mapRows - 1)
                     {
-                        tile.hex.Elevation = -1f;
+                        tile.hexData.Elevation = -1f;
                     }
 
                     //chance for ice in the top and bottom
@@ -166,7 +173,7 @@ public class MapManager : MonoBehaviour
                     {
                         if (Random.Range(0f, 1f) > 0.5f)
                         {
-                            tile.hex.Elevation = -1f;
+                            tile.hexData.Elevation = -1f;
                         }
                     }
 
@@ -204,7 +211,7 @@ public class MapManager : MonoBehaviour
                     float noise = Mathf.PerlinNoise( 
                         ((float)column/mapColumns/noiseResolution) + noiseOffset.x, 
                         ((float)row/mapRows/noiseResolution) + noiseOffset.y)  - 0.5f;
-                    h.hex.Elevation += noise * noiseScale;
+                    h.hexData.Elevation += noise * noiseScale;
                     h.UpdateVisuals();
                 }
             }
@@ -266,27 +273,31 @@ public class MapManager : MonoBehaviour
                         tile.UpdateDebugText("");
                     }
                     tile.SetData(column, row, regionMap[row * mapRows + column], true);
-                    spawnedObject.transform.position = tile.hex.Position();
+                    spawnedObject.transform.position = tile.hexData.Position();
                     spawnedObject.transform.SetParent(tileParent.transform);
 
                     hexes[column, row] = tile;
 
                     mapTiles.Add(tile);
 
-                    switch (tile.hex.type)
+                    //filter the hexes into lists for other uses 
+                    switch (tile.hexData.type)
                     {
                         case TileType.DEEPSEA:
                             break;
                         case TileType.SEA:
                             break;
                         case TileType.SAND:
+                            hexesWhereCityCanSpawn.Add(tile);
                             walkableTiles.Add(tile);
                             break;
                         case TileType.GRASS:
                             walkableTiles.Add(tile);
+                            hexesWhereCityCanSpawn.Add(tile);
                             break;
                         case TileType.HILL:
                             walkableTiles.Add(tile);
+                            hexesWhereCityCanSpawn.Add(tile);
                             break;
                         case TileType.MOUNTAIN:
                             break;
@@ -295,6 +306,7 @@ public class MapManager : MonoBehaviour
 
                     }
 
+                    //update each tile with the correct visual prefab
                     tile.UpdateVisuals(true);
                 }
             }
@@ -308,17 +320,83 @@ public class MapManager : MonoBehaviour
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
+    void OccupyHexesForCityGeneration(WorldHex cityCenter, int range)
+    {
+        List<WorldHex> hexesToRemove = GetHexesListWithinRadius(cityCenter.hexData, range);
+
+        foreach(WorldHex hex in hexesToRemove)
+        {
+            if (hexesWhereCityCanSpawn.Contains(hex))
+            {
+                hexesWhereCityCanSpawn.Remove(hex);
+            }
+        }
+
+    }
+
+    void CalculateDistanceFromOtherCities(WorldHex city)
+    {
+        for(int i = 0; i < worldCities.Count; i++)
+        {
+            //city.cityData.
+        }
+    }
+
     public void GenerateCities()
     {
-        //TODO: Spawn a set amount of cities based on map size and player count. 
+        //define the number of cities to spawn based on map size: made this a public var
+        int citiesSpawned = 0;
 
-        foreach(Player player in GameManager.Instance.sessionPlayers)
+        for (int i = 0; i < citiesNum; i++)
         {
-            int randomTileIndex = Random.Range(0, walkableTiles.Count);
-           
-            walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
-            player.AddCity(walkableTiles[randomTileIndex]);
+            if (hexesWhereCityCanSpawn.Count < 0)
+            {
+                Debug.LogWarning("No more availabel spaces where found for citis");
+                break;
+            }
+            int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
+            WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
+            newCity.SpawnCity();
+            worldCities.Add(newCity);
+            citiesSpawned++;
+            //newCity.OccypyCityTiles();
+            
         }
+
+        foreach(WorldHex generatedCity in worldCities)
+        {
+            CalculateDistanceFromOtherCities(generatedCity);
+        }
+
+        List<WorldHex> worldCitiesToAssign = new List<WorldHex>(worldCities);
+
+        foreach (Player player in GameManager.Instance.sessionPlayers)
+        {
+            //TODO: Change this to a distance based algorithm
+            int randomCity = Random.Range(0, worldCitiesToAssign.Count);
+            
+            //walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
+            player.AddCity(worldCitiesToAssign[randomCity]);
+            OccupyHexesForCityGeneration(worldCitiesToAssign[randomCity], 2);
+            worldCitiesToAssign.RemoveAt(randomCity);
+        }
+    }
+
+    public void GenerateResources(WorldHex cityCenter)
+    {
+        List<WorldHex> cityHexes = GetHexesListWithinRadius(cityCenter.hexData, cityCenter.cityData.range);
+
+        //move this to a more complex system where a number of resource points is guaranteed.
+        if (cityHexes.Contains(cityCenter))
+        {
+            cityHexes.Remove(cityCenter);
+        }
+
+        foreach(WorldHex hex in cityHexes)
+        {
+            hex.GenerateResources();
+        }
+
     }
 
     public float GetElevationFromType(TileType type)
@@ -347,17 +425,17 @@ public class MapManager : MonoBehaviour
 
     void ElevateArea(int q, int r, int radius, float elevation)
     {
-        Hex centerHex = GetHexAt(q, r).hex;
+        Hex centerHex = GetHexAt(q, r).hexData;
         WorldHex[] areaHexes = GetHexesWithinRadiusOf(centerHex, radius);
 
         foreach(WorldHex worldHex in areaHexes)
         {
-            if (worldHex.hex.Elevation < 0)
+            if (worldHex.hexData.Elevation < 0)
             {
-                worldHex.hex.Elevation = 0;
+                worldHex.hexData.Elevation = 0;
             }
             //we need a way to find distance from center hex 
-            worldHex.hex.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hex) / radius);
+            worldHex.hexData.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hexData) / radius);
             worldHex.UpdateVisuals();
         }
     }
@@ -457,13 +535,19 @@ public struct TerrainType
 {
     public TileType type;
     public float height;
-    public Resource[] resources;
 }
 
 [System.Serializable]
 public struct Resource
 {
     public string name;
+    public TileType compatibleTerrain;
+
+    public int cost;
+    public int output;
+
+    public float spawnChanceRate;
+
     public GameObject prefab;
 }
 

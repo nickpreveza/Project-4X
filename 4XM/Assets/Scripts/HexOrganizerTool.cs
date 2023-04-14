@@ -62,16 +62,16 @@ public class HexOrganizerTool : MonoBehaviour
 
                 newHex.HideHighlight();
 
-                newHex.hex.SetData(column, row);
+                newHex.hexData.SetData(column, row);
                 newHex.hexIdentifier = column * mapRows + row;
 
-                spawnedObject.transform.position = newHex.hex.Position();
+                spawnedObject.transform.position = newHex.hexData.Position();
                 spawnedObject.transform.SetParent(hexParent.transform);
 
                 hexes[column, row] = newHex;
                 worldHexes.Add(newHex);
 
-                newHex.hex.Elevation = 0f;
+                newHex.hexData.Elevation = 0f;
 
                
                 newHex.UpdateVisuals();
@@ -85,17 +85,17 @@ public class HexOrganizerTool : MonoBehaviour
 
     void ElevateArea(int q, int r, int radius, float elevation)
     {
-        Hex centerHex = GetHexAt(q, r).hex;
+        Hex centerHex = GetHexAt(q, r).hexData;
         WorldHex[] areaHexes = GetHexesWithinRadiusOf(centerHex, radius);
 
         foreach (WorldHex worldHex in areaHexes)
         {
-            if (worldHex.hex.Elevation < 0)
+            if (worldHex.hexData.Elevation < 0)
             {
-                worldHex.hex.Elevation = 0;
+                worldHex.hexData.Elevation = 0;
             }
             //we need a way to find distance from center hex 
-            worldHex.hex.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hex) / radius);
+            worldHex.hexData.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hexData) / radius);
             worldHex.UpdateVisuals();
         }
     }

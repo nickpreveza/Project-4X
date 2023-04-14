@@ -13,30 +13,52 @@ public class HexView : MonoBehaviour
 
     [SerializeField] GameObject actionItemPrefab;
     WorldHex hex;
+    bool isUnitView;
 
-    public void SetData(WorldHex newHex)
+    public void SetData(WorldHex newHex, WorldUnit newUnit = null)
     {
-        hex = newHex;
-        //TODO: Handle avatars
-
-        if (hex.hex.hasCity)
+        foreach(Transform child in horizontalScrollParent)
         {
-            hexName.text = hex.hex.cityName;
+            Destroy(child.gameObject);
+        }
 
-            GenerateUnitButtons();
+        hex = newHex;
+
+        if (newUnit != null)
+        {
+            isUnitView = true;
         }
         else
         {
-            hexName.text = SetName(hex.hex.type);
-
-            GenerateResourceButtons();
-
+            isUnitView = false;
         }
+
+        if (isUnitView)
+        {
+            hexName.text = newUnit.data.unitName;
+        }
+        else
+        {
+            if (hex.hexData.hasCity)
+            {
+                hexName.text = hex.hexData.cityName;
+
+                GenerateUnitButtons();
+            }
+            else
+            {
+                hexName.text = SetName(hex.hexData.type);
+
+                GenerateResourceButtons();
+
+            }
+        }
+        
     }
 
     void GenerateUnitButtons()
     {
-
+       // List<Units>
 
     }
 

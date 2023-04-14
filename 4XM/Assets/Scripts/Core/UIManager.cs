@@ -175,6 +175,11 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
         }
 
+        public void ShowHexView(WorldHex hex, WorldUnit unit = null)
+        {
+            gamePanel.GetComponent<GamePanel>().ShowHexView(hex, unit);
+        }
+
         public void ShowOverlay(GameObject target, float offset, bool placementOverlay)
         {
             overlayPanel.EnableOverlayPrompt(target, offset, placementOverlay);

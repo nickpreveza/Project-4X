@@ -188,6 +188,11 @@ namespace SignedInitiative
             return sessionPlayers[index];
         }
 
+        public int GetPlayerIndex(Player player)
+        {
+            return Array.IndexOf(sessionPlayers, player);
+        }
+
         public Color GetPlayerColor(int index)
         {
             return sessionPlayers[index].playerColor;

@@ -8,7 +8,8 @@ public class WorldHex : MonoBehaviour
     //calculated as Column * numberOfRows + row 
     public int hexIdentifier;
 
-    public Hex hex;
+    public Hex hexData;
+    public CityData cityData;
     public GameObject hexGameObject;
     TextMesh debugText;
     Wiggler wiggler;
@@ -16,6 +17,8 @@ public class WorldHex : MonoBehaviour
     public Transform unitParent;
     public Transform resourceParent;
     [SerializeField] GameObject hexHighlight;
+    [SerializeField] GameObject cityGameObject;
+    public WorldHex parentCity;
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
@@ -60,9 +63,9 @@ public class WorldHex : MonoBehaviour
 
     public void SetData(int column, int row, TileType newType, bool setElevationFromType)
     {
-        hex.SetData(column, row);
+        hexData.SetData(column, row);
         hexIdentifier = column * MapManager.Instance.mapRows + row;
-        hex.type = newType;
+        hexData.type = newType;
         if (setElevationFromType)
         {
             SetElevationFromType();
@@ -70,7 +73,7 @@ public class WorldHex : MonoBehaviour
     }
     public void SetElevationFromType()
     {
-        hex.Elevation = MapManager.Instance.GetElevationFromType(hex.type);
+        hexData.Elevation = MapManager.Instance.GetElevationFromType(hexData.type);
     }
     public void UpdateVisuals(bool isForced = false) //better name, this updates a lot more
     {
@@ -89,16 +92,16 @@ public class WorldHex : MonoBehaviour
 
         for (int i = 0; i < HexOrganizerTool.Instance.regions.Length; i++)
         {
-            if (hex.Elevation <= HexOrganizerTool.Instance.regions[i].height)
+            if (hexData.Elevation <= HexOrganizerTool.Instance.regions[i].height)
             {
                 newType = HexOrganizerTool.Instance.regions[i].type;
                 break;
             }
         }
 
-        if (newType != hex.type)
+        if (newType != hexData.type)
         {
-            hex.type = newType;
+            hexData.type = newType;
             UpdateVisualObject();
         }
         else
@@ -120,11 +123,11 @@ public class WorldHex : MonoBehaviour
 
         if (MapManager.Instance == null)
         {
-            prefabToSpawn = Instantiate(HexOrganizerTool.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+            prefabToSpawn = Instantiate(HexOrganizerTool.Instance.hexVisualPrefabs[(int)hexData.type], transform.GetChild(0));
         }
         else
         {
-            prefabToSpawn = Instantiate(MapManager.Instance.hexVisualPrefabs[(int)hex.type], transform.GetChild(0));
+            prefabToSpawn = Instantiate(MapManager.Instance.hexVisualPrefabs[(int)hexData.type], transform.GetChild(0));
         }
 
         hexGameObject = prefabToSpawn;
@@ -138,32 +141,93 @@ public class WorldHex : MonoBehaviour
     }
     public void UpdatePositionInMap()
     {
-        this.transform.position = hex.PositionFromCamera();
+        this.transform.position = hexData.PositionFromCamera();
     }
 
     public void UnitIn(WorldUnit newUnit)
     {
-        hex.occupied = true;
+        hexData.occupied = true;
         associatedUnit = newUnit;
     }
 
     public void UnitOut(WorldUnit newUnit)
     {
-        hex.occupied = false;
+        hexData.occupied = false;
         associatedUnit = null;
     }
 
-    public void SpawnCity(int playerIndex, GameObject cityPrefab)
+    List<WorldHex> OccupyCityHexes()
     {
-        GameObject obj = Instantiate(cityPrefab, transform);
+        return MapManager.Instance.GetHexesListWithinRadius(this.hexData, cityData.range);
+    }
+
+    public void SpawnCity()
+    {
+        GameObject obj = Instantiate(MapManager.Instance.cityPrefab, transform);
         obj.transform.SetParent(resourceParent);
-        obj.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerByIndex(playerIndex).playerColor;
-        hex.playerOwnerIndex = playerIndex;
-        hex.hasCity = true;
+        cityGameObject = obj;
+        hexData.hasCity = true;
+        cityData = new CityData();
 
-        //TODO: Remove resourced that may have been spawned on Hex
-        //TODO: Filter out of tiles able to have cities;
+        cityData.level = 1;
+        cityData.output = 1;
+        cityData.range = 1;
+        cityData.playerIndex = -1;
+        cityData.cityHexes = OccupyCityHexes();
 
+      
+
+    }
+
+    public void SetAsOccupiedByCity(WorldHex parentCityHex)
+    {
+        parentCity = parentCityHex;
+        hexData.isOwnedByCity = true;
+        hexData.playerOwnerIndex = parentCity.hexData.playerOwnerIndex;
+        this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color =
+            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerColor;
+        //remove this later on
+
+    }
+
+    public void GenerateResources()
+    {
+        if (hexData.hasCity)
+        {
+            Debug.LogError("Tried to generate resource for city Hex");
+            return;
+        }
+        
+        //allocate a resource base on mapmanager chances and surrounded resources
+        //spawn resource
+        //set correct data
+        //GameObject resourceObj = Instantiate(MapManager.Instance.GetResourcePrefab)
+    }
+
+    public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
+    {
+        if (!hexData.hasCity)
+        {
+
+            Debug.LogError("Hed does not have a city");
+            return;
+        }
+
+        cityGameObject.GetComponent<MeshRenderer>().material.color = player.playerColor;
+        hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
+        cityData.playerIndex = hexData.playerOwnerIndex;
+
+        foreach (WorldHex newHex in cityData.cityHexes)
+        {
+            newHex.SetAsOccupiedByCity(this);
+        }
+
+        cityData.availableUnits = player.playerUnitsThatCanBeSpawned;
+
+        if (spawnUnit)
+        {
+
+        }
 
     }
 
@@ -171,14 +235,17 @@ public class WorldHex : MonoBehaviour
     {
         hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
     }
+
     public void Select(int layer)
     {
         if (UnitManager.Instance == null)
         {
+            //This is just for visual prototype feedback testing
             wiggler?.Wiggle();
             return;
         }
 
+        //if a unit is moving 
         if (UnitManager.Instance.movementSelectMode)
         {
             if (UnitManager.Instance.IsHexValidMove(this))
@@ -190,26 +257,31 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
+        //layer sets if the unit or the hex is going to be shown
         switch (layer)
         {
             case 1:
                 
-                if (hex.occupied && associatedUnit != null)
+                if (hexData.occupied && associatedUnit != null)
                 {
                     Debug.Log("This is the Unit layer");
                     associatedUnit.Select();
                     wiggler?.Wiggle();
+                    UIManager.Instance.ShowHexView(this, associatedUnit);
                     return;
                 }
                 else
                 {
+                    //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
                     Debug.Log("Auto-moved to the resource layer");
+                    UIManager.Instance.ShowHexView(this);
                     Select();
                 }
                 break;
             case 2:
                 Debug.Log("This is the resource layer");
                 Select();
+                UIManager.Instance.ShowHexView(this);
                 break;
         }
     }
@@ -231,28 +303,28 @@ public class WorldHex : MonoBehaviour
 
     public void RandomizeVisualElevation()
     {
-        switch (hex.type)
+        switch (hexData.type)
         {
             case TileType.DEEPSEA:
-                hex.rndVisualElevation = Random.Range(-0.5f, -0.5f);
+                hexData.rndVisualElevation = Random.Range(-0.5f, -0.5f);
                 break;
             case TileType.SEA:
-                hex.rndVisualElevation = Random.Range(-0.5f, -0.5f);
+                hexData.rndVisualElevation = Random.Range(-0.5f, -0.5f);
                 break;
             case TileType.SAND:
-                hex.rndVisualElevation = Random.Range(-0.3f, -0.3f);
+                hexData.rndVisualElevation = Random.Range(-0.3f, -0.3f);
                 break;
             case TileType.GRASS:
-                hex.rndVisualElevation = Random.Range(-0.2f, -0.2f);
+                hexData.rndVisualElevation = Random.Range(-0.2f, -0.2f);
                 break;
             case TileType.HILL:
-                hex.rndVisualElevation = Random.Range(-0.1f, -0.1f);
+                hexData.rndVisualElevation = Random.Range(-0.1f, -0.1f);
                 break;
             case TileType.MOUNTAIN:
-                hex.rndVisualElevation = Random.Range(0f, 0f);
+                hexData.rndVisualElevation = Random.Range(0f, 0f);
                 break;
             case TileType.ICE:
-                hex.rndVisualElevation = Random.Range(-.5f, .5f);
+                hexData.rndVisualElevation = Random.Range(-.5f, .5f);
                 break;
 
         }

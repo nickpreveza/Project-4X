@@ -69,7 +69,7 @@ namespace SignedInitiative
         void OnMapGenerated()
         {
             mapGenerated = true;
-            UnitManager.Instance.InitializeUnits();
+            UnitManager.Instance.InitializeStartUnits();
         }
 
         void OnUnitsPlaced()

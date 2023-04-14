@@ -101,16 +101,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe3d7aa22fd4ff49a32e244a95fc1a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hex:
+  hexIdentifier: 0
+  hexData:
     C: 0
     R: 0
     S: 0
     moveCost: 1
-    type: 4
+    type: 0
     requirment: 0
     occupied: 0
+    isOwnedByCity: 0
     hasCity: 0
+    hasResource: 0
+    cityName: 
     playerOwnerIndex: 0
+    resource:
+      name: 
+      compatibleTerrain: 0
+      cost: 0
+      output: 0
+      spawnChanceRate: 0
+      prefab: {fileID: 0}
     Elevation: 0
     Moisture: 0
     rndVisualElevation: 0
@@ -119,6 +130,8 @@ MonoBehaviour:
   unitParent: {fileID: 0}
   resourceParent: {fileID: 0}
   hexHighlight: {fileID: 0}
+  cityGameObject: {fileID: 0}
+  parentCity: {fileID: 0}
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0

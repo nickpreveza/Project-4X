@@ -41,7 +41,7 @@ public class UnitManager : MonoBehaviour
 
   
 
-    public void InitializeUnits()
+    public void InitializeStartUnits()
     {
         foreach(Player player in GameManager.Instance.sessionPlayers)
         {
@@ -51,6 +51,7 @@ public class UnitManager : MonoBehaviour
             }
             else
             {
+                //spanw a unit at the first city of each player
                 SpawnUnitAt(player.index, unitTestPrefab, player.playerCities[0]);
             }
         }
@@ -101,7 +102,7 @@ public class UnitManager : MonoBehaviour
     }
     public void HighlightHexes(WorldHex hexCenter, int range)
     {
-        highlightedHexes = MapManager.Instance.GetHexesWithinRadiusOf(hexCenter.hex, range);
+        highlightedHexes = MapManager.Instance.GetHexesWithinRadiusOf(hexCenter.hexData, range);
 
         foreach (WorldHex hex in highlightedHexes)
         {

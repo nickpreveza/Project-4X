@@ -16,6 +16,8 @@ public class Player
 
     public Color playerColor;
 
+    public List<WorldUnit> playerUnitsThatCanBeSpawned = new List<WorldUnit>();
+
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
     public List<WorldHex> playerBorders = new List<WorldHex>();
@@ -61,6 +63,7 @@ public class Player
     {
         //TODO: Some security checks to make sure this is the correct tile;
         playerCities.Add(cityHex);
+        cityHex.OccupyCityByPlayer(this);
     }
 }
 

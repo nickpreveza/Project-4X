@@ -20,9 +20,14 @@ public class Hex
     public TileType type;
     public TraverseRequirment requirment;
     public bool occupied;
+
+    public bool isOwnedByCity;
     public bool hasCity;
+    public bool hasResource;
     public string cityName;
     public int playerOwnerIndex;
+
+    public Resource resource;
 
     //Data for map generation and in-game effects
     public float Elevation;

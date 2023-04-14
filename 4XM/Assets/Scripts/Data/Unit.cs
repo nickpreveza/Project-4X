@@ -8,6 +8,7 @@ public class Unit
     public int c;
     public int r;
 
+    public string unitName = "defaultUnit";
     public int health = 10;
     public int attack = 5;
 

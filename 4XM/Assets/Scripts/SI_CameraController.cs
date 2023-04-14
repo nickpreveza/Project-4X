@@ -237,7 +237,7 @@ public class SI_CameraController : MonoBehaviour
     {
         autoPanHexIdentifier = hex.hexIdentifier;
         prevCameraPosition = this.transform.position;
-        targetCameraPosition = hex.hex.PositionFromCamera() + cameraOffsetFromPanTarget * (this.transform.position.y / 60);
+        targetCameraPosition = hex.hexData.PositionFromCamera() + cameraOffsetFromPanTarget * (this.transform.position.y / 60);
         targetCameraPosition.y = this.transform.position.y;
         autoMove = true;
     }

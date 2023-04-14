@@ -32,8 +32,8 @@ public class WorldUnit : MonoBehaviour
     {
         data.associatedPlayerIndex = playerIndex;
 
-        data.c = newHex.hex.C;
-        data.r = newHex.hex.R;
+        data.c = newHex.hexData.C;
+        data.r = newHex.hexData.R;
         parentHex = newHex;
         parentHex.UnitIn(this);
 
@@ -50,7 +50,7 @@ public class WorldUnit : MonoBehaviour
 
     public void AutomoveRandomly()
     {
-        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hex, data.range);
+        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, data.range);
 
         if (hexesInRadius.Contains(parentHex))
         {
@@ -107,7 +107,7 @@ public class WorldUnit : MonoBehaviour
     public int MovementCostOfHex(WorldHex hex)
     {
         //TODO: Override movement cost based on unit abilities or stats 
-        return hex.hex.moveCost;
+        return hex.hexData.moveCost;
     }
 
     public float AggregateTurnsToEnterHex(WorldHex hex, float turnsToData)
@@ -121,10 +121,10 @@ public class WorldUnit : MonoBehaviour
 
     public void Move(WorldHex newHex, bool followCamera = false)
     {
-        data.c = newHex.hex.C;
-        data.r = newHex.hex.R;
+        data.c = newHex.hexData.C;
+        data.r = newHex.hexData.R;
 
-        oldPosition = parentHex.hex.PositionFromCamera();
+        oldPosition = parentHex.hexData.PositionFromCamera();
 
         parentHex.UnitOut(this);
 
@@ -135,7 +135,7 @@ public class WorldUnit : MonoBehaviour
 
         data.hasMoved = true;
 
-        newPosition = parentHex.hex.PositionFromCamera();
+        newPosition = parentHex.hexData.PositionFromCamera();
 
         if (Vector3.Distance(oldPosition, newPosition) > 2)
         {

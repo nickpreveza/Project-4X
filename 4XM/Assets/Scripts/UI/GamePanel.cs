@@ -13,6 +13,8 @@ public class GamePanel : UIPanel
     public TextMeshProUGUI devText;
     public Textbox textbox;
 
+    [SerializeField] HexView hexView;
+
     [SerializeField] TextMeshProUGUI playerName;
 
     void Start()
@@ -23,6 +25,8 @@ public class GamePanel : UIPanel
             UIManager.Instance.gamePanel = this.GetComponent<UIPanel>();
             UIManager.Instance.AddPanel(this);
         }
+
+        HideHexView();
         //textbox.EndTextbox();
     }
 
@@ -38,17 +42,15 @@ public class GamePanel : UIPanel
         scoreValue.text = ItemManager.Instance.GetItemAmount("hemppebbles").ToString(); */
     }
 
-    private void Update()
-    {/*
-        if (SI_GameManager.Instance.devMode)
-        {
-            devText.text = "devMode";
-           
-        }
-        else
-        {
-            devText.text = "";
-        }*/
+    public void ShowHexView(WorldHex hex, WorldUnit unit = null)
+    {
+        hexView.gameObject.SetActive(true);
+        hexView.SetData(hex, unit);
+    }
+
+    public void HideHexView()
+    {
+        hexView.gameObject.SetActive(false);
     }
 
     public override void Setup()
