@@ -94,7 +94,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 13.65
+  m_fontSize: 1
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -150,6 +150,8 @@ GameObject:
   - component: {fileID: 9056598548823813422}
   - component: {fileID: 9056598548823813423}
   - component: {fileID: 9056598548823813411}
+  - component: {fileID: 3023362378750055698}
+  - component: {fileID: 3698686316826388919}
   m_Layer: 5
   m_Name: ActionButtonPrefab
   m_TagString: Untagged
@@ -313,3 +315,27 @@ MonoBehaviour:
   selectedColor: {r: 0, g: 0, b: 0, a: 0.14901961}
   hoverColor: {r: 0.075, g: 0.075, b: 0.075, a: 0.20166667}
   clickedColor: {r: 0.125, g: 0.125, b: 0.125, a: 0.23676471}
+--- !u!225 &3023362378750055698
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056598548823813421}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
+--- !u!114 &3698686316826388919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056598548823813421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a14a3b53fc1ac418284ad1665ab34a03, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

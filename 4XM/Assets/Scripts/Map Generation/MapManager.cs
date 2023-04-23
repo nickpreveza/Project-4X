@@ -349,7 +349,7 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < citiesNum; i++)
         {
-            if (hexesWhereCityCanSpawn.Count < 0)
+            if (hexesWhereCityCanSpawn.Count <= 0)
             {
                 Debug.LogWarning("No more availabel spaces where found for citis");
                 break;
@@ -360,7 +360,7 @@ public class MapManager : MonoBehaviour
             worldCities.Add(newCity);
             citiesSpawned++;
             //newCity.OccypyCityTiles();
-            
+            OccupyHexesForCityGeneration(newCity, 3);
         }
 
         foreach(WorldHex generatedCity in worldCities)
@@ -377,7 +377,6 @@ public class MapManager : MonoBehaviour
             
             //walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
             player.AddCity(worldCitiesToAssign[randomCity]);
-            OccupyHexesForCityGeneration(worldCitiesToAssign[randomCity], 2);
             worldCitiesToAssign.RemoveAt(randomCity);
         }
     }
