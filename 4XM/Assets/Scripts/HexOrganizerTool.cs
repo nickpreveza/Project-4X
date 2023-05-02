@@ -53,11 +53,11 @@ public class HexOrganizerTool : MonoBehaviour
 
                 if (ShowCoords)
                 {
-                    newHex.UpdateDebugText(string.Format("{0},{1}", column, row));
+                    //newHex.UpdateDebugText(string.Format("{0},{1}", column, row));
                 }
                 else
                 {
-                    newHex.UpdateDebugText("");
+                   // newHex.UpdateDebugText("");
                 }
 
                 newHex.HideHighlight();

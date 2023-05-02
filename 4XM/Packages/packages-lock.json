@@ -482,6 +482,12 @@
       },
       "url": "https://packages.unity.com"
     },
+    "studio.beardy.grid-layout-group": {
+      "version": "file:C:/Users/NickP/Downloads/BeardyGridLayout-main/BeardyGridLayout-main",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 0,

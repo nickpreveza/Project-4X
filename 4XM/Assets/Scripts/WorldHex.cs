@@ -11,7 +11,6 @@ public class WorldHex : MonoBehaviour
     public Hex hexData;
     public CityData cityData;
     public GameObject hexGameObject;
-    TextMesh debugText;
     Wiggler wiggler;
     [SerializeField] WorldUnit associatedUnit;
     public Transform unitParent;
@@ -19,11 +18,11 @@ public class WorldHex : MonoBehaviour
     [SerializeField] GameObject hexHighlight;
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
+    public CityView cityView;
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
-    //3 - Text mesh (Debug Only)
-    //4 - Hex Highlight
+    //3 - Hex Highlight
 
     Material rimMaterial;
 
@@ -32,8 +31,7 @@ public class WorldHex : MonoBehaviour
         hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
         resourceParent = transform.GetChild(1);
         unitParent = transform.GetChild(2);
-        debugText = transform.GetChild(3).GetComponent<TextMesh>();
-        hexHighlight = transform.GetChild(4).gameObject;
+        hexHighlight = transform.GetChild(3).gameObject;
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
         RandomizeVisualElevation();
     }
@@ -134,11 +132,6 @@ public class WorldHex : MonoBehaviour
         RandomizeVisualElevation();
     }
 
-    public void UpdateDebugText(string newText)
-    {
-        debugText = transform.GetChild(3).GetComponent<TextMesh>();
-        debugText.text = newText;
-    }
     public void UpdatePositionInMap()
     {
         this.transform.position = hexData.PositionFromCamera();
@@ -161,7 +154,7 @@ public class WorldHex : MonoBehaviour
         return MapManager.Instance.GetHexesListWithinRadius(this.hexData, cityData.range);
     }
 
-    public void SpawnCity()
+    public void SpawnCity(string newName)
     {
         GameObject obj = Instantiate(MapManager.Instance.cityPrefab, transform);
         obj.transform.SetParent(resourceParent);
@@ -169,15 +162,118 @@ public class WorldHex : MonoBehaviour
         hexData.hasCity = true;
         cityData = new CityData();
 
+        cityData.cityName = newName;
         cityData.level = 1;
         cityData.output = 1;
         cityData.range = 1;
         cityData.playerIndex = -1;
         cityData.cityHexes = OccupyCityHexes();
 
-      
-
+        GameObject worldUI = Instantiate(MapManager.Instance.worldUIprefab, transform);
+        cityView = worldUI.GetComponent<CityView>();
+        cityView.SetData(this);
+        cityView.gameObject.SetActive(false);
     }
+    public IEnumerator RemoveProgressPoint(int value)
+    {
+        for (int i = 0; i < value; i++)
+        {
+            if (cityData.levelPointsToNext > 0)
+            {
+                cityData.levelPointsToNext--;
+                cityView.RemoveProgressUIPoint();
+                yield return new WaitForSeconds(0.3f);
+            }
+            else
+            {
+                if (cityData.negativeLevelPoints >= cityData.targetLevelPoints  || cityData.output == 0)
+                {
+                    continue;
+                }
+
+                cityData.negativeLevelPoints++;
+                cityData.output--;
+
+                cityView.AddNegativeProgressUIPoint();
+                cityView.UpdateData();
+                yield return new WaitForSeconds(0.3f);
+            }
+
+            cityView.UpdateData();
+
+        }
+    }
+    public IEnumerator AddProgressPoint(int value)
+    {
+        for(int i = 0; i < value; i++)
+        {
+            if (cityData.negativeLevelPoints > 0)
+            {
+                cityData.negativeLevelPoints--;
+                cityView.RemoveProgressUIPoint();
+                cityData.output++;
+                cityView.UpdateData();
+                yield return new WaitForSeconds(0.3f);
+                
+                continue;
+            }
+    
+            cityData.levelPointsToNext++;
+
+            if (cityData.levelPointsToNext >= cityData.targetLevelPoints)
+            {
+                cityView.AddProgressUIPoint();
+                yield return new WaitForSeconds(0.3f);
+
+                cityData.level++;
+                cityData.targetLevelPoints = cityData.level + 1;
+                cityData.levelPointsToNext = 0;
+                cityData.output++;
+                cityView.AddLevelUIPoint();
+                cityView.RemoveAllProgressPoints();
+                cityView.UpdateData();
+                yield return new WaitForSeconds(0.3f);
+            }
+            else
+            {
+                cityView.AddProgressUIPoint();
+                yield return new WaitForSeconds(0.3f);
+            }
+        }
+
+        cityView.UpdateData();
+        
+    }
+
+    void AddLevelPoint(int points)
+    {
+        StartCoroutine(AddProgressPoint(points));
+    }
+
+    void RemoveLevelPoint(int points)
+    {
+        StartCoroutine(RemoveProgressPoint(points));
+    }
+
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            if (hexData.cityHasBeenClaimed)
+            {
+                AddLevelPoint(1);
+            }
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            if (hexData.cityHasBeenClaimed)
+            {
+                RemoveLevelPoint(1);
+            }
+        }
+    }
+
 
     public void SetAsOccupiedByCity(WorldHex parentCityHex)
     {
@@ -215,6 +311,7 @@ public class WorldHex : MonoBehaviour
 
         cityGameObject.GetComponent<MeshRenderer>().material.color = player.playerColor;
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
+        hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
 
         foreach (WorldHex newHex in cityData.cityHexes)
@@ -223,7 +320,12 @@ public class WorldHex : MonoBehaviour
         }
 
         cityData.availableUnits = player.playerUnitsThatCanBeSpawned;
+        cityView.gameObject.SetActive(true);
 
+
+        cityView.UpdateData();
+        cityView.InitialLevelSetup();
+        
         if (spawnUnit)
         {
 
@@ -233,7 +335,7 @@ public class WorldHex : MonoBehaviour
 
     public void Deselect()
     {
-        hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
+       // hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
     }
 
     public void Select(int layer)

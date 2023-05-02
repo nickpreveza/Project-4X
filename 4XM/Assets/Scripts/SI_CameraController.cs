@@ -608,7 +608,14 @@ public class SI_CameraController : MonoBehaviour
     {
         if (newTile == selectedTile)
         {
-            layerAccessor = 2;
+            if (layerAccessor == 1)
+            {
+                layerAccessor = 2;
+            }
+            else if (layerAccessor == 2)
+            {
+                layerAccessor = 1;
+            }
         }
         else
         {
@@ -617,7 +624,7 @@ public class SI_CameraController : MonoBehaviour
 
         if (selectedTile != null)
         {
-           // selectedTile.Deselect();
+           selectedTile.Deselect();
         }
         
         selectedTile = newTile;

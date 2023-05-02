@@ -12,7 +12,6 @@ public class MapManager : MonoBehaviour
     public int mapColumns;
     public int citiesNum; //maybe this should be a variable based on mapsize 
 
-    public bool ShowCoords;
     public bool useNewMapGeneration;
     [Header("New Simple Map Generation")]
     public int numContinents = 2;
@@ -49,7 +48,32 @@ public class MapManager : MonoBehaviour
     public List<WorldHex> hexesWhereCityCanSpawn = new List<WorldHex>();
     public List<WorldHex> worldCities = new List<WorldHex>();
 
-    public Resource[] hexResources; 
+    public Resource[] hexResources;
+
+    public string[] cityNames = new string[] {
+    "Bamery", 
+    "Ochepsa",
+    "Edosgend",
+    "Pihsea",
+    "Vleuver",
+    "Osrery",
+    "Yhok",
+    "Hurg",
+    "Acomond",
+    "Ocksas",
+    "Crietsa",
+    "Yreford",
+    "Krehledo",
+    "Vruelwell",
+    "Keburn",
+    "Oprey",
+    "Grose",
+    "Sheley",
+    "Odonsea",
+    "Ingate"};
+
+    List<string> availableCityNames = new List<string>();
+    public GameObject worldUIprefab;
     //octaves 7
     //Persistence = 0.391
     //Lacunarity = 2;
@@ -70,6 +94,7 @@ public class MapManager : MonoBehaviour
         }
 
         falloffMap = FalloffGenerator.GenerateFallofMap(mapRows, mapColumns);
+        availableCityNames = new List<string>(cityNames);
     }
 
     private void OnValidate()
@@ -142,15 +167,6 @@ public class MapManager : MonoBehaviour
                     GameObject prefab = hexBasePrefab;
                     GameObject spawnedObject = Instantiate(prefab, tileParent.transform);
                     WorldHex tile = spawnedObject.GetComponent<WorldHex>();
-
-                    if (ShowCoords)
-                    {
-                        tile.UpdateDebugText(string.Format("{0},{1}", column, row));
-                    }
-                    else
-                    {
-                        tile.UpdateDebugText("");
-                    }
                    
                     tile.hexData.SetData(column, row);
 
@@ -264,14 +280,6 @@ public class MapManager : MonoBehaviour
 
                     WorldHex tile = spawnedObject.GetComponent<WorldHex>();
 
-                    if (ShowCoords)
-                    {
-                        tile.UpdateDebugText(string.Format("{0},{1}", column, row));
-                    }
-                    else
-                    {
-                        tile.UpdateDebugText("");
-                    }
                     tile.SetData(column, row, regionMap[row * mapRows + column], true);
                     spawnedObject.transform.position = tile.hexData.Position();
                     spawnedObject.transform.SetParent(tileParent.transform);
@@ -356,7 +364,10 @@ public class MapManager : MonoBehaviour
             }
             int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
             WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
-            newCity.SpawnCity();
+            int cityNameIndex = (Random.Range(0, availableCityNames.Count));
+            string cityName = availableCityNames[cityNameIndex];
+            availableCityNames.RemoveAt(cityNameIndex);
+            newCity.SpawnCity(cityName);
             worldCities.Add(newCity);
             citiesSpawned++;
             //newCity.OccypyCityTiles();

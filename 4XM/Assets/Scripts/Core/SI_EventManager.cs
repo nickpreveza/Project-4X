@@ -21,7 +21,6 @@ public class SI_EventManager : MonoBehaviour
 
     public event Action<int> onTurnEnded;
 
-
     //Camera
     public event Action<int> onAutopanCompleted; //int = WorldHex.hexIdentifier 
 

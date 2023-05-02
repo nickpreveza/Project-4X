@@ -41,7 +41,7 @@ public class HexView : MonoBehaviour
         {
             if (hex.hexData.hasCity)
             {
-                hexName.text = hex.hexData.cityName;
+                hexName.text = hex.cityData.cityName;
 
                 GenerateUnitButtons();
             }

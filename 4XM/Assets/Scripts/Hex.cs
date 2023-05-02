@@ -23,8 +23,8 @@ public class Hex
 
     public bool isOwnedByCity;
     public bool hasCity;
+    public bool cityHasBeenClaimed;
     public bool hasResource;
-    public string cityName;
     public int playerOwnerIndex;
 
     public Resource resource;

@@ -4,7 +4,14 @@ using UnityEngine;
 
 public class CityData
 {
-    public int level = 0;
+    public string cityName;
+
+    public int level = 1;
+    public int targetLevelPoints = 2;
+    public int levelPointsToNext = 0;
+
+    public int negativeLevelPoints = 0;
+
     public int playerIndex;
     public List<WorldUnit> availableUnits = new List<WorldUnit>();
     public int range;
@@ -12,5 +19,4 @@ public class CityData
 
     public int output;
     public List<WorldHex> cityHexes = new List<WorldHex>();
-
 }
