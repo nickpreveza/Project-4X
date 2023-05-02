@@ -12,7 +12,7 @@ public class WorldHex : MonoBehaviour
     public CityData cityData;
     public GameObject hexGameObject;
     Wiggler wiggler;
-    [SerializeField] WorldUnit associatedUnit;
+    public WorldUnit associatedUnit;
     public Transform unitParent;
     public Transform resourceParent;
     [SerializeField] GameObject hexHighlight;
@@ -205,6 +205,10 @@ public class WorldHex : MonoBehaviour
     }
     public IEnumerator AddProgressPoint(int value)
     {
+        if (value == 0)
+        {
+            yield break;
+        }
         for(int i = 0; i < value; i++)
         {
             if (cityData.negativeLevelPoints > 0)
@@ -274,6 +278,13 @@ public class WorldHex : MonoBehaviour
         }
     }
 
+    public void HarvestResource()
+    {
+        GameObject resourceObj = resourceParent.GetChild(0).gameObject;
+        Destroy(resourceObj);
+        parentCity.AddLevelPoint(MapManager.Instance.hexResources[hexData.resourceIndex].output);
+        hexData.hasResource = false;
+    }
 
     public void SetAsOccupiedByCity(WorldHex parentCityHex)
     {
@@ -286,14 +297,17 @@ public class WorldHex : MonoBehaviour
 
     }
 
-    public void GenerateResources()
+    public void GenerateResource(Resource selectedResource, int resourceIndex)
     {
         if (hexData.hasCity)
         {
             Debug.LogError("Tried to generate resource for city Hex");
             return;
         }
-        
+
+        GameObject obj = Instantiate(selectedResource.prefab, resourceParent);
+        hexData.hasResource = true;
+        hexData.resourceIndex = resourceIndex;
         //allocate a resource base on mapmanager chances and surrounded resources
         //spawn resource
         //set correct data
@@ -333,9 +347,15 @@ public class WorldHex : MonoBehaviour
 
     }
 
+    public void OccupyCityFromEnemy()
+    {
+        //TODO: slightly different from occupycitybyplayer because it doesn't set up its level
+    }
+
     public void Deselect()
     {
-       // hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
+        // hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
+        UIManager.Instance.HideHexView();
     }
 
     public void Select(int layer)
@@ -370,6 +390,7 @@ public class WorldHex : MonoBehaviour
                     associatedUnit.Select();
                     wiggler?.Wiggle();
                     UIManager.Instance.ShowHexView(this, associatedUnit);
+                    SI_CameraController.Instance.layerAccessor = 1;
                     return;
                 }
                 else
@@ -377,6 +398,7 @@ public class WorldHex : MonoBehaviour
                     //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
                     Debug.Log("Auto-moved to the resource layer");
                     UIManager.Instance.ShowHexView(this);
+                    SI_CameraController.Instance.layerAccessor = 2;
                     Select();
                 }
                 break;
@@ -384,6 +406,7 @@ public class WorldHex : MonoBehaviour
                 Debug.Log("This is the resource layer");
                 Select();
                 UIManager.Instance.ShowHexView(this);
+                SI_CameraController.Instance.layerAccessor = 2;
                 break;
         }
     }

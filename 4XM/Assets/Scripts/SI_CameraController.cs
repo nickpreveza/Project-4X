@@ -38,7 +38,7 @@ public class SI_CameraController : MonoBehaviour
     [SerializeField] float timeToRegisterHold;
 
     bool tapValid;
-    int layerAccessor;
+    public int layerAccessor;
 
 
     [SerializeField] float internalMapHeight;
@@ -606,27 +606,20 @@ public class SI_CameraController : MonoBehaviour
 
     void SelectTile(WorldHex newTile)
     {
+        int previousLayer = layerAccessor;
+        layerAccessor = 1;
+
         if (newTile == selectedTile)
         {
-            if (layerAccessor == 1)
+            if (previousLayer == 2)
             {
-                layerAccessor = 2;
+                selectedTile.Deselect();
+                return;
             }
-            else if (layerAccessor == 2)
-            {
-                layerAccessor = 1;
-            }
-        }
-        else
-        {
-            layerAccessor = 1;
-        }
 
-        if (selectedTile != null)
-        {
-           selectedTile.Deselect();
+            layerAccessor = 2;
         }
-        
+    
         selectedTile = newTile;
 
         if (selectedTile != null)

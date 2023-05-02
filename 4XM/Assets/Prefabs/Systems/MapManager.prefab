@@ -47,7 +47,6 @@ MonoBehaviour:
   mapRows: 32
   mapColumns: 32
   citiesNum: 10
-  ShowCoords: 0
   useNewMapGeneration: 0
   numContinents: 2
   continentSpacing: 20
@@ -62,42 +61,25 @@ MonoBehaviour:
   regions:
   - type: 0
     height: -1
-    resources: []
   - type: 1
     height: 0.1
-    resources: []
   - type: 2
     height: 0.3
-    resources:
-    - name: Fish
-      prefab: {fileID: 0}
   - type: 3
     height: 0.4
-    resources:
-    - name: Palm
-      prefab: {fileID: 0}
   - type: 4
     height: 0.6
-    resources:
-    - name: Fruit
-      prefab: {fileID: 0}
-    - name: Tree
-      prefab: {fileID: 0}
   - type: 5
     height: 0.8
-    resources:
-    - name: 
-      prefab: {fileID: 0}
   - type: 6
     height: 0.9
-    resources: []
   tileParent: {fileID: 0}
   hexBasePrefab: {fileID: 4283572920935952471, guid: 1ef965df57d649f468ccff87fb43604e,
     type: 3}
   hexVisualPrefabs:
   - {fileID: 6777993680153919561, guid: 2a33bc3c6aacccd4b9ddea4c3d464f61, type: 3}
-  - {fileID: 6796946291012872061, guid: 4a4fd60b89cee854e900f39cbf9c7a71, type: 3}
-  - {fileID: 8673928421755131038, guid: b98ad5b35939253489ff554dab22fc8e, type: 3}
+  - {fileID: 9004857094778249697, guid: 7ace27dc036eb4bceb47daad8185c786, type: 3}
+  - {fileID: 9004857094778249697, guid: 32100aad2ce3b4665bab4a2dab79f0fe, type: 3}
   - {fileID: 9216348200091701431, guid: 5780865a23cfcba489a45304a61ea666, type: 3}
   - {fileID: 9004857094778249697, guid: c8d2d790f26fcd448b26e992249b9061, type: 3}
   - {fileID: 7945852626180814377, guid: 72ff3f8e667d1d747a7c3e2773770553, type: 3}
@@ -9996,3 +9978,79 @@ MonoBehaviour:
   useFalloff: 1
   hexesWhereCityCanSpawn: []
   worldCities: []
+  hexResources:
+  - resourceName: Fruit
+    type: 0
+    cost: 2
+    output: 1
+    spawnChanceRate: 0.3
+    prefab: {fileID: 3004191609962716706, guid: 9773f3b6ecc6d4d17b27107f299b3f2f,
+      type: 3}
+  - resourceName: Forest
+    type: 1
+    cost: 2
+    output: 1
+    spawnChanceRate: 0.3
+    prefab: {fileID: 1408089770241075203, guid: a0ba5a2c4ecb94188a4859c8afac6730,
+      type: 3}
+  - resourceName: Animal
+    type: 2
+    cost: 2
+    output: 1
+    spawnChanceRate: 0.5
+    prefab: {fileID: 7896384858549804202, guid: f116450366c0b4ec4850254c45297839,
+      type: 3}
+  - resourceName: Farm
+    type: 5
+    cost: 5
+    output: 2
+    spawnChanceRate: 0.5
+    prefab: {fileID: 7204963003714441147, guid: 55417d6b9fe23422e8b542810557f684,
+      type: 3}
+  - resourceName: Mine
+    type: 3
+    cost: 5
+    output: 2
+    spawnChanceRate: 0.5
+    prefab: {fileID: 1104415093595829196, guid: 0b8b84c6a5a2f4652a996790b9248975,
+      type: 3}
+  - resourceName: Fish
+    type: 4
+    cost: 2
+    output: 1
+    spawnChanceRate: 0.2
+    prefab: {fileID: 7896384858549804202, guid: f116450366c0b4ec4850254c45297839,
+      type: 3}
+  cityNames:
+  - Bamery
+  - Ochepsa
+  - Edosgend
+  - Pihsea
+  - Vleuver
+  - Osrery
+  - Yhok
+  - Hurg
+  - Acomond
+  - Ocksas
+  - Crietsa
+  - Yreford
+  - Krehledo
+  - Vruelwell
+  - Keburn
+  - Oprey
+  - Grose
+  - Sheley
+  - Odonsea
+  - Ingate
+  worldUIprefab: {fileID: 5099913411745414140, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+    type: 3}
+  oceanResources: []
+  grassResources: []
+  hillResources: []
+  mountainResources:
+  - resourceName: 
+    type: 0
+    cost: 0
+    output: 0
+    spawnChanceRate: 0
+    prefab: {fileID: 0}

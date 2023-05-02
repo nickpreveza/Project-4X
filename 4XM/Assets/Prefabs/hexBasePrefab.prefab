@@ -111,11 +111,19 @@ MonoBehaviour:
     occupied: 0
     isOwnedByCity: 0
     hasCity: 0
+    cityHasBeenClaimed: 0
     hasResource: 0
-    playerOwnerIndex: 0
+    playerOwnerIndex: -1
+    hexResource:
+      resourceName: 
+      type: 0
+      cost: 0
+      output: 0
+      spawnChanceRate: 0
+      prefab: {fileID: 0}
     resource:
-      name: 
-      compatibleTerrain: 0
+      resourceName: 
+      type: 0
       cost: 0
       output: 0
       spawnChanceRate: 0
@@ -130,6 +138,7 @@ MonoBehaviour:
   hexHighlight: {fileID: 0}
   cityGameObject: {fileID: 0}
   parentCity: {fileID: 0}
+  cityView: {fileID: 0}
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0

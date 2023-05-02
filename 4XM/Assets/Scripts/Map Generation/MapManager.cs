@@ -80,6 +80,11 @@ public class MapManager : MonoBehaviour
     //Noise Scale  = 50;
 
     //move these out 
+    public List<Resource> oceanResources = new List<Resource>();
+    public List<Resource> grassResources = new List<Resource>();
+    public List<Resource> hillResources = new List<Resource>();
+    public List<Resource> mountainResources = new List<Resource>();
+
 
 
     void Awake()
@@ -288,26 +293,62 @@ public class MapManager : MonoBehaviour
 
                     mapTiles.Add(tile);
 
+                    //resources cheat sheet 
+                    // 0 - Fruit
+                    // 1 - Forest 
+                    // 2 - Animal
+                    // 3 - Farm
+                    // 4 - Mine
+                    // 5- Fish
+                    
                     //filter the hexes into lists for other uses 
                     switch (tile.hexData.type)
                     {
                         case TileType.DEEPSEA:
                             break;
                         case TileType.SEA:
+                            if (Random.Range(0f,1f) < hexResources[5].spawnChanceRate)
+                            {
+                                tile.GenerateResource(hexResources[5], 5);
+                            }
                             break;
                         case TileType.SAND:
+                            if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
+                            {
+                                tile.GenerateResource(hexResources[0], 0);
+                            }
                             hexesWhereCityCanSpawn.Add(tile);
                             walkableTiles.Add(tile);
                             break;
                         case TileType.GRASS:
+                            if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
+                            {
+                                tile.GenerateResource(hexResources[0], 0);
+                            }
                             walkableTiles.Add(tile);
                             hexesWhereCityCanSpawn.Add(tile);
                             break;
                         case TileType.HILL:
+                            if (Random.Range(0f, 1f) < hexResources[3].spawnChanceRate)
+                            {
+                                if (Random.Range(0f, 1f) < 0.5)
+                                {
+                                    tile.GenerateResource(hexResources[3], 3);
+                                }
+                                else
+                                {
+                                    tile.GenerateResource(hexResources[1], 1);
+                                }
+                               
+                            }
                             walkableTiles.Add(tile);
                             hexesWhereCityCanSpawn.Add(tile);
                             break;
                         case TileType.MOUNTAIN:
+                            if (Random.Range(0f, 1f) < hexResources[4].spawnChanceRate)
+                            {
+                                tile.GenerateResource(hexResources[4], 4);
+                            }
                             break;
                         case TileType.ICE:
                             break;
@@ -364,6 +405,7 @@ public class MapManager : MonoBehaviour
             }
             int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
             WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
+           // GenerateResources(newCity);
             int cityNameIndex = (Random.Range(0, availableCityNames.Count));
             string cityName = availableCityNames[cityNameIndex];
             availableCityNames.RemoveAt(cityNameIndex);
@@ -404,7 +446,7 @@ public class MapManager : MonoBehaviour
 
         foreach(WorldHex hex in cityHexes)
         {
-            hex.GenerateResources();
+            //hex.GenerateResources();
         }
 
     }
@@ -550,8 +592,8 @@ public struct TerrainType
 [System.Serializable]
 public struct Resource
 {
-    public string name;
-    public TileType compatibleTerrain;
+    public string resourceName;
+    public ResourceType type;
 
     public int cost;
     public int output;
@@ -571,6 +613,16 @@ public enum TileType
     GRASS = 4,
     HILL = 5,
     MOUNTAIN = 6
+}
+
+public enum ResourceType
+{
+    FRUIT = 0,
+    FOREST = 1,
+    ANIMAL = 2,
+    MINE = 3,
+    FISH = 4,
+    FARM = 5,
 }
 
 

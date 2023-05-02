@@ -220,6 +220,11 @@ namespace SignedInitiative
         public void LocalEndTurn()
         {
             activePlayer.EndTurn();
+            foreach(WorldHex city in activePlayer.playerCities)
+            {
+                AddStars(city.cityData.output);
+            }
+
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 
             activePlayerIndex++;
@@ -235,6 +240,8 @@ namespace SignedInitiative
         public void EndTurn(Player player)
         {
             //TODO: Stuff about ending turn and checkign movement;
+
+
             activePlayerIndex++;
             if (activePlayerIndex >= sessionPlayers.Length)
             {
@@ -258,6 +265,21 @@ namespace SignedInitiative
         {
             data.hbscore += amount;
             UIManager.Instance.UpdateHUD();
+        }
+
+        public void RemoveStars(int amount)
+        {
+            if (amount > activePlayer.stars)
+            {
+                Debug.LogError("Not enough stars but nothing stopped it. You broke the economy");
+            }
+
+            activePlayer.stars -= amount;
+        }
+
+        public void AddStars(int amount)
+        {
+            activePlayer.stars += amount;
         }
 
         public void LoadGame()

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using SignedInitiative;
 
 public class HexView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI hexName;
+    [SerializeField] TextMeshProUGUI hexDescription;
     [SerializeField] Image hexAvatar;
 
     [SerializeField] Transform horizontalScrollParent;
@@ -36,6 +38,10 @@ public class HexView : MonoBehaviour
         if (isUnitView)
         {
             hexName.text = newUnit.data.unitName;
+            if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
+            {
+                GenerateCityCaptureButton();
+            }
         }
         else
         {
@@ -43,13 +49,44 @@ public class HexView : MonoBehaviour
             {
                 hexName.text = hex.cityData.cityName;
 
-                GenerateUnitButtons();
+                if (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                {
+                    GenerateUnitButtons();
+                }
             }
             else
             {
-                hexName.text = SetName(hex.hexData.type);
+                string newHexName = SetName(hex.hexData.type);
+                if (hex.hexData.hasResource)
+                {
+                    newHexName += " ," + MapManager.Instance.hexResources[hex.hexData.resourceIndex].resourceName;
+                }
 
-                GenerateResourceButtons();
+                hexName.text = newHexName;
+                hexDescription.text = "This tile really has nothing on top";
+
+                if (hex.hexData.isOwnedByCity && (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex))
+                {
+                    if (hex.hexData.hasResource)
+                    {
+                        hexDescription.text = "Harvest this resource to upgrade your city";
+                        GenerateResourceButtons();
+                    }
+                  
+                }
+                else
+                {
+                    if (hex.hexData.hasResource)
+                    {
+                        hexDescription.text = "This resource is outside of your empire's borders";
+                    }
+                    else
+                    {
+                        hexDescription.text = "This tile really has nothing on top";
+                    }
+                   
+                }
+               
 
             }
         }
@@ -59,12 +96,24 @@ public class HexView : MonoBehaviour
     void GenerateUnitButtons()
     {
        // List<Units>
-
+        foreach(WorldUnit unit in GameManager.Instance.activePlayer.playerUnitsThatCanBeSpawned)
+        {
+            GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+            obj.GetComponent<ActionButton>().SetDataForUnitSpawn(this, hex, unit);
+        }
     }
 
     void GenerateResourceButtons()
     {
+        //update this to support multiple resources on the same hex
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForResource(this, hex);
+    }
 
+    public void GenerateCityCaptureButton()
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForCityCapture(this, hex);
     }
 
 

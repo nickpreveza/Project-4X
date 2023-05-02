@@ -180,6 +180,11 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().ShowHexView(hex, unit);
         }
 
+        public void HideHexView()
+        {
+            gamePanel.GetComponent<GamePanel>().HideHexView();
+        }
+
         public void ShowOverlay(GameObject target, float offset, bool placementOverlay)
         {
             overlayPanel.EnableOverlayPrompt(target, offset, placementOverlay);
