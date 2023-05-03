@@ -16,7 +16,10 @@ public class GamePanel : UIPanel
     [SerializeField] HexView hexView;
 
     [SerializeField] TextMeshProUGUI playerName;
-
+    [SerializeField] GameObject overviewPanel;
+    [SerializeField] GameObject researchPanel;
+    
+    ResearchViewHandler research;
     void Start()
     {
       
@@ -25,11 +28,43 @@ public class GamePanel : UIPanel
             UIManager.Instance.gamePanel = this.GetComponent<UIPanel>();
             UIManager.Instance.AddPanel(this);
         }
-
+        research = researchPanel.GetComponent<ResearchViewHandler>();
+        researchPanel.SetActive(false);
+        overviewPanel.SetActive(false);
         HideHexView();
         //textbox.EndTextbox();
     }
 
+    public void UpdateResearchPanel()
+    {
+        research.UpdateResearchButtons();
+    }
+
+    public void ToggleOverviewPanel()
+    {
+        if (overviewPanel.activeSelf)
+        {
+            overviewPanel.SetActive(false);
+        }
+        else
+        {
+            overviewPanel.SetActive(true);
+            researchPanel.SetActive(false);
+        }
+    }
+
+    public void ToggleResearchPanel()
+    {
+        if (researchPanel.activeSelf)
+        {
+            researchPanel.SetActive(false);
+        }
+        else
+        {
+            researchPanel.SetActive(true);
+            overviewPanel.SetActive(false);
+        }
+    }
     public void UpdateCurrencies()
     {
         playerName.text = GameManager.Instance.activePlayer.name;

@@ -6,16 +6,20 @@ using SignedInitiative;
 [System.Serializable]
 public class Player
 {
+    //Setup
     public PlayerType type;
+    public AbilityTree abilities;
     public int index;
     public string name;
+    public Color playerColor;
 
+    //Score Related
     public int score;
     public int turnCount;
     public int stars;
 
-    public Color playerColor;
-
+   
+    //Game Editable Data
     public List<WorldUnit> playerUnitsThatCanBeSpawned = new List<WorldUnit>();
 
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
@@ -26,6 +30,10 @@ public class Player
 
     List<Turn> turns = new List<Turn>();
 
+    public WorldUnit lastMovedUnit;
+
+    public List<PlayerAbilityData> abilityDatabase = new List<PlayerAbilityData>();
+    public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
     public void StartTurn()
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();
@@ -41,7 +49,16 @@ public class Player
         }
     }
 
-  
+    public void BuyAbility(Abilities ability)
+    {
+        abilityDictionary[ability].canBePurchased = true;
+       abilityDictionary[ability].hasBeenPurchased = true;
+    }
+
+    public void UnlockAbility(Abilities ability)
+    {
+        abilityDictionary[ability].canBePurchased = true;
+    }
 
     public void EndTurn()
     {

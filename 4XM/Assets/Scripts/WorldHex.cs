@@ -51,6 +51,14 @@ public class WorldHex : MonoBehaviour
     {
         if (hexHighlight != null)
         hexHighlight?.SetActive(true);
+
+        //TODO: Visualize combat or blocked tiles.
+        if (hexData.occupied)
+        {
+
+        }
+
+
     }
 
     public void HideHighlight()
@@ -358,7 +366,7 @@ public class WorldHex : MonoBehaviour
         UIManager.Instance.HideHexView();
     }
 
-    public void Select(int layer)
+    public void Select(bool isRepeat)
     {
         if (UnitManager.Instance == null)
         {
@@ -370,45 +378,46 @@ public class WorldHex : MonoBehaviour
         //if a unit is moving 
         if (UnitManager.Instance.movementSelectMode)
         {
-            if (UnitManager.Instance.IsHexValidMove(this))
+            if (UnitManager.Instance.startHex == this)
+            {
+                UnitManager.Instance.CancelMoveMode();
+            }
+            else if (UnitManager.Instance.IsHexValidMove(this))
             {
                 UnitManager.Instance.MoveTargetTile(this);
+
+                wiggler?.Wiggle();
+                return;
             }
-           
-            wiggler?.Wiggle();
-            return;
         }
 
-        //layer sets if the unit or the hex is going to be shown
-        switch (layer)
+        if (!isRepeat)
         {
-            case 1:
-                
-                if (hexData.occupied && associatedUnit != null)
-                {
-                    Debug.Log("This is the Unit layer");
-                    associatedUnit.Select();
-                    wiggler?.Wiggle();
-                    UIManager.Instance.ShowHexView(this, associatedUnit);
-                    SI_CameraController.Instance.layerAccessor = 1;
-                    return;
-                }
-                else
-                {
-                    //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
-                    Debug.Log("Auto-moved to the resource layer");
-                    UIManager.Instance.ShowHexView(this);
-                    SI_CameraController.Instance.layerAccessor = 2;
-                    Select();
-                }
-                break;
-            case 2:
-                Debug.Log("This is the resource layer");
-                Select();
+            if (hexData.occupied && associatedUnit != null)
+            {
+                Debug.Log("This is the Unit layer");
+                associatedUnit.Select();
+                wiggler?.Wiggle();
+                UIManager.Instance.ShowHexView(this, associatedUnit);
+                return;
+            }
+            else
+            {
+                //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
+                Debug.Log("Auto-moved to the resource layer");
+                SI_CameraController.Instance.repeatSelection = true;
                 UIManager.Instance.ShowHexView(this);
-                SI_CameraController.Instance.layerAccessor = 2;
-                break;
+                Select();
+            }
         }
+        else
+        {
+            SI_CameraController.Instance.repeatSelection = true;
+            Debug.Log("This is the resource layer");
+            Select();
+            UIManager.Instance.ShowHexView(this);
+        }
+
     }
 
     public void Select()

@@ -14,13 +14,12 @@ public class Unit
     public int attack = 5;
 
     public int range = 1;
+
+    //Abilties
     public bool canAttackAfterMove;
     public bool canMoveAfterAttack;
 
-    public bool canBeInteracted;
-    public bool movePossible;
-    public bool attackPossible;
-
+    public bool isInteractable;
     public bool hasMoved;
     public bool hasAttacked;
 
@@ -33,20 +32,6 @@ public class Unit
     {
         hasMoved = false;
         hasAttacked = false;
-        canBeInteracted = true; 
+        isInteractable = true;
     }
-
-    public void ValidateOptions()
-    {
-        if (!hasMoved)
-        {
-            movePossible = true;
-        }
-
-        if (!hasAttacked)
-        {
-            attackPossible = true;
-        }
-    }
-
 }

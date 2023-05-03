@@ -37,12 +37,22 @@ public class WorldUnit : MonoBehaviour
         parentHex = newHex;
         parentHex.UnitIn(this);
 
-        SetInteractable();
+        SetInteractable(true, true);
     }
 
-    public void SetInteractable()
+    public void SetInteractable(bool resetWalk, bool resetAttack)
     {
-        data.canBeInteracted = true;
+        data.isInteractable = true;
+
+        if (resetWalk)
+        {
+            data.hasMoved = false;
+        }
+
+        if (resetAttack)
+        {
+            data.hasAttacked = false;
+        }
         //TODO: move these to a different function to have better control over visuals
         this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
         this.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerColor(data.associatedPlayerIndex);
@@ -65,7 +75,7 @@ public class WorldUnit : MonoBehaviour
     {
         data.hasMoved = true;
         data.hasAttacked = true;
-        data.canBeInteracted = false;
+        data.isInteractable = false;
 
         //TODO: Set to a transparent shader
         this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
@@ -84,7 +94,7 @@ public class WorldUnit : MonoBehaviour
     {
         if (data.associatedPlayerIndex == playerIndex)
         {
-            data.ValidateOptions();
+            SetInteractable(true, true);
         }
     }
     public void SetHexPath(WorldHex[] newHexPath)
@@ -155,6 +165,8 @@ public class WorldUnit : MonoBehaviour
         {
             SI_CameraController.Instance.PanToHex(newHex);
         }
+
+        GameManager.Instance.sessionPlayers[data.associatedPlayerIndex].lastMovedUnit = this;
         //wiggler?.AnimatedMove(newPosition);
 
         //check if attack possibled
@@ -180,7 +192,7 @@ public class WorldUnit : MonoBehaviour
         wiggler?.Wiggle();
         if (GameManager.Instance.activePlayer.index == data.associatedPlayerIndex)
         {
-            if (data.canBeInteracted)
+            if (data.isInteractable)
             {
                 UnitManager.Instance.SelectUnit(this);
             }

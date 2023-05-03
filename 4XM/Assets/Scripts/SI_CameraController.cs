@@ -31,15 +31,13 @@ public class SI_CameraController : MonoBehaviour
     Vector2 internalBoundsX;
     Vector2 internalBoundsY;
 
-    WorldHex selectedTile;
+    public WorldHex selectedTile;
 
     [SerializeField] float internalTouchTimer;
     [SerializeField] float timeToRegisterTap;
     [SerializeField] float timeToRegisterHold;
 
     bool tapValid;
-    public int layerAccessor;
-
 
     [SerializeField] float internalMapHeight;
     [SerializeField] float internalMapWidth;
@@ -85,6 +83,7 @@ public class SI_CameraController : MonoBehaviour
    [SerializeField] float maxHeight = 20;
 
     int autoPanHexIdentifier;
+    public bool repeatSelection;
     void Awake()
     {
         if (Instance == null)
@@ -155,14 +154,18 @@ public class SI_CameraController : MonoBehaviour
         //clean up any UI associated with the mode
     }
 
+    private bool IsPointerOverUIObject()
+    {
+        PointerEventData eventDataCurrentPosition = new PointerEventData(EventSystem.current);
+        eventDataCurrentPosition.position = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        List<RaycastResult> results = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventDataCurrentPosition, results);
+        return results.Count > 0;
+
+    }
+
     void Update_DetectModeStart()
     {
-        if (EventSystem.current.IsPointerOverGameObject())
-        {
-            //Debug.Log("Mouse over gameobject");
-            //cancel out if over UI
-           // return;
-        }
         if (Input.GetMouseButtonDown(0))
         {
            // Update_CurrentFunction;
@@ -178,8 +181,8 @@ public class SI_CameraController : MonoBehaviour
             }
 
             Update_Tap();
-            //Click here
-            //do something else
+            
+           
         }
         else if (Input.GetMouseButton(0) && (Vector3.Distance(Input.mousePosition, lastMousePosition) > mouseDragThreshold))
         {
@@ -209,7 +212,7 @@ public class SI_CameraController : MonoBehaviour
 
         if (touchControls)
         {
-            TouchInput();
+            //TouchInput();
         }
 
         if (keyboardControls)
@@ -261,168 +264,173 @@ public class SI_CameraController : MonoBehaviour
         this.transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
     }
 
-    //Needs rework
-    void TouchInput()
-    {
-        if (Input.touchCount > 0)
-        {
-            if (Input.touches[0].phase == TouchPhase.Began)
-            {
-                internalTouchTimer = 0f;
-                tapValid = true;
-            }
+    /*
+     void TouchInput()
+     {
+         if (Input.touchCount > 0)
+         {
+             if (Input.touches[0].phase == TouchPhase.Began)
+             {
+                 internalTouchTimer = 0f;
+                 tapValid = true;
+             }
 
-            internalTouchTimer += 1 * Time.deltaTime;
+             internalTouchTimer += 1 * Time.deltaTime;
 
-            if (Input.touchCount < 2 && Input.GetTouch(0).phase == TouchPhase.Moved)
-            {
-                tapValid = false;
+             if (Input.touchCount < 2 && Input.GetTouch(0).phase == TouchPhase.Moved)
+             {
+                 tapValid = false;
 
-                if (outOfBoundsX || outOfBoundsY)
-                {
-                    editedScrollSpeed = scrollSpeed * 0.1f;
-                }
-                else
-                {
-                    editedScrollSpeed = scrollSpeed;
-                }
-                touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-                transform.Translate(-touchDeltaPosition.x * editedScrollSpeed, -(touchDeltaPosition.y * editedScrollSpeed), 0);
-                editedPosition = transform.position;
-                editedPosition.z = -5;
-                transform.position = editedPosition;
-                if (transform.position.x > internalBoundsX.y || transform.position.x < internalBoundsX.x)
-                {
-                    outOfBoundsX = true;
-                }
+                 if (outOfBoundsX || outOfBoundsY)
+                 {
+                     editedScrollSpeed = scrollSpeed * 0.1f;
+                 }
+                 else
+                 {
+                     editedScrollSpeed = scrollSpeed;
+                 }
+                 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+                 transform.Translate(-touchDeltaPosition.x * editedScrollSpeed, -(touchDeltaPosition.y * editedScrollSpeed), 0);
+                 editedPosition = transform.position;
+                 editedPosition.z = -5;
+                 transform.position = editedPosition;
+                 if (transform.position.x > internalBoundsX.y || transform.position.x < internalBoundsX.x)
+                 {
+                     outOfBoundsX = true;
+                 }
 
-                if (transform.position.y > internalBoundsY.y || transform.position.y < internalBoundsY.x)
-                {
-                    outOfBoundsY = true;
-                }
-                //editedPosition.x = Mathf.Clamp(transform.position.x, xBounds.x, xBounds.y);
-                // editedPosition.y = Mathf.Clamp(transform.position.y, yBounds.x, yBounds.y);
-                //editedPosition.z = 0;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
-                //transform.position = editedPosition;
-            }
+                 if (transform.position.y > internalBoundsY.y || transform.position.y < internalBoundsY.x)
+                 {
+                     outOfBoundsY = true;
+                 }
+                 //editedPosition.x = Mathf.Clamp(transform.position.x, xBounds.x, xBounds.y);
+                 // editedPosition.y = Mathf.Clamp(transform.position.y, yBounds.x, yBounds.y);
+                 //editedPosition.z = 0;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
+                 //transform.position = editedPosition;
+             }
 
-            if (Input.touchCount == 2)
-            {
-                tapValid = false;
+             if (Input.touchCount == 2)
+             {
+                 tapValid = false;
 
-                Touch touchZero = Input.GetTouch(0);
-                Touch touchOne = Input.GetTouch(1);
+                 Touch touchZero = Input.GetTouch(0);
+                 Touch touchOne = Input.GetTouch(1);
 
-                touchZeroDelta = touchZero.position - touchZero.deltaPosition;
-                touchOneDelta = touchOne.position - touchOne.deltaPosition;
+                 touchZeroDelta = touchZero.position - touchZero.deltaPosition;
+                 touchOneDelta = touchOne.position - touchOne.deltaPosition;
 
-                prevTouchDeltaMag = (touchZeroDelta - touchOneDelta).magnitude;
-                touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-                deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+                 prevTouchDeltaMag = (touchZeroDelta - touchOneDelta).magnitude;
+                 touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+                 deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-                mainCamera.orthographicSize += deltaMagnitudeDiff * zoomSpeed;
-                mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
-                playerCamera.orthographicSize = mainCamera.orthographicSize;
+                 mainCamera.orthographicSize += deltaMagnitudeDiff * zoomSpeed;
+                 mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
+                 playerCamera.orthographicSize = mainCamera.orthographicSize;
 
-            }
+             }
 
-            if (Input.touches[0].phase == TouchPhase.Ended && tapValid)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-                RaycastHit hit;
+             if (Input.touches[0].phase == TouchPhase.Ended && tapValid)
+             {
+                 Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
+                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.transform.CompareTag("Tile"))
-                    {
-                        if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
-                        {
-                            WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
-                            SelectTile(newTile);
-                            return;
-                        }
+                 if (Physics.Raycast(ray, out hit))
+                 {
+                     if (hit.transform.CompareTag("Tile"))
+                     {
+                         if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
+                         {
+                             WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
+                             SelectTile(newTile);
+                             return;
+                         }
 
-                        if (internalTouchTimer >= timeToRegisterHold)
-                        {
-                            selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
-                            if (selectedTile != null)
-                            {
-                                selectedTile.Hold();
-                                internalTouchTimer = 0;
-                                tapValid = false;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        layerAccessor = 0;
-                        selectedTile = null;
-                    }
-                }
-                else
-                {
-                    layerAccessor = 0;
-                    selectedTile = null;
-                }
-            }
+                         if (internalTouchTimer >= timeToRegisterHold)
+                         {
+                             selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
+                             if (selectedTile != null)
+                             {
+                                 selectedTile.Hold();
+                                 internalTouchTimer = 0;
+                                 tapValid = false;
+                             }
+                         }
+                     }
+                     else
+                     {
+                         layerAccessor = 0;
+                         selectedTile = null;
+                     }
+                 }
+                 else
+                 {
+                     layerAccessor = 0;
+                     selectedTile = null;
+                 }
+             }
 
-            if (Input.touches[0].phase == TouchPhase.Stationary && tapValid)
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-                RaycastHit hit;
+             if (Input.touches[0].phase == TouchPhase.Stationary && tapValid)
+             {
+                 Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
+                 RaycastHit hit;
 
-                if (Physics.Raycast(ray, out hit))
-                {
-                    if (hit.transform.CompareTag("Tile"))
-                    {
-                        if (internalTouchTimer >= timeToRegisterHold)
-                        {
-                            selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
-                            if (selectedTile != null)
-                            {
-                                selectedTile.Hold();
-                                internalTouchTimer = 0;
-                                tapValid = false;
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                 if (Physics.Raycast(ray, out hit))
+                 {
+                     if (hit.transform.CompareTag("Tile"))
+                     {
+                         if (internalTouchTimer >= timeToRegisterHold)
+                         {
+                             selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
+                             if (selectedTile != null)
+                             {
+                                 selectedTile.Hold();
+                                 internalTouchTimer = 0;
+                                 tapValid = false;
+                             }
+                         }
+                     }
+                 }
+             }
+         }
 
-        if (Input.touchCount == 0 && !movingBack)
-        {
-            if (outOfBoundsX || outOfBoundsY)
-            {
-                movingBack = true;
-                //StartCoroutine(ReturnToBounds());
-            }
-        }
+         if (Input.touchCount == 0 && !movingBack)
+         {
+             if (outOfBoundsX || outOfBoundsY)
+             {
+                 movingBack = true;
+                 //StartCoroutine(ReturnToBounds());
+             }
+         }
 
-        if (Input.touchCount == 0 && movingBack)
-        {
-            editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
-            editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
-            editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
+         if (Input.touchCount == 0 && movingBack)
+         {
+             editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
+             editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
+             editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
 
-            var step = scrollSpeed * Time.deltaTime;
-            transform.position = editedPosition; //= editedPosition;
+             var step = scrollSpeed * Time.deltaTime;
+             transform.position = editedPosition; //= editedPosition;
 
-            if (transform.position == editedPosition)
-            {
-                movingBack = false;
-                outOfBoundsY = false;
-                outOfBoundsX = false;
-            }
+             if (transform.position == editedPosition)
+             {
+                 movingBack = false;
+                 outOfBoundsY = false;
+                 outOfBoundsX = false;
+             }
 
-        }
-    }
-
+         }
+     } */
     void Update_Tap()
     {
+        if (IsPointerOverUIObject())
+        {
+            return;
+        }
+
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
-
+        
+        
         if (Physics.Raycast(ray, out hit, Mathf.Infinity, interactableMask))
         {
             if (hit.transform.CompareTag("Tile"))
@@ -434,13 +442,11 @@ public class SI_CameraController : MonoBehaviour
             }
             else
             {
-                layerAccessor = 0;
                 selectedTile = null;
             }
         }
         else
         {
-            layerAccessor = 0;
             selectedTile = null;
         }
 
@@ -474,7 +480,7 @@ public class SI_CameraController : MonoBehaviour
     void Update_CameraDrag()
     {
         //Dragging
-        if (Input.GetMouseButtonUp(0))
+        if (Input.GetMouseButtonUp(0) ||  IsPointerOverUIObject())
         {
             CancelUpdateFunction();
             return;
@@ -606,25 +612,26 @@ public class SI_CameraController : MonoBehaviour
 
     void SelectTile(WorldHex newTile)
     {
-        int previousLayer = layerAccessor;
-        layerAccessor = 1;
-
         if (newTile == selectedTile)
         {
-            if (previousLayer == 2)
+            if (repeatSelection)
             {
+                repeatSelection = false;
                 selectedTile.Deselect();
+                selectedTile = null;
                 return;
             }
+            repeatSelection = true;
+            selectedTile.Select(repeatSelection);
+            internalTouchTimer = 0;
+            tapValid = false;
 
-            layerAccessor = 2;
         }
-    
-        selectedTile = newTile;
-
-        if (selectedTile != null)
+        else
         {
-            selectedTile.Select(layerAccessor);
+            repeatSelection = false;
+            selectedTile = newTile;
+            selectedTile.Select(repeatSelection);
             internalTouchTimer = 0;
             tapValid = false;
         }

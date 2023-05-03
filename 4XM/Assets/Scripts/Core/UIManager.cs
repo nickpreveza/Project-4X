@@ -25,12 +25,19 @@ namespace SignedInitiative
         public bool menuActive;
         public bool popupActive;
         public bool subPanelActive;
+
         public Color affordableColor;
         public Color unaffordableColor;
         public Color itemUIselected;
         public Color itemUIDeselected;
         public Color skillbarEnabled;
         public Color skillbarDisabled;
+
+        public Color researchPurchased;
+        public Color researchLocked;
+        public Color researchAvailable;
+        public Color researchUnavailable;
+
         bool canLoad;
 
         [SerializeField] Button loadGame;
@@ -183,6 +190,11 @@ namespace SignedInitiative
         public void HideHexView()
         {
             gamePanel.GetComponent<GamePanel>().HideHexView();
+        }
+
+        public void UpdateResourcePanel()
+        {
+            gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
         }
 
         public void ShowOverlay(GameObject target, float offset, bool placementOverlay)

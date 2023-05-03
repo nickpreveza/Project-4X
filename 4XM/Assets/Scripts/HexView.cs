@@ -38,6 +38,19 @@ public class HexView : MonoBehaviour
         if (isUnitView)
         {
             hexName.text = newUnit.data.unitName;
+
+            if (newUnit.data.associatedPlayerIndex == GameManager.Instance.activePlayer.index)
+            {
+                if (newUnit.data.hasMoved)
+                {
+                    hexDescription.text = "This unit does not have any actions left";
+                }
+                else
+                {
+                    hexDescription.text = "This unit has available actions";
+                }
+            }
+           
             if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
             {
                 GenerateCityCaptureButton();

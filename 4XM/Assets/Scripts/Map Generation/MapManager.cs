@@ -477,7 +477,7 @@ public class MapManager : MonoBehaviour
 
     void ElevateArea(int q, int r, int radius, float elevation)
     {
-        Hex centerHex = GetHexAt(q, r).hexData;
+        WorldHex centerHex = GetHexAt(q, r);
         WorldHex[] areaHexes = GetHexesWithinRadiusOf(centerHex, radius);
 
         foreach(WorldHex worldHex in areaHexes)
@@ -487,12 +487,12 @@ public class MapManager : MonoBehaviour
                 worldHex.hexData.Elevation = 0;
             }
             //we need a way to find distance from center hex 
-            worldHex.hexData.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex, worldHex.hexData) / radius);
+            worldHex.hexData.Elevation += elevation * Mathf.Lerp(1f, 0.25f, Hex.Distance(mapColumns, mapRows, centerHex.hexData, worldHex.hexData) / radius);
             worldHex.UpdateVisuals();
         }
     }
 
-    public WorldHex[] GetHexesWithinRadiusOf(Hex centerHex, int range)
+    public WorldHex[] GetHexesWithinRadiusOf(WorldHex centerHex, int range)
     {
         List<WorldHex> results = new List<WorldHex>();
 
@@ -500,8 +500,13 @@ public class MapManager : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
             {
-                results.Add(GetHexAt(centerHex.C + dx, centerHex.R + dy));
+                results.Add(GetHexAt(centerHex.hexData.C + dx, centerHex.hexData.R + dy));
             }
+        }
+
+        if (results.Contains(centerHex))
+        {
+            results.Remove(centerHex);
         }
 
         return results.ToArray();

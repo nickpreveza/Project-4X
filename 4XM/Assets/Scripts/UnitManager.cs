@@ -20,7 +20,7 @@ public class UnitManager : MonoBehaviour
     public Material highlightHex;
 
     WorldHex[] highlightedHexes;
-
+    public WorldHex startHex;
     bool waitingForCameraPan;
     void Awake()
     {
@@ -102,10 +102,14 @@ public class UnitManager : MonoBehaviour
     }
     public void HighlightHexes(WorldHex hexCenter, int range)
     {
-        highlightedHexes = MapManager.Instance.GetHexesWithinRadiusOf(hexCenter.hexData, range);
-
+        startHex = hexCenter;
+        highlightedHexes = MapManager.Instance.GetHexesWithinRadiusOf(hexCenter, range);
         foreach (WorldHex hex in highlightedHexes)
         {
+            if (hex == hexCenter)
+            {
+                continue;
+            }
             hex.ShowHighlight();
         }
     }
@@ -143,6 +147,11 @@ public class UnitManager : MonoBehaviour
         GameManager.Instance.LocalEndTurn();
     }
 
+    public void CancelMoveMode()
+    {
+        ClearHighlightedHexes();
+        movementSelectMode = false;
+    }
 
     public bool IsHexValidMove(WorldHex hex)
     {

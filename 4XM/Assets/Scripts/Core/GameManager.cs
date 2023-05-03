@@ -46,6 +46,11 @@ namespace SignedInitiative
         public Player[] sessionPlayers;
         public Player activePlayer;
         public int activePlayerIndex;
+
+        public List<AbilityData> abilities = new List<AbilityData>();
+        public Dictionary<Abilities, AbilityData> abilitiesDictionary = new Dictionary<Abilities, AbilityData>();
+        //[HideInInspector]
+        List<PlayerAbilityData> defaultAbilityDatabase = new List<PlayerAbilityData>();
         void Awake()
         {
             if (Instance == null)
@@ -200,12 +205,48 @@ namespace SignedInitiative
 
         public void StartGame()
         {
+            GenerateAbilitiesDictionary();
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
             gameReady = true;
             activePlayerIndex = 0;
+            GenerateAbilitiesDatabaseForPlayers();
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
             UIManager.Instance.OpenGamePanel();
         }
+
+        void GenerateAbilitiesDatabaseForPlayers()
+        {
+            defaultAbilityDatabase.Clear();
+
+            foreach (AbilityData ability in abilities)
+            {
+                PlayerAbilityData newAbility = new PlayerAbilityData();
+
+                newAbility.abilityID = ability.abilityID;
+                newAbility.hasBeenPurchased = false;
+                newAbility.canBePurchased = ability.isUnlocked;
+
+                defaultAbilityDatabase.Add(newAbility);
+            }
+
+            foreach(Player player in sessionPlayers)
+            {
+                player.abilityDatabase = new List<PlayerAbilityData>(defaultAbilityDatabase);
+                foreach (PlayerAbilityData data in player.abilityDatabase)
+                {
+                    player.abilityDictionary.Add(data.abilityID, data);
+                }
+            }
+        }
+
+        void GenerateAbilitiesDictionary()
+        {
+            foreach(AbilityData ability in abilities)
+            {
+                abilitiesDictionary.Add(ability.abilityID, ability);
+            }
+        }
+
         public void SetActivePlayer(Player player)
         {
             activePlayer = player;
@@ -213,8 +254,17 @@ namespace SignedInitiative
 
             activePlayer.StartTurn();
             UIManager.Instance.UpdateHUD();
-            SI_CameraController.Instance.PanToHex(player.playerCities[0]);
-            //TODO: Update map and stuff
+
+            if (activePlayer.lastMovedUnit != null)
+            {
+                SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
+            }
+            else
+            {
+                SI_CameraController.Instance.PanToHex(player.playerCities[0]);
+            }
+            
+            //TODO: Update fog map and stuff
         }
 
         public void LocalEndTurn()
@@ -225,8 +275,11 @@ namespace SignedInitiative
                 AddStars(city.cityData.output);
             }
 
+            UIManager.Instance.HideHexView();
+
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 
+            SI_CameraController.Instance.selectedTile = null;
             activePlayerIndex++;
             if (activePlayerIndex >= sessionPlayers.Length)
             {
@@ -355,6 +408,15 @@ namespace SignedInitiative
             }
         }
 
+        public int GetCurrentPlayerStars()
+        {
+            return activePlayer.stars;
+        }
+
+        public int GetAbilityCost(Abilities ability)
+        {
+            return abilitiesDictionary[ability].abilityCost;
+        }
         public void GameOver()
         {
             playerDead = true;
@@ -367,6 +429,91 @@ namespace SignedInitiative
             SceneManager.LoadScene(scene.name);
         }
 
+        public void UnlockAbility(Abilities ability)
+        {
+            Abilities abilityToUnlock = abilitiesDictionary[ability].abilityToUnlock;
+
+            if (ability != Abilities.NONE)
+            {
+                activePlayer.BuyAbility(ability);
+            }
+
+            if (abilityToUnlock != Abilities.NONE)
+            {
+                activePlayer.UnlockAbility(abilityToUnlock);
+            }
+           
+            switch (ability)
+            {
+                case Abilities.Climbing:
+                    activePlayer.abilities.travelMountain = true;
+                    break;
+                case Abilities.Mining:
+                    activePlayer.abilities.mineHarvest = true;
+                    break;
+                case Abilities.Shields:
+                    activePlayer.abilities.unitShield = true;
+                    break;
+                case Abilities.Smithery:
+                    activePlayer.abilities.smitheryBuilding = true;
+                    break;
+
+                case Abilities.Roads:
+                    activePlayer.abilities.roads = true;
+                    break;
+                case Abilities.Trader:
+                    activePlayer.abilities.unitTrader = true;
+                    break;
+                case Abilities.Diplomat:
+                    activePlayer.abilities.unitDiplomat = true;
+                    break;
+                case Abilities.Guild:
+                    activePlayer.abilities.merchantBuilding = true;
+                    break;
+
+                case Abilities.Forestry:
+                    activePlayer.abilities.forestHarvest = true;
+                    break;
+                case Abilities.Husbandry:
+                    activePlayer.abilities.animalHarvest = true;
+                    break;
+                case Abilities.Engineering:
+                    activePlayer.abilities.unitTrebucet = true;
+                    break;
+                case Abilities.Papermill:
+                    activePlayer.abilities.forestBuilding = true;
+                    break;
+
+                case Abilities.Fishing:
+                    activePlayer.abilities.fishHarvest = true;
+                    break;
+                case Abilities.Port:
+                    activePlayer.abilities.portBuilding = true;
+                    break;
+                case Abilities.OpenSea:
+                    activePlayer.abilities.travelOcean = true;
+                    break;
+                case Abilities.FishFarm:
+                    activePlayer.abilities.fishBuilding = true;
+                    break;
+
+                case Abilities.Harvest:
+                    activePlayer.abilities.fruitHarvest = true;
+                    break;
+                case Abilities.Horserider:
+                    activePlayer.abilities.unitHorserider = true;
+                    break;
+                case Abilities.Farming:
+                    activePlayer.abilities.farmHarvest = true;
+                    break;
+                case Abilities.Windmill:
+                    activePlayer.abilities.farmBuilding = true;
+                    break;
+            }
+
+            UIManager.Instance.UpdateResourcePanel();
+            
+        }
     }
 }
 
