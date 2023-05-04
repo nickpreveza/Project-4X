@@ -120,6 +120,7 @@ public class WorldUnit : MonoBehaviour
         data.r = newHex.hexData.R;
         parentHex = newHex;
         parentHex.UnitIn(this);
+        data.SetupData();
 
         if (exhaustOnSpawn)
         {
@@ -127,7 +128,7 @@ public class WorldUnit : MonoBehaviour
             data.currentTurnAttackCharges = 0;
             data.hasMoved = true;
             data.hasAttacked = true;
-            data.ValidateRemainingActions();
+            ValidateRemainigActions();
         }
         else
         {
@@ -141,17 +142,25 @@ public class WorldUnit : MonoBehaviour
         data.hasMoved = true;
         data.currentTurnActionPoints = 0;
         data.currentTurnAttackCharges = 0;
-        data.ValidateRemainingActions();
+        ValidateRemainigActions();
     }
 
     public void ActionReset()
     {
         data.hasMoved = false;
         data.hasAttacked = false;
+        data.hasNoValidHexesInRange = false; //aslo probably update this if any unit dies or something
+
         data.currentTurnActionPoints = data.actionPoints;
         data.currentTurnAttackCharges = data.attackCharges;
 
-        data.ValidateRemainingActions();
+        ValidateRemainigActions();
+    }
+
+    public void ValidateRemainigActions()
+    {
+        data.ValidateRemainigUnitActions(parentHex.HasAvailableUnitActions());
+        VisualUpdate();
     }
 
     public void VisualUpdate()
@@ -211,7 +220,58 @@ public class WorldUnit : MonoBehaviour
         return 0f;
     }
 
-    public void Move(WorldHex newHex, bool followCamera = false)
+    public bool AttemptToKill(int value)
+    {
+        data.currentHealth -= value;
+
+        if (data.currentHealth <= 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void Heal(int value)
+    {
+        data.currentHealth = Mathf.Clamp(value, 0, data.health);
+    }
+    public void Attack(WorldHex enemyHex)
+    {
+        WorldUnit enemyUnit = enemyHex.associatedUnit;
+        data.attackCharges--;
+        data.hasAttacked = true;
+
+        if (enemyUnit.AttemptToKill(data.attack))
+        {
+            enemyUnit.Death();
+            Move(enemyHex, true);
+        }
+        else
+        {
+            if (AttemptToKill(enemyUnit.data.attack))
+            {
+                Death();
+                return;
+            }
+
+            UnitManager.Instance.SelectUnit(this);
+        }
+    }
+
+    void Death()
+    {
+        GameManager.Instance.sessionPlayers[data.associatedPlayerIndex].playerUnits.Remove(this);
+        //Do some cool UI stuff
+        //Maybe particles
+        //def sound
+        parentHex.UnitOut(this);
+        Destroy(this.gameObject);
+    }
+
+    public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
         data.c = newHex.hexData.C;
         data.r = newHex.hexData.R;
@@ -225,9 +285,16 @@ public class WorldUnit : MonoBehaviour
        
         transform.SetParent(parentHex.unitParent);
 
-        data.hasMoved = true;
-        data.currentTurnActionPoints--;
-       
+        if (!afterAttack)
+        {
+            data.hasMoved = true;
+            data.currentTurnActionPoints--;
+
+            if (data.setAPToZeroAfterWalk)
+            {
+                data.currentTurnActionPoints = 0;
+            }
+        }
 
         newPosition = parentHex.hexData.PositionFromCamera();
 
@@ -253,17 +320,9 @@ public class WorldUnit : MonoBehaviour
         //wiggler?.AnimatedMove(newPosition);
 
         //check if attack possibled
-        data.ValidateRemainingActions();
+        ValidateRemainigActions();
 
-        if (data.canMove)
-        {
-            UnitManager.Instance.FindWalkableHexes(parentHex, data.range);
-        }
-
-        if (data.canAttack)
-        {
-            UnitManager.Instance.FindAttackableHexes(parentHex, data.range);
-        }
+        UnitManager.Instance.SelectUnit(this);
     }
 
     

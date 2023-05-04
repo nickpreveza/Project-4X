@@ -527,6 +527,29 @@ public class MapManager : MonoBehaviour
         return results;
     }
 
+    public List<WorldHex> GetEnemiesInRange (Hex centerHex, int range)
+    {
+        List<WorldHex> results = new List<WorldHex>();
+
+        for (int dx = -range; dx <= range; dx++)
+        {
+            for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
+            {
+                WorldHex hex = GetHexAt(centerHex.C + dx, centerHex.R + dy);
+                if (hex.hexData.occupied)
+                {
+                    if (!hex.associatedUnit.BelongsToActivePlayer)
+                    {
+                        results.Add(hex);
+                    }
+                }
+               
+            }
+        }
+
+        return results;
+    }
+
 
     public WorldHex GetHexAt(int x, int y)
     {

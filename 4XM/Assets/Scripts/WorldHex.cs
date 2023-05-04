@@ -26,6 +26,25 @@ public class WorldHex : MonoBehaviour
 
     Material rimMaterial;
 
+    public bool HasAvailableUnitActions()
+    {
+        if (hexData.occupied)
+        {
+            if (hexData.playerOwnerIndex != associatedUnit.data.associatedPlayerIndex)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     private void Awake()
     {
         hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
@@ -382,11 +401,18 @@ public class WorldHex : MonoBehaviour
         }
 
         //if a unit is moving 
-        if (UnitManager.Instance.movementSelectMode)
+        if (UnitManager.Instance.hexSelectMode)
         {
             if (UnitManager.Instance.startHex == this)
             {
-                UnitManager.Instance.CancelMoveMode();
+                UnitManager.Instance.ClearHexSelectionMode();
+            }
+            else if (UnitManager.Instance.IsHexValidAttack(this))
+            {
+                UnitManager.Instance.AttackTargetUnitInHex(this);
+
+                wiggler?.Wiggle();
+                return;
             }
             else if (UnitManager.Instance.IsHexValidMove(this))
             {
@@ -397,7 +423,7 @@ public class WorldHex : MonoBehaviour
             }
             else
             {
-                UnitManager.Instance.CancelMoveMode();
+                UnitManager.Instance.ClearHexSelectionMode();
             }
         }
 
@@ -416,6 +442,7 @@ public class WorldHex : MonoBehaviour
                 //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
                 Debug.Log("Auto-moved to the resource layer");
                 SI_CameraController.Instance.repeatSelection = true;
+                UnitManager.Instance.ClearHexSelectionMode();
                 UIManager.Instance.ShowHexView(this);
                 Select();
             }

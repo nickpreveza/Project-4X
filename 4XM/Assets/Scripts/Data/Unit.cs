@@ -13,17 +13,25 @@ public class Unit
     public int cost;
     public int health = 10;
     public int attack = 5;
+    public int defense = 1;
     public int range = 1;
     public int actionPoints = 1;
     public int attackCharges = 1;
 
+    //gameplay affected
+    public int currentHealth;
+    public int currentAttack;
+    public int currentDefense;
+
     //turn resets
     public int currentTurnActionPoints = 1; //related to button actions and movement 
     public int currentTurnAttackCharges = 1; //related only to attacks
-
+    public int enemiesInRange = 0;
+    public bool hasNoValidHexesInRange;
     //Abilties
     public bool canAttackAfterMove;
     public bool canMoveAfterAttack;
+    public bool setAPToZeroAfterWalk;
 
     public bool canMove;
     public bool canAttack;
@@ -37,11 +45,30 @@ public class Unit
     public int movePoints = 1;
     public int movePointsRemaining = 1;
 
-    public void ValidateRemainingActions()
+    public void SetupData()
+    {
+        currentHealth = health;
+        currentAttack = attack;
+        currentDefense = defense;
+    }
+    public void ValidateRemainigUnitActions(bool parentHexHasUnitActions)
     {
         if (currentTurnActionPoints > 0)
         {
-            canMove = true;
+            if (hasNoValidHexesInRange)
+            {
+                canMove = false;
+            }
+            else
+            {
+                canMove = true;
+            }
+
+            if (parentHexHasUnitActions)
+            {
+                canMove = true;
+            }
+           
         }
         else
         {
@@ -50,7 +77,15 @@ public class Unit
 
         if (currentTurnAttackCharges > 0)
         {
-            canAttack = true;
+            if (enemiesInRange > 0)
+            {
+                canAttack = true;
+            }
+            else
+            {
+                canAttack = false;
+            }
+            
         }
         else
         {
@@ -72,12 +107,13 @@ public class Unit
         if (!canAttack && !canMove && currentTurnActionPoints <= 0)
         {
             isInteractable = false;
+
         }
         else
         {
             isInteractable = true;
         }
+
+
     }
-
-
 }

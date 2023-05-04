@@ -9,8 +9,8 @@ public class UnitManager : MonoBehaviour
 
     [SerializeField] GameObject[] unitPrefabs;
 
-    public bool movementSelectMode;
-    public bool attackSelectMode;
+    public bool hexSelectMode;
+
     public WorldUnit selectedUnit;
 
     public GameObject unitTestPrefab;
@@ -98,16 +98,25 @@ public class UnitManager : MonoBehaviour
         {
             if (selectedUnit.CanMove && selectedUnit.CanAttack)
             {
-                movementSelectMode = true;
                 FindActionableHexes(newUnit.parentHex, newUnit.data.range);
             }
             else if (selectedUnit.CanMove && !selectedUnit.CanAttack)
             {
-
+                FindWalkableHexes(newUnit.parentHex, newUnit.data.range);
             }
             else if (!selectedUnit.CanMove && selectedUnit.CanAttack)
             {
+                FindAttackableHexes(newUnit.parentHex, newUnit.data.range);
+            }
 
+            if (selectedUnit.CanMove || selectedUnit.CanAttack)
+            {
+                hexSelectMode = true;
+            }
+
+            if (!selectedUnit.CanMove && !selectedUnit.CanAttack)
+            {
+                hexSelectMode = false;
             }
         }
     }
@@ -137,6 +146,12 @@ public class UnitManager : MonoBehaviour
         else { return false; }
     }
 
+    public bool IsHexValidAttack(WorldHex hex)
+    {
+        if (hexesInAttackRange.Contains(hex)) { return true; }
+        else { return false; }
+    }
+
     public void FindWalkableHexes(WorldHex hexCenter, int range)
     {
         startHex = hexCenter;
@@ -147,11 +162,14 @@ public class UnitManager : MonoBehaviour
             hexesInWalkRange.Remove(hexCenter);
         }
 
+        List<WorldHex> hexesToRemove = new List<WorldHex>();
+
+       
         foreach (WorldHex hex in hexesInWalkRange)
         {
             if (hex.hexData.occupied)
             {
-                hexesInWalkRange.Remove(hex);
+                hexesToRemove.Add(hex);
                 continue;
             }
 
@@ -164,7 +182,7 @@ public class UnitManager : MonoBehaviour
                     }
                     else
                     {
-                        hexesInWalkRange.Remove(hex);
+                        hexesToRemove.Add(hex);
                     }
                     break;
                 case TileType.SEA:
@@ -174,7 +192,7 @@ public class UnitManager : MonoBehaviour
                     }
                     else
                     {
-                        hexesInWalkRange.Remove(hex);
+                        hexesToRemove.Add(hex);
                     }
                     break;
                 case TileType.MOUNTAIN:
@@ -184,40 +202,85 @@ public class UnitManager : MonoBehaviour
                     }
                     else
                     {
-                        hexesInWalkRange.Remove(hex);
+                        hexesToRemove.Add(hex);
                     }
+                    break;
+                case TileType.ICE:
+                    hexesToRemove.Add(hex);
+                    break;
+                case TileType.SAND:
+                case TileType.GRASS:
+                case TileType.HILL:
+                    hex.ShowHighlight(false);
                     break;
             }
         }
+
+        foreach(WorldHex hex in hexesToRemove)
+        {
+            if (hexesInWalkRange.Contains(hex))
+            {
+                hexesInWalkRange.Remove(hex);
+            }
+        }
+
+        if (hexesInWalkRange.Count == 0)
+        {
+            selectedUnit.data.hasNoValidHexesInRange = true;
+            selectedUnit.ValidateRemainigActions();
+        }
+
+
     }
 
     public void FindAttackableHexes(WorldHex hexCenter, int range)
     {
         startHex = hexCenter;
-        hexesInAttackRange = MapManager.Instance.GetHexesListWithinRadius(hexCenter.hexData, range);
+        hexesInAttackRange = MapManager.Instance.GetEnemiesInRange(hexCenter.hexData, range);
+
+        selectedUnit.data.enemiesInRange = hexesInAttackRange.Count;
+        selectedUnit.ValidateRemainigActions();
+
+        if (hexesInAttackRange.Count > 0)
+        {
+            foreach (WorldHex hex in hexesInAttackRange)
+            {
+                hex.ShowHighlight(true);
+            }
+        }
+
+        /*
         if (hexesInAttackRange.Contains(hexCenter))
         {
             hexesInAttackRange.Remove(hexCenter);
         }
 
+        List<WorldHex> hexesToRemove = new List<WorldHex>();
+
         foreach (WorldHex hex in hexesInAttackRange)
         {
             if (!hex.hexData.occupied)
             {
-                hexesInAttackRange.Remove(hex);
+                hexesToRemove.Add(hex);
                 continue;
             }
 
             if (hex.associatedUnit.BelongsToActivePlayer)
             {
-                hexesInAttackRange.Remove(hex);
+                hexesToRemove.Add(hex);
                 continue;
             }
 
             hex.ShowHighlight(true);
         }
 
-        
+        foreach (WorldHex hex in hexesToRemove)
+        {
+            if (hexesInAttackRange.Contains(hex))
+            {
+                hexesInAttackRange.Remove(hex);
+            }
+        }*/
 
     }
     public void FindActionableHexes(WorldHex hexCenter, int range)
@@ -258,16 +321,24 @@ public class UnitManager : MonoBehaviour
 
     
 
-    public void CancelMoveMode()
+    public void ClearHexSelectionMode()
     {
         ClearFoundHexes();
-        movementSelectMode = false;
+        hexSelectMode = false;
     }
 
     public void MoveToTargetHex(WorldHex hex)
     {
         ClearFoundHexes();
+        hexSelectMode = false;
         selectedUnit.Move(hex);
-        movementSelectMode = false;
+        
+    }
+
+    public void AttackTargetUnitInHex(WorldHex hex)
+    {
+        ClearFoundHexes();
+        hexSelectMode = false;
+        selectedUnit.Attack(hex);
     }
 }
