@@ -79,7 +79,7 @@ public class SI_CameraController : MonoBehaviour
 
     Vector3 zoomTemp;
     Vector3 dragTemp;
-
+    Vector3 panTemp;
     Vector3 dir;
     Vector3 lastCameraPosition;
     void Awake()
@@ -216,6 +216,7 @@ public class SI_CameraController : MonoBehaviour
         prevCameraPosition = this.transform.position;
         targetCameraPosition = hex.hexData.PositionFromCamera() + cameraOffsetFromPanTarget * (this.transform.position.y / 60);
         targetCameraPosition.y = this.transform.position.y;
+
         autoMove = true;
     }
 

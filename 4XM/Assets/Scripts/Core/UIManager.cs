@@ -94,6 +94,11 @@ namespace SignedInitiative
             StartCoroutine(ToggleUIPanelEnum(targetPanel, state, fadeGamePanel, delayAmount));
         }
 
+        public void OpenResearchPanel()
+        {
+            gamePanel.GetComponent<GamePanel>().OpenResearchPanel();
+        }
+
         IEnumerator ToggleUIPanelEnum(UIPanel targetPanel, bool state, bool fadeGamePanel = true, float delayAmount = 0.0f)
         {
             yield return new WaitForSeconds(delayAmount);
@@ -149,6 +154,7 @@ namespace SignedInitiative
         public void EndTurn()
         {
             HideHexView();
+            UpdateResourcePanel();
             gamePanel.GetComponent<GamePanel>().HideResearchPanel();
             gamePanel.GetComponent<GamePanel>().HideOverviewPanel();
             //gamePanel.GetComponent<GamePanel>().HideSettingsPanel();

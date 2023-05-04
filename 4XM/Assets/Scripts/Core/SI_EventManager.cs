@@ -26,6 +26,8 @@ public class SI_EventManager : MonoBehaviour
     public event Action<int> onAutopanCompleted; //int = WorldHex.hexIdentifier 
     public event Action<WorldUnit> onUnitMoved;
     public event Action<WorldUnit> onUnitAction;
+
+    public event Action<int> onAbilityUnlocked;
     void Awake()
     {
         if (Instance == null)
@@ -36,6 +38,11 @@ public class SI_EventManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void OnAbilityUnlocked(int playerIndex)
+    {
+        onAbilityUnlocked?.Invoke(playerIndex);
     }
 
     public void OnTransactionMade(int playerIndex)

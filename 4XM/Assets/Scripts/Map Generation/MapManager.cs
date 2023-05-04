@@ -49,6 +49,7 @@ public class MapManager : MonoBehaviour
     public List<WorldHex> worldCities = new List<WorldHex>();
 
     public Resource[] hexResources;
+    public Building[] hexBuildings;
 
     public string[] cityNames = new string[] {
     "Bamery", 
@@ -123,6 +124,112 @@ public class MapManager : MonoBehaviour
         }
     }
 
+        public ResourceType GetBuildingMatchingResourceType(BuildingType type)
+    {
+        switch (type)
+        {
+            case BuildingType.ForestWorked:
+            case BuildingType.FarmWorked:
+            case BuildingType.MineWorked:
+                Debug.LogError("This building type should not ask for matching resource type");
+                return ResourceType.EMPTY;
+            case BuildingType.ForestMaster:
+                return hexBuildings[1].matchingResource;
+            case BuildingType.FarmMaster:
+                return hexBuildings[3].matchingResource;
+            case BuildingType.MineMaster:
+                return hexBuildings[5].matchingResource;
+            case BuildingType.Guild:
+                return hexBuildings[6].matchingResource;
+        }
+
+        Debug.LogError("Building for Building Type was not found");
+        return ResourceType.EMPTY;
+    }
+
+    public Building GetBuildingByType(BuildingType type)
+    {
+        switch (type)
+        {
+            case BuildingType.ForestWorked:
+                return hexBuildings[0];
+            case BuildingType.ForestMaster:
+                return hexBuildings[1];
+
+            case BuildingType.FarmWorked:
+                return hexBuildings[2];
+            case BuildingType.FarmMaster:
+                return hexBuildings[3];
+    
+            case BuildingType.MineWorked:
+                return hexBuildings[4];
+            case BuildingType.MineMaster:
+                return hexBuildings[5];
+
+            case BuildingType.Guild:
+                return hexBuildings[6];
+        }
+
+        Debug.LogError("Building for Building Type was not found");
+        return hexBuildings[0];
+    }
+
+
+    public Resource GetResourceByType(ResourceType type)
+    {
+
+        //resources cheat sheet 
+        // 0 - Fruit
+        // 1 - Forest 
+        // 2 - Animal
+        // 3 - Farm
+        // 4 - Mine
+        // 5- Fish
+
+        switch (type)
+        {
+            case ResourceType.FRUIT:
+                return hexResources[0];
+            case ResourceType.FOREST:
+                return hexResources[1];
+            case ResourceType.ANIMAL:
+                return hexResources[2];
+            case ResourceType.FARM:
+                return hexResources[3];
+            case ResourceType.MINE:
+                return hexResources[4];
+            case ResourceType.FISH:
+                return hexResources[5];
+
+        }
+
+        Debug.LogWarning("Resource type was not found");
+        return hexResources[0];
+    }
+
+    public BuildingType GetBuildingByResourceType(ResourceType type)
+    {
+        switch (type)
+        {
+            case ResourceType.FRUIT:
+            case ResourceType.ANIMAL:
+            case ResourceType.FISH:
+            case ResourceType.EMPTY:
+                Debug.LogWarning("Resource type does not have a matching Building Type");
+                return BuildingType.Empty;
+            case ResourceType.FOREST:
+                return BuildingType.ForestWorked;
+            case ResourceType.FARM:
+                return BuildingType.FarmWorked;
+            case ResourceType.MINE:
+                return BuildingType.MineWorked;
+        }
+
+
+        Debug.LogWarning("Resource type does not have a matching Building Type");
+        return BuildingType.Empty;
+
+    }
     public void UpdateHexVisuals()
     {
         for (int column = 0; column < mapColumns; column++)
@@ -293,13 +400,6 @@ public class MapManager : MonoBehaviour
 
                     mapTiles.Add(tile);
 
-                    //resources cheat sheet 
-                    // 0 - Fruit
-                    // 1 - Forest 
-                    // 2 - Animal
-                    // 3 - Farm
-                    // 4 - Mine
-                    // 5- Fish
                     
                     //filter the hexes into lists for other uses 
                     switch (tile.hexData.type)
@@ -309,13 +409,13 @@ public class MapManager : MonoBehaviour
                         case TileType.SEA:
                             if (Random.Range(0f,1f) < hexResources[5].spawnChanceRate)
                             {
-                                tile.GenerateResource(hexResources[5], 5);
+                                tile.GenerateResource(ResourceType.FISH);
                             }
                             break;
                         case TileType.SAND:
                             if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
                             {
-                                tile.GenerateResource(hexResources[0], 0);
+                                tile.GenerateResource(ResourceType.FRUIT);
                             }
                             hexesWhereCityCanSpawn.Add(tile);
                             walkableTiles.Add(tile);
@@ -323,7 +423,14 @@ public class MapManager : MonoBehaviour
                         case TileType.GRASS:
                             if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
                             {
-                                tile.GenerateResource(hexResources[0], 0);
+                                if (Random.Range(0f, 1f) < 0.4)
+                                {
+                                    tile.GenerateResource(ResourceType.FRUIT);
+                                }
+                                else
+                                {
+                                    tile.GenerateResource(ResourceType.FOREST);
+                                }
                             }
                             walkableTiles.Add(tile);
                             hexesWhereCityCanSpawn.Add(tile);
@@ -333,11 +440,11 @@ public class MapManager : MonoBehaviour
                             {
                                 if (Random.Range(0f, 1f) < 0.5)
                                 {
-                                    tile.GenerateResource(hexResources[3], 3);
+                                    tile.GenerateResource(ResourceType.FOREST);
                                 }
                                 else
                                 {
-                                    tile.GenerateResource(hexResources[1], 1);
+                                    tile.GenerateResource(ResourceType.FARM);
                                 }
                                
                             }
@@ -347,7 +454,7 @@ public class MapManager : MonoBehaviour
                         case TileType.MOUNTAIN:
                             if (Random.Range(0f, 1f) < hexResources[4].spawnChanceRate)
                             {
-                                tile.GenerateResource(hexResources[4], 4);
+                                tile.GenerateResource(ResourceType.MINE);
                             }
                             break;
                         case TileType.ICE:
@@ -360,13 +467,30 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
-       
 
+        FindAdjacentTiles();
         GenerateCities();
 
         SI_EventManager.Instance?.OnCameraMoved();
         SI_EventManager.Instance?.OnMapGenerated();
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
+    }
+
+    void FindAdjacentTiles()
+    {
+        for (int column = 0; column < mapColumns; column++)
+        {
+            for (int row = 0; row < mapRows; row++)
+            {
+                WorldHex hex = hexes[column, row];
+                List<WorldHex> hexesToAdd = GetHexesListWithinRadius(hex.hexData, 1);
+                if (hexesToAdd.Contains(hex))
+                {
+                    hexesToAdd.Remove(hex);
+                }
+                hex.adjacentHexes = hexesToAdd;
+            }
+        }
     }
 
     void OccupyHexesForCityGeneration(WorldHex cityCenter, int range)
@@ -623,6 +747,8 @@ public struct Resource
     public string resourceName;
     public ResourceType type;
 
+    public bool canBeBuild;
+
     public int cost;
     public int output;
 
@@ -630,6 +756,24 @@ public struct Resource
 
     public GameObject prefab;
 }
+
+[System.Serializable]
+public struct Building
+{
+    public string buildingName;
+    public BuildingType type;
+    public BuildingType slaveBuilding;
+    public BuildingType masterBuilding;
+    public ResourceType matchingResource;
+
+    public bool hasLevels;
+
+    public int cost;
+    public int output;
+
+    public GameObject[] levelPrefabs;
+}
+
 
 
 public enum TileType
@@ -651,6 +795,19 @@ public enum ResourceType
     MINE = 3,
     FISH = 4,
     FARM = 5,
+    EMPTY = 6
+}
+
+public enum BuildingType
+{
+    ForestWorked,
+    ForestMaster,
+    FarmWorked,
+    FarmMaster,
+    MineWorked,
+    MineMaster,
+    Guild,
+    Empty,
 }
 
 

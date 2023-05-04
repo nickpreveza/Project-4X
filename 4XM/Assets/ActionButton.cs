@@ -40,19 +40,30 @@ public class ActionButton : MonoBehaviour
             buttonAction.interactable = false;
         }
     }
-    public void SetDataForResource(HexView newHandler, WorldHex newHex)
+    public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable)
     {
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].resourceName;
-        actionCost = MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].cost;
+        buttonName.text = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+        actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).cost;
 
         actionCostText.text = actionCost.ToString();
         //image also here 
-        buttonAction.onClick.AddListener(HarvestResource);
-        CheckIfAffordable();
+
+         if (shouldBeInteracable)
+         {
+            buttonAction.onClick.AddListener(HarvestResource);
+            CheckIfAffordable();
+         }
+        else
+        {
+            buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+            buttonImage.color = UIManager.Instance.unaffordableColor;
+            buttonAction.interactable = true;
+        }
+       
     }
 
     public void SetDataForCityCapture(HexView newHandler, WorldHex newHex, bool isInteractable)
@@ -83,7 +94,7 @@ public class ActionButton : MonoBehaviour
 
     void CheckIfAffordable()
     {
-        if (GameManager.Instance.CanActivePlayerAfford(MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].cost))
+        if (GameManager.Instance.CanActivePlayerAfford(MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).cost))
         {
             buttonImage.color = UIManager.Instance.affordableColor;
             buttonAction.interactable = true;

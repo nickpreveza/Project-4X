@@ -143,6 +143,7 @@ public class WorldUnit : MonoBehaviour
         data.currentTurnActionPoints = 0;
         data.currentTurnAttackCharges = 0;
         ValidateRemainigActions();
+        UIManager.Instance.ShowHexView(this.parentHex, this);
     }
 
     public void ActionReset()
@@ -320,8 +321,8 @@ public class WorldUnit : MonoBehaviour
         //wiggler?.AnimatedMove(newPosition);
 
         //check if attack possibled
-        ValidateRemainigActions();
 
+       
         UnitManager.Instance.SelectUnit(this);
     }
 

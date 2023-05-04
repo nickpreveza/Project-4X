@@ -39,11 +39,21 @@ public class UnitManager : MonoBehaviour
     private void Start()
     {
         SI_EventManager.Instance.onAutopanCompleted += OnAutopanCompletedCallback;
+        SI_EventManager.Instance.onAbilityUnlocked += OnAbilityUnlockUpdate;
     }
 
     public void OnUnitMovedCallback(WorldHex oldHex, WorldHex newHex)
     {
 
+    }
+
+    public void OnAbilityUnlockUpdate(int playerIndex)
+    {
+        if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
+        {
+            if (hexSelectMode)
+            SelectUnit(selectedUnit);
+        }
     }
 
     void OnAutopanCompletedCallback(int hexIdentifier)
@@ -96,18 +106,8 @@ public class UnitManager : MonoBehaviour
 
         if (GameManager.Instance.activePlayer.index == newUnit.data.associatedPlayerIndex)
         {
-            if (selectedUnit.CanMove && selectedUnit.CanAttack)
-            {
-                FindActionableHexes(newUnit.parentHex, newUnit.data.range);
-            }
-            else if (selectedUnit.CanMove && !selectedUnit.CanAttack)
-            {
-                FindWalkableHexes(newUnit.parentHex, newUnit.data.range);
-            }
-            else if (!selectedUnit.CanMove && selectedUnit.CanAttack)
-            {
-                FindAttackableHexes(newUnit.parentHex, newUnit.data.range);
-            }
+            FindActionableHexes(newUnit.parentHex, newUnit.data.range);
+            selectedUnit.ValidateRemainigActions();
 
             if (selectedUnit.CanMove || selectedUnit.CanAttack)
             {
@@ -117,7 +117,10 @@ public class UnitManager : MonoBehaviour
             if (!selectedUnit.CanMove && !selectedUnit.CanAttack)
             {
                 hexSelectMode = false;
+                ClearFoundHexes();
             }
+
+            UIManager.Instance.ShowHexView(newUnit.parentHex, newUnit);
         }
     }
 
@@ -227,13 +230,12 @@ public class UnitManager : MonoBehaviour
         if (hexesInWalkRange.Count == 0)
         {
             selectedUnit.data.hasNoValidHexesInRange = true;
-            selectedUnit.ValidateRemainigActions();
         }
 
 
     }
 
-    public void FindAttackableHexes(WorldHex hexCenter, int range)
+    void FindAttackableHexes(WorldHex hexCenter, int range)
     {
         startHex = hexCenter;
         hexesInAttackRange = MapManager.Instance.GetEnemiesInRange(hexCenter.hexData, range);
@@ -283,7 +285,7 @@ public class UnitManager : MonoBehaviour
         }*/
 
     }
-    public void FindActionableHexes(WorldHex hexCenter, int range)
+    void FindActionableHexes(WorldHex hexCenter, int range)
     {
         FindWalkableHexes(hexCenter, range);
         FindAttackableHexes(hexCenter, range);
@@ -325,6 +327,7 @@ public class UnitManager : MonoBehaviour
     {
         ClearFoundHexes();
         hexSelectMode = false;
+        selectedUnit = null;
     }
 
     public void MoveToTargetHex(WorldHex hex)

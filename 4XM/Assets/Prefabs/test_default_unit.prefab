@@ -114,17 +114,24 @@ MonoBehaviour:
   data:
     c: 0
     r: 0
-    unitName: defaultUnit
+    unitName: Warrior
     cost: 1
     health: 10
     attack: 5
+    defense: 1
     range: 1
-    actionPoints: 3
+    actionPoints: 1
     attackCharges: 2
+    currentHealth: 0
+    currentAttack: 0
+    currentDefense: 0
     currentTurnActionPoints: 1
     currentTurnAttackCharges: 1
+    enemiesInRange: 0
+    hasNoValidHexesInRange: 0
     canAttackAfterMove: 1
     canMoveAfterAttack: 1
+    setAPToZeroAfterWalk: 0
     canMove: 0
     canAttack: 0
     isInteractable: 0

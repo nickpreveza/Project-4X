@@ -19,6 +19,8 @@ public class WorldHex : MonoBehaviour
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
+
+    public List<WorldHex> adjacentHexes = new List<WorldHex>();
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
@@ -290,21 +292,65 @@ public class WorldHex : MonoBehaviour
         StartCoroutine(RemoveProgressPoint(points));
     }
 
-
-    private void Update()
+    public void CreateMasterBuilding(BuildingType type)
     {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
+        if (hexData.hasBuilding)
         {
-            if (hexData.cityHasBeenClaimed)
-            {
-                AddLevelPoint(1);
-            }
+            Debug.Log("Tried to place building on top of building");
+            return;
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+
+        if (hexData.hasResource)
         {
-            if (hexData.cityHasBeenClaimed)
+            Debug.Log("Tried to place building on top of a resource");
+            return;
+        }
+
+        Building building = MapManager.Instance.GetBuildingByType(type);
+
+        hexData.hasBuilding = true;
+        hexData.buildingType = type;
+        hexData.buildingLevel = 0;
+
+        CalculateBuildingLevel();
+
+        int buildingLevelPrefab = 0;
+
+        if (building.levelPrefabs.Length > hexData.buildingLevel)
+        {
+            buildingLevelPrefab = hexData.buildingLevel;
+        }
+
+        GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
+
+        CalculatePointsForMasterBuilding();
+
+        UIManager.Instance.ShowHexView(this);
+    }
+
+    void CalculatePointsForMasterBuilding()
+    {
+        for(int i = 0; i < hexData.buildingLevel; i++)
+        {
+            parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+        }
+    }
+
+    void CalculateBuildingLevel()
+    {
+        foreach(WorldHex hex in adjacentHexes)
+        {
+            if (hex.hexData.hasBuilding)
             {
-                RemoveLevelPoint(1);
+                if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).slaveBuilding)
+                {
+                    hexData.buildingLevel++;
+                }
+
+            }
+            else
+            {
+                continue;
             }
         }
     }
@@ -313,8 +359,47 @@ public class WorldHex : MonoBehaviour
     {
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
-        parentCity.AddLevelPoint(MapManager.Instance.hexResources[hexData.resourceIndex].output);
+
+        if (MapManager.Instance.GetResourceByType(hexData.resourceType).canBeBuild)
+        {
+            hexData.hasBuilding = true;
+            hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
+
+            GameObject obj = Instantiate(MapManager.Instance.GetBuildingByType(hexData.buildingType).levelPrefabs[0], resourceParent);
+
+            CheckForMasterBuilding();
+        }
+        else
+        {
+           //I thought somewthing else could happen here
+        }
+
         hexData.hasResource = false;
+        hexData.resourceType = ResourceType.EMPTY;
+
+        parentCity.AddLevelPoint(MapManager.Instance.GetResourceByType(hexData.resourceType).output);
+       
+        UIManager.Instance.ShowHexView(this);
+    }
+
+    void CheckForMasterBuilding()
+    {
+        bool masterExists = false;
+
+        foreach(WorldHex hex in adjacentHexes)
+        {
+            if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
+            {
+                hex.AddLevelForMaster();
+                break;
+            }
+        }
+    }
+
+    void AddLevelForMaster()
+    {
+        hexData.buildingLevel++;
+        parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
     }
 
     public void SetAsOccupiedByCity(WorldHex parentCityHex)
@@ -328,7 +413,7 @@ public class WorldHex : MonoBehaviour
 
     }
 
-    public void GenerateResource(Resource selectedResource, int resourceIndex)
+    public void GenerateResource(ResourceType resourceType)
     {
         if (hexData.hasCity)
         {
@@ -336,9 +421,11 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
+        Resource selectedResource = MapManager.Instance.GetResourceByType(resourceType);
+
         GameObject obj = Instantiate(selectedResource.prefab, resourceParent);
+        hexData.resourceType = resourceType;
         hexData.hasResource = true;
-        hexData.resourceIndex = resourceIndex;
         //allocate a resource base on mapmanager chances and surrounded resources
         //spawn resource
         //set correct data

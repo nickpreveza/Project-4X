@@ -18,7 +18,7 @@ public class GamePanel : UIPanel
     [SerializeField] TextMeshProUGUI playerName;
     [SerializeField] GameObject overviewPanel;
     [SerializeField] GameObject researchPanel;
-
+    [SerializeField] GameObject settingsPanel;
 
     [SerializeField] Image playerAvatarBackground;
 
@@ -34,8 +34,25 @@ public class GamePanel : UIPanel
         research = researchPanel.GetComponent<ResearchViewHandler>();
         researchPanel.SetActive(false);
         overviewPanel.SetActive(false);
+        settingsPanel.SetActive(false);
         HideHexView();
         //textbox.EndTextbox();
+    }
+
+    public void ToggleSettingsPanel()
+    {
+        settingsPanel.SetActive(!settingsPanel.activeSelf);
+
+    }
+
+    public void RestartAction()
+    {
+        GameManager.Instance.ReloadScene();
+    }
+
+    public void ExitAction()
+    {
+        GameManager.Instance.ApplicationQuit();
     }
 
     public void SetPlayerAvatar()
@@ -81,6 +98,12 @@ public class GamePanel : UIPanel
             researchPanel.SetActive(true);
             overviewPanel.SetActive(false);
         }
+
+    }
+
+    public void OpenResearchPanel()
+    {
+        researchPanel.SetActive(true);
     }
     public void UpdateCurrencies()
     {

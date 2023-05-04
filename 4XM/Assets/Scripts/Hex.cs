@@ -24,7 +24,15 @@ public class Hex
     public bool isOwnedByCity;
     public bool hasCity;
     public bool cityHasBeenClaimed;
+
     public bool hasResource;
+    public bool hasBuilding;
+    public bool hasRoad;
+
+    public int buildingLevel;
+
+    public ResourceType resourceType;
+    public BuildingType buildingType;
     public int playerOwnerIndex = -1;
     //Data for map generation and in-game effects
     public float Elevation;
@@ -38,7 +46,6 @@ public class Hex
 
     static readonly float WIDTH_MULTIPLIER = Mathf.Sqrt(3) / 2;
 
-    public int resourceIndex;
     public Vector3 Position()
     {
         return new Vector3(HexHorizontalSpacing() * (this.C + this.R / 2f), 0, HexVerticalSpacing() * this.R);

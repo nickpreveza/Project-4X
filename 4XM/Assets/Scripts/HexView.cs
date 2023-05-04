@@ -135,8 +135,17 @@ public class HexView : MonoBehaviour
                 {
                     if (hex.hexData.hasResource)
                     {
-                        hexDescription.text = "Harvest this resource to upgrade your city";
-                        GenerateResourceButtons();
+                        if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+                        {
+                            hexDescription.text = "Harvest this resource to upgrade your city";
+                            GenerateResourceButtons(true);
+                        }
+                        else
+                        {
+                            hexDescription.text = "Research required.";
+                            GenerateResourceButtons(false);
+                        }
+                       
                     }
                   
                 }
@@ -169,11 +178,11 @@ public class HexView : MonoBehaviour
         }
     }
 
-    void GenerateResourceButtons()
+    void GenerateResourceButtons(bool shouldBeInteractable)
     {
         //update this to support multiple resources on the same hex
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForResource(this, hex);
+        obj.GetComponent<ActionButton>().SetDataForResource(this, hex, shouldBeInteractable);
     }
 
     public void GenerateCityCaptureButton(bool doesUnitHaveActions)

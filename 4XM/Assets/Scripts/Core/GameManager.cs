@@ -188,6 +188,29 @@ namespace SignedInitiative
             LoadGame();
         }
 
+        public bool CanPlayerHarvestResource(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.FRUIT:
+                    return activePlayer.abilities.fruitHarvest;
+                case ResourceType.FOREST:
+                    return activePlayer.abilities.forestHarvest;
+                case ResourceType.ANIMAL:
+                    return activePlayer.abilities.animalHarvest;
+                case ResourceType.FARM:
+                    return activePlayer.abilities.farmHarvest;
+                case ResourceType.MINE:
+                    return activePlayer.abilities.mineHarvest;
+                case ResourceType.FISH:
+                    return activePlayer.abilities.fishHarvest;
+
+            }
+
+            Debug.LogWarning("Resource type was not found");
+            return false;
+        }
+
         public Player GetPlayerByIndex(int index)
         {
             return sessionPlayers[index];
@@ -221,27 +244,22 @@ namespace SignedInitiative
 
         void GenerateAbilitiesDatabaseForPlayers()
         {
-            defaultAbilityDatabase.Clear();
-
-            foreach (AbilityData ability in abilities)
-            {
-                PlayerAbilityData newAbility = new PlayerAbilityData();
-
-                newAbility.abilityID = ability.abilityID;
-                newAbility.calculatedAbilityCost = ability.abilityCost;
-                newAbility.hasBeenPurchased = false;
-                newAbility.canBePurchased = ability.isUnlocked;
-
-                defaultAbilityDatabase.Add(newAbility);
-            }
-
             foreach(Player player in sessionPlayers)
             {
-                player.abilityDatabase = new List<PlayerAbilityData>(defaultAbilityDatabase);
-                foreach (PlayerAbilityData data in player.abilityDatabase)
+                player.abilityDatabase = new List<PlayerAbilityData>();
+
+                foreach (AbilityData ability in abilities)
                 {
-                    player.abilityDictionary.Add(data.abilityID, data);
-                    player.calculatedAbilityCost.Add(data.abilityID, data.calculatedAbilityCost);
+                    PlayerAbilityData newAbility = new PlayerAbilityData();
+
+                    newAbility.abilityID = ability.abilityID;
+                    newAbility.calculatedAbilityCost = ability.abilityCost;
+                    newAbility.hasBeenPurchased = false;
+                    newAbility.canBePurchased = ability.isUnlocked;
+
+                    player.abilityDatabase.Add(newAbility);
+                    player.abilityDictionary.Add(newAbility.abilityID, newAbility);
+                    player.calculatedAbilityCost.Add(newAbility.abilityID, newAbility.calculatedAbilityCost);
                 }
             }
         }
@@ -282,20 +300,20 @@ namespace SignedInitiative
                 AddStars(city.cityData.output);
             }
 
-            UIManager.Instance.EndTurn();
+           
 
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 
             SI_CameraController.Instance.selectedTile = null;
+            UnitManager.Instance.ClearHexSelectionMode();
             activePlayerIndex++;
             if (activePlayerIndex >= sessionPlayers.Length)
             {
                 activePlayerIndex = 0;
             }
 
-           
-
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
+            UIManager.Instance.EndTurn();
         }
         public void EndTurn(Player player)
         {
@@ -474,6 +492,11 @@ namespace SignedInitiative
             SceneManager.LoadScene(scene.name);
         }
 
+        public void ApplicationQuit()
+        {
+            Application.Quit();
+        }
+
         public void UnlockAbility(Abilities ability)
         {
             Abilities abilityToUnlock = abilitiesDictionary[ability].abilityToUnlock;
@@ -534,6 +557,7 @@ namespace SignedInitiative
                     break;
                 case Abilities.Port:
                     activePlayer.abilities.portBuilding = true;
+                    activePlayer.abilities.travelSea = true;
                     break;
                 case Abilities.OpenSea:
                     activePlayer.abilities.travelOcean = true;
@@ -556,6 +580,7 @@ namespace SignedInitiative
                     break;
             }
 
+            SI_EventManager.Instance.OnAbilityUnlocked(activePlayerIndex);
             UIManager.Instance.UpdateResourcePanel();
             
         }
