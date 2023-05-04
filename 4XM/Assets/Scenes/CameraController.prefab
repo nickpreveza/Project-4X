@@ -154,12 +154,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2cb65726ef466ea449418d0e134135e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scrollSpeed: 0.005
-  zoomSpeed: 10
-  orthoSizeBounds: {x: 5, y: 10}
-  editedPosition: {x: 0.53499943, y: 10.603822, z: -5}
-  outOfBoundsX: 0
-  outOfBoundsY: 0
+  outOfBounds: 0
+  internalBoundsZ: {x: -5, y: 33}
+  selectedTile: {fileID: 0}
   internalTouchTimer: 0.3002439
   timeToRegisterTap: 0.1
   timeToRegisterHold: 0.8
@@ -174,8 +171,9 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 656
   cameraOffsetFromPanTarget: {x: 22, y: 0, z: -35}
-  minHeight: 2
+  minHeight: 10
   maxHeight: 20
+  repeatSelection: 0
 --- !u!1 &5448783927269960831
 GameObject:
   m_ObjectHideFlags: 0

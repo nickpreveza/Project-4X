@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3962260812926059865}
   - component: {fileID: 4184800732699203609}
   m_Layer: 6
-  m_Name: man-cult
+  m_Name: test_default_unit
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -118,12 +118,16 @@ MonoBehaviour:
     cost: 1
     health: 10
     attack: 5
-    range: 5
-    canAttackAfterMove: 0
-    canMoveAfterAttack: 0
-    canBeInteracted: 0
-    movePossible: 0
-    attackPossible: 0
+    range: 1
+    actionPoints: 3
+    attackCharges: 2
+    currentTurnActionPoints: 1
+    currentTurnAttackCharges: 1
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 1
+    canMove: 0
+    canAttack: 0
+    isInteractable: 0
     hasMoved: 0
     hasAttacked: 0
     associatedPlayerIndex: -1

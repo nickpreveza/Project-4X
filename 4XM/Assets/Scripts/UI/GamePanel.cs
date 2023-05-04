@@ -18,7 +18,10 @@ public class GamePanel : UIPanel
     [SerializeField] TextMeshProUGUI playerName;
     [SerializeField] GameObject overviewPanel;
     [SerializeField] GameObject researchPanel;
-    
+
+
+    [SerializeField] Image playerAvatarBackground;
+
     ResearchViewHandler research;
     void Start()
     {
@@ -33,6 +36,11 @@ public class GamePanel : UIPanel
         overviewPanel.SetActive(false);
         HideHexView();
         //textbox.EndTextbox();
+    }
+
+    public void SetPlayerAvatar()
+    {
+        playerAvatarBackground.color = GameManager.Instance.GetActivePlayerColor();
     }
 
     public void UpdateResearchPanel()

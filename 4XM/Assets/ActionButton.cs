@@ -48,13 +48,14 @@ public class ActionButton : MonoBehaviour
 
         buttonName.text = MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].resourceName;
         actionCost = MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].cost;
+
         actionCostText.text = actionCost.ToString();
         //image also here 
         buttonAction.onClick.AddListener(HarvestResource);
         CheckIfAffordable();
     }
 
-    public void SetDataForCityCapture(HexView newHandler, WorldHex newHex)
+    public void SetDataForCityCapture(HexView newHandler, WorldHex newHex, bool isInteractable)
     {
         parentHandler = newHandler;
         targetHex = newHex;
@@ -66,17 +67,31 @@ public class ActionButton : MonoBehaviour
         actionCostText.text = "";
         //image also here 
         buttonAction.onClick.AddListener(CaptureCity);
+
+        buttonAction.interactable = isInteractable;
+
+        if (isInteractable)
+        {
+            buttonImage.color = UIManager.Instance.affordableColor;
+        }
+        else
+        {
+            buttonImage.color = UIManager.Instance.unaffordableColor;
+        }
         //CheckIfAffordable();
     }
 
     void CheckIfAffordable()
     {
-        if (GameManager.Instance.activePlayer.stars >= MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].cost)
+        if (GameManager.Instance.CanActivePlayerAfford(MapManager.Instance.hexResources[targetHex.hexData.resourceIndex].cost))
         {
+            buttonImage.color = UIManager.Instance.affordableColor;
             buttonAction.interactable = true;
         }
         else
         {
+            buttonImage.color = UIManager.Instance.unaffordableColor;
+            
             buttonAction.interactable = false;
         }
     }
@@ -84,8 +99,7 @@ public class ActionButton : MonoBehaviour
     public void CaptureCity()
     {
         GameManager.Instance.activePlayer.AddCity(targetHex);
-        targetHex.associatedUnit.data.hasMoved = true;
-        targetHex.associatedUnit.data.hasAttacked = true;
+        targetHex.associatedUnit.CityCaptureAction();
     }
 
     public void HarvestResource()
@@ -99,7 +113,7 @@ public class ActionButton : MonoBehaviour
     public void SpawnUnit()
     {
         GameManager.Instance.RemoveStars(actionCost);
-        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayerIndex, UnitManager.Instance.unitTestPrefab, targetHex);
+        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayerIndex, UnitManager.Instance.unitTestPrefab, targetHex, true);
     }
 
 

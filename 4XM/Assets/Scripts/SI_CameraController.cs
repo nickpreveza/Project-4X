@@ -7,30 +7,22 @@ public class SI_CameraController : MonoBehaviour
 {
     public static SI_CameraController Instance;
 
-    [SerializeField] float scrollSpeed = 0.01f;
-    [SerializeField] float zoomSpeed = 0.01f;
-    Vector2 touchDeltaPosition;
-
-    public Vector2 orthoSizeBounds;
-
-    [SerializeField] Vector3 editedPosition;
-
     Camera mainCamera;
     Camera playerCamera;
 
+    //forgotten touch input related stuff
+    Vector2 touchDeltaPosition;
     Vector2 touchZeroDelta;
     Vector2 touchOneDelta;
     float editedScrollSpeed;
     float prevTouchDeltaMag = 0;
     float touchDeltaMag = 0;
     float deltaMagnitudeDiff = 0;
-    [SerializeField] bool outOfBoundsX;
-    [SerializeField] bool outOfBoundsY;
-    bool movingBack;
 
-    Vector2 internalBoundsX;
-    Vector2 internalBoundsY;
-
+    //custom camera bounds
+    [SerializeField] bool outOfBounds; 
+    [SerializeField] Vector2 mapVerticalBounds; //-5, 33
+    Vector2 calculatedBounds;
     public WorldHex selectedTile;
 
     [SerializeField] float internalTouchTimer;
@@ -84,6 +76,12 @@ public class SI_CameraController : MonoBehaviour
 
     int autoPanHexIdentifier;
     public bool repeatSelection;
+
+    Vector3 zoomTemp;
+    Vector3 dragTemp;
+
+    Vector3 dir;
+    Vector3 lastCameraPosition;
     void Awake()
     {
         if (Instance == null)
@@ -95,6 +93,7 @@ public class SI_CameraController : MonoBehaviour
             Destroy(this.gameObject);
         }
 
+        calculatedBounds = mapVerticalBounds;
         oldPosition = this.transform.position;
         mainCamera = transform.GetChild(0).GetComponent<Camera>();
         playerCamera = transform.GetChild(0).GetChild(0).GetComponent<Camera>();
@@ -103,6 +102,7 @@ public class SI_CameraController : MonoBehaviour
 
     public void UpdateBounds(int numRows, int numColumns)
     {
+        /*
         float radius = 1;
         float HexHeight = radius * 2;
         float HexWidth = (Mathf.Sqrt(3) / 2) * HexHeight;
@@ -113,11 +113,13 @@ public class SI_CameraController : MonoBehaviour
         float mapWidth = numColumns * HexHorizontalSpacing;
 
         internalMapHeight = mapHeight;
-        internalMapWidth = mapWidth;
+        internalMapWidth = mapWidth;*/
     }
 
     private void Update()
     {
+        
+
         if (autoMove)
         {
             AutoHexPan();
@@ -125,13 +127,17 @@ public class SI_CameraController : MonoBehaviour
             return;
         }
 
+        if (outOfBounds)
+        {
+          // MoveBack();
+           // return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)
         {
             CancelUpdateFunction();
             return;
         }
-
-        
 
         Update_CurrentFunction();
 
@@ -204,45 +210,6 @@ public class SI_CameraController : MonoBehaviour
         }
     }
 
-    void OLDUpdate() //Still has some functionallity that hasn't been moved 
-    {
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (mouseRay.direction.y >= 0)
-        {
-            Debug.LogError("Why is mouse pointing up?");
-            return;
-        }
-        rayLenght = mouseRay.origin.y / mouseRay.direction.y;
-        hitPos = mouseRay.origin + (mouseRay.direction * rayLenght);
-
-        //MouseInput();
-
-        if (touchControls)
-        {
-            //TouchInput();
-        }
-
-        if (keyboardControls)
-        {
-            KeyboardInput();
-        }
-        if (zoomEnabled)
-        {
-            //ZoomInput();
-            Update_ScrollZoom();
-        }
-
-        if (dragEnabled)
-        {
-            //DragInput(mouseRay);
-        }
-      
-
-
-        CheckifCameraMoved();
-    }
-
-
     public void PanToHex(WorldHex hex)
     {
         autoPanHexIdentifier = hex.hexIdentifier;
@@ -269,8 +236,34 @@ public class SI_CameraController : MonoBehaviour
     {
         Vector3 translate = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         this.transform.Translate(translate * moveSpeed * Time.deltaTime, Space.World);
+
+        OutOfBoundsCheck();
     }
 
+    void OutOfBoundsCheck()
+    {
+        if (transform.position.z < calculatedBounds.x || transform.position.z > calculatedBounds.y ) //y max, x min
+        {
+            outOfBounds = true;
+            targetCameraPosition = this.transform.position;
+            targetCameraPosition.z = Mathf.Clamp(transform.position.z, calculatedBounds.x + 1, calculatedBounds.y - 1);
+
+            return;
+        }
+    }
+
+    void MoveBack()
+    {
+        this.transform.position = Vector3.SmoothDamp(this.transform.position, targetCameraPosition, ref currentVelocity, smoothTime);
+
+        if (Vector3.Distance(this.transform.position, targetCameraPosition) <= 0.1)
+        {
+            outOfBounds = false;
+            currentVelocity = Vector3.zero;
+        }
+
+        CheckifCameraMoved();
+    }
     /*
      void TouchInput()
      {
@@ -456,31 +449,6 @@ public class SI_CameraController : MonoBehaviour
         {
             selectedTile = null;
         }
-
-
-        if (outOfBoundsX || outOfBoundsY)
-        {
-            movingBack = true;
-            //StartCoroutine(ReturnToBounds());
-        }
-
-        if (movingBack)
-        {
-            editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
-            editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
-            editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
-
-            var step = scrollSpeed * Time.deltaTime;
-            transform.position = editedPosition; //= editedPosition;
-
-            if (transform.position == editedPosition)
-            {
-                movingBack = false;
-                outOfBoundsY = false;
-                outOfBoundsX = false;
-            }
-
-        }
     }
 
 
@@ -497,56 +465,20 @@ public class SI_CameraController : MonoBehaviour
         diff = lastMouseGroundPlanePosition - hitPos;
         this.transform.Translate(diff, Space.World);
 
-        lastMouseGroundPlanePosition = hitPos = MouseToGroundPlane(Input.mousePosition);
-    }
-
-    void ZoomInput()
-    {
-        //TODO: Smooth zoom 
-        float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
-
-        Vector3 currentOrthoSize = new Vector3(mainCamera.orthographicSize, 0,0);
-        Vector3 adjustedOrthoSize = new Vector3(mainCamera.orthographicSize - scrollAmount * zoomSpeed, 0, 0);
-        currentOrthoSize = Vector3.Lerp(currentOrthoSize, adjustedOrthoSize, Time.deltaTime * 5f);
-     
-
-        if (Mathf.Abs(scrollAmount) > 0.1f)
+        dragTemp = this.transform.position;
+        if (dragTemp.z < calculatedBounds.x)
         {
-            //mainCamera.orthographicSize -= scrollAmount * zoomSpeed * Time.deltaTime * 5f;
-            mainCamera.orthographicSize = currentOrthoSize.x;
-            mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
-            playerCamera.orthographicSize = mainCamera.orthographicSize;
-
-
-            float lowZoom = orthoSizeBounds.x + 3; //dunno don't ask
-            float highZoom = orthoSizeBounds.y - 3;
-
-            /*
-            if (mainCamera.orthographicSize < lowZoom)
-            {
-                this.transform.rotation = Quaternion.Euler(
-    Mathf.Lerp(45, 50, ((mainCamera.orthographicSize - orthoSizeBounds.x) / (lowZoom - orthoSizeBounds.x))),
-    this.transform.rotation.eulerAngles.y,
-    this.transform.rotation.eulerAngles.z);
-            }
-
-            else if (mainCamera.orthographicSize > highZoom)
-            {
-                this.transform.rotation = Quaternion.Euler(
-    Mathf.Lerp(50, 60, ((mainCamera.orthographicSize - highZoom) / (orthoSizeBounds.y - highZoom))),
-    this.transform.rotation.eulerAngles.y,
-    this.transform.rotation.eulerAngles.z);
-            }
-            else
-            {
-                this.transform.rotation = Quaternion.Euler(
-  60,
-   this.transform.rotation.eulerAngles.y,
-   this.transform.rotation.eulerAngles.z);
-            } */
-               
+            dragTemp.z = calculatedBounds.x;
         }
+        if (dragTemp.z > calculatedBounds.y)
+        {
+            dragTemp.z = calculatedBounds.y;
+        }
+        this.transform.position = dragTemp;
 
+        lastMouseGroundPlanePosition = hitPos = MouseToGroundPlane(Input.mousePosition);
+
+        OutOfBoundsCheck();
     }
 
     Vector3 MouseToGroundPlane(Vector3 mousePos)
@@ -562,39 +494,58 @@ public class SI_CameraController : MonoBehaviour
         return mouseRay.origin - (mouseRay.direction * rayLength);
     }
 
+    bool IsMouseOverGameWindow { get { return !(0 > Input.mousePosition.x || 0 > Input.mousePosition.y || Screen.width < Input.mousePosition.x || Screen.height < Input.mousePosition.y); } }
+
     void Update_ScrollZoom()
     {
+        if (!IsMouseOverGameWindow)
+        {
+            return;
+        }
         // Zoom to scrollwheel
         float scrollAmount = Input.GetAxis("Mouse ScrollWheel");
 
         // Move camera towards hitPos
-        Vector3 hitPos = MouseToGroundPlane(Input.mousePosition);
-        Vector3 dir = hitPos - this.transform.position;
-
-        Vector3 p = this.transform.position;
+        hitPos = MouseToGroundPlane(Input.mousePosition);
+        dir = hitPos - this.transform.position;
+        
+        zoomTemp = this.transform.position;
 
         // Stop zooming out at a certain distance.
         // TODO: Maybe you should still slide around at 20 zoom?
-        if (scrollAmount > 0 || p.y < (maxHeight - 0.1f))
+        if (scrollAmount > 0 || zoomTemp.y < (maxHeight - 0.1f))
         {
             cameraTargetOffset += dir * scrollAmount;
         }
-        Vector3 lastCameraPosition = this.transform.position;
+        lastCameraPosition = this.transform.position;
         this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + cameraTargetOffset, Time.deltaTime * 5f);
         cameraTargetOffset -= this.transform.position - lastCameraPosition;
 
 
-        p = this.transform.position;
-        if (p.y < minHeight)
+        zoomTemp = this.transform.position;
+        if (zoomTemp.y < minHeight)
         {
-            p.y = minHeight;
+            zoomTemp.y = minHeight;
         }
-        if (p.y > maxHeight)
+        if (zoomTemp.y > maxHeight)
         {
-            p.y = maxHeight;
+            zoomTemp.y = maxHeight;
         }
 
-        this.transform.position = p;
+        int m = (19 - 33) / (20 - 10); // Calculate the slope (change in y / change in x)
+        int c = 33 - m * 10; // Calculate the y-intercept
+        calculatedBounds.y = m * zoomTemp.y + c; 
+
+        if (zoomTemp.z < calculatedBounds.x)
+        {
+            zoomTemp.z = calculatedBounds.x;
+        }
+        if (zoomTemp.z > calculatedBounds.y)
+        {
+            zoomTemp.z = calculatedBounds.y;
+        }
+
+        this.transform.position = zoomTemp;
 
         // Change camera angle
         this.transform.rotation = Quaternion.Euler(
@@ -603,6 +554,7 @@ public class SI_CameraController : MonoBehaviour
             Camera.main.transform.rotation.eulerAngles.z
         );
 
+        OutOfBoundsCheck();
 
     }
 
@@ -644,16 +596,7 @@ public class SI_CameraController : MonoBehaviour
         }
     }
 
-    IEnumerator ReturnToBounds()
-    {
-      
-        yield return new WaitForSeconds(0.1f);
-        editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
-        editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
-        editedPosition.z = 0;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
-        movingBack = true;
-       
-    }
+
 #if UNITY_IOS || UNITY_ANDROID
 
 #endif

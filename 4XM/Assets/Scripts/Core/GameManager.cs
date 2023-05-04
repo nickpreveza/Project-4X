@@ -203,10 +203,15 @@ namespace SignedInitiative
             return sessionPlayers[index].playerColor;
         }
 
+        public Color GetActivePlayerColor()
+        {
+            return activePlayer.playerColor;
+        }
+
         public void StartGame()
         {
             GenerateAbilitiesDictionary();
-            UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 5f);
+            UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
             gameReady = true;
             activePlayerIndex = 0;
             GenerateAbilitiesDatabaseForPlayers();

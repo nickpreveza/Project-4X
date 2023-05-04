@@ -38,6 +38,17 @@ namespace SignedInitiative
         public Color researchAvailable;
         public Color researchUnavailable;
 
+        public Color hexViewDescriptionAvailable;
+        public Color hexViewDescriptionUnavailable;
+
+        public Color oceanHex;
+        public Color seaHex;
+        public Color sandHex;
+        public Color grassHex;
+        public Color hillhex;
+        public Color mountainHex;
+
+
         bool canLoad;
 
         [SerializeField] Button loadGame;
@@ -209,11 +220,34 @@ namespace SignedInitiative
         public void UpdateHUD()
         {
             gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
+            //TODO: optimize this to only update when turn changes
+            gamePanel.GetComponent<GamePanel>().SetPlayerAvatar();
         }
 
         public void ShowHexView(WorldHex hex, WorldUnit unit = null)
         {
             gamePanel.GetComponent<GamePanel>().ShowHexView(hex, unit);
+        }
+
+        public Color GetHexColorByType(TileType type)
+        {
+            switch (type)
+            {
+                case TileType.DEEPSEA:
+                    return oceanHex;
+                case TileType.SEA:
+                    return seaHex;
+                case TileType.SAND:
+                    return sandHex;
+                case TileType.GRASS:
+                    return grassHex;
+                case TileType.HILL:
+                    return hillhex;
+                case TileType.MOUNTAIN:
+                    return mountainHex;
+            }
+
+            return Color.white;
         }
 
         public void HideHexView()

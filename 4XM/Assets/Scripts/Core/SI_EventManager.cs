@@ -24,7 +24,8 @@ public class SI_EventManager : MonoBehaviour
     public event Action<int> onTransactionMade;
     //Camera
     public event Action<int> onAutopanCompleted; //int = WorldHex.hexIdentifier 
-
+    public event Action<WorldUnit> onUnitMoved;
+    public event Action<WorldUnit> onUnitAction;
     void Awake()
     {
         if (Instance == null)

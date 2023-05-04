@@ -47,15 +47,19 @@ public class WorldHex : MonoBehaviour
         HideHighlight();
     }
 
-    public void ShowHighlight()
+    public void ShowHighlight(bool combat)
     {
         if (hexHighlight != null)
         hexHighlight?.SetActive(true);
 
         //TODO: Visualize combat or blocked tiles.
-        if (hexData.occupied)
+        if (combat)
         {
-
+            hexHighlight.GetComponent<MeshRenderer>().material.color = Color.red;
+        }
+        else
+        {
+            hexHighlight.GetComponent<MeshRenderer>().material.color = Color.white;
         }
 
 
@@ -386,10 +390,14 @@ public class WorldHex : MonoBehaviour
             }
             else if (UnitManager.Instance.IsHexValidMove(this))
             {
-                UnitManager.Instance.MoveTargetTile(this);
+                UnitManager.Instance.MoveToTargetHex(this);
 
                 wiggler?.Wiggle();
                 return;
+            }
+            else
+            {
+                UnitManager.Instance.CancelMoveMode();
             }
         }
 
