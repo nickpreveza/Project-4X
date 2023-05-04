@@ -40,6 +40,15 @@ public class GamePanel : UIPanel
         research.UpdateResearchButtons();
     }
 
+    public void HideResearchPanel()
+    {
+        researchPanel.SetActive(false);
+    }
+
+    public void HideOverviewPanel()
+    {
+        overviewPanel.SetActive(false);
+    }
     public void ToggleOverviewPanel()
     {
         if (overviewPanel.activeSelf)

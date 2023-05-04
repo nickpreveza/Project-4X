@@ -9653,6 +9653,7 @@ MonoBehaviour:
     score: 0
     turnCount: 1
     stars: 5
+    unlockedAbiltiesCount: 0
     playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
@@ -9690,6 +9691,7 @@ MonoBehaviour:
     score: 0
     turnCount: 1
     stars: 5
+    unlockedAbiltiesCount: 0
     playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
@@ -9728,6 +9730,7 @@ MonoBehaviour:
     score: 0
     turnCount: 0
     stars: 0
+    unlockedAbiltiesCount: 0
     playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
@@ -9740,140 +9743,140 @@ MonoBehaviour:
     abilityName: Climbing
     abilityDescription: Allows units to traverse mountains
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 1
     isUnlocked: 1
     abilityToUnlock: 1
   - abilityID: 1
     abilityName: Mining
     abilityDescription: Allows you to harvest the mine resource
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 2
     isUnlocked: 0
     abilityToUnlock: 2
   - abilityID: 2
     abilityName: Shields
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 3
     isUnlocked: 0
     abilityToUnlock: 3
   - abilityID: 3
     abilityName: Smithery
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 4
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 4
     abilityName: Roads
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 1
     isUnlocked: 1
     abilityToUnlock: 5
   - abilityID: 5
     abilityName: Trader
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 2
     isUnlocked: 0
     abilityToUnlock: 6
   - abilityID: 6
     abilityName: Diplomat
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 3
     isUnlocked: 0
     abilityToUnlock: 7
   - abilityID: 7
     abilityName: Guild
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 4
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 8
     abilityName: Forestry
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 1
     isUnlocked: 1
     abilityToUnlock: 9
   - abilityID: 9
     abilityName: Husbandry
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 2
     isUnlocked: 0
     abilityToUnlock: 10
   - abilityID: 10
     abilityName: Engineering
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 3
     isUnlocked: 0
     abilityToUnlock: 11
   - abilityID: 11
     abilityName: Papermill
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 4
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 12
     abilityName: Fishing
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 1
     isUnlocked: 1
     abilityToUnlock: 13
   - abilityID: 13
     abilityName: Port
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 2
     isUnlocked: 0
     abilityToUnlock: 14
   - abilityID: 14
     abilityName: Open Sea
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 3
     isUnlocked: 0
     abilityToUnlock: 15
   - abilityID: 15
     abilityName: Fish Farm
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 4
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 16
     abilityName: Harvest
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 1
     isUnlocked: 1
     abilityToUnlock: 17
   - abilityID: 17
     abilityName: Horserider
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 2
     isUnlocked: 0
     abilityToUnlock: 18
   - abilityID: 18
     abilityName: Farming
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 3
     isUnlocked: 0
     abilityToUnlock: 19
   - abilityID: 19
     abilityName: Windmill
     abilityDescription: 
     abilityIcon: {fileID: 0}
-    abilityCost: 0
+    abilityCost: 4
     isUnlocked: 0
     abilityToUnlock: 20
 --- !u!114 &1307550165
@@ -16187,6 +16190,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ResearchButton (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371912095152197206, guid: e6dad85be8d087d4d969ecf318e9ba4f,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.4198113
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371912095152197206, guid: e6dad85be8d087d4d969ecf318e9ba4f,
+        type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1371912095152197206, guid: e6dad85be8d087d4d969ecf318e9ba4f,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.5118308
       objectReference: {fileID: 0}
     - target: {fileID: 2374597824449754886, guid: e6dad85be8d087d4d969ecf318e9ba4f,
         type: 3}

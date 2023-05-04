@@ -36,10 +36,20 @@ public class UnitManager : MonoBehaviour
 
     private void Start()
     {
-        SI_EventManager.Instance.onAutopanCompleted += AutoPanCallback;
+        SI_EventManager.Instance.onAutopanCompleted += OnAutopanCompletedCallback;
     }
 
-  
+    public void OnUnitMovedCallback(WorldHex oldHex, WorldHex newHex)
+    {
+
+    }
+
+    void OnAutopanCompletedCallback(int hexIdentifier)
+    {
+        waitingForCameraPan = false;
+    }
+
+
 
     public void InitializeStartUnits()
     {
@@ -70,11 +80,7 @@ public class UnitManager : MonoBehaviour
         GameManager.Instance.GetPlayerByIndex(playerIndex).AddUnit(unit);
     }
 
-    public void OnUnitMoved(WorldHex oldHex, WorldHex newHex)
-    {
-
-    }
-     
+   
     public void SelectUnit(WorldUnit newUnit)
     {
         ClearHighlightedHexes();
@@ -114,11 +120,7 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    void AutoPanCallback(int hexIdentifier)
-    {
-        waitingForCameraPan = false;
-    }
-
+   
     public void PlayRandomTurnForAIUnits(Player player)
     {
         StartCoroutine(TestRandomAIMove(player));
@@ -146,6 +148,8 @@ public class UnitManager : MonoBehaviour
 
         GameManager.Instance.LocalEndTurn();
     }
+
+    
 
     public void CancelMoveMode()
     {

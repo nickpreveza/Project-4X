@@ -13,20 +13,22 @@ public class ResearchButton: MonoBehaviour
     [SerializeField] Image icon;
     [SerializeField] TextMeshProUGUI buttonText;
     [SerializeField] TextMeshProUGUI buttonCost;
+    int fetchedAbilityCost;
     public void FetchData()
     {
         buttonText.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityName;
+        fetchedAbilityCost = GameManager.Instance.GetCurrentPlayerAbilityCost(abilityID);
 
-        if (GameManager.Instance.activePlayer.abilityDictionary[abilityID].canBePurchased)
+        if (GameManager.Instance.IsAbilityUnlocked(abilityID))
         {
-            if (GameManager.Instance.activePlayer.abilityDictionary[abilityID].hasBeenPurchased)
+            if (GameManager.Instance.isAbilityPurchased(abilityID))
             {
                 SetAsPurchased();
                 return;
             }
 
             //mmove this to somethingi like CanActivePlayerAfford(value)
-            if (GameManager.Instance.GetCurrentPlayerStars() >= GameManager.Instance.GetAbilityCost(abilityID))
+            if (GameManager.Instance.CanActivePlayerAffordAbility(abilityID))
             {
                 SetAsAvailable();
             }
@@ -45,6 +47,8 @@ public class ResearchButton: MonoBehaviour
     public void SetAsPurchased()
     {
         backgroundImage.color = UIManager.Instance.researchPurchased;
+        buttonCost.text = "";
+        buttonText.color = Color.black;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OpenPopupAlreadyPurchased);
     }
@@ -52,7 +56,8 @@ public class ResearchButton: MonoBehaviour
     public void SetAsAvailable()
     {
         backgroundImage.color = UIManager.Instance.researchAvailable;
-
+        buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
+        buttonText.color = Color.black;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OpenPopup);
     }
@@ -60,7 +65,8 @@ public class ResearchButton: MonoBehaviour
     public void SetAsUnavailble()
     {
         backgroundImage.color = UIManager.Instance.researchUnavailable;
-
+        buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
+        buttonCost.color = Color.black;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OpenPopup);
     }
@@ -68,7 +74,8 @@ public class ResearchButton: MonoBehaviour
     public void SetAsLocked()
     {
         backgroundImage.color = UIManager.Instance.researchLocked;
-
+        buttonCost.text = "";
+        buttonText.color = Color.white;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(OpenPopupLocked);
     }
@@ -80,7 +87,9 @@ public class ResearchButton: MonoBehaviour
     public void OpenPopup()
     {
         //remove this
+        GameManager.Instance.RemoveStars(fetchedAbilityCost);
         GameManager.Instance.UnlockAbility(abilityID);
+ 
     }
 
     public void OpenPopupLocked()

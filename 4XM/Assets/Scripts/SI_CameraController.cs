@@ -124,24 +124,31 @@ public class SI_CameraController : MonoBehaviour
             CheckifCameraMoved();
             return;
         }
+
         if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)
         {
             CancelUpdateFunction();
             return;
         }
 
-        if (keyboardControls)
-        {
-            KeyboardInput();
-        }
+        
 
         Update_CurrentFunction();
 
-        if (zoomEnabled)
+        if (!IsPointerOverUIObject())
         {
-            Update_ScrollZoom();
+            if (keyboardControls)
+            {
+                KeyboardInput();
+            }
+
+            if (zoomEnabled)
+            {
+                Update_ScrollZoom();
+            }
+
         }
-       
+
 
         lastMousePosition = Input.mousePosition;
         lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);

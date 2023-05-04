@@ -20,7 +20,8 @@ public class SI_EventManager : MonoBehaviour
 
 
     public event Action<int> onTurnEnded;
-
+    public event Action<int> onCityCaptured;
+    public event Action<int> onTransactionMade;
     //Camera
     public event Action<int> onAutopanCompleted; //int = WorldHex.hexIdentifier 
 
@@ -34,6 +35,11 @@ public class SI_EventManager : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+    }
+
+    public void OnTransactionMade(int playerIndex)
+    {
+        onTransactionMade?.Invoke(playerIndex);
     }
 
     public void OnAutoPanCompleted(int hexIdentifier)
@@ -51,6 +57,10 @@ public class SI_EventManager : MonoBehaviour
         onMapGenerated?.Invoke();
     }
 
+    public void OnCityCaptured(int playerIndex)
+    {
+        onCityCaptured?.Invoke(playerIndex);
+    }
     public void OnUnitsPlaced()
     {
         onUnitsPlaced?.Invoke();

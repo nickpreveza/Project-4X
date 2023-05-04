@@ -223,6 +223,7 @@ namespace SignedInitiative
                 PlayerAbilityData newAbility = new PlayerAbilityData();
 
                 newAbility.abilityID = ability.abilityID;
+                newAbility.calculatedAbilityCost = ability.abilityCost;
                 newAbility.hasBeenPurchased = false;
                 newAbility.canBePurchased = ability.isUnlocked;
 
@@ -235,6 +236,7 @@ namespace SignedInitiative
                 foreach (PlayerAbilityData data in player.abilityDatabase)
                 {
                     player.abilityDictionary.Add(data.abilityID, data);
+                    player.calculatedAbilityCost.Add(data.abilityID, data.calculatedAbilityCost);
                 }
             }
         }
@@ -275,7 +277,7 @@ namespace SignedInitiative
                 AddStars(city.cityData.output);
             }
 
-            UIManager.Instance.HideHexView();
+            UIManager.Instance.EndTurn();
 
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 
@@ -328,11 +330,15 @@ namespace SignedInitiative
             }
 
             activePlayer.stars -= amount;
+
+            SI_EventManager.Instance.OnTransactionMade(activePlayer.index);
         }
 
         public void AddStars(int amount)
         {
             activePlayer.stars += amount;
+
+            SI_EventManager.Instance.OnTransactionMade(activePlayer.index);
         }
 
         public void LoadGame()
@@ -384,36 +390,70 @@ namespace SignedInitiative
 
             if (devMode && Debug.isDebugBuild)
             {
-                DevUpdate();
+                //DevUpdate();
             }
         }
 
-        void DevUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha1))
-            {
 
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha2))
-            {
-
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha3))
-            {
-
-            }
-            if (Input.GetKeyDown(KeyCode.Alpha4))
-            {
-
-            }
-        }
 
         public int GetCurrentPlayerStars()
         {
             return activePlayer.stars;
         }
 
-        public int GetAbilityCost(Abilities ability)
+        public bool CanActivePlayerAfford(int value)
+        {
+            if (value <= activePlayer.stars)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsIndexOfActivePlayer(int index)
+        {
+            if (activePlayer.index == index)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IsAbilityUnlocked(Abilities ability)
+        {
+            return activePlayer.abilityDictionary[ability].canBePurchased;
+        }
+
+        public bool isAbilityPurchased(Abilities ability)
+        {
+            return activePlayer.abilityDictionary[ability].hasBeenPurchased;
+        }
+
+        public bool CanActivePlayerAffordAbility(Abilities ability)
+        {
+            if (GetCurrentPlayerAbilityCost(ability) <= activePlayer.stars)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public int GetCurrentPlayerAbilityCost(Abilities ability)
+        {
+            return activePlayer.calculatedAbilityCost[ability];
+        }
+
+
+        public int GetBaseAbilityCost(Abilities ability)
         {
             return abilitiesDictionary[ability].abilityCost;
         }

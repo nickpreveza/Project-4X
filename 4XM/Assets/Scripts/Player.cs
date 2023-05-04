@@ -17,7 +17,7 @@ public class Player
     public int score;
     public int turnCount;
     public int stars;
-
+    public int unlockedAbiltiesCount;
    
     //Game Editable Data
     public List<WorldUnit> playerUnitsThatCanBeSpawned = new List<WorldUnit>();
@@ -34,6 +34,7 @@ public class Player
 
     public List<PlayerAbilityData> abilityDatabase = new List<PlayerAbilityData>();
     public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
+    public Dictionary<Abilities, int> calculatedAbilityCost = new Dictionary<Abilities, int>();
     public void StartTurn()
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();
@@ -49,15 +50,50 @@ public class Player
         }
     }
 
+    public void ChangeAbiltiyCost(Abilities ability, int value)
+    {
+        calculatedAbilityCost[ability] = value;
+    }
+
+    public int GetAbilityCost(Abilities ability)
+    {
+        return calculatedAbilityCost[ability];
+    }
+
     public void BuyAbility(Abilities ability)
     {
         abilityDictionary[ability].canBePurchased = true;
-       abilityDictionary[ability].hasBeenPurchased = true;
+        abilityDictionary[ability].hasBeenPurchased = true;
     }
 
     public void UnlockAbility(Abilities ability)
     {
         abilityDictionary[ability].canBePurchased = true;
+    }
+
+    public void RecalculateAbilityCosts()
+    {
+
+        foreach(PlayerAbilityData ability in abilityDatabase)
+        {
+            int baseAbilityCost = GameManager.Instance.GetBaseAbilityCost(ability.abilityID);
+
+            switch (baseAbilityCost)
+            {
+                case 1:
+                    baseAbilityCost += playerCities.Count;
+                    break;
+                case 2:
+                    baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 1.5f);
+                    break;
+                case 3:
+                    baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 2f);
+                    break;
+            }
+
+
+            ability.calculatedAbilityCost = baseAbilityCost;
+        }
     }
 
     public void EndTurn()
@@ -81,6 +117,9 @@ public class Player
         //TODO: Some security checks to make sure this is the correct tile;
         playerCities.Add(cityHex);
         cityHex.OccupyCityByPlayer(this);
+
+        GameManager.Instance.activePlayer.RecalculateAbilityCosts();
+        SI_EventManager.Instance.OnCityCaptured(index);
     }
 }
 

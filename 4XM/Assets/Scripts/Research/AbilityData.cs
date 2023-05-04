@@ -18,6 +18,7 @@ public class AbilityData
 public class PlayerAbilityData
 {
     public Abilities abilityID;
+    public int calculatedAbilityCost;
     public bool canBePurchased;
     public bool hasBeenPurchased;
 }

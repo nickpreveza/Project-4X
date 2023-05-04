@@ -56,6 +56,28 @@ namespace SignedInitiative
 
         }
 
+        private void Start()
+        {
+            SI_EventManager.Instance.onCityCaptured += OnCityCaptureCallback;
+            SI_EventManager.Instance.onTransactionMade += OnTransactionMadeCallback;
+        }
+
+        void OnCityCaptureCallback(int playerIndex)
+        {
+            if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
+            {
+                gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
+            }
+        }
+
+        public void OnTransactionMadeCallback(int playerIndex)
+        {
+            if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
+            {
+                UpdateHUD();
+            }
+        }
+
         public void ToggleUIPanel(UIPanel targetPanel, bool state, bool fadeGamePanel = true, float delayAmount = 0.0f)
         {
             StartCoroutine(ToggleUIPanelEnum(targetPanel, state, fadeGamePanel, delayAmount));
@@ -113,6 +135,13 @@ namespace SignedInitiative
             }
         }
 
+        public void EndTurn()
+        {
+            HideHexView();
+            gamePanel.GetComponent<GamePanel>().HideResearchPanel();
+            gamePanel.GetComponent<GamePanel>().HideOverviewPanel();
+            //gamePanel.GetComponent<GamePanel>().HideSettingsPanel();
+        }
         public void StartTextbox(string characterName, List<string> dialogContent, ConversationType convoType, Quest quest = null)
         {
             GameManager.Instance.menuActive = true;
