@@ -371,10 +371,12 @@ public class WorldHex : MonoBehaviour
            //I thought somewthing else could happen here
         }
 
+        parentCity.AddLevelPoint(MapManager.Instance.GetResourceByType(hexData.resourceType).output);
+
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
 
-        parentCity.AddLevelPoint(MapManager.Instance.GetResourceByType(hexData.resourceType).output);
+       
        
         UIManager.Instance.ShowHexView(this);
     }

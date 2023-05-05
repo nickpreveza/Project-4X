@@ -35,7 +35,6 @@ public class Player
 
     public List<PlayerAbilityData> abilityDatabase = new List<PlayerAbilityData>();
     public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
-    public Dictionary<Abilities, int> calculatedAbilityCost = new Dictionary<Abilities, int>();
     public void StartTurn()
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();
@@ -75,16 +74,6 @@ public class Player
         stars += amount;
 
         SI_EventManager.Instance.OnTransactionMade(index);
-    }
-
-    public void ChangeAbiltiyCost(Abilities ability, int value)
-    {
-        calculatedAbilityCost[ability] = value;
-    }
-
-    public int GetAbilityCost(Abilities ability)
-    {
-        return calculatedAbilityCost[ability];
     }
 
     public void BuyAbility(Abilities ability)

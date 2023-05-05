@@ -32,6 +32,14 @@ public class AbilityTree
 
     public bool roads;
 
+    /*
+    public bool createForest;
+    public bool createFarm;
+    public bool createFish;
+    public bool createAnimals;
+    public bool createMine; */
+
+
     public bool forestBuilding;
     public bool smitheryBuilding;
     public bool farmBuilding;

@@ -86,9 +86,9 @@ public class ResearchButton: MonoBehaviour
     }
     public void OpenPopup()
     {
-        //remove this
+        //remove this. honestly just experimenting with formats
         GameManager.Instance.activePlayer.RemoveStars(fetchedAbilityCost);
-        GameManager.Instance.UnlockAbility(abilityID);
+        GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, true);
  
     }
 

@@ -483,12 +483,16 @@ public class MapManager : MonoBehaviour
             for (int row = 0; row < mapRows; row++)
             {
                 WorldHex hex = hexes[column, row];
-                List<WorldHex> hexesToAdd = GetHexesListWithinRadius(hex.hexData, 1);
-                if (hexesToAdd.Contains(hex))
+                if (hex.hexData.type != TileType.ICE)
                 {
-                    hexesToAdd.Remove(hex);
+                    List<WorldHex> hexesToAdd = GetHexesListWithinRadius(hex.hexData, 1);
+                    if (hexesToAdd.Contains(hex))
+                    {
+                        hexesToAdd.Remove(hex);
+                    }
+                    hex.adjacentHexes = hexesToAdd;
                 }
-                hex.adjacentHexes = hexesToAdd;
+               
             }
         }
     }

@@ -21,6 +21,7 @@ public class HexView : MonoBehaviour
 
     public void Refresh()
     {
+        if (hex!=null)
         SetData(hex, unit);
     }
 

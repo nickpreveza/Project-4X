@@ -143,6 +143,7 @@ public class WorldUnit : MonoBehaviour
         data.currentTurnActionPoints = 0;
         data.currentTurnAttackCharges = 0;
         ValidateRemainigActions();
+        UnitManager.Instance.SelectUnit(this);
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
 

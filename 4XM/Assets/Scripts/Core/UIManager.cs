@@ -154,7 +154,7 @@ namespace SignedInitiative
         public void EndTurn()
         {
             HideHexView();
-            UpdateResourcePanel();
+          
             gamePanel.GetComponent<GamePanel>().HideResearchPanel();
             gamePanel.GetComponent<GamePanel>().HideOverviewPanel();
             //gamePanel.GetComponent<GamePanel>().HideSettingsPanel();
@@ -266,9 +266,13 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().HideHexView();
         }
 
-        public void UpdateResourcePanel()
+        public void UpdateResourcePanel(int playerIndex)
         {
-            gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
+            if (playerIndex == GameManager.Instance.activePlayerIndex)
+            {
+                gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
+            }
+            
         }
 
         public void ShowOverlay(GameObject target, float offset, bool placementOverlay)
