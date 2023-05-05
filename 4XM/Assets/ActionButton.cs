@@ -14,15 +14,19 @@ public class ActionButton : MonoBehaviour
     [SerializeField] Button buttonAction;
     WorldHex targetHex;
     int actionCost;
+    UnitType unitType;
 
-    public void SetDataForUnitSpawn(HexView newHandler, WorldHex newHex, WorldUnit unit)
+    public void SetDataForUnitSpawn(HexView newHandler, WorldHex newHex, UnitType unit)
     {
+        unitType = unit;
+        UnitStruct unitData = UnitManager.Instance.GetUnitByType(unit);
+
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = unit.data.unitName;
-        actionCost = unit.data.cost;
+        buttonName.text = unitData.unitName;
+        actionCost = unitData.cost;
         actionCostText.text = actionCost.ToString();
 
         buttonAction.onClick.AddListener(SpawnUnit);
@@ -31,7 +35,7 @@ public class ActionButton : MonoBehaviour
 
     void CheckIfSpawnPossible()
     {
-        if (GameManager.Instance.activePlayer.stars > actionCost && !targetHex.hexData.occupied)
+        if (GameManager.Instance.CanActivePlayerAfford(actionCost) && !targetHex.hexData.occupied)
         {
             buttonAction.interactable = true;
         }
@@ -117,14 +121,15 @@ public class ActionButton : MonoBehaviour
     {
         //do a confirm pop up to avoid misclicks
         // UIManager.Instance.ShowConfirmationPopup();
-        GameManager.Instance.RemoveStars(actionCost);
+        GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.HarvestResource();
     }
 
     public void SpawnUnit()
     {
-        GameManager.Instance.RemoveStars(actionCost);
-        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayerIndex, UnitManager.Instance.unitTestPrefab, targetHex, true);
+        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayerIndex, unitType, targetHex, true, true);
+
+        UIManager.Instance.RefreshHexView();
     }
 
 

@@ -14,8 +14,7 @@ public class CityData
     public int negativeLevelPoints = 0;
 
     public int playerIndex;
-    public List<WorldUnit> availableUnits = new List<WorldUnit>();
-    public int range;
+    public int range = 1;
 
 
     public int output;

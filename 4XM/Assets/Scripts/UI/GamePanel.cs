@@ -123,6 +123,11 @@ public class GamePanel : UIPanel
         hexView.SetData(hex, unit);
     }
 
+    public void RefreshHexView()
+    {
+        hexView.Refresh();
+    }
+
     public void HideHexView()
     {
         hexView.gameObject.SetActive(false);

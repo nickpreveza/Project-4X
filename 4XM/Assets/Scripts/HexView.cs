@@ -16,18 +16,28 @@ public class HexView : MonoBehaviour
 
     [SerializeField] GameObject actionItemPrefab;
     WorldHex hex;
+    WorldUnit unit;
     bool isUnitView;
+
+    public void Refresh()
+    {
+        SetData(hex, unit);
+    }
+
 
     public void SetData(WorldHex newHex, WorldUnit newUnit = null)
     {
+        unit = null;
+
         foreach(Transform child in horizontalScrollParent)
         {
             Destroy(child.gameObject);
         }
 
         hex = newHex;
+        unit = newUnit;
 
-        if (newUnit != null)
+        if (unit != null)
         {
             isUnitView = true;
         }
@@ -38,12 +48,12 @@ public class HexView : MonoBehaviour
 
         if (isUnitView)
         {
-            hexName.text = newUnit.data.unitName;
+            hexName.text = unit.data.unitName;
             hexAvatar.color = Color.white; //TODO: change avatar with related icon
 
-            if (newUnit.data.associatedPlayerIndex == GameManager.Instance.activePlayer.index)
+            if (unit.data.associatedPlayerIndex == GameManager.Instance.activePlayer.index)
             {
-                if (newUnit.IsInteractable)
+                if (unit.IsInteractable)
                 {
                     hexDescription.text = "This unit has available actions";
                     hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
@@ -56,7 +66,7 @@ public class HexView : MonoBehaviour
 
                 if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
                 {
-                    GenerateCityCaptureButton(newUnit.HasActionsLeft);
+                    GenerateCityCaptureButton(unit.HasActionsLeft);
                 }
 
             }
@@ -171,10 +181,14 @@ public class HexView : MonoBehaviour
     void GenerateUnitButtons()
     {
        // List<Units>
-        foreach(WorldUnit unit in GameManager.Instance.activePlayer.playerUnitsThatCanBeSpawned)
+        foreach(UnitType unitType in GameManager.Instance.activePlayer.gameUnitsDictionary.Keys)
         {
-            GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-            obj.GetComponent<ActionButton>().SetDataForUnitSpawn(this, hex, unit);
+            if (GameManager.Instance.activePlayer.gameUnitsDictionary[unitType])
+            {
+                GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+                obj.GetComponent<ActionButton>().SetDataForUnitSpawn(this, hex, unitType);
+            }
+           
         }
     }
 

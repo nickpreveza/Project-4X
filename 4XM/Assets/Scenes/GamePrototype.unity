@@ -7130,12 +7130,51 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 22f43513c8d2a9d4faf80ee69321de02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitPrefabs:
-  - {fileID: 500447415083812173, guid: 8247784e89bf16e4996a03c591124bde, type: 3}
+  gameUnits:
+  - unitName: Swordsman
+    defaultLockState: 0
+    type: 0
+    cost: 2
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Archer
+    defaultLockState: 1
+    type: 1
+    cost: 2
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Horseman
+    defaultLockState: 1
+    type: 2
+    cost: 2
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Trebuchet
+    defaultLockState: 1
+    type: 3
+    cost: 5
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Shields
+    defaultLockState: 1
+    type: 4
+    cost: 3
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Trader
+    defaultLockState: 1
+    type: 5
+    cost: 3
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
+  - unitName: Diplomat
+    defaultLockState: 1
+    type: 6
+    cost: 5
+    prefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
+      type: 3}
   hexSelectMode: 0
   selectedUnit: {fileID: 0}
-  unitTestPrefab: {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c,
-    type: 3}
   unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
   unitUsed: {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
   highlightHex: {fileID: 2100000, guid: 2bd3ab025c0d1b440a43e1dbae69c987, type: 2}
@@ -9933,7 +9972,7 @@ MonoBehaviour:
       travelMountain: 0
       travelSea: 0
       travelOcean: 0
-      unitSwordsman: 0
+      unitSwordsman: 1
       unitArcher: 0
       unitHorserider: 0
       unitTrebucet: 0
@@ -9960,7 +9999,6 @@ MonoBehaviour:
     turnCount: 0
     stars: 5
     unlockedAbiltiesCount: 0
-    playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
     playerBorders: []
@@ -9971,7 +10009,7 @@ MonoBehaviour:
       travelMountain: 0
       travelSea: 0
       travelOcean: 0
-      unitSwordsman: 0
+      unitSwordsman: 1
       unitArcher: 0
       unitHorserider: 0
       unitTrebucet: 0
@@ -9998,7 +10036,6 @@ MonoBehaviour:
     turnCount: 0
     stars: 5
     unlockedAbiltiesCount: 0
-    playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
     playerBorders: []
@@ -10037,7 +10074,6 @@ MonoBehaviour:
     turnCount: 0
     stars: 0
     unlockedAbiltiesCount: 0
-    playerUnitsThatCanBeSpawned: []
     playerUnits: []
     playerCities: []
     playerBorders: []
@@ -17306,6 +17342,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: CameraController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448783926915451347, guid: 1ec539821adaa3e42ba89791983b010b,
+        type: 3}
+      propertyPath: cameraOffsetFromPanTarget.x
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5448783926915451347, guid: 1ec539821adaa3e42ba89791983b010b,
+        type: 3}
+      propertyPath: cameraOffsetFromPanTarget.z
+      value: -30
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ec539821adaa3e42ba89791983b010b, type: 3}

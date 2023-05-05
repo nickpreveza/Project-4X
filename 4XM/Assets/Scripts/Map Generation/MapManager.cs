@@ -542,7 +542,7 @@ public class MapManager : MonoBehaviour
 
         foreach(WorldHex generatedCity in worldCities)
         {
-            CalculateDistanceFromOtherCities(generatedCity);
+           // CalculateDistanceFromOtherCities(generatedCity);
         }
 
         List<WorldHex> worldCitiesToAssign = new List<WorldHex>(worldCities);
@@ -553,9 +553,15 @@ public class MapManager : MonoBehaviour
             int randomCity = Random.Range(0, worldCitiesToAssign.Count);
             
             //walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
-            player.AddCity(worldCitiesToAssign[randomCity]);
+           
+            ClaimCityByPlayer(player, worldCitiesToAssign[randomCity]);
             worldCitiesToAssign.RemoveAt(randomCity);
         }
+    }
+
+    void ClaimCityByPlayer(Player player, WorldHex city)
+    {
+        player.AddCity(city);
     }
 
     public void GenerateResources(WorldHex cityCenter)

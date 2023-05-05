@@ -297,14 +297,14 @@ namespace SignedInitiative
             activePlayer.EndTurn();
             foreach(WorldHex city in activePlayer.playerCities)
             {
-                AddStars(city.cityData.output);
+                activePlayer.AddStars(city.cityData.output);
             }
 
            
 
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 
-            SI_CameraController.Instance.selectedTile = null;
+            SI_CameraController.Instance.DeselectSelection();
             UnitManager.Instance.ClearHexSelectionMode();
             activePlayerIndex++;
             if (activePlayerIndex >= sessionPlayers.Length)
@@ -339,30 +339,21 @@ namespace SignedInitiative
 
         }
 
-        public void RewardScore(int amount)
+        public void AddStars(int playerIndex, int amount)
         {
-            data.hbscore += amount;
-            UIManager.Instance.UpdateHUD();
+            GetPlayerByIndex(playerIndex).AddStars(amount);
         }
 
-        public void RemoveStars(int amount)
+        public void RemoveStars(int playerIndex, int amount)
         {
-            if (amount > activePlayer.stars)
-            {
-                Debug.LogError("Not enough stars but nothing stopped it. You broke the economy");
-            }
-
-            activePlayer.stars -= amount;
-
-            SI_EventManager.Instance.OnTransactionMade(activePlayer.index);
+            GetPlayerByIndex(playerIndex).RemoveStars(amount);
         }
 
-        public void AddStars(int amount)
+        public void AddScore(int playerIndex, int amount)
         {
-            activePlayer.stars += amount;
-
-            SI_EventManager.Instance.OnTransactionMade(activePlayer.index);
+            GetPlayerByIndex(playerIndex).AddScore(amount);
         }
+
 
         public void LoadGame()
         {
@@ -581,8 +572,9 @@ namespace SignedInitiative
             }
 
             SI_EventManager.Instance.OnAbilityUnlocked(activePlayerIndex);
+            activePlayer.UpdateAvailableUnits();
             UIManager.Instance.UpdateResourcePanel();
-            
+            UIManager.Instance.RefreshHexView();
         }
     }
 }

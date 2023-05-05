@@ -234,6 +234,11 @@ namespace SignedInitiative
         {
             gamePanel.GetComponent<GamePanel>().ShowHexView(hex, unit);
         }
+        
+        public void RefreshHexView()
+        {
+            gamePanel.GetComponent<GamePanel>().RefreshHexView();
+        }
 
         public Color GetHexColorByType(TileType type)
         {

@@ -182,17 +182,15 @@ public class WorldHex : MonoBehaviour
         associatedUnit = null;
     }
 
-    List<WorldHex> OccupyCityHexes()
-    {
-        return MapManager.Instance.GetHexesListWithinRadius(this.hexData, cityData.range);
-    }
-
     public void SpawnCity(string newName)
     {
+        RemoveResource();
+
         GameObject obj = Instantiate(MapManager.Instance.cityPrefab, transform);
         obj.transform.SetParent(resourceParent);
         cityGameObject = obj;
         hexData.hasCity = true;
+        hexData.hasBuilding = true; //maybe this will cause issues?
         cityData = new CityData();
 
         cityData.cityName = newName;
@@ -200,7 +198,6 @@ public class WorldHex : MonoBehaviour
         cityData.output = 1;
         cityData.range = 1;
         cityData.playerIndex = -1;
-        cityData.cityHexes = OccupyCityHexes();
 
         GameObject worldUI = Instantiate(MapManager.Instance.worldUIprefab, transform);
         cityView = worldUI.GetComponent<CityView>();
@@ -407,6 +404,9 @@ public class WorldHex : MonoBehaviour
         parentCity = parentCityHex;
         hexData.isOwnedByCity = true;
         hexData.playerOwnerIndex = parentCity.hexData.playerOwnerIndex;
+
+
+        //set outline material to match player color 
         this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color =
             GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerColor;
         //remove this later on
@@ -432,6 +432,22 @@ public class WorldHex : MonoBehaviour
         //GameObject resourceObj = Instantiate(MapManager.Instance.GetResourcePrefab)
     }
 
+    public void RemoveResource()
+    {
+        if (hexData.hasResource)
+        {
+            hexData.resourceType = ResourceType.EMPTY;
+            hexData.hasResource = false;
+
+            GameObject resourceObj = resourceParent.GetChild(0).gameObject;
+
+            if (resourceObj != null)
+            {
+                Destroy(resourceObj);
+            }
+           
+        }
+    }
     public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
     {
         if (!hexData.hasCity)
@@ -446,12 +462,24 @@ public class WorldHex : MonoBehaviour
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
 
+        List<WorldHex> cityHexes = new List<WorldHex>(adjacentHexes);
+
+        foreach(WorldHex hex in adjacentHexes)
+        {
+            if (hex.hexData.isOwnedByCity)
+            {
+                //Remove hexes that already belong to other cities 
+                cityHexes.Remove(hex);
+            }
+        }
+
+        cityData.cityHexes = cityHexes;
+
         foreach (WorldHex newHex in cityData.cityHexes)
         {
             newHex.SetAsOccupiedByCity(this);
         }
 
-        cityData.availableUnits = player.playerUnitsThatCanBeSpawned;
         cityView.gameObject.SetActive(true);
 
 
@@ -475,18 +503,12 @@ public class WorldHex : MonoBehaviour
     public void Deselect()
     {
         // hexGameObject.GetComponent<MeshRenderer>().materials[0] = rimMaterial;
+        HideHighlight();
         UIManager.Instance.HideHexView();
     }
 
     public void Select(bool isRepeat)
     {
-        if (UnitManager.Instance == null)
-        {
-            //This is just for visual prototype feedback testing
-            wiggler?.Wiggle();
-            return;
-        }
-
         //if a unit is moving 
         if (UnitManager.Instance.hexSelectMode)
         {
@@ -526,7 +548,8 @@ public class WorldHex : MonoBehaviour
             }
             else
             {
-                //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive 
+                //TODO: Change the bheaviour to select the unit normally, but show that it's currently inactive
+                // ShowHighlight(false);
                 Debug.Log("Auto-moved to the resource layer");
                 SI_CameraController.Instance.repeatSelection = true;
                 UnitManager.Instance.ClearHexSelectionMode();
@@ -550,7 +573,13 @@ public class WorldHex : MonoBehaviour
         var newMaterials = hexGameObject.GetComponent<MeshRenderer>().materials;
         newMaterials[0] = UnitManager.Instance.highlightHex;
         hexGameObject.GetComponent<MeshRenderer>().materials = newMaterials; */
+        ShowHighlight(false);
         wiggler?.Wiggle();
+
+        if (hexData.isOwnedByCity)
+        {
+            parentCity.wiggler?.Wiggle();
+        }
     }
 
     public void Hold()

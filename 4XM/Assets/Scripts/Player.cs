@@ -18,9 +18,10 @@ public class Player
     public int turnCount;
     public int stars;
     public int unlockedAbiltiesCount;
-   
+
     //Game Editable Data
-    public List<WorldUnit> playerUnitsThatCanBeSpawned = new List<WorldUnit>();
+
+    public Dictionary<UnitType, bool> gameUnitsDictionary = new Dictionary<UnitType, bool>();
 
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
@@ -50,6 +51,32 @@ public class Player
         }
     }
 
+    public void AddScore(int amount)
+    {
+        score += amount;
+        UIManager.Instance.UpdateHUD();
+    }
+
+    public void RemoveStars(int amount)
+    {
+        if (amount > stars)
+        {
+            Debug.LogError("Not enough stars but nothing stopped it. You broke the economy");
+        }
+
+        stars -= amount;
+
+        SI_EventManager.Instance.OnTransactionMade(index);
+    }
+
+
+    public void AddStars(int amount)
+    {
+        stars += amount;
+
+        SI_EventManager.Instance.OnTransactionMade(index);
+    }
+
     public void ChangeAbiltiyCost(Abilities ability, int value)
     {
         calculatedAbilityCost[ability] = value;
@@ -69,6 +96,26 @@ public class Player
     public void UnlockAbility(Abilities ability)
     {
         abilityDictionary[ability].canBePurchased = true;
+    }
+
+    public void GenerateUnitDictionary()
+    {
+        foreach(UnitStruct unitStruct in UnitManager.Instance.gameUnits)
+        {
+            gameUnitsDictionary.Add(unitStruct.type, unitStruct.defaultLockState);
+        }
+    }
+
+    public void UpdateAvailableUnits()
+    {
+        gameUnitsDictionary[UnitType.Swordsman] = abilities.unitSwordsman;
+        gameUnitsDictionary[UnitType.Archer] = abilities.unitArcher;
+        gameUnitsDictionary[UnitType.Horseman] = abilities.unitHorserider;
+        gameUnitsDictionary[UnitType.Trebuchet] = abilities.unitTrebucet;
+        gameUnitsDictionary[UnitType.Shields] = abilities.unitShield;
+        gameUnitsDictionary[UnitType.Trader] = abilities.unitTrader;
+        gameUnitsDictionary[UnitType.Diplomat] = abilities.unitDiplomat;
+       
     }
 
     public void RecalculateAbilityCosts()

@@ -570,8 +570,22 @@ public class SI_CameraController : MonoBehaviour
         }
     }
 
+    public void DeselectSelection()
+    {
+        if (selectedTile != null)
+        {
+            selectedTile.Deselect();
+        }
+
+        selectedTile = null;
+    }
+
     void SelectTile(WorldHex newTile)
     {
+        if (selectedTile != null)
+        {
+            selectedTile.Deselect();
+        }
         if (newTile == selectedTile)
         {
             if (repeatSelection)

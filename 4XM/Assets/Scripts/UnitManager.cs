@@ -7,14 +7,11 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
 
-    [SerializeField] GameObject[] unitPrefabs;
+    public UnitStruct[] gameUnits; 
 
     public bool hexSelectMode;
 
     public WorldUnit selectedUnit;
-
-    public GameObject unitTestPrefab;
-
     public Material unitActive;
     public Material unitUsed;
     public Material highlightHex;
@@ -61,12 +58,40 @@ public class UnitManager : MonoBehaviour
         waitingForCameraPan = false;
     }
 
+    public UnitStruct GetUnitByType(UnitType type)
+    {
+        switch (type)
+        {
+            case UnitType.Swordsman:
+                return gameUnits[0];
+            case UnitType.Archer:
+                return gameUnits[1];
+            case UnitType.Horseman:
+                return gameUnits[2];
+            case UnitType.Trebuchet:
+                return gameUnits[3];
+            case UnitType.Shields:
+                return gameUnits[4];
+            case UnitType.Trader:
+                return gameUnits[5];
+            case UnitType.Diplomat:
+                return gameUnits[6];
+        }
+
+        Debug.LogError("Unit type given was invalid. Returned default unit");
+        return gameUnits[0];
+    }
+
 
 
     public void InitializeStartUnits()
     {
         foreach(Player player in GameManager.Instance.sessionPlayers)
         {
+            player.GenerateUnitDictionary();
+
+            player.UpdateAvailableUnits();
+
             if (player.playerUnits.Count > 0)
             {
                 //TODO: place the units of each players
@@ -74,7 +99,7 @@ public class UnitManager : MonoBehaviour
             else
             {
                 //spanw a unit at the first city of each player
-                SpawnUnitAt(player.index, unitTestPrefab, player.playerCities[0], false);
+                SpawnUnitAt(player.index, UnitType.Swordsman, player.playerCities[0], false, false);
             }
         }
        
@@ -82,9 +107,16 @@ public class UnitManager : MonoBehaviour
     }
 
 
-    public void SpawnUnitAt(int playerIndex, GameObject prefab, WorldHex targetHex, bool exhaustMoves)
+    public void SpawnUnitAt(int playerIndex, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost)
     {
-        GameObject obj = Instantiate(prefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+        UnitStruct unitData = GetUnitByType(newUnit);
+
+        if (applyCost)
+        {
+            GameManager.Instance.RemoveStars(playerIndex, unitData.cost);
+        }
+
+        GameObject obj = Instantiate(unitData.prefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
         obj.transform.localPosition = Vector3.zero;
         WorldUnit unit = obj.GetComponent<WorldUnit>();
         unit.SpawnSetup(targetHex, playerIndex, exhaustMoves);
@@ -344,4 +376,26 @@ public class UnitManager : MonoBehaviour
         hexSelectMode = false;
         selectedUnit.Attack(hex);
     }
+}
+
+
+[System.Serializable]
+public struct UnitStruct
+{
+    public string unitName;
+    public bool defaultLockState;
+    public UnitType type;
+    public int cost;
+    public GameObject prefab;
+}
+
+public enum UnitType
+{
+    Swordsman,
+    Archer,
+    Horseman,
+    Trebuchet,
+    Shields,
+    Trader,
+    Diplomat
 }
