@@ -4,12 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.UI.Extensions;
+using SignedInitiative;
 
 public class CityView : MonoBehaviour
 {
     WorldHex parentHex;
     [SerializeField] TextMeshProUGUI cityName;
     [SerializeField] TextMeshProUGUI cityOutput;
+    [SerializeField] TextMeshProUGUI cityLevel;
     [SerializeField] Image cityNameBackground;
     [SerializeField] Color positiveGainColor;
     [SerializeField] Color negativeGainColor;
@@ -28,8 +30,14 @@ public class CityView : MonoBehaviour
         parentHex = hex;
     }
 
+    public void UpdateForCityCapture()
+    {
+        cityNameBackground.color = GameManager.Instance.GetCivilizationColor(parentHex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
+    }
+
     public void UpdateData()
     {
+        cityLevel.text = parentHex.cityData.level.ToString();
         cityName.text = parentHex.cityData.cityName;
         cityOutput.text = parentHex.cityData.output.ToString();
     }
@@ -85,40 +93,6 @@ public class CityView : MonoBehaviour
         levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).gameObject.SetActive(true);
         levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).GetComponent<Image>().color = negativeGainColor;
     }
-
-
-    public void UpdateLevelProgressPoint()
-    {/*
-        int currentLevelPoints = parentHex.cityData.targetLevelPoints;
-        int progressLevelPoints = parentHex.cityData.levelPointsToNext;
-
-        if (internalProgressLevel != progressLevelPoints)
-        {
-            if (internalProgressLevel < progressLevelPoints)
-            {
-                if (progressLevelPoints != 0)
-                {
-                    int pointsToGenerate = progressLevelPoints - internalProgressLevel;
-                    for (int i = 0; i < pointsToGenerate; i++)
-                    {
-                        AddLevelProgressPoint();
-                    }
-                }
-            }
-            else
-            {
-                int pointsToRemove = internalProgressLevel - progressLevelPoints;
-                for (int i = 0; i < pointsToRemove; i++)
-                {
-                    RemoveLevelProgressPoint();
-                }
-
-            }
-
-            internalProgressLevel = progressLevelPoints;
-        }*/
-    }
-
  
 
     public void InitialLevelSetup()

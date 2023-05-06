@@ -54,6 +54,10 @@ namespace SignedInitiative
         [SerializeField] Button loadGame;
         [SerializeField] UIPanel currentSubpanel;
 
+        [SerializeField] UniversalPopup universalPopup;
+        public delegate void popupFunction();
+        public popupFunction confirmAction;
+
         void Awake()
         {
             if (Instance == null)
@@ -71,6 +75,21 @@ namespace SignedInitiative
         {
             SI_EventManager.Instance.onCityCaptured += OnCityCaptureCallback;
             SI_EventManager.Instance.onTransactionMade += OnTransactionMadeCallback;
+
+            ClosePopup();
+        }
+
+        public void OpenPopup(string title, string description, bool available, popupFunction  newFunction)
+        {
+            confirmAction = newFunction;
+
+            universalPopup.gameObject.SetActive(true);
+            universalPopup.SetData(title, description, available);
+        }
+
+        public void ClosePopup()
+        {
+            universalPopup.Close();
         }
 
         void OnCityCaptureCallback(int playerIndex)
@@ -187,6 +206,7 @@ namespace SignedInitiative
             gamePanel.Activate();
 
             menuActive = false;
+            SetupOverview();
             GameManager.Instance.menuActive = true;
         }
 
@@ -226,8 +246,14 @@ namespace SignedInitiative
         public void UpdateHUD()
         {
             gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
-            //TODO: optimize this to only update when turn changes
-            gamePanel.GetComponent<GamePanel>().SetPlayerAvatar();
+            gamePanel.GetComponent<GamePanel>().UpdateOverview();
+           //TODO: optimize this to only update when turn changes
+           gamePanel.GetComponent<GamePanel>().SetPlayerAvatar();
+        }
+
+        public void SetupOverview()
+        {
+            gamePanel.GetComponent<GamePanel>().SetupOverview();
         }
 
         public void ShowHexView(WorldHex hex, WorldUnit unit = null)
@@ -344,6 +370,7 @@ namespace SignedInitiative
             Application.OpenURL(GameManager.Instance.data.discordURL);
         }
 
+   
     }
 
 }

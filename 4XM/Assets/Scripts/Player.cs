@@ -15,7 +15,10 @@ public class Player
     public string name;
 
     //Score Related
-    public int score;
+    public int totalScore;
+    public int developmentScore;
+    public int researchScore;
+    public int militaryScore;
     public int turnCount;
     public int stars;
     public int unlockedAbiltiesCount;
@@ -51,9 +54,9 @@ public class Player
         }
     }
 
-    public void AddScore(int amount)
+    public void AddTotalScore(int amount)
     {
-        score += amount;
+        totalScore += amount;
         UIManager.Instance.UpdateHUD();
     }
 
@@ -77,8 +80,12 @@ public class Player
         SI_EventManager.Instance.OnTransactionMade(index);
     }
 
-    public void BuyAbility(Abilities ability)
+    public void BuyAbility(Abilities ability, bool removeStars)
     {
+        if (removeStars)
+        {
+            RemoveStars(abilityDictionary[ability].calculatedAbilityCost);
+        }
         abilityDictionary[ability].canBePurchased = true;
         abilityDictionary[ability].hasBeenPurchased = true;
     }
@@ -162,9 +169,20 @@ public class Player
         playerCities.Add(cityHex);
         cityHex.OccupyCityByPlayer(this);
 
-        GameManager.Instance.activePlayer.RecalculateAbilityCosts();
+        RecalculateAbilityCosts();
         SI_EventManager.Instance.OnCityCaptured(index);
     }
+
+    public void RemoveCity(WorldHex cityHex)
+    {
+        if (playerCities.Contains(cityHex))
+        {
+            playerCities.Remove(cityHex);
+        }
+
+        RecalculateAbilityCosts();
+    }
+
 }
 
 

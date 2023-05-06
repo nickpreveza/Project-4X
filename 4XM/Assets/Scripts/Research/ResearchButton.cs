@@ -59,7 +59,7 @@ public class ResearchButton: MonoBehaviour
         buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
         buttonText.color = Color.black;
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(OpenPopup);
+        button.onClick.AddListener(() => OpenPopup(true));
     }
 
     public void SetAsUnavailble()
@@ -68,7 +68,7 @@ public class ResearchButton: MonoBehaviour
         buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
         buttonCost.color = Color.black;
         button.onClick.RemoveAllListeners();
-        button.onClick.AddListener(OpenPopup);
+        button.onClick.AddListener(() =>OpenPopup(false));
     }
 
     public void SetAsLocked()
@@ -84,21 +84,21 @@ public class ResearchButton: MonoBehaviour
     {
 
     }
-    public void OpenPopup()
+    public void OpenPopup(bool available)
     {
-        //remove this. honestly just experimenting with formats
-        GameManager.Instance.activePlayer.RemoveStars(fetchedAbilityCost);
-        GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, true);
- 
+        UIManager.Instance.OpenPopup(
+            GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
+            GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
+            available,
+            ()=>GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, 
+            true, true
+        ));
     }
+
 
     public void OpenPopupLocked()
     {
 
     }
 
-    public void AttemptPurchase()
-    {
-
-    }
 }

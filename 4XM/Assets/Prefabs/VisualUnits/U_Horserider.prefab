@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 567042301805318189}
   - component: {fileID: 567042301802418189}
   - component: {fileID: 567042301803418317}
-  - component: {fileID: 3308677334637137624}
   m_Layer: 6
   m_Name: U_Horserider
   m_TagString: Unit
@@ -88,45 +87,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3308677334637137624
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 567042301805612045}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52d64e395b91c3547a5fc7a4a2e70e8e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data:
-    c: 0
-    r: 0
-    unitName: Horserider
-    cost: 2
-    health: 10
-    attack: 5
-    defense: 1
-    range: 3
-    actionPoints: 1
-    attackCharges: 1
-    currentHealth: 0
-    currentAttack: 0
-    currentDefense: 0
-    currentTurnActionPoints: 1
-    currentTurnAttackCharges: 1
-    enemiesInRange: 0
-    hasNoValidHexesInRange: 0
-    canAttackAfterMove: 0
-    canMoveAfterAttack: 0
-    setAPToZeroAfterWalk: 0
-    canMove: 0
-    canAttack: 0
-    isInteractable: 0
-    hasMoved: 0
-    hasAttacked: 0
-    associatedPlayerIndex: -1
-    movePoints: 1
-    movePointsRemaining: 1
-  parentHex: {fileID: 0}

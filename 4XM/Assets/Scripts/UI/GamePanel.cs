@@ -23,6 +23,8 @@ public class GamePanel : UIPanel
     [SerializeField] Image playerAvatarBackground;
 
     ResearchViewHandler research;
+    OverviewPanel overview;
+
     void Start()
     {
       
@@ -32,6 +34,7 @@ public class GamePanel : UIPanel
             UIManager.Instance.AddPanel(this);
         }
         research = researchPanel.GetComponent<ResearchViewHandler>();
+        overview = overviewPanel.GetComponent<OverviewPanel>();
         researchPanel.SetActive(false);
         overviewPanel.SetActive(false);
         settingsPanel.SetActive(false);
@@ -45,6 +48,15 @@ public class GamePanel : UIPanel
 
     }
 
+    public void SetupOverview()
+    {
+        overview.OverviewSetup();
+    }
+
+    public void UpdateOverview()
+    {
+        overview.UpdateEntries();
+    }
     public void RestartAction()
     {
         GameManager.Instance.ReloadScene();
@@ -108,13 +120,9 @@ public class GamePanel : UIPanel
     public void UpdateCurrencies()
     {
         playerName.text = GameManager.Instance.activePlayer.name;
-        scoreValue.text = "SCORE: " + GameManager.Instance.activePlayer.score;
+        scoreValue.text = "SCORE: " + GameManager.Instance.activePlayer.totalScore;
         starValue.text = "STARS: " + GameManager.Instance.activePlayer.stars;
         turnValue.text = "TURN: " + GameManager.Instance.activePlayer.turnCount;
-        /*
-        scoreValue.text = ItemManager.Instance.GetItemAmount("hempseeds").ToString();
-        starValue.text = ItemManager.Instance.GetItemAmount("hempfibers").ToString();
-        scoreValue.text = ItemManager.Instance.GetItemAmount("hemppebbles").ToString(); */
     }
 
     public void ShowHexView(WorldHex hex, WorldUnit unit = null)

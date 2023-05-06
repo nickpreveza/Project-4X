@@ -47,7 +47,8 @@ public class WorldUnit : MonoBehaviour
     public Color civColor;
 
     bool attackIsRanged;
-
+    UnitView unitView;
+    GameObject visualUnit;
     public bool BelongsToActivePlayer
     {
         get
@@ -59,7 +60,7 @@ public class WorldUnit : MonoBehaviour
     void Start()
     {
         wiggler = GetComponent<Wiggler>();
-
+      
         oldPosition = newPosition = this.transform.position;
         SI_EventManager.Instance.onTurnEnded += OnTurnEnded;
        // SI_EventManager.Instance.onUni
@@ -130,6 +131,18 @@ public class WorldUnit : MonoBehaviour
             ResetActions();
         }
 
+        unitView = transform.GetChild(0).GetComponent<UnitView>();
+        unitView.SetData(this);
+
+        if (visualUnit == null)
+        {
+            Instantiate(referenceData.GetPrefab(), this.transform);
+        }
+        else
+        {
+            Destroy(visualUnit);
+            Instantiate(referenceData.GetPrefab(), this.transform);
+        }
     }
 
     void ExhaustActions()
@@ -232,21 +245,30 @@ public class WorldUnit : MonoBehaviour
     {
         if (isInteractable)
         {
-            this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
-            this.GetComponent<MeshRenderer>().material.color = civColor;
+            if (visualUnit != null)
+            {
+                visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
+                visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+            }
+          
         }
         else
         {
-          
-            this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
-            this.GetComponent<MeshRenderer>().material.color = civColor;
+            if (visualUnit != null)
+            {
+                visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
+                visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+            }
+           
         }
+
+        unitView?.UpdateData();
     }
 
     public void AutomoveRandomly()
     {
         List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, unitReference.walkRange);
-
+        
         if (hexesInRadius.Contains(parentHex))
         {
             hexesInRadius.Remove(parentHex);
@@ -287,7 +309,7 @@ public class WorldUnit : MonoBehaviour
     public bool AttemptToKill(int value)
     {
         currentHealth -= value;
-
+        unitView.UpdateData();
         if (currentHealth <= 0)
         {
             return true;
@@ -296,6 +318,8 @@ public class WorldUnit : MonoBehaviour
         {
             return false;
         }
+
+      
     }
 
     public void Heal(int value)

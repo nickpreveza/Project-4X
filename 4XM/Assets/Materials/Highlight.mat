@@ -8,9 +8,8 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Highlight
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ValidKeywords:
-  - _RECEIVE_SHADOWS_OFF
+  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+  m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -80,8 +79,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - Vector1_38BD3441: 0.4
+    - Vector1_CF8B0D8D: 6
+    - Vector1_ED5ABFD9: 0.05
+    - Vector1_F3F6B787: 0
     - _AlphaClip: 0
     - _Blend: 0
+    - _BlendOp: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -89,34 +93,60 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DistortAmplitude: 1
+    - _DistortNoise: 4
     - _DstBlend: 0
     - _EnvironmentReflections: 1
     - _GlossMapScale: 1
     - _Glossiness: 0.5
     - _GlossinessSource: 0
     - _GlossyReflections: 1
+    - _GrainColorBlend: 0.5
+    - _GrainShineStrenght: 1
+    - _Grainperiod: 100
     - _Metallic: 0
     - _Mode: 0
+    - _NormalStrenght: 1
     - _OcclusionStrength: 1
     - _Parallax: 0.02
+    - _PolygonSides: 6
+    - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 0
+    - _SampleGI: 0
+    - _ShineDuneHeightMin: 0.5
+    - _ShineThreshold: 0.9
     - _Shininess: 0
+    - _SinFreq: 1
+    - _SineAmplitude: 1
+    - _SineRotation: 0
     - _Smoothness: 1
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
     - _SpecSource: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
+    - _SubstrateDuneHeightMax: 1
+    - _SubstrateGrainHeightMax: 1
     - _Surface: 0
+    - _SusbtrateTightening: 0
+    - _UVScale: 1
     - _UVSec: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 0.86093307, g: 1, b: 0, a: 1}
-    - _Color: {r: 0.86093307, g: 1, b: 0, a: 1}
+    - Color_28180829: {r: 0.5019608, g: 0.30196077, b: 0.058823504, a: 1}
+    - Color_57D43A16: {r: 0.95283014, g: 0.95283014, b: 0.95283014, a: 0}
+    - Color_F689E8B9: {r: 0.9245283, g: 0.6391348, b: 0.29218578, a: 1}
+    - _BaseColor: {r: 0.86274505, g: 1, b: 0, a: 1}
+    - _Color: {r: 0.86274505, g: 1, b: 0, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _SandHighColor: {r: 0, g: 0, b: 0, a: 0}
+    - _SandLowColor: {r: 1, g: 0.7994545, b: 0.36320746, a: 0}
+    - _ShineColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _SubstrateColor: {r: 1, g: 1, b: 1, a: 0}
+    - _UVTiling: {r: 2, g: 2, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &367460620645622230
 MonoBehaviour:

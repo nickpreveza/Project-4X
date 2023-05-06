@@ -22,6 +22,8 @@ public class UnitManager : MonoBehaviour
     List<WorldHex> hexesInWalkRange = new List<WorldHex>();
     List<WorldHex> hexesInAttackRange = new List<WorldHex>();
 
+    [SerializeField] GameObject worldUnitPrefab;
+
     void Awake()
     {
         if (Instance == null)
@@ -117,7 +119,6 @@ public class UnitManager : MonoBehaviour
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 
-
     public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost)
     {
         UnitData unitData = GetUnitDataByType(newUnit, player.civilization);
@@ -127,7 +128,7 @@ public class UnitManager : MonoBehaviour
             GameManager.Instance.RemoveStars(player.index, unitData.cost);
         }
 
-        GameObject obj = Instantiate(unitData.GetPrefab(), targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+        GameObject obj = Instantiate(worldUnitPrefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
         obj.transform.localPosition = Vector3.zero;
         WorldUnit unit = obj.GetComponent<WorldUnit>();
         unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves);
@@ -405,17 +406,17 @@ public class UnitData
     public bool canAttackAfterMove;
     public bool canMoveAfterAttack;
 
-    public GameObject[] prefabs; //associatedToUnitLevels if we have the time
+    public GameObject[] visualPrefab; //associatedToUnitLevels if we have the time
 
     public GameObject GetPrefab()
     {
-        if (prefabs.Length > level)
+        if (visualPrefab.Length > level-1)
         {
-            return prefabs[level];
+            return visualPrefab[level-1];
         }
         else
         {
-            return prefabs[0];
+            return visualPrefab[0];
         }
     }
 

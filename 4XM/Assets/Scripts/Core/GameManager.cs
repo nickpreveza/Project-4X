@@ -234,6 +234,7 @@ namespace SignedInitiative
             activePlayerIndex = 0;
            
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
+
             UIManager.Instance.OpenGamePanel();
         }
 
@@ -318,7 +319,7 @@ namespace SignedInitiative
                 {
                     foreach (AbilityData ability in abilities)
                     {
-                        UnlockAbility(player.index, ability.abilityID, false);
+                        UnlockAbility(player.index, ability.abilityID, false, false);
                     }
                   
                 }
@@ -415,7 +416,7 @@ namespace SignedInitiative
 
         public void AddScore(int playerIndex, int amount)
         {
-            GetPlayerByIndex(playerIndex).AddScore(amount);
+            GetPlayerByIndex(playerIndex).AddTotalScore(amount);
         }
 
 
@@ -552,15 +553,22 @@ namespace SignedInitiative
             Application.Quit();
         }
 
-        public void UnlockAbility(int playerIndex, Abilities ability, bool updateUI)
+        public void UnlockAbility(int playerIndex, Abilities ability, bool updateUI, bool removeStars)
         {
+          
             Player player = GetPlayerByIndex(playerIndex);
+
+            if (player.abilityDictionary[ability].hasBeenPurchased)
+            {
+                Debug.Log("Ability has already been purchased");
+                return;
+            }
 
             Abilities abilityToUnlock = abilitiesDictionary[ability].abilityToUnlock;
 
             if (ability != Abilities.NONE)
             {
-                player.BuyAbility(ability);
+                player.BuyAbility(ability, removeStars);
             }
 
             if (abilityToUnlock != Abilities.NONE)

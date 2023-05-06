@@ -439,6 +439,15 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
+        bool isThisATakeOver = false;
+
+        if (hexData.playerOwnerIndex > -1 && hexData.playerOwnerIndex != player.index)
+        {
+            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).RemoveCity(this);
+            isThisATakeOver = true;
+        }
+       
+
         cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
@@ -446,26 +455,38 @@ public class WorldHex : MonoBehaviour
 
         List<WorldHex> cityHexes = new List<WorldHex>(adjacentHexes);
 
-        foreach(WorldHex hex in adjacentHexes)
+        if (!isThisATakeOver)
         {
-            if (hex.hexData.isOwnedByCity)
+            foreach (WorldHex hex in adjacentHexes)
             {
-                //Remove hexes that already belong to other cities 
-                cityHexes.Remove(hex);
+                if (hex.hexData.isOwnedByCity)
+                {
+                    //Remove hexes that already belong to other cities 
+                    cityHexes.Remove(hex);
+                }
+            }
+
+            cityData.cityHexes = cityHexes;
+
+            foreach (WorldHex newHex in cityData.cityHexes)
+            {
+                newHex.SetAsOccupiedByCity(this);
             }
         }
-
-        cityData.cityHexes = cityHexes;
-
-        foreach (WorldHex newHex in cityData.cityHexes)
+        else
         {
-            newHex.SetAsOccupiedByCity(this);
+            foreach (WorldHex newHex in cityData.cityHexes)
+            {
+                newHex.SetAsOccupiedByCity(this);
+            }
         }
+       
 
         cityView.gameObject.SetActive(true);
 
 
         cityView.UpdateData();
+        cityView.UpdateForCityCapture();
         cityView.InitialLevelSetup();
         
         if (spawnUnit)
