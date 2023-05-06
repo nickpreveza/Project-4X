@@ -10,6 +10,7 @@ public class AbilityData
     public string abilityDescription;
     public Sprite abilityIcon;
     public int abilityCost;
+    public int scoreForPlayer;
     public bool isUnlocked;
     public Abilities abilityToUnlock;
 }

@@ -110,7 +110,7 @@ public class ActionButton : MonoBehaviour
         else
         {
             buttonImage.color = UIManager.Instance.unaffordableColor;
-            costVisual.SetActive(false);
+            costVisual.SetActive(true);
             buttonAction.interactable = false;
         }
     }
@@ -133,6 +133,7 @@ public class ActionButton : MonoBehaviour
         UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true);
 
         UIManager.Instance.RefreshHexView();
+        UIManager.Instance.UpdateHUD();
     }
 
 

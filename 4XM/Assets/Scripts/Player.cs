@@ -55,10 +55,47 @@ public class Player
         }
     }
 
-    public void AddTotalScore(int amount)
+    public void AddScore(int scoreType, int amount)
     {
-        totalScore += amount;
-        UIManager.Instance.UpdateHUD();
+        if (scoreType == 1)
+        {
+            developmentScore += amount;
+        }
+        else if (scoreType == 2)
+        {
+            researchScore += amount;
+        }
+        else if (scoreType == 3)
+        {
+            militaryScore += amount;
+        }
+
+        totalScore = researchScore + developmentScore + militaryScore;
+
+
+    }
+
+    public void CalculateDevelopmentScore(bool updateHUD)
+    {
+        int newDevelopmentScore = 0;
+        foreach(WorldHex hex in playerCities)
+        {
+            if (hex.cityData.level <= 10)
+            {
+                newDevelopmentScore += hex.cityData.level * 10;
+            }
+            else if (hex.cityData.level > 10)
+            {
+                int baseScore = hex.cityData.level - 10;
+                newDevelopmentScore += 100 + (baseScore * 50);
+            }
+           
+        }
+
+        if (updateHUD)
+        {
+            UIManager.Instance.UpdateHUD();
+        }
     }
 
     public void RemoveStars(int amount)
@@ -102,6 +139,7 @@ public class Player
         {
             RemoveStars(abilityDictionary[ability].calculatedAbilityCost);
         }
+
         abilityDictionary[ability].canBePurchased = true;
         abilityDictionary[ability].hasBeenPurchased = true;
     }

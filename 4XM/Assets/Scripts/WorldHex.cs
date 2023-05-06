@@ -228,6 +228,12 @@ public class WorldHex : MonoBehaviour
             cityView.UpdateData();
 
         }
+
+        if (GameManager.Instance.IsIndexOfActivePlayer(hexData.playerOwnerIndex))
+        {
+            GameManager.Instance.activePlayer.CalculateExpectedStars();
+            UIManager.Instance.UpdateHUD();
+        }
     }
     public IEnumerator AddProgressPoint(int value)
     {
@@ -262,6 +268,7 @@ public class WorldHex : MonoBehaviour
                 cityView.AddLevelUIPoint();
                 cityView.RemoveAllProgressPoints();
                 cityView.UpdateData();
+               
                 yield return new WaitForSeconds(0.3f);
             }
             else
@@ -272,6 +279,13 @@ public class WorldHex : MonoBehaviour
         }
 
         cityView.UpdateData();
+
+        if (GameManager.Instance.IsIndexOfActivePlayer(hexData.playerOwnerIndex))
+        {
+            GameManager.Instance.activePlayer.CalculateExpectedStars();
+            GameManager.Instance.activePlayer.CalculateDevelopmentScore(false);
+            UIManager.Instance.UpdateHUD();
+        }
         
     }
 
@@ -511,11 +525,6 @@ public class WorldHex : MonoBehaviour
 
   
 
-    }
-
-    public void OccupyCityFromEnemy()
-    {
-        //TODO: slightly different from occupycitybyplayer because it doesn't set up its level
     }
 
     public void Deselect()

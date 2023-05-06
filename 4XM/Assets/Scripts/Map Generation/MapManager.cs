@@ -760,6 +760,7 @@ public struct Resource
 
     public bool canBeBuild;
 
+    public int scoreForPlayer;
     public int cost;
     public int output;
 
@@ -778,7 +779,7 @@ public struct Building
     public ResourceType matchingResource;
 
     public bool hasLevels;
-
+    public int scoreForPlayer;
     public int cost;
     public int output;
 

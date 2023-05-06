@@ -76,7 +76,7 @@ public class GamePanel : UIPanel
     {
         playerAvatarBackground.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
-        turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        scoreImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
     }
 
     public void UpdateResearchPanel()
@@ -130,7 +130,7 @@ public class GamePanel : UIPanel
         scoreValue.text = GameManager.Instance.activePlayer.totalScore.ToString();
         starValue.text = GameManager.Instance.activePlayer.stars.ToString();
         turnValue.text = GameManager.Instance.activePlayer.turnCount.ToString();
-        expectedStars.text = GameManager.Instance.activePlayer.expectedStars.ToString();
+        expectedStars.text = " +" + GameManager.Instance.activePlayer.expectedStars.ToString();
     }
 
     public void ShowHexView(WorldHex hex, WorldUnit unit = null)

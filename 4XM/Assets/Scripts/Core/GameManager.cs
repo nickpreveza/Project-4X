@@ -347,8 +347,9 @@ namespace SignedInitiative
             activePlayerIndex = player.index;
 
             activePlayer.StartTurn();
-            UIManager.Instance.UpdateHUD();
-            UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
+            activePlayer.CalculateDevelopmentScore(false);
+            activePlayer.CalculateExpectedStars();
+          
             if (activePlayer.lastMovedUnit != null)
             {
                 SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
@@ -357,12 +358,15 @@ namespace SignedInitiative
             {
                 SI_CameraController.Instance.PanToHex(player.playerCities[0]);
             }
-            
+
+            UIManager.Instance.UpdateHUD();
+            UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
             //TODO: Update fog map and stuff
         }
 
         public void LocalEndTurn()
         {
+            UIManager.Instance.EndTurn();
             activePlayer.EndTurn();
             foreach(WorldHex city in activePlayer.playerCities)
             {
@@ -383,7 +387,7 @@ namespace SignedInitiative
             }
 
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
-            UIManager.Instance.EndTurn();
+         
         }
         public void EndTurn(Player player)
         {
@@ -419,9 +423,9 @@ namespace SignedInitiative
             GetPlayerByIndex(playerIndex).RemoveStars(amount);
         }
 
-        public void AddScore(int playerIndex, int amount)
+        public void AddScore(int playerIndex, int scoreType, int amount)
         {
-            GetPlayerByIndex(playerIndex).AddTotalScore(amount);
+            GetPlayerByIndex(playerIndex).AddScore(scoreType, amount);
         }
 
 
@@ -570,7 +574,7 @@ namespace SignedInitiative
             }
 
             Abilities abilityToUnlock = abilitiesDictionary[ability].abilityToUnlock;
-
+            player.AddScore(2, abilitiesDictionary[ability].scoreForPlayer);
             if (ability != Abilities.NONE)
             {
                 player.BuyAbility(ability, removeStars);

@@ -127,6 +127,7 @@ public class UnitManager : MonoBehaviour
         {
             GameManager.Instance.RemoveStars(player.index, unitData.cost);
         }
+        player.AddScore(3, unitData.scoreForPlayer);
 
         GameObject obj = Instantiate(worldUnitPrefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
         obj.transform.localPosition = Vector3.zero;
@@ -390,6 +391,7 @@ public class UnitData
     public UnitType type;
     public Civilizations civType;
     public int cost;
+    public int scoreForPlayer;
 
     [Header("Unit Stats")]
     public int level;

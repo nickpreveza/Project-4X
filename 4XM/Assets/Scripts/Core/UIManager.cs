@@ -208,6 +208,8 @@ namespace SignedInitiative
             menuActive = false;
             SetupOverview();
             GameManager.Instance.menuActive = true;
+            UpdateHUD();
+            UpdateResourcePanel(GameManager.Instance.activePlayerIndex);
         }
 
         public void OpenMainMenu()
