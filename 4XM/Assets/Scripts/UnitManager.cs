@@ -7,7 +7,7 @@ public class UnitManager : MonoBehaviour
 {
     public static UnitManager Instance;
 
-    public UnitStruct[] gameUnits; 
+    public UnitData[] gameUnits; 
 
     public bool hexSelectMode;
 
@@ -16,11 +16,12 @@ public class UnitManager : MonoBehaviour
     public Material unitUsed;
     public Material highlightHex;
 
+    public WorldHex startHex;
+    bool waitingForCameraPan;
+
     List<WorldHex> hexesInWalkRange = new List<WorldHex>();
     List<WorldHex> hexesInAttackRange = new List<WorldHex>();
 
-    public WorldHex startHex;
-    bool waitingForCameraPan;
     void Awake()
     {
         if (Instance == null)
@@ -58,19 +59,30 @@ public class UnitManager : MonoBehaviour
         waitingForCameraPan = false;
     }
 
-    public UnitStruct GetUnitByType(UnitType type)
+
+    public UnitData GetUnitDataByType(UnitType type, Civilizations civilization)
     {
+        Civilization currentCiv = GameManager.Instance.GetCivilizationByType(civilization);
+
+        if (currentCiv != null)
+        {
+            if (currentCiv.unitDictionary.ContainsKey(type))
+            {
+                return currentCiv.GetUnitOverride(type);
+            }
+        }
+
         switch (type)
         {
-            case UnitType.Swordsman:
+            case UnitType.Melee:
                 return gameUnits[0];
-            case UnitType.Archer:
+            case UnitType.Ranged:
                 return gameUnits[1];
-            case UnitType.Horseman:
+            case UnitType.Cavalry:
                 return gameUnits[2];
-            case UnitType.Trebuchet:
+            case UnitType.Siege:
                 return gameUnits[3];
-            case UnitType.Shields:
+            case UnitType.Defensive:
                 return gameUnits[4];
             case UnitType.Trader:
                 return gameUnits[5];
@@ -80,9 +92,8 @@ public class UnitManager : MonoBehaviour
 
         Debug.LogError("Unit type given was invalid. Returned default unit");
         return gameUnits[0];
+
     }
-
-
 
     public void InitializeStartUnits()
     {
@@ -90,7 +101,7 @@ public class UnitManager : MonoBehaviour
         {
             player.GenerateUnitDictionary();
 
-            player.UpdateAvailableUnits();
+            player.UpdateAvailableUnitsFromAbilities();
 
             if (player.playerUnits.Count > 0)
             {
@@ -99,7 +110,7 @@ public class UnitManager : MonoBehaviour
             else
             {
                 //spanw a unit at the first city of each player
-                SpawnUnitAt(player.index, UnitType.Swordsman, player.playerCities[0], false, false);
+                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false);
             }
         }
        
@@ -107,49 +118,55 @@ public class UnitManager : MonoBehaviour
     }
 
 
-    public void SpawnUnitAt(int playerIndex, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost)
+    public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost)
     {
-        UnitStruct unitData = GetUnitByType(newUnit);
+        UnitData unitData = GetUnitDataByType(newUnit, player.civilization);
 
         if (applyCost)
         {
-            GameManager.Instance.RemoveStars(playerIndex, unitData.cost);
+            GameManager.Instance.RemoveStars(player.index, unitData.cost);
         }
 
-        GameObject obj = Instantiate(unitData.prefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+        GameObject obj = Instantiate(unitData.GetPrefab(), targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
         obj.transform.localPosition = Vector3.zero;
         WorldUnit unit = obj.GetComponent<WorldUnit>();
-        unit.SpawnSetup(targetHex, playerIndex, exhaustMoves);
+        unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves);
 
-        GameManager.Instance.GetPlayerByIndex(playerIndex).AddUnit(unit);
+        player.AddUnit(unit);
     }
 
    
     public void SelectUnit(WorldUnit newUnit)
     {
-        ClearFoundHexes();
 
         if (selectedUnit != null)
         {
             selectedUnit.Deselect();
         }
 
+        ClearHexSelectionMode();
+
         selectedUnit = newUnit;
 
-        if (GameManager.Instance.activePlayer.index == newUnit.data.associatedPlayerIndex)
+        if (GameManager.Instance.activePlayer.index == newUnit.playerOwnerIndex)
         {
-            FindActionableHexes(newUnit.parentHex, newUnit.data.range);
-            selectedUnit.ValidateRemainigActions();
-
-            if (selectedUnit.CanMove || selectedUnit.CanAttack)
+           
+            if (selectedUnit.currentMovePoints > 0)
             {
-                hexSelectMode = true;
+                FindWalkableHexes(newUnit.parentHex, newUnit.unitReference.walkRange);
             }
 
-            if (!selectedUnit.CanMove && !selectedUnit.CanAttack)
+            if (selectedUnit.currentAttackCharges > 0)
             {
-                hexSelectMode = false;
-                ClearFoundHexes();
+                FindAttackableHexes(newUnit.parentHex, newUnit.unitReference.attackRange);
+            }
+
+            selectedUnit.ValidateRemainigActions();
+
+            if (selectedUnit.isInteractable)
+            {
+                if (!selectedUnit.noAttackHexInRange || !selectedUnit.noWalkHexInRange)
+                hexSelectMode = true;
             }
 
             UIManager.Instance.ShowHexView(newUnit.parentHex, newUnit);
@@ -261,37 +278,16 @@ public class UnitManager : MonoBehaviour
 
         if (hexesInWalkRange.Count == 0)
         {
-            selectedUnit.data.hasNoValidHexesInRange = true;
+            selectedUnit.noWalkHexInRange = true;
         }
-
-
     }
 
-    void FindAttackableHexes(WorldHex hexCenter, int range)
+    void FindAttackableHexes(WorldHex hexCenter, int attackRange)
     {
         startHex = hexCenter;
-        hexesInAttackRange = MapManager.Instance.GetEnemiesInRange(hexCenter.hexData, range);
-
-        selectedUnit.data.enemiesInRange = hexesInAttackRange.Count;
-        selectedUnit.ValidateRemainigActions();
-
-        if (hexesInAttackRange.Count > 0)
-        {
-            foreach (WorldHex hex in hexesInAttackRange)
-            {
-                hex.ShowHighlight(true);
-            }
-        }
-
-        /*
-        if (hexesInAttackRange.Contains(hexCenter))
-        {
-            hexesInAttackRange.Remove(hexCenter);
-        }
-
+        hexesInAttackRange = MapManager.Instance.GetHexesListWithinRadius(hexCenter.hexData, attackRange);
         List<WorldHex> hexesToRemove = new List<WorldHex>();
-
-        foreach (WorldHex hex in hexesInAttackRange)
+        foreach(WorldHex hex in hexesInAttackRange)
         {
             if (!hex.hexData.occupied)
             {
@@ -299,13 +295,11 @@ public class UnitManager : MonoBehaviour
                 continue;
             }
 
-            if (hex.associatedUnit.BelongsToActivePlayer)
+            if (hex.hexData.occupied && hex.associatedUnit.BelongsToActivePlayer)
             {
                 hexesToRemove.Add(hex);
                 continue;
             }
-
-            hex.ShowHighlight(true);
         }
 
         foreach (WorldHex hex in hexesToRemove)
@@ -314,16 +308,22 @@ public class UnitManager : MonoBehaviour
             {
                 hexesInAttackRange.Remove(hex);
             }
-        }*/
+        }
 
-    }
-    void FindActionableHexes(WorldHex hexCenter, int range)
-    {
-        FindWalkableHexes(hexCenter, range);
-        FindAttackableHexes(hexCenter, range);
-       
-    }
+        if (hexesInAttackRange.Count > 0)
+        {
+            foreach (WorldHex hex in hexesInAttackRange)
+            {
+                hex.ShowHighlight(true);
+            }
 
+            selectedUnit.noAttackHexInRange = false;
+        }
+        else
+        {
+            selectedUnit.noAttackHexInRange = true;
+        }
+    }
    
     public void PlayRandomTurnForAIUnits(Player player)
     {
@@ -376,26 +376,58 @@ public class UnitManager : MonoBehaviour
         hexSelectMode = false;
         selectedUnit.Attack(hex);
     }
+
+   
 }
 
 
 [System.Serializable]
-public struct UnitStruct
+public class UnitData
 {
-    public string unitName;
+    public string name;
     public bool defaultLockState;
     public UnitType type;
+    public Civilizations civType;
     public int cost;
-    public GameObject prefab;
+
+    [Header("Unit Stats")]
+    public int level;
+    public int health;
+    public int attack;
+    public int defense;
+    public int walkRange;
+    public int attackRange;
+
+    public int attackCharges;
+    public int moveCharges;
+
+    [Header("Unit Abilities")]
+    public bool canAttackAfterMove;
+    public bool canMoveAfterAttack;
+
+    public GameObject[] prefabs; //associatedToUnitLevels if we have the time
+
+    public GameObject GetPrefab()
+    {
+        if (prefabs.Length > level)
+        {
+            return prefabs[level];
+        }
+        else
+        {
+            return prefabs[0];
+        }
+    }
+
 }
 
 public enum UnitType
 {
-    Swordsman,
-    Archer,
-    Horseman,
-    Trebuchet,
-    Shields,
+    Melee,
+    Ranged,
+    Cavalry,
+    Siege,
+    Defensive,
     Trader,
     Diplomat
 }

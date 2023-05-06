@@ -14,6 +14,8 @@ namespace SignedInitiative
     {
         public static GameManager Instance;
 
+        public Civilization[] gameCivilizations;
+
         [Header("Game Data")]
         public GameData data;
 
@@ -222,19 +224,11 @@ namespace SignedInitiative
             return Array.IndexOf(sessionPlayers, player);
         }
 
-        public Color GetPlayerColor(int index)
-        {
-            return sessionPlayers[index].playerColor;
-        }
-
-        public Color GetActivePlayerColor()
-        {
-            return activePlayer.playerColor;
-        }
-
         public void StartGame()
         {
             GenerateAbilitiesDictionary();
+            CivilizationsSetup();
+
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
             gameReady = true;
             activePlayerIndex = 0;
@@ -242,6 +236,61 @@ namespace SignedInitiative
             SetActivePlayer(sessionPlayers[activePlayerIndex]);
             UIManager.Instance.OpenGamePanel();
         }
+
+
+        void CivilizationsSetup()
+        {
+            foreach(Civilization civ in gameCivilizations)
+            {
+                foreach (UnitData unit in civ.unitOverrides)
+                {
+                    civ.unitDictionary.Add(unit.type, unit);
+                }
+            }
+            
+        }
+
+        public Color GetCivilizationColor(int index, CivColorType colorType)
+        {
+            Player player = GetPlayerByIndex(index);
+            return GetCivilizationColor(player.civilization, colorType);
+        }
+
+        public Color GetCivilizationColor(Civilizations type, CivColorType colorType)
+        {
+            Civilization civ = GetCivilizationByType(type);
+            switch (colorType)
+            {
+                case CivColorType.unitColor:
+                    return civ.unitColor;
+                case CivColorType.borderColor:
+                    return civ.borderColor;
+                case CivColorType.uiActiveColor:
+                    return civ.uiColorActive;
+                case CivColorType.uiInactiveColor:
+                    return civ.uiColorInactive;
+            }
+
+           return civ.unitColor;
+        }
+
+        public Civilization CivOfActivePlayer()
+        {
+            return GetCivilizationByType(activePlayer.civilization);
+        }
+        public Civilization GetCivilizationByType(Civilizations type)
+        {
+            switch (type)
+            {
+                case Civilizations.Greeks:
+                    return gameCivilizations[0];
+                case Civilizations.Romans:
+                    return gameCivilizations[1];
+            }
+
+            return null;
+        }
+
 
         void GenerateAbilitiesDatabaseForPlayers()
         {
@@ -536,6 +585,7 @@ namespace SignedInitiative
 
                 case Abilities.Roads:
                     player.abilities.roads = true;
+              
                     break;
                 case Abilities.Trader:
                     player.abilities.unitTrader = true;
@@ -576,6 +626,7 @@ namespace SignedInitiative
 
                 case Abilities.Harvest:
                     player.abilities.fruitHarvest = true;
+                    player.abilities.unitArcher = true; //should have a distinct entry
                     break;
                 case Abilities.Horserider:
                     player.abilities.unitHorserider = true;
@@ -589,11 +640,19 @@ namespace SignedInitiative
             }
 
             SI_EventManager.Instance.OnAbilityUnlocked(playerIndex);
-            player.UpdateAvailableUnits();
+            player.UpdateAvailableUnitsFromAbilities();
 
             if (updateUI)
             UIManager.Instance.UpdateResourcePanel(playerIndex);
         }
     }
+}
+
+public enum CivColorType
+{
+    borderColor,
+    unitColor,
+    uiActiveColor,
+    uiInactiveColor
 }
 

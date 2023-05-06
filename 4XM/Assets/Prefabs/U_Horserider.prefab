@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 567042301803418317}
   - component: {fileID: 3308677334637137624}
   m_Layer: 6
-  m_Name: Horserider
+  m_Name: U_Horserider
   m_TagString: Unit
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

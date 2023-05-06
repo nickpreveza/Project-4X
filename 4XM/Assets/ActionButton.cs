@@ -19,13 +19,13 @@ public class ActionButton : MonoBehaviour
     public void SetDataForUnitSpawn(HexView newHandler, WorldHex newHex, UnitType unit)
     {
         unitType = unit;
-        UnitStruct unitData = UnitManager.Instance.GetUnitByType(unit);
+        UnitData unitData = UnitManager.Instance.GetUnitDataByType(unit, GameManager.Instance.activePlayer.civilization);
 
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = unitData.unitName;
+        buttonName.text = unitData.name;
         actionCost = unitData.cost;
         actionCostText.text = actionCost.ToString();
 
@@ -113,7 +113,6 @@ public class ActionButton : MonoBehaviour
 
     public void CaptureCity()
     {
-        GameManager.Instance.activePlayer.AddCity(targetHex);
         targetHex.associatedUnit.CityCaptureAction();
     }
 
@@ -127,7 +126,7 @@ public class ActionButton : MonoBehaviour
 
     public void SpawnUnit()
     {
-        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayerIndex, unitType, targetHex, true, true);
+        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true);
 
         UIManager.Instance.RefreshHexView();
     }

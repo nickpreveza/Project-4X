@@ -1,0 +1,359 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8911852278046293655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8911852278046293650}
+  - component: {fileID: 8911852278046293649}
+  - component: {fileID: 8911852278046293648}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8911852278046293650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911852278046293655}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8911852278046293649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911852278046293655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4e1378b86813c44fb935c3e4bd7435e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  csvFile: {fileID: 0}
+--- !u!114 &8911852278046293648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911852278046293655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b6dc9f9599007749b71b25142a18d21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameCivilizations:
+  - name: Greeks
+    unitOverrides: []
+    unitColor: {r: 0, g: 0.61094916, b: 0.8113208, a: 1}
+    uiColorActive: {r: 0, g: 0.6117647, b: 0.8117647, a: 1}
+    uiColorInactive: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.64705884}
+    borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 1}
+  - name: Romans
+    unitOverrides: []
+    unitColor: {r: 0.75338453, g: 0.28261834, b: 0.8207547, a: 1}
+    uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
+    uiColorInactive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.64705884}
+    borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
+  data:
+    day: 0
+    hour: 0
+    minute: 0
+    second: 0
+    highscore: 0
+    hbscore: 0
+    hempSeeds: 0
+    hempFibers: 0
+    quadrantsUnlocked: 0
+    factoryCost: 0
+    wavesCompleted: 0
+    nextWaveTime: 0
+    discordURL: 
+    websiteURL: 
+    itchURL: 
+    player_weapon: 1
+    player_maxHealth: 100
+  gameReady: 0
+  isPaused: 0
+  playerDead: 0
+  menuActive: 0
+  devMode: 0
+  allAbilitiesUnlocked: 1
+  infiniteCurrency: 0
+  noScenceChanges: 0
+  noSave: 0
+  noLoad: 0
+  globalVolume: {fileID: 0}
+  canLoad: 0
+  csvReader: {fileID: 0}
+  sessionPlayers:
+  - type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 1
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      forestBuilding: 0
+      smitheryBuilding: 0
+      farmBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      merchantBuilding: 0
+    index: 0
+    name: Greeks
+    score: 0
+    turnCount: 0
+    stars: 5
+    unlockedAbiltiesCount: 0
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+  - type: 0
+    civilization: 1
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 1
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      forestBuilding: 0
+      smitheryBuilding: 0
+      farmBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      merchantBuilding: 0
+    index: 1
+    name: Romans
+    score: 0
+    turnCount: 0
+    stars: 5
+    unlockedAbiltiesCount: 0
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+  activePlayer:
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      forestBuilding: 0
+      smitheryBuilding: 0
+      farmBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      merchantBuilding: 0
+    index: 0
+    name: 
+    score: 0
+    turnCount: 0
+    stars: 0
+    unlockedAbiltiesCount: 0
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+  activePlayerIndex: 0
+  abilities:
+  - abilityID: 0
+    abilityName: Climbing
+    abilityDescription: Allows units to traverse mountains
+    abilityIcon: {fileID: 0}
+    abilityCost: 1
+    isUnlocked: 1
+    abilityToUnlock: 1
+  - abilityID: 1
+    abilityName: Mining
+    abilityDescription: Allows you to harvest the mine resource
+    abilityIcon: {fileID: 0}
+    abilityCost: 2
+    isUnlocked: 0
+    abilityToUnlock: 2
+  - abilityID: 2
+    abilityName: Shields
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 3
+    isUnlocked: 0
+    abilityToUnlock: 3
+  - abilityID: 3
+    abilityName: Smithery
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 4
+    isUnlocked: 0
+    abilityToUnlock: 20
+  - abilityID: 4
+    abilityName: Roads
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 1
+    isUnlocked: 1
+    abilityToUnlock: 5
+  - abilityID: 5
+    abilityName: Trader
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 2
+    isUnlocked: 0
+    abilityToUnlock: 6
+  - abilityID: 6
+    abilityName: Diplomat
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 3
+    isUnlocked: 0
+    abilityToUnlock: 7
+  - abilityID: 7
+    abilityName: Guild
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 4
+    isUnlocked: 0
+    abilityToUnlock: 20
+  - abilityID: 8
+    abilityName: Forestry
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 1
+    isUnlocked: 1
+    abilityToUnlock: 9
+  - abilityID: 9
+    abilityName: Husbandry
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 2
+    isUnlocked: 0
+    abilityToUnlock: 10
+  - abilityID: 10
+    abilityName: Engineering
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 3
+    isUnlocked: 0
+    abilityToUnlock: 11
+  - abilityID: 11
+    abilityName: Papermill
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 4
+    isUnlocked: 0
+    abilityToUnlock: 20
+  - abilityID: 12
+    abilityName: Fishing
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 1
+    isUnlocked: 1
+    abilityToUnlock: 13
+  - abilityID: 13
+    abilityName: Port
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 2
+    isUnlocked: 0
+    abilityToUnlock: 14
+  - abilityID: 14
+    abilityName: Open Sea
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 3
+    isUnlocked: 0
+    abilityToUnlock: 15
+  - abilityID: 15
+    abilityName: Fish Farm
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 4
+    isUnlocked: 0
+    abilityToUnlock: 20
+  - abilityID: 16
+    abilityName: Harvest
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 1
+    isUnlocked: 1
+    abilityToUnlock: 17
+  - abilityID: 17
+    abilityName: Horserider
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 2
+    isUnlocked: 0
+    abilityToUnlock: 18
+  - abilityID: 18
+    abilityName: Farming
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 3
+    isUnlocked: 0
+    abilityToUnlock: 19
+  - abilityID: 19
+    abilityName: Windmill
+    abilityDescription: 
+    abilityIcon: {fileID: 0}
+    abilityCost: 4
+    isUnlocked: 0
+    abilityToUnlock: 20

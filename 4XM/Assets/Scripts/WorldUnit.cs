@@ -6,8 +6,7 @@ using System.Linq;
 
 public class WorldUnit : MonoBehaviour
 {
-
-    public Unit data;
+    public UnitData unitReference;
     Wiggler wiggler;
 
     public WorldHex parentHex;
@@ -19,51 +18,41 @@ public class WorldUnit : MonoBehaviour
     bool shouldMove;
 
     Queue<WorldHex> hexPath;
-    public bool IsInteractable
-    {
-        get
-        {
-            return data.isInteractable;
-        }
-    }
 
-    public bool HasActionsLeft
-    {
-        get
-        {
-            return (data.currentTurnActionPoints > 0);
-        }
-    }
+    public int c;
+    public int r;
 
-    public bool HasAttacksLeft
-    {
-        get
-        {
-            return (data.currentTurnAttackCharges > 0);
-        }
-    }
+    public UnitType type;
+    public Civilizations civilization;
+    public int playerOwnerIndex = -1;
 
-    public bool CanMove
-    {
-        get
-        {
-            return data.canMove;
-        }
-    }
+    //not default, look at unitstruct
+    public int currentHealth;
+    public int currentAttack;
+    public int currentDefense;
+    public int currentLevel;
 
-    public bool CanAttack
-    {
-        get
-        {
-            return data.canAttack;
-        }
-    }
+    public int currentMovePoints = 1;
+    public int currentAttackCharges = 1;
+
+    public bool hasMoved;
+    public bool hasAttacked;
+
+    public bool buttonActionPossible;
+    public bool noWalkHexInRange;
+    public bool noAttackHexInRange;
+
+    public bool isInteractable;
+
+    public Color civColor;
+
+    bool attackIsRanged;
 
     public bool BelongsToActivePlayer
     {
         get
         {
-            return (data.associatedPlayerIndex == GameManager.Instance.activePlayerIndex);
+            return (playerOwnerIndex == GameManager.Instance.activePlayerIndex);
         }
     }
 
@@ -85,9 +74,9 @@ public class WorldUnit : MonoBehaviour
     public void OnTurnEnded(int playerIndex)
     {
         //if this is the end of this players turn, reset the checks. 
-        if (data.associatedPlayerIndex == playerIndex)
+        if (playerOwnerIndex == playerIndex)
         {
-            ActionReset();
+            ResetActions();
         }
     }
 
@@ -112,78 +101,151 @@ public class WorldUnit : MonoBehaviour
         hexPath = new Queue<WorldHex>(newHexPath);
     }
 
-    public void SpawnSetup(WorldHex newHex, int playerIndex, bool exhaustOnSpawn)
+    public void SpawnSetup(WorldHex newHex, int playerIndex, UnitData referenceData, bool exhaustOnSpawn)
     {
-        data.associatedPlayerIndex = playerIndex;
+        unitReference = referenceData;
+        playerOwnerIndex = playerIndex;
 
-        data.c = newHex.hexData.C;
-        data.r = newHex.hexData.R;
+        c = newHex.hexData.C;
+        r = newHex.hexData.R;
+
         parentHex = newHex;
         parentHex.UnitIn(this);
-        data.SetupData();
+
+        currentHealth = unitReference.health;
+        currentAttack = unitReference.attack;
+        currentDefense = unitReference.defense;
+
+        if (unitReference.attackRange > 1)
+        {
+            attackIsRanged = true;
+        }
 
         if (exhaustOnSpawn)
         {
-            data.currentTurnActionPoints = 0;
-            data.currentTurnAttackCharges = 0;
-            data.hasMoved = true;
-            data.hasAttacked = true;
-            ValidateRemainigActions();
+            ExhaustActions();
         }
         else
         {
-            ActionReset();
+            ResetActions();
         }
 
+    }
+
+    void ExhaustActions()
+    {
+        currentAttackCharges = 0;
+        currentMovePoints = 0;
+        hasMoved = true;
+        hasAttacked = true;
+
+        ValidateRemainigActions();
+    }
+
+    void ResetActions()
+    {
+        hasMoved = false;
+        hasAttacked = false;
+        currentAttackCharges = unitReference.attackCharges;
+        currentMovePoints = unitReference.moveCharges;
+        noWalkHexInRange = false;
+        noAttackHexInRange = false;
+        buttonActionPossible = true;
+        ValidateRemainigActions();
     }
 
     public void CityCaptureAction()
     {
-        data.hasMoved = true;
-        data.currentTurnActionPoints = 0;
-        data.currentTurnAttackCharges = 0;
-        ValidateRemainigActions();
+        if (!isInteractable)
+        {
+            Debug.LogError("Unit was not interactable but tried to capture a city");
+            return;
+        }
+
+        //more checks here to be double sure;
+
+        GameManager.Instance.activePlayer.AddCity(parentHex);
+        ExhaustActions();
+        OnActionEnded();
+    }
+
+    void OnActionEnded() //not really an event, but treated as one
+    {
         UnitManager.Instance.SelectUnit(this);
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
 
-    public void ActionReset()
-    {
-        data.hasMoved = false;
-        data.hasAttacked = false;
-        data.hasNoValidHexesInRange = false; //aslo probably update this if any unit dies or something
-
-        data.currentTurnActionPoints = data.actionPoints;
-        data.currentTurnAttackCharges = data.attackCharges;
-
-        ValidateRemainigActions();
-    }
-
     public void ValidateRemainigActions()
     {
-        data.ValidateRemainigUnitActions(parentHex.HasAvailableUnitActions());
+        
+        if (hasMoved)
+        {
+            if (!unitReference.canAttackAfterMove)
+            {
+                currentAttackCharges = 0;
+            }
+        }
+
+        if (hasAttacked)
+        {
+            if (!unitReference.canMoveAfterAttack)
+            {
+                currentMovePoints = 0;
+            }
+        }
+
+        bool interactabilityCheckForWalk = false;
+        bool interactabilityCheckForAttack = false;
+
+        if (currentMovePoints > 0)
+        {
+            if (!noWalkHexInRange)
+            {
+                interactabilityCheckForWalk = true;
+            }
+        }
+
+        if (currentAttackCharges > 0)
+        {
+            if (!noAttackHexInRange)
+            {
+                interactabilityCheckForAttack = true;
+            }
+        }
+
+        isInteractable = false;
+
+        if (interactabilityCheckForAttack || interactabilityCheckForWalk)
+        {
+            isInteractable = true;
+        }
+
+        if (hasMoved || hasAttacked)
+        {
+            buttonActionPossible = false;
+        }
+
         VisualUpdate();
     }
 
     public void VisualUpdate()
     {
-        if (data.isInteractable)
+        if (isInteractable)
         {
             this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
-            this.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerColor(data.associatedPlayerIndex);
-
+            this.GetComponent<MeshRenderer>().material.color = civColor;
         }
         else
         {
           
             this.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
-            this.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetPlayerColor(data.associatedPlayerIndex);
+            this.GetComponent<MeshRenderer>().material.color = civColor;
         }
     }
 
     public void AutomoveRandomly()
     {
-        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, data.range);
+        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, unitReference.walkRange);
 
         if (hexesInRadius.Contains(parentHex))
         {
@@ -204,7 +266,7 @@ public class WorldUnit : MonoBehaviour
 
         WorldHex newHex = hexPath.Dequeue();
 
-        Move(newHex);
+        //Move(newHex);
     }
 
     public int MovementCostOfHex(WorldHex hex)
@@ -217,16 +279,16 @@ public class WorldUnit : MonoBehaviour
     {
         //return the number of turn required to reach that hex. 
         //if a cost is greater, autocomplete turns off and user has to manually decide. 
-        float baseTurnsToEnterHex = MovementCostOfHex(hex) / data.movePoints;
-        float turnsRemaining = data.movePointsRemaining / data.movePoints;
+        float baseTurnsToEnterHex = MovementCostOfHex(hex) / unitReference.moveCharges;
+        float turnsRemaining = currentMovePoints / unitReference.moveCharges;
         return 0f;
     }
 
     public bool AttemptToKill(int value)
     {
-        data.currentHealth -= value;
+        currentHealth -= value;
 
-        if (data.currentHealth <= 0)
+        if (currentHealth <= 0)
         {
             return true;
         }
@@ -238,22 +300,28 @@ public class WorldUnit : MonoBehaviour
 
     public void Heal(int value)
     {
-        data.currentHealth = Mathf.Clamp(value, 0, data.health);
+        currentHealth = Mathf.Clamp(value, 0, unitReference.health);
     }
     public void Attack(WorldHex enemyHex)
     {
         WorldUnit enemyUnit = enemyHex.associatedUnit;
-        data.attackCharges--;
-        data.hasAttacked = true;
 
-        if (enemyUnit.AttemptToKill(data.attack))
+        currentAttackCharges--;
+        hasAttacked = true;
+
+        if (enemyUnit.AttemptToKill(unitReference.attack))
         {
             enemyUnit.Death();
-            Move(enemyHex, true);
+
+            if (!attackIsRanged)
+            {
+                Move(enemyHex, true);
+            }
+           
         }
         else
         {
-            if (AttemptToKill(enemyUnit.data.attack))
+            if (AttemptToKill(enemyUnit.unitReference.attack))
             {
                 Death();
                 return;
@@ -265,7 +333,8 @@ public class WorldUnit : MonoBehaviour
 
     void Death()
     {
-        GameManager.Instance.sessionPlayers[data.associatedPlayerIndex].playerUnits.Remove(this);
+        Deselect();
+        GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
         //Do some cool UI stuff
         //Maybe particles
         //def sound
@@ -275,8 +344,10 @@ public class WorldUnit : MonoBehaviour
 
     public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
-        data.c = newHex.hexData.C;
-        data.r = newHex.hexData.R;
+        Deselect();
+
+        c = newHex.hexData.C;
+        r = newHex.hexData.R;
 
         oldPosition = parentHex.hexData.PositionFromCamera();
 
@@ -289,17 +360,13 @@ public class WorldUnit : MonoBehaviour
 
         if (!afterAttack)
         {
-            data.hasMoved = true;
-            data.currentTurnActionPoints--;
-
-            if (data.setAPToZeroAfterWalk)
-            {
-                data.currentTurnActionPoints = 0;
-            }
+            hasMoved = true;
+            currentMovePoints--;
         }
 
         newPosition = parentHex.hexData.PositionFromCamera();
-
+        shouldMove = true;
+        /*
         //this si visual only
         if (Vector3.Distance(oldPosition, newPosition) > 2)
         {
@@ -311,7 +378,7 @@ public class WorldUnit : MonoBehaviour
         {
             //Do animated move
             shouldMove = true;
-        }
+        }*/
        
         if (followCamera)
         {
@@ -319,6 +386,7 @@ public class WorldUnit : MonoBehaviour
         }
 
         GameManager.Instance.activePlayer.lastMovedUnit = this;
+        //ValidateRemainigActions();
         //wiggler?.AnimatedMove(newPosition);
 
         //check if attack possibled
@@ -333,9 +401,12 @@ public class WorldUnit : MonoBehaviour
     public void Select()
     {
         wiggler?.Wiggle();
-        if (GameManager.Instance.activePlayer.index == data.associatedPlayerIndex)
+        parentHex.ShowHighlight(false);
+        if (GameManager.Instance.activePlayer.index == playerOwnerIndex)
         {
-            if (data.isInteractable)
+            //ValidateRemainigActions();
+
+            if (isInteractable)
             {
                 UnitManager.Instance.SelectUnit(this);
             }
@@ -355,6 +426,6 @@ public class WorldUnit : MonoBehaviour
 
     public void Deselect()
     {
-
+        parentHex.HideHighlight();
     }
 }

@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2117972109247701253
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2117972109247701252}
+  - component: {fileID: 2117972109247701251}
+  m_Layer: 0
+  m_Name: UnitManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2117972109247701252
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117972109247701253}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2117972109247701251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2117972109247701253}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22f43513c8d2a9d4faf80ee69321de02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameUnits:
+  - name: Warrior
+    defaultLockState: 0
+    type: 0
+    civType: 0
+    cost: 2
+    level: 1
+    health: 1
+    attack: 1
+    defense: 1
+    walkRange: 1
+    attackRange: 1
+    attackCharges: 1
+    moveCharges: 1
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 0
+    prefabs:
+    - {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c, type: 3}
+  - name: Archer
+    defaultLockState: 1
+    type: 1
+    civType: 0
+    cost: 2
+    level: 1
+    health: 1
+    attack: 1
+    defense: 1
+    walkRange: 1
+    attackRange: 3
+    attackCharges: 1
+    moveCharges: 1
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 0
+    prefabs:
+    - {fileID: 95653297576899810, guid: 9f9c2e0bdadcc460fb22a36a3819c1be, type: 3}
+  - name: Horseman
+    defaultLockState: 1
+    type: 2
+    civType: 0
+    cost: 2
+    level: 1
+    health: 1
+    attack: 1
+    defense: 1
+    walkRange: 2
+    attackRange: 1
+    attackCharges: 1
+    moveCharges: 1
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 1
+    prefabs:
+    - {fileID: 567042301805612045, guid: c50f9875b346a294ca12573883c630de, type: 3}
+  hexSelectMode: 0
+  selectedUnit: {fileID: 0}
+  unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
+  unitUsed: {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
+  highlightHex: {fileID: 2100000, guid: 2bd3ab025c0d1b440a43e1dbae69c987, type: 2}
+  startHex: {fileID: 0}

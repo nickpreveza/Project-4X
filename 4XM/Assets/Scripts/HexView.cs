@@ -49,12 +49,12 @@ public class HexView : MonoBehaviour
 
         if (isUnitView)
         {
-            hexName.text = unit.data.unitName;
+            hexName.text = unit.unitReference.name;
             hexAvatar.color = Color.white; //TODO: change avatar with related icon
 
-            if (unit.data.associatedPlayerIndex == GameManager.Instance.activePlayer.index)
+            if (unit.playerOwnerIndex == GameManager.Instance.activePlayer.index)
             {
-                if (unit.IsInteractable)
+                if (unit.isInteractable || unit.buttonActionPossible)
                 {
                     hexDescription.text = "This unit has available actions";
                     hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
@@ -67,7 +67,7 @@ public class HexView : MonoBehaviour
 
                 if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
                 {
-                    GenerateCityCaptureButton(unit.HasActionsLeft);
+                    GenerateCityCaptureButton(unit.buttonActionPossible);
                 }
 
             }
@@ -102,7 +102,7 @@ public class HexView : MonoBehaviour
                         {
                             if (hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
                             {
-                                GenerateCityCaptureButton(hex.associatedUnit.HasActionsLeft);
+                                GenerateCityCaptureButton(hex.associatedUnit.buttonActionPossible);
                             }
                         }
                     }
@@ -117,7 +117,7 @@ public class HexView : MonoBehaviour
                         {
                             if (hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
                             {
-                                GenerateCityCaptureButton(hex.associatedUnit.HasActionsLeft);
+                                GenerateCityCaptureButton(hex.associatedUnit.buttonActionPossible);
                             }
                         }
                     }
@@ -153,7 +153,7 @@ public class HexView : MonoBehaviour
                         }
                         else
                         {
-                            hexDescription.text = "Research required.";
+                            hexDescription.text = "Research more technologies to harvest this resource.";
                             GenerateResourceButtons(false);
                         }
                        
@@ -165,6 +165,7 @@ public class HexView : MonoBehaviour
                     if (hex.hexData.hasResource)
                     {
                         hexDescription.text = "This resource is outside of your empire's borders";
+                        GenerateResourceButtons(false);
                     }
                     else
                     {

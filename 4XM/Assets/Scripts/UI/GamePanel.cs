@@ -57,7 +57,7 @@ public class GamePanel : UIPanel
 
     public void SetPlayerAvatar()
     {
-        playerAvatarBackground.color = GameManager.Instance.GetActivePlayerColor();
+        playerAvatarBackground.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
     }
 
     public void UpdateResearchPanel()

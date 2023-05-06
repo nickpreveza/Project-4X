@@ -28,25 +28,6 @@ public class WorldHex : MonoBehaviour
 
     Material rimMaterial;
 
-    public bool HasAvailableUnitActions()
-    {
-        if (hexData.occupied)
-        {
-            if (hexData.playerOwnerIndex != associatedUnit.data.associatedPlayerIndex)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     private void Awake()
     {
         hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
@@ -409,8 +390,7 @@ public class WorldHex : MonoBehaviour
 
 
         //set outline material to match player color 
-        this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color =
-            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerColor;
+        this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
         //remove this later on
 
     }
@@ -459,7 +439,7 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
-        cityGameObject.GetComponent<MeshRenderer>().material.color = player.playerColor;
+        cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;

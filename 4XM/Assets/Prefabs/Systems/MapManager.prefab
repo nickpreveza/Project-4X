@@ -9981,6 +9981,7 @@ MonoBehaviour:
   hexResources:
   - resourceName: Fruit
     type: 0
+    canBeBuild: 0
     cost: 2
     output: 1
     spawnChanceRate: 0.3
@@ -9988,6 +9989,7 @@ MonoBehaviour:
       type: 3}
   - resourceName: Forest
     type: 1
+    canBeBuild: 1
     cost: 2
     output: 1
     spawnChanceRate: 0.3
@@ -9995,20 +9997,23 @@ MonoBehaviour:
       type: 3}
   - resourceName: Animal
     type: 2
+    canBeBuild: 0
     cost: 2
     output: 1
     spawnChanceRate: 0.5
-    prefab: {fileID: 7896384858549804202, guid: f116450366c0b4ec4850254c45297839,
+    prefab: {fileID: 7896384858549804202, guid: 2db29025501a29346a6ea5b7d0d99545,
       type: 3}
   - resourceName: Farm
     type: 5
+    canBeBuild: 1
     cost: 5
     output: 2
     spawnChanceRate: 0.5
     prefab: {fileID: 7204963003714441147, guid: 55417d6b9fe23422e8b542810557f684,
       type: 3}
-  - resourceName: Mine
+  - resourceName: Ore
     type: 3
+    canBeBuild: 1
     cost: 5
     output: 2
     spawnChanceRate: 0.5
@@ -10016,11 +10021,83 @@ MonoBehaviour:
       type: 3}
   - resourceName: Fish
     type: 4
+    canBeBuild: 0
     cost: 2
     output: 1
     spawnChanceRate: 0.2
     prefab: {fileID: 7896384858549804202, guid: f116450366c0b4ec4850254c45297839,
       type: 3}
+  hexBuildings:
+  - buildingName: Cabin
+    type: 0
+    slaveBuilding: 7
+    masterBuilding: 1
+    matchingResource: 1
+    hasLevels: 0
+    cost: 0
+    output: 0
+    levelPrefabs:
+    - {fileID: 1408089770241075203, guid: 79801e191cdf3074a98906b5ae0f592f, type: 3}
+  - buildingName: Lumberjack
+    type: 1
+    slaveBuilding: 0
+    masterBuilding: 7
+    matchingResource: 6
+    hasLevels: 1
+    cost: 5
+    output: 1
+    levelPrefabs:
+    - {fileID: 2002334878761239205, guid: 3ed0a2ddaa7f1f649aa7fd0be7b9270a, type: 3}
+  - buildingName: Farm
+    type: 2
+    slaveBuilding: 7
+    masterBuilding: 3
+    matchingResource: 5
+    hasLevels: 0
+    cost: 0
+    output: 0
+    levelPrefabs:
+    - {fileID: 7204963003714441147, guid: f20853bd0c9a026428ceb7402e05cc4d, type: 3}
+  - buildingName: Windmill
+    type: 3
+    slaveBuilding: 2
+    masterBuilding: 7
+    matchingResource: 6
+    hasLevels: 1
+    cost: 5
+    output: 1
+    levelPrefabs:
+    - {fileID: 48758583767061231, guid: e056576c7ec8c3a429b0261db593b39f, type: 3}
+  - buildingName: Mine
+    type: 4
+    slaveBuilding: 7
+    masterBuilding: 5
+    matchingResource: 3
+    hasLevels: 0
+    cost: 0
+    output: 0
+    levelPrefabs:
+    - {fileID: 1104415093595829196, guid: 0fbdca5e7b295af42a3e79c08bf6208c, type: 3}
+  - buildingName: Ironsmith
+    type: 5
+    slaveBuilding: 4
+    masterBuilding: 7
+    matchingResource: 6
+    hasLevels: 1
+    cost: 5
+    output: 1
+    levelPrefabs:
+    - {fileID: 6866786563185507143, guid: 2e7a8845a539f3142be37f302249325f, type: 3}
+  - buildingName: Guild
+    type: 6
+    slaveBuilding: 7
+    masterBuilding: 7
+    matchingResource: 6
+    hasLevels: 1
+    cost: 5
+    output: 2
+    levelPrefabs:
+    - {fileID: 1149622556129291929, guid: 2c429e315de546442b9eaaba72c10916, type: 3}
   cityNames:
   - Bamery
   - Ochepsa
@@ -10050,6 +10127,7 @@ MonoBehaviour:
   mountainResources:
   - resourceName: 
     type: 0
+    canBeBuild: 0
     cost: 0
     output: 0
     spawnChanceRate: 0

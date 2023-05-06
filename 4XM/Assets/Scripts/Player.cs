@@ -8,10 +8,11 @@ public class Player
 {
     //Setup
     public PlayerType type;
+    public Civilizations civilization;
+
     public AbilityTree abilities;
     public int index;
     public string name;
-    public Color playerColor;
 
     //Score Related
     public int score;
@@ -89,22 +90,29 @@ public class Player
 
     public void GenerateUnitDictionary()
     {
-        foreach(UnitStruct unitStruct in UnitManager.Instance.gameUnits)
+        foreach(UnitData unitData in UnitManager.Instance.gameUnits)
         {
-            gameUnitsDictionary.Add(unitStruct.type, unitStruct.defaultLockState);
+            gameUnitsDictionary.Add(unitData.type, unitData.defaultLockState);
         }
     }
 
-    public void UpdateAvailableUnits()
+    void UpdateLockStateForUnitType(UnitType type, bool lockState)
     {
-        gameUnitsDictionary[UnitType.Swordsman] = abilities.unitSwordsman;
-        gameUnitsDictionary[UnitType.Archer] = abilities.unitArcher;
-        gameUnitsDictionary[UnitType.Horseman] = abilities.unitHorserider;
-        gameUnitsDictionary[UnitType.Trebuchet] = abilities.unitTrebucet;
-        gameUnitsDictionary[UnitType.Shields] = abilities.unitShield;
-        gameUnitsDictionary[UnitType.Trader] = abilities.unitTrader;
-        gameUnitsDictionary[UnitType.Diplomat] = abilities.unitDiplomat;
-       
+        if (gameUnitsDictionary.ContainsKey(type))
+        {
+            gameUnitsDictionary[type] = lockState;
+        }
+    }
+    public void UpdateAvailableUnitsFromAbilities()
+    {
+        UpdateLockStateForUnitType(UnitType.Melee, abilities.unitSwordsman);
+        UpdateLockStateForUnitType(UnitType.Cavalry, abilities.unitHorserider);
+        UpdateLockStateForUnitType(UnitType.Ranged, abilities.unitArcher);
+
+        UpdateLockStateForUnitType(UnitType.Siege, abilities.unitTrebucet);
+        UpdateLockStateForUnitType(UnitType.Defensive, abilities.unitShield);
+        UpdateLockStateForUnitType(UnitType.Trader, abilities.unitTrader);
+        UpdateLockStateForUnitType(UnitType.Diplomat, abilities.unitDiplomat);
     }
 
     public void RecalculateAbilityCosts()
