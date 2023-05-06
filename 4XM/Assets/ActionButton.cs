@@ -12,6 +12,7 @@ public class ActionButton : MonoBehaviour
     [SerializeField] TextMeshProUGUI actionCostText;
     [SerializeField] Image buttonImage;
     [SerializeField] Button buttonAction;
+    [SerializeField] GameObject costVisual;
     WorldHex targetHex;
     int actionCost;
     UnitType unitType;
@@ -37,10 +38,12 @@ public class ActionButton : MonoBehaviour
     {
         if (GameManager.Instance.CanActivePlayerAfford(actionCost) && !targetHex.hexData.occupied)
         {
+            costVisual.SetActive(true);
             buttonAction.interactable = true;
         }
         else
         {
+            costVisual.SetActive(false);
             buttonAction.interactable = false;
         }
     }
@@ -84,7 +87,7 @@ public class ActionButton : MonoBehaviour
         buttonAction.onClick.AddListener(CaptureCity);
 
         buttonAction.interactable = isInteractable;
-
+        costVisual.SetActive(false);
         if (isInteractable)
         {
             buttonImage.color = UIManager.Instance.affordableColor;
@@ -101,12 +104,13 @@ public class ActionButton : MonoBehaviour
         if (GameManager.Instance.CanActivePlayerAfford(MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).cost))
         {
             buttonImage.color = UIManager.Instance.affordableColor;
+            costVisual.SetActive(true);
             buttonAction.interactable = true;
         }
         else
         {
             buttonImage.color = UIManager.Instance.unaffordableColor;
-            
+            costVisual.SetActive(false);
             buttonAction.interactable = false;
         }
     }

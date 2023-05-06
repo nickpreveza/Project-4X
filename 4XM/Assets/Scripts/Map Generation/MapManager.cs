@@ -124,6 +124,31 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    public int GetMoveCostForType(TileType type)
+    {
+        switch (type)
+        {
+            case TileType.DEEPSEA:
+                return 2;
+            case TileType.SEA:
+                return 1;
+            case TileType.SAND:
+                return 1;
+            case TileType.GRASS:
+                return 1;
+            case TileType.HILL:
+                return 1;
+            case TileType.MOUNTAIN:
+                return 2;
+            case TileType.ICE:
+                Debug.LogWarning("TileType was ICE. This is Invalid");
+                return 100;
+        }
+
+        Debug.LogWarning("TileType was invalid");
+        return 100;
+    }
+
         public ResourceType GetBuildingMatchingResourceType(BuildingType type)
     {
         switch (type)

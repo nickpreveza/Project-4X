@@ -122,11 +122,6 @@ public class HexView : MonoBehaviour
                         }
                     }
                 }
-                
-               
-              
-
-               
             }
             else
             {
@@ -146,7 +141,12 @@ public class HexView : MonoBehaviour
                 {
                     if (hex.hexData.hasResource)
                     {
-                        if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+                        if (hex.hexData.occupiedByEnemyUnit)
+                        {
+                            hexDescription.text = "Hex is occupied by Enemy.";
+                            GenerateResourceButtons(false);
+                        }
+                        else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
                         {
                             hexDescription.text = "Harvest this resource to upgrade your city";
                             GenerateResourceButtons(true);

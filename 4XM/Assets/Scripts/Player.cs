@@ -21,6 +21,7 @@ public class Player
     public int militaryScore;
     public int turnCount;
     public int stars;
+    public int expectedStars;
     public int unlockedAbiltiesCount;
 
     //Game Editable Data
@@ -72,6 +73,21 @@ public class Player
         SI_EventManager.Instance.OnTransactionMade(index);
     }
 
+    public void CalculateExpectedStars()
+    {
+        int starsToReceive = 0;
+
+        foreach(WorldHex hex in playerCities)
+        {
+            if (!hex.hexData.occupiedByEnemyUnit)
+            {
+                starsToReceive += hex.cityData.output;
+            }
+          
+        }
+
+        expectedStars = starsToReceive;
+    }
 
     public void AddStars(int amount)
     {

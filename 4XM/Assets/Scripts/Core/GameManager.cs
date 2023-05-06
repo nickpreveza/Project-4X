@@ -292,7 +292,11 @@ namespace SignedInitiative
             return null;
         }
 
-
+        public void RecalculatePlayerExpectedStars(int playerIndex)
+        {
+            Player player = GetPlayerByIndex(playerIndex);
+            player.CalculateExpectedStars();
+        }
         void GenerateAbilitiesDatabaseForPlayers()
         {
             foreach(Player player in sessionPlayers)
@@ -362,10 +366,11 @@ namespace SignedInitiative
             activePlayer.EndTurn();
             foreach(WorldHex city in activePlayer.playerCities)
             {
-                activePlayer.AddStars(city.cityData.output);
+                if (!city.hexData.occupiedByEnemyUnit)
+                {
+                    activePlayer.AddStars(city.cityData.output);
+                }
             }
-
-           
 
             SI_EventManager.Instance.OnTurnEnded(activePlayerIndex);
 

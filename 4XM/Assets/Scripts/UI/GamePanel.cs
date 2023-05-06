@@ -10,6 +10,8 @@ public class GamePanel : UIPanel
     [SerializeField] TextMeshProUGUI scoreValue;
     [SerializeField] TextMeshProUGUI starValue;
     [SerializeField] TextMeshProUGUI turnValue;
+    [SerializeField] TextMeshProUGUI expectedStars;
+
     public TextMeshProUGUI devText;
     public Textbox textbox;
 
@@ -21,6 +23,9 @@ public class GamePanel : UIPanel
     [SerializeField] GameObject settingsPanel;
 
     [SerializeField] Image playerAvatarBackground;
+    [SerializeField] Image starsImage;
+    [SerializeField] Image scoreImage;
+    [SerializeField] Image turnImage;
 
     ResearchViewHandler research;
     OverviewPanel overview;
@@ -70,6 +75,8 @@ public class GamePanel : UIPanel
     public void SetPlayerAvatar()
     {
         playerAvatarBackground.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
     }
 
     public void UpdateResearchPanel()
@@ -120,9 +127,10 @@ public class GamePanel : UIPanel
     public void UpdateCurrencies()
     {
         playerName.text = GameManager.Instance.activePlayer.name;
-        scoreValue.text = "SCORE: " + GameManager.Instance.activePlayer.totalScore;
-        starValue.text = "STARS: " + GameManager.Instance.activePlayer.stars;
-        turnValue.text = "TURN: " + GameManager.Instance.activePlayer.turnCount;
+        scoreValue.text = GameManager.Instance.activePlayer.totalScore.ToString();
+        starValue.text = GameManager.Instance.activePlayer.stars.ToString();
+        turnValue.text = GameManager.Instance.activePlayer.turnCount.ToString();
+        expectedStars.text = GameManager.Instance.activePlayer.expectedStars.ToString();
     }
 
     public void ShowHexView(WorldHex hex, WorldUnit unit = null)

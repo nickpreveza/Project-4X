@@ -20,6 +20,7 @@ public class Hex
     public TileType type;
     public TraverseRequirment requirment;
     public bool occupied;
+    public bool occupiedByEnemyUnit;
 
     public bool isOwnedByCity;
     public bool hasCity;

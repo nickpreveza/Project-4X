@@ -78,6 +78,7 @@ public class WorldHex : MonoBehaviour
         hexData.SetData(column, row);
         hexIdentifier = column * MapManager.Instance.mapRows + row;
         hexData.type = newType;
+        hexData.moveCost = MapManager.Instance.GetMoveCostForType(newType);
         if (setElevationFromType)
         {
             SetElevationFromType();
@@ -154,13 +155,27 @@ public class WorldHex : MonoBehaviour
     public void UnitIn(WorldUnit newUnit)
     {
         hexData.occupied = true;
+        if (newUnit.playerOwnerIndex != hexData.playerOwnerIndex && hexData.playerOwnerIndex != -1)
+        {
+            hexData.occupiedByEnemyUnit = true;
+        }
         associatedUnit = newUnit;
     }
 
     public void UnitOut(WorldUnit newUnit)
     {
         hexData.occupied = false;
+       
         associatedUnit = null;
+
+        if (hexData.occupiedByEnemyUnit)
+        {
+            hexData.occupiedByEnemyUnit = false;
+            if (hexData.hasCity)
+            {
+                GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+            }
+        }
     }
 
     public void SpawnCity(string newName)
@@ -420,7 +435,7 @@ public class WorldHex : MonoBehaviour
         {
             hexData.resourceType = ResourceType.EMPTY;
             hexData.hasResource = false;
-
+            hexData.moveCost = MapManager.Instance.GetMoveCostForType(hexData.type);
             GameObject resourceObj = resourceParent.GetChild(0).gameObject;
 
             if (resourceObj != null)
