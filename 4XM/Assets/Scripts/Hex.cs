@@ -27,6 +27,7 @@ public class Hex
     public bool cityHasBeenClaimed;
 
     public bool hasResource;
+
     public bool hasBuilding;
     public bool hasRoad;
 

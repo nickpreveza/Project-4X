@@ -13,6 +13,7 @@ public class ActionButton : MonoBehaviour
     [SerializeField] Image buttonImage;
     [SerializeField] Button buttonAction;
     [SerializeField] GameObject costVisual;
+    BuildingType masterBuildingType;
     WorldHex targetHex;
     int actionCost;
     UnitType unitType;
@@ -46,6 +47,34 @@ public class ActionButton : MonoBehaviour
             costVisual.SetActive(false);
             buttonAction.interactable = false;
         }
+    }
+
+    public void SetDataForBuilding(HexView newHandler, WorldHex newHex, BuildingType type, bool shouldBeInteracable)
+    {
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        masterBuildingType = type;
+
+        buttonName.text = MapManager.Instance.GetBuildingByType(type).buildingName;
+        actionCost = MapManager.Instance.GetBuildingByType(type).cost;
+
+        actionCostText.text = actionCost.ToString();
+        //image also here 
+
+        if (shouldBeInteracable)
+        {
+            buttonAction.onClick.AddListener(CreateMasterBuilding);
+            CheckIfAffordable();
+        }
+        else
+        {
+            buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+            buttonImage.color = UIManager.Instance.unaffordableColor;
+            buttonAction.interactable = true;
+        }
+
     }
     public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable)
     {
@@ -101,7 +130,7 @@ public class ActionButton : MonoBehaviour
 
     void CheckIfAffordable()
     {
-        if (GameManager.Instance.CanActivePlayerAfford(MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).cost))
+        if (GameManager.Instance.CanActivePlayerAfford(actionCost))
         {
             buttonImage.color = UIManager.Instance.affordableColor;
             costVisual.SetActive(true);
@@ -126,6 +155,11 @@ public class ActionButton : MonoBehaviour
         // UIManager.Instance.ShowConfirmationPopup();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.HarvestResource();
+    }
+
+    public void CreateMasterBuilding()
+    {
+        targetHex.GenerateMasterBuilding(masterBuildingType);
     }
 
     public void SpawnUnit()

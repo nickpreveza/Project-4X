@@ -299,41 +299,7 @@ public class WorldHex : MonoBehaviour
         StartCoroutine(RemoveProgressPoint(points));
     }
 
-    public void CreateMasterBuilding(BuildingType type)
-    {
-        if (hexData.hasBuilding)
-        {
-            Debug.Log("Tried to place building on top of building");
-            return;
-        }
-
-        if (hexData.hasResource)
-        {
-            Debug.Log("Tried to place building on top of a resource");
-            return;
-        }
-
-        Building building = MapManager.Instance.GetBuildingByType(type);
-
-        hexData.hasBuilding = true;
-        hexData.buildingType = type;
-        hexData.buildingLevel = 0;
-
-        CalculateBuildingLevel();
-
-        int buildingLevelPrefab = 0;
-
-        if (building.levelPrefabs.Length > hexData.buildingLevel)
-        {
-            buildingLevelPrefab = hexData.buildingLevel;
-        }
-
-        GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
-
-        CalculatePointsForMasterBuilding();
-
-        UIManager.Instance.ShowHexView(this);
-    }
+  
 
     void CalculatePointsForMasterBuilding()
     {
@@ -367,7 +333,7 @@ public class WorldHex : MonoBehaviour
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
 
-        if (MapManager.Instance.GetResourceByType(hexData.resourceType).canBeBuild)
+        if (MapManager.Instance.GetResourceByType(hexData.resourceType).transformToBuilding)
         {
             hexData.hasBuilding = true;
             hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
@@ -422,6 +388,49 @@ public class WorldHex : MonoBehaviour
         this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
         //remove this later on
 
+    }
+
+    public bool DoesCityHaveMasterBuildingOfType(BuildingType type)
+    {
+        return cityData.masterBuildings.Contains(type);
+    }
+
+    public void GenerateMasterBuilding(BuildingType type)
+    {
+        if (hexData.hasBuilding)
+        {
+            Debug.LogWarning("Tried to place building on top of building");
+            return;
+        }
+
+        if (hexData.hasResource)
+        {
+            Debug.LogWarning("Tried to place building on top of a resource");
+            return;
+        }
+
+        cityData.masterBuildings.Add(type);
+
+        Building building = MapManager.Instance.GetBuildingByType(type);
+
+        hexData.hasBuilding = true;
+        hexData.buildingType = type;
+        hexData.buildingLevel = 0;
+
+        CalculateBuildingLevel();
+
+        int buildingLevelPrefab = 0;
+
+        if (building.levelPrefabs.Length > hexData.buildingLevel)
+        {
+            buildingLevelPrefab = hexData.buildingLevel;
+        }
+
+        GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
+
+        CalculatePointsForMasterBuilding();
+
+        UIManager.Instance.ShowHexView(this);
     }
 
     public void GenerateResource(ResourceType resourceType)

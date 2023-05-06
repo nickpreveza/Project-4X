@@ -128,11 +128,6 @@ public class HexView : MonoBehaviour
                 string newHexName = SetName(hex.hexData.type);
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
                 hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                if (hex.hexData.hasResource)
-                {
-                    //TODO: move this to someplace else
-                   // newHexName += " ," + MapManager.Instance.hexResources[hex.hexData.resourceIndex].resourceName;
-                }
 
                 hexName.text = newHexName;
                 hexDescription.text = "This tile really has nothing on top";
@@ -144,19 +139,75 @@ public class HexView : MonoBehaviour
                         if (hex.hexData.occupiedByEnemyUnit)
                         {
                             hexDescription.text = "Hex is occupied by Enemy.";
-                            GenerateResourceButtons(false);
+                            GenerateResourceButton(false);
                         }
                         else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
                         {
+                            
                             hexDescription.text = "Harvest this resource to upgrade your city";
-                            GenerateResourceButtons(true);
+                            GenerateResourceButton(true);
                         }
                         else
                         {
                             hexDescription.text = "Research more technologies to harvest this resource.";
-                            GenerateResourceButtons(false);
+                            GenerateResourceButton(false);
                         }
-                       
+                    }
+                    else
+                    {
+                        //Move this as permanent data to optimize;
+                        List<ResourceType> adjacentResources = new List<ResourceType>();
+
+                        bool forestMaster = false;
+                        bool farmMaster = false;
+                        bool mineMaster = false;
+
+                        foreach (WorldHex adjacentHex in hex.adjacentHexes)
+                        {
+                            if (adjacentHex.hexData.hasBuilding)
+                            {
+                                if (adjacentHex.hexData.buildingType == BuildingType.ForestWorked && GameManager.Instance.activePlayer.abilities.forestBuilding)
+                                {
+                                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                                    {
+                                        forestMaster = true;
+                                     
+                                    }
+                                }
+                                else if (adjacentHex.hexData.buildingType == BuildingType.FarmWorked && GameManager.Instance.activePlayer.abilities.farmBuilding)
+                                {
+                                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmWorked))
+                                    {
+                                        farmMaster = true;
+
+                                    }
+                                }
+                                else if (adjacentHex.hexData.buildingType == BuildingType.MineWorked && GameManager.Instance.activePlayer.abilities.smitheryBuilding)
+                                {
+                                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.MineMaster))
+                                    {
+                                        mineMaster = true;
+
+                                    }
+                                }
+                            }
+                        }
+
+                        if (forestMaster)
+                        {
+                            GenerateBuildingButton(BuildingType.ForestMaster, true);
+                        }
+
+                        if (farmMaster)
+                        {
+                            GenerateBuildingButton(BuildingType.FarmMaster, true);
+                        }
+
+                        if (mineMaster)
+                        {
+                            GenerateBuildingButton(BuildingType.MineMaster, true);
+                        }
+
                     }
                   
                 }
@@ -165,7 +216,7 @@ public class HexView : MonoBehaviour
                     if (hex.hexData.hasResource)
                     {
                         hexDescription.text = "This resource is outside of your empire's borders";
-                        GenerateResourceButtons(false);
+                        GenerateResourceButton(false);
                     }
                     else
                     {
@@ -194,7 +245,13 @@ public class HexView : MonoBehaviour
         }
     }
 
-    void GenerateResourceButtons(bool shouldBeInteractable)
+    void GenerateBuildingButton(BuildingType type, bool shouldBeInteractable)
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable);
+    }
+
+    void GenerateResourceButton(bool shouldBeInteractable)
     {
         //update this to support multiple resources on the same hex
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);

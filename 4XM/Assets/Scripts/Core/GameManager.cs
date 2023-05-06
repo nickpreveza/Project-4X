@@ -660,7 +660,11 @@ namespace SignedInitiative
             player.UpdateAvailableUnitsFromAbilities();
 
             if (updateUI)
-            UIManager.Instance.UpdateResourcePanel(playerIndex);
+            {
+                UIManager.Instance.UpdateResourcePanel(playerIndex);
+                UIManager.Instance.RefreshHexView();
+            }
+           
         }
     }
 }

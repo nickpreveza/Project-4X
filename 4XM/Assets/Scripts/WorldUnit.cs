@@ -428,17 +428,8 @@ public class WorldUnit : MonoBehaviour
         parentHex.ShowHighlight(false);
         if (GameManager.Instance.activePlayer.index == playerOwnerIndex)
         {
-            //ValidateRemainigActions();
+            UnitManager.Instance.SelectUnit(this);
 
-            if (isInteractable)
-            {
-                UnitManager.Instance.SelectUnit(this);
-            }
-            else
-            {
-                Debug.Log("This Unit is not interactable");
-            }
-          
         }
         else
         {

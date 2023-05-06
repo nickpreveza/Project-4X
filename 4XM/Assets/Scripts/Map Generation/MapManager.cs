@@ -758,8 +758,8 @@ public struct Resource
     public string resourceName;
     public ResourceType type;
 
-    public bool canBeBuild;
-
+    public bool transformToBuilding;
+    public bool canMasterBeCreateOnTop;
     public int scoreForPlayer;
     public int cost;
     public int output;
