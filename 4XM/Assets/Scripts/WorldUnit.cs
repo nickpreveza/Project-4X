@@ -187,7 +187,7 @@ public class WorldUnit : MonoBehaviour
         UnitManager.Instance.SelectUnit(this);
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
-
+    
     public void ValidateRemainigActions()
     {
         

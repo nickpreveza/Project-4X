@@ -16,6 +16,7 @@ public class WorldHex : MonoBehaviour
     public Transform unitParent;
     public Transform resourceParent;
     [SerializeField] GameObject hexHighlight;
+    [SerializeField] GameObject cloud;
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
@@ -25,8 +26,11 @@ public class WorldHex : MonoBehaviour
     //1 - Resource Layer 
     //2 - Unit Layer 
     //3 - Hex Highlight
-
+    //4 - Road Layer
+    //5 - Fog Layer
     Material rimMaterial;
+    public bool isHidden = true;
+
 
     private void Awake()
     {
@@ -34,6 +38,7 @@ public class WorldHex : MonoBehaviour
         resourceParent = transform.GetChild(1);
         unitParent = transform.GetChild(2);
         hexHighlight = transform.GetChild(3).gameObject;
+        cloud = transform.GetChild(5).GetChild(0).gameObject;
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
         RandomizeVisualElevation();
     }
@@ -47,7 +52,27 @@ public class WorldHex : MonoBehaviour
         wiggler = GetComponent<Wiggler>();
         rimMaterial = hexGameObject.GetComponent<MeshRenderer>().materials[0];
         HideHighlight();
+        HideCloud();
     }
+
+    public void ShowCloud()
+    {
+        if (cloud != null)
+        {
+            cloud.SetActive(true);
+            isHidden = true;
+        }
+    }
+
+    public void HideCloud()
+    {
+        if (cloud != null)
+        {
+            cloud.SetActive(false);
+            isHidden = false;
+        }
+    }
+
 
     public void ShowHighlight(bool combat)
     {
@@ -513,9 +538,16 @@ public class WorldHex : MonoBehaviour
         hexData.isOwnedByCity = true;
         hexData.playerOwnerIndex = parentCity.hexData.playerOwnerIndex;
 
+        Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
 
+        //TODO: Set outline material color only perimiter; 
+
+        for(int i = 1; i < 7; i++)
+        {
+            hexGameObject.GetComponent<MeshRenderer>().materials[i].color = newColor;
+        }
         //set outline material to match player color 
-        this.hexGameObject.GetComponent<MeshRenderer>().materials[0].color = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
+      
         //remove this later on
 
     }

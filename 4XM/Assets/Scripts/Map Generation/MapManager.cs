@@ -425,7 +425,31 @@ public class MapManager : MonoBehaviour
 
                     mapTiles.Add(tile);
 
-                    
+                    switch (tile.hexData.type)
+                    {
+                        case TileType.SAND:
+                        case TileType.GRASS:
+                        case TileType.HILL:
+                            hexesWhereCityCanSpawn.Add(tile);
+                            walkableTiles.Add(tile);
+                            break;
+                    }
+                    //update each tile with the correct visual prefab
+                    tile.UpdateVisuals(true);
+                }
+            }
+        }
+
+        FindAdjacentTiles();
+        GenerateCities();
+
+        SI_EventManager.Instance?.OnCameraMoved();
+        SI_EventManager.Instance?.OnMapGenerated();
+        SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
+    }
+
+    /*
+     *  
                     //filter the hexes into lists for other uses 
                     switch (tile.hexData.type)
                     {
@@ -487,19 +511,8 @@ public class MapManager : MonoBehaviour
 
                     }
 
-                    //update each tile with the correct visual prefab
-                    tile.UpdateVisuals(true);
-                }
-            }
-        }
+    */
 
-        FindAdjacentTiles();
-        GenerateCities();
-
-        SI_EventManager.Instance?.OnCameraMoved();
-        SI_EventManager.Instance?.OnMapGenerated();
-        SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
-    }
 
     public void SetHexUnderSiege(WorldHex hex)
     {
@@ -550,19 +563,6 @@ public class MapManager : MonoBehaviour
         }
     }
 
-    void OccupyHexesForCityGeneration(WorldHex cityCenter, int range)
-    {
-        List<WorldHex> hexesToRemove = GetHexesListWithinRadius(cityCenter.hexData, range);
-
-        foreach(WorldHex hex in hexesToRemove)
-        {
-            if (hexesWhereCityCanSpawn.Contains(hex))
-            {
-                hexesWhereCityCanSpawn.Remove(hex);
-            }
-        }
-
-    }
 
     void CalculateDistanceFromOtherCities(WorldHex city)
     {
@@ -576,6 +576,8 @@ public class MapManager : MonoBehaviour
     {
         //define the number of cities to spawn based on map size: made this a public var
         int citiesSpawned = 0;
+        Random.InitState(seed);
+        List<WorldHex> hexesInRadius = new List<WorldHex>();
 
         for (int i = 0; i < citiesNum; i++)
         {
@@ -584,6 +586,7 @@ public class MapManager : MonoBehaviour
                 Debug.LogWarning("No more availabel spaces where found for citis");
                 break;
             }
+
             int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
             WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
            // GenerateResources(newCity);
@@ -593,9 +596,50 @@ public class MapManager : MonoBehaviour
             newCity.SpawnCity(cityName);
             worldCities.Add(newCity);
             citiesSpawned++;
-            //newCity.OccypyCityTiles();
-            OccupyHexesForCityGeneration(newCity, 3);
+
+            hexesInRadius = GetHexesListWithinRadius(newCity.hexData, 3);
+
+            foreach (WorldHex hex in hexesInRadius)
+            {
+                if (hexesWhereCityCanSpawn.Contains(hex))
+                {
+                    hexesWhereCityCanSpawn.Remove(hex);
+                }
+            }
+
+            if (hexesInRadius.Contains(newCity))
+            {
+                hexesInRadius.Remove(newCity);
+            }
+
+            for(int x = 0; x < hexesInRadius.Count; x++)
+            {
+                switch (hexesInRadius[x].hexData.type)
+                {
+                    case TileType.SAND:
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FARM);
+                        break;
+                    case TileType.GRASS:
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FARM);
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FOREST);
+                        break;
+                    case TileType.HILL:
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FOREST);
+                        TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL);
+                        break;
+                    case TileType.MOUNTAIN:
+                        TryToPlantResource(hexesInRadius[x], ResourceType.MINE);
+                        break;
+                    case TileType.SEA:
+                        TryToPlantResource(hexesInRadius[x], ResourceType.FISH);
+                        break;
+                }
+            }
         }
+
 
         foreach(WorldHex generatedCity in worldCities)
         {
@@ -614,6 +658,44 @@ public class MapManager : MonoBehaviour
             ClaimCityByPlayer(player, worldCitiesToAssign[randomCity]);
             worldCitiesToAssign.RemoveAt(randomCity);
         }
+    }
+
+
+
+    public void TryToPlantResource(WorldHex hex, ResourceType type)
+    {
+        if (hex.hexData.hasResource)
+        {
+            return;
+        }
+
+        if (Random.Range(0f,1f) < GetResourceBiomeSpawnChanceRate(type, hex.hexData.type))
+        {
+            hex.GenerateResource(type);
+        }
+    }
+
+    public float GetResourceBiomeSpawnChanceRate(ResourceType resourceType, TileType tileType)
+    {
+        switch (tileType)
+        {
+            case TileType.ICE:
+            case TileType.DEEPSEA:
+                return 0;
+            case TileType.SEA:
+                return GetResourceByType(resourceType).spawnChanceRates[0];
+            case TileType.SAND:
+                return GetResourceByType(resourceType).spawnChanceRates[1];
+            case TileType.GRASS:
+                return GetResourceByType(resourceType).spawnChanceRates[2];
+            case TileType.HILL:
+                return GetResourceByType(resourceType).spawnChanceRates[3];
+            case TileType.MOUNTAIN:
+                return GetResourceByType(resourceType).spawnChanceRates[4];
+        }
+
+        return 0;
+       
     }
 
     void ClaimCityByPlayer(Player player, WorldHex city)
@@ -798,7 +880,7 @@ public struct Resource
     public int destroyReward;
     public int output;
 
-    public float spawnChanceRate;
+    public float[] spawnChanceRates;
 
     public GameObject prefab;
 }

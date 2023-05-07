@@ -101,24 +101,52 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbe3d7aa22fd4ff49a32e244a95fc1a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hex:
+  hexIdentifier: 0
+  hexData:
     C: 0
     R: 0
     S: 0
     moveCost: 1
-    type: 4
+    type: 0
     requirment: 0
     occupied: 0
+    occupiedByEnemyUnit: 0
+    isOwnedByCity: 0
     hasCity: 0
-    playerOwnerIndex: 0
+    cityHasBeenClaimed: 0
+    hasResource: 0
+    hasBuilding: 0
+    hasRoad: 0
+    buildingLevel: 0
+    resourceType: 0
+    buildingType: 0
+    playerOwnerIndex: -1
     Elevation: 0
     Moisture: 0
     rndVisualElevation: 0
+  cityData:
+    cityName: 
+    isCaptital: 0
+    isConnectedToCapital: 0
+    level: 1
+    targetLevelPoints: 2
+    levelPointsToNext: 0
+    negativeLevelPoints: 0
+    playerIndex: 0
+    range: 1
+    isUnderSiege: 0
+    output: 0
+    cityHexes: []
+    masterBuildings: 
   hexGameObject: {fileID: 0}
   associatedUnit: {fileID: 0}
   unitParent: {fileID: 0}
   resourceParent: {fileID: 0}
   hexHighlight: {fileID: 0}
+  cityGameObject: {fileID: 0}
+  parentCity: {fileID: 0}
+  cityView: {fileID: 0}
+  adjacentHexes: []
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,7 +300,7 @@ PrefabInstance:
     - target: {fileID: 270956471123373867, guid: 5ad38bb73c8db1b44bc82e529335273d,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 615147983894656401, guid: 5ad38bb73c8db1b44bc82e529335273d,
         type: 3}

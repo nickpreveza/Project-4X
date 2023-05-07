@@ -135,7 +135,7 @@ Material:
     - _GradientCenterY: 0
     - _GradientEnabled: 0
     - _GradientSize: 10
-    - _GrainColorBlend: 0.385
+    - _GrainColorBlend: 0.391
     - _GrainShineStrenght: 1
     - _Grainperiod: 143
     - _LightContribution: 1
@@ -162,7 +162,7 @@ Material:
     - _ShineDuneHeightMin: 0.65
     - _ShineThreshold: 0.59
     - _Shininess: 0
-    - _SinFreq: 8.8
+    - _SinFreq: 6.8
     - _SineAmplitude: 0.21
     - _SineRotation: 10
     - _Smoothness: 0.5
@@ -172,7 +172,7 @@ Material:
     - _SpecularEnabled: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
-    - _SubstrateDuneHeightMax: 0.779
+    - _SubstrateDuneHeightMax: 0.543
     - _SubstrateGrainHeightMax: 0.172
     - _Surface: 0
     - _SusbtrateTightening: 34.77

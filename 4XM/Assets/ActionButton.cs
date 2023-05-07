@@ -120,11 +120,11 @@ public class ActionButton : MonoBehaviour
 
         if (MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).transformToBuilding)
         {
-            buttonName.text = "Build";
+            buttonName.text = "Build " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         }
         else
         {
-            buttonName.text = "Harvest";
+            buttonName.text = "Harvest " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         }
         //MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).harvestCost;

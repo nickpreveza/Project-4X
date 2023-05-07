@@ -41,6 +41,8 @@ public class Player
 
     public List<PlayerAbilityData> abilityDatabase = new List<PlayerAbilityData>();
     public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
+
+    public List<WorldHex> clearedHexes = new List<WorldHex>();
     public void StartTurn()
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();

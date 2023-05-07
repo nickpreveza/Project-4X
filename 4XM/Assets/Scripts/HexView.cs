@@ -84,13 +84,14 @@ public class HexView : MonoBehaviour
                 hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex.";
             }
 
-            if (!hex.hexData.hasRoad && hex.hexData.playerOwnerIndex == -1)
+            if (GameManager.Instance.activePlayer.abilities.roads && !hex.hexData.hasRoad && hex.hexData.playerOwnerIndex == -1)
             {
                 if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
                 {
                     GenerateRoadButton();
                 }
             }
+           
         }
     }
 
@@ -224,7 +225,7 @@ public class HexView : MonoBehaviour
                
             }
 
-            if (!hex.hexData.hasRoad)
+            if (GameManager.Instance.activePlayer.abilities.roads && !hex.hexData.hasRoad)
             {
                 if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
                 {
