@@ -411,7 +411,7 @@ public class WorldUnit : MonoBehaviour
 
         if (parentHex.hexData.hasCity)
         {
-            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex)
+            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex && parentHex.hexData.playerOwnerIndex != -1)
             {
                 MapManager.Instance.SetHexUnderSiege(parentHex);
             }

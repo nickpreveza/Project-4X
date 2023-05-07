@@ -17,6 +17,7 @@ public class WorldHex : MonoBehaviour
     public Transform resourceParent;
     [SerializeField] GameObject hexHighlight;
     [SerializeField] GameObject cloud;
+    [SerializeField] GameObject border;
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
@@ -28,7 +29,9 @@ public class WorldHex : MonoBehaviour
     //3 - Hex Highlight
     //4 - Road Layer
     //5 - Fog Layer
-    Material rimMaterial;
+    //Material rimMaterial;
+
+
     public bool isHidden = true;
 
 
@@ -39,6 +42,7 @@ public class WorldHex : MonoBehaviour
         unitParent = transform.GetChild(2);
         hexHighlight = transform.GetChild(3).gameObject;
         cloud = transform.GetChild(5).GetChild(0).gameObject;
+        border = transform.GetChild(6).GetChild(0).gameObject;
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
         RandomizeVisualElevation();
     }
@@ -50,9 +54,8 @@ public class WorldHex : MonoBehaviour
     void Start()
     {
         wiggler = GetComponent<Wiggler>();
-        rimMaterial = hexGameObject.GetComponent<MeshRenderer>().materials[0];
+        //rimMaterial = hexGameObject.GetComponent<MeshRenderer>().materials[0];
         HideHighlight();
-        HideCloud();
     }
 
     public void ShowCloud()
@@ -62,6 +65,11 @@ public class WorldHex : MonoBehaviour
             cloud.SetActive(true);
             isHidden = true;
         }
+    }
+
+    void HideBorder()
+    {
+        border?.SetActive(false);
     }
 
     public void HideCloud()
@@ -108,6 +116,9 @@ public class WorldHex : MonoBehaviour
         {
             SetElevationFromType();
         }
+
+        HideBorder();
+        HideCloud();
     }
     public void SetElevationFromType()
     {
@@ -542,10 +553,9 @@ public class WorldHex : MonoBehaviour
 
         //TODO: Set outline material color only perimiter; 
 
-        for(int i = 1; i < 7; i++)
-        {
-            hexGameObject.GetComponent<MeshRenderer>().materials[i].color = newColor;
-        }
+        border.SetActive(true);
+        border.GetComponent<MeshRenderer>().materials[0].color = newColor;
+
         //set outline material to match player color 
       
         //remove this later on
