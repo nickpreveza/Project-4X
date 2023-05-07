@@ -78,7 +78,7 @@ public enum Abilities //more like ability grousps
     Fishing,
     Port,
     OpenSea,
-    FishFarm,
+    Destruction,
     Harvest,
     Horserider,
     Farming,

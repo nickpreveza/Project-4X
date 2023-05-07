@@ -31,6 +31,7 @@ namespace SignedInitiative
         public bool devMode;
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;
+        public bool createStuff;
         public bool infiniteCurrency;
         public bool noScenceChanges;
         public bool noSave;
@@ -205,6 +206,15 @@ namespace SignedInitiative
 
         public bool CanPlayerDestoryResourceForReward(ResourceType type)
         {
+            switch (type)
+            {
+                case ResourceType.FOREST:
+                    return GameManager.Instance.activePlayer.abilities.forestCut;
+            }
+
+            //shouldn't really use this honestly.
+            return false;
+
             if (CanPlayerHarvestResource(type))
             {
                 return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
@@ -625,6 +635,10 @@ namespace SignedInitiative
                     player.abilities.travelMountain = true;
                     break;
                 case Abilities.Mining:
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createMine = true;
+                    }
                     player.abilities.mineHarvest = true;
                     break;
                 case Abilities.Shields:
@@ -653,6 +667,11 @@ namespace SignedInitiative
                 case Abilities.Forestry:
                     player.abilities.forestHarvest = true;
                     player.abilities.forestCut = true;
+
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createForest = true;
+                    }
                     break;
                 case Abilities.Husbandry:
                     player.abilities.animalHarvest = true;
@@ -662,11 +681,16 @@ namespace SignedInitiative
                     break;
                 case Abilities.Papermill:
                     player.abilities.forestMasterBuilding = true;
+                    player.abilities.createFarm = true;
                     break;
 
                 case Abilities.Fishing:
                     player.abilities.fishHarvest = true;
-                    player.abilities.fishBuilding = true;
+
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createFish = true;
+                    }
                     break;
                 case Abilities.Port:
                     player.abilities.portBuilding = true;
@@ -675,22 +699,31 @@ namespace SignedInitiative
                 case Abilities.OpenSea:
                     player.abilities.travelOcean = true;
                     break;
-                case Abilities.FishFarm:
+                case Abilities.Destruction:
                     player.abilities.fishBuilding = true;
+                    player.abilities.destroyAbility = true;
                     break;
 
                 case Abilities.Harvest:
                     player.abilities.fruitHarvest = true;
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createFruit = true;
+                    }
                     break;
                 case Abilities.Horserider:
                     player.abilities.unitHorserider = true;
                     break;
                 case Abilities.Farming:
                     player.abilities.farmHarvest = true;
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createFarm = true;
+                    }
                     break;
                 case Abilities.Windmill:
                     player.abilities.farmMasterBuilding = true;
-                    player.abilities.destroyAbility = true;
+                    player.abilities.createForest = true;
                     break;
             }
 

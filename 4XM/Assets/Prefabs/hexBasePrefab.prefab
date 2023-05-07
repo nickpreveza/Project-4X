@@ -109,28 +109,34 @@ MonoBehaviour:
     type: 0
     requirment: 0
     occupied: 0
+    occupiedByEnemyUnit: 0
     isOwnedByCity: 0
     hasCity: 0
     cityHasBeenClaimed: 0
     hasResource: 0
+    hasBuilding: 0
+    hasRoad: 0
+    buildingLevel: 0
+    resourceType: 6
+    buildingType: 9
     playerOwnerIndex: -1
-    hexResource:
-      resourceName: 
-      type: 0
-      cost: 0
-      output: 0
-      spawnChanceRate: 0
-      prefab: {fileID: 0}
-    resource:
-      resourceName: 
-      type: 0
-      cost: 0
-      output: 0
-      spawnChanceRate: 0
-      prefab: {fileID: 0}
     Elevation: 0
     Moisture: 0
     rndVisualElevation: 0
+  cityData:
+    cityName: 
+    isCaptital: 0
+    isConnectedToCapital: 0
+    level: 1
+    targetLevelPoints: 2
+    levelPointsToNext: 0
+    negativeLevelPoints: 0
+    playerIndex: 0
+    range: 1
+    isUnderSiege: 0
+    output: 0
+    cityHexes: []
+    masterBuildings: 
   hexGameObject: {fileID: 0}
   associatedUnit: {fileID: 0}
   unitParent: {fileID: 0}
@@ -139,6 +145,7 @@ MonoBehaviour:
   cityGameObject: {fileID: 0}
   parentCity: {fileID: 0}
   cityView: {fileID: 0}
+  adjacentHexes: []
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0

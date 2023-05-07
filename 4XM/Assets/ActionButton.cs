@@ -152,8 +152,8 @@ public class ActionButton : MonoBehaviour
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
-        actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).creationCost;
+        buttonName.text = MapManager.Instance.GetResourceByType(type).resourceName;
+        actionCost = MapManager.Instance.GetResourceByType(type).creationCost;
         actionCostText.text = actionCost.ToString();
         //image also here 
         buttonAction.onClick.AddListener(()=>CreateResourceButton(type));
@@ -208,7 +208,9 @@ public class ActionButton : MonoBehaviour
         UIManager.Instance.OpenPopup(
             "Capture city", 
             "Add this city to your empire", 
-            true, 
+            true,
+            "Capture",
+            "Cancel",
             () => targetHex.associatedUnit.CityCaptureAction());
     }
 
@@ -218,6 +220,8 @@ public class ActionButton : MonoBehaviour
             "Create",
             "Create a " + MapManager.Instance.GetResourceByType(type).resourceName + " resource",
             true,
+            "Create",
+            "Cancel",
             () => CreateResource(type));
     }
 

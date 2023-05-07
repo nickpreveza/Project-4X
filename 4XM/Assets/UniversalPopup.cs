@@ -32,12 +32,15 @@ public class UniversalPopup : UIPopup
         cancel.onClick.AddListener(() => UIManager.Instance.additionalAction());
         cancel.onClick.AddListener(() => CloseWithDelay());
     }
-    public void SetData(string newTitle, string newDescription, bool available)
+    public void SetData(string newTitle, string newDescription, bool available, string option1name, string option2name)
     {
         title.text = newTitle;
         description.text = newDescription;
         confirm.onClick.RemoveAllListeners();
         confirm.interactable = available;
+
+        confirmText.text = option1name;
+        cancelText.text = option2name;
 
         if (available)
         {

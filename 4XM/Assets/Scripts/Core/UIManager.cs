@@ -81,16 +81,19 @@ namespace SignedInitiative
             ClosePopup();
         }
 
-        public void OpenPopup(string title, string description, bool available, popupFunction  newFunction)
+        public void OpenPopup(string title, string description, bool available, string option1name, string option2name, popupFunction  newFunction)
         {
             confirmAction = newFunction;
 
             universalPopup.gameObject.SetActive(true);
-            universalPopup.SetData(title, description, available);
+            universalPopup.SetData(title, description, available, option1name, option2name);
         }
 
         public void OpenPopupReward(string title, string description, string option1name, popupFunction option1, string option2name, popupFunction option2)
         {
+            confirmAction = null;
+            additionalAction = null;
+
             waitingForPopupReply = true;
             confirmAction = option1;
             additionalAction = option2;

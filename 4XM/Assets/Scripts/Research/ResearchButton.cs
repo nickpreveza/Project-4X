@@ -90,6 +90,8 @@ public class ResearchButton: MonoBehaviour
             GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
             GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
             available,
+            "Research",
+            "Cancel",
             ()=>GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, 
             true, true
         ));

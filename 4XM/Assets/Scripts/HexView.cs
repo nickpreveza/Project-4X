@@ -86,7 +86,10 @@ public class HexView : MonoBehaviour
 
             if (!hex.hexData.hasRoad && hex.hexData.playerOwnerIndex == -1)
             {
-                GenerateRoadButton();
+                if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
+                {
+                    GenerateRoadButton();
+                }
             }
         }
     }
@@ -170,21 +173,24 @@ public class HexView : MonoBehaviour
                 hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
                 hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex in your empire";
 
-                CheckMasterBuildingButtons();
+               
 
-                if (GameManager.Instance.activePlayer.abilities.guildBuilding)
-                {
-                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
-                    {
-                        GenerateGuildButton();
-                    }   
-                }
 
                 switch (hex.hexData.type)
                 {
                     case TileType.GRASS:
                     case TileType.SAND:
                     case TileType.HILL:
+                        CheckMasterBuildingButtons();
+
+                        if (GameManager.Instance.activePlayer.abilities.guildBuilding)
+                        {
+                            if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
+                            {
+                                GenerateGuildButton();
+                            }
+                        }
+
                         if (GameManager.Instance.activePlayer.abilities.createAnimals)
                         {
                             GenerateCreationButton(ResourceType.ANIMAL);
@@ -220,7 +226,10 @@ public class HexView : MonoBehaviour
 
             if (!hex.hexData.hasRoad)
             {
-                GenerateRoadButton();
+                if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
+                {
+                    GenerateRoadButton();
+                }
             }
         }
     }
@@ -246,7 +255,7 @@ public class HexView : MonoBehaviour
                 }
                 else if (adjacentHex.hexData.buildingType == BuildingType.FarmWorked)
                 {
-                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmWorked))
+                    if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
                     {
                         farmMaster = true;
                     }

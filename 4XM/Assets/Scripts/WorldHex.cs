@@ -271,7 +271,7 @@ public class WorldHex : MonoBehaviour
     
             cityData.levelPointsToNext++;
 
-            if (cityData.levelPointsToNext >= cityData.targetLevelPoints)
+            if (cityData.levelPointsToNext == cityData.targetLevelPoints)
             {
                 cityView.AddProgressUIPoint();
                 yield return new WaitForSeconds(0.3f);
@@ -457,7 +457,7 @@ public class WorldHex : MonoBehaviour
     public void CreateResource(ResourceType type)
     {
         GenerateResource(type);
-        UIManager.Instance.RefreshHexView();
+        Select(false);
     }
 
     public void HarvestResource()
@@ -484,7 +484,7 @@ public class WorldHex : MonoBehaviour
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
 
-        UIManager.Instance.ShowHexView(this);
+        Select(false);
     }
 
     void CheckForMasterBuilding()
@@ -535,11 +535,10 @@ public class WorldHex : MonoBehaviour
 
         if (hexData.hasResource)
         {
-            Debug.LogWarning("Tried to place building on top of a resource");
-            return;
+            RemoveResource(false, false);
         }
 
-        cityData.masterBuildings.Add(type);
+        parentCity.cityData.masterBuildings.Add(type);
 
         Building building = MapManager.Instance.GetBuildingByType(type);
 
@@ -551,7 +550,6 @@ public class WorldHex : MonoBehaviour
         {
             CalculateBuildingLevel();
            
-
             if (building.levelPrefabs.Length > hexData.buildingLevel)
             {
                 buildingLevelPrefab = hexData.buildingLevel-1;
@@ -592,12 +590,12 @@ public class WorldHex : MonoBehaviour
 
         if (building.isMaster)
         {
-            cityData.masterBuildings.Remove(building.type);
-            RemoveProgressPoint(hexData.buildingLevel);
+            parentCity.cityData.masterBuildings.Remove(building.type);
+            parentCity.RemoveLevelPoint(hexData.buildingLevel);
         }
         else
         {
-            RemoveProgressPoint(MapManager.Instance.GetResourceByType(building.matchingResource).output);
+            parentCity.RemoveLevelPoint(MapManager.Instance.GetResourceByType(building.matchingResource).output);
         }
       
 
