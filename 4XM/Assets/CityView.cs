@@ -25,13 +25,26 @@ public class CityView : MonoBehaviour
     List<GameObject> currentLevelPoints = new List<GameObject>();
 
     int lastEnabledProgressPointIndex = -1;
+    [SerializeField] GameObject cityCaptureIcon;
+    [SerializeField] GameObject capitalIcon;
     public void SetData(WorldHex hex)
     {
         parentHex = hex;
+        capitalIcon.SetActive(false);
+        cityCaptureIcon.SetActive(false);
     }
 
     public void UpdateForCityCapture()
     {
+        if (parentHex == GameManager.Instance.GetPlayerByIndex(parentHex.hexData.playerOwnerIndex).capitalCity)
+        {
+            capitalIcon.SetActive(true);
+        }
+        else
+        {
+            capitalIcon.SetActive(false);
+        }
+
         cityNameBackground.color = GameManager.Instance.GetCivilizationColor(parentHex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
     }
 
@@ -40,6 +53,11 @@ public class CityView : MonoBehaviour
         cityLevel.text = parentHex.cityData.level.ToString();
         cityName.text = parentHex.cityData.cityName;
         cityOutput.text = parentHex.cityData.output.ToString();
+    }
+
+    public void UpdateSiegeState(bool showSiegeIcon)
+    {
+        cityCaptureIcon.SetActive(showSiegeIcon);
     }
     public void AddLevelUIPoint()
     {

@@ -409,6 +409,14 @@ public class WorldUnit : MonoBehaviour
             SI_CameraController.Instance.PanToHex(newHex);
         }
 
+        if (parentHex.hexData.hasCity)
+        {
+            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex)
+            {
+                MapManager.Instance.SetHexUnderSiege(parentHex);
+            }
+        }
+
         GameManager.Instance.activePlayer.lastMovedUnit = this;
         //ValidateRemainigActions();
         //wiggler?.AnimatedMove(newPosition);

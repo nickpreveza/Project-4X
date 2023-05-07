@@ -86,7 +86,7 @@ public class MapManager : MonoBehaviour
     public List<Resource> hillResources = new List<Resource>();
     public List<Resource> mountainResources = new List<Resource>();
 
-
+    public List<WorldHex> hexesUnderSiege = new List<WorldHex>();
 
     void Awake()
     {
@@ -501,6 +501,34 @@ public class MapManager : MonoBehaviour
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
+    public void SetHexUnderSiege(WorldHex hex)
+    {
+        if (!hexesUnderSiege.Contains(hex))
+        {
+            hexesUnderSiege.Add(hex);
+        }
+    }
+
+    public void RemoveHexFromSiege(WorldHex hex)
+    {
+        if (hexesUnderSiege.Contains(hex))
+        {
+            hexesUnderSiege.Remove(hex);
+            hex.cityView?.UpdateSiegeState(false);
+        }
+    }
+
+    public void CheckForSiegedCities()
+    {
+        if (hexesUnderSiege.Count > 0)
+        {
+            foreach(WorldHex hex in hexesUnderSiege)
+            {
+                hex.cityView?.UpdateSiegeState(true);
+            }
+        }
+    }
+
     void FindAdjacentTiles()
     {
         for (int column = 0; column < mapColumns; column++)
@@ -590,7 +618,9 @@ public class MapManager : MonoBehaviour
 
     void ClaimCityByPlayer(Player player, WorldHex city)
     {
+        player.capitalCity = city;
         player.AddCity(city);
+        
     }
 
     public void GenerateResources(WorldHex cityCenter)
@@ -756,12 +786,16 @@ public struct TerrainType
 public struct Resource
 {
     public string resourceName;
+    public string description;
     public ResourceType type;
 
     public bool transformToBuilding;
     public bool canMasterBeCreateOnTop;
+    public bool canBeDestroyedForReward;
     public int scoreForPlayer;
-    public int cost;
+    public int harvestCost;
+    public int creationCost;
+    public int destroyReward;
     public int output;
 
     public float spawnChanceRate;
@@ -773,12 +807,13 @@ public struct Resource
 public struct Building
 {
     public string buildingName;
+    public string description;
     public BuildingType type;
     public BuildingType slaveBuilding;
     public BuildingType masterBuilding;
     public ResourceType matchingResource;
 
-    public bool hasLevels;
+    public bool isMaster;
     public int scoreForPlayer;
     public int cost;
     public int output;
@@ -819,6 +854,8 @@ public enum BuildingType
     MineWorked,
     MineMaster,
     Guild,
+    Port,
+    City,
     Empty,
 }
 

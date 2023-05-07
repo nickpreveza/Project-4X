@@ -1016,6 +1016,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1918084465}
   - {fileID: 6832742657834022243}
   - {fileID: 1242417124}
   - {fileID: 4069018887689573866}
@@ -4139,6 +4140,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: hexBasePrefab
       objectReference: {fileID: 0}
+    - target: {fileID: 4283572920935952471, guid: 1ef965df57d649f468ccff87fb43604e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6248557620041467765, guid: 1ef965df57d649f468ccff87fb43604e,
         type: 3}
       propertyPath: m_RootOrder
@@ -4476,6 +4482,7 @@ MonoBehaviour:
   loadGame: {fileID: 0}
   currentSubpanel: {fileID: 0}
   universalPopup: {fileID: 145610924}
+  waitingForPopupReply: 0
 --- !u!1 &656457446
 GameObject:
   m_ObjectHideFlags: 0
@@ -8125,7 +8132,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1142379690
 Transform:
   m_ObjectHideFlags: 0
@@ -9052,7 +9059,7 @@ PrefabInstance:
     - target: {fileID: 1989160365937015807, guid: d15e445f8ab0347b6b1eaaa1247fe593,
         type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 1989160365937015807, guid: d15e445f8ab0347b6b1eaaa1247fe593,
         type: 3}
@@ -9634,6 +9641,85 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b6dc9f9599007749b71b25142a18d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &1328345087
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1028593541}
+    m_Modifications:
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291928, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291929, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_Name
+      value: Port
+      objectReference: {fileID: 0}
+    - target: {fileID: 1149622556129291930, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 1af5bd9bb573ce647a80db5807694740, type: 2}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d5791d04db8e05a44b2846a561733aab, type: 3}
 --- !u!1 &1376641848
 GameObject:
   m_ObjectHideFlags: 0
@@ -12989,6 +13075,82 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1044253566}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1918084464
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1918084465}
+  - component: {fileID: 1918084467}
+  - component: {fileID: 1918084466}
+  m_Layer: 5
+  m_Name: Image
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1918084465
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918084464}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 139643262}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -57.429337, y: 0}
+  m_SizeDelta: {x: -114.8587, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1918084466
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918084464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1918084467
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1918084464}
+  m_CullTransparentMesh: 1
 --- !u!1 &1922375093
 GameObject:
   m_ObjectHideFlags: 0
@@ -14150,6 +14312,26 @@ PrefabInstance:
       propertyPath: m_PresetInfoIsWorld
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2096492477688596643, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2096492477688596643, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2096492477688596643, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -1.335
+      objectReference: {fileID: 0}
+    - target: {fileID: 2096492477688596643, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 1.109
+      objectReference: {fileID: 0}
     - target: {fileID: 4401474969468356448, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -14290,6 +14472,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: CityViewCanvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5193011965601033263, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_Color.a
+      value: 0.36078432
+      objectReference: {fileID: 0}
     - target: {fileID: 5419459796656540132, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -14319,6 +14506,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchoredPosition.y
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9216320261661448838, guid: 84a9fc64f4b7c7b49a0bf746be18ed33,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 84a9fc64f4b7c7b49a0bf746be18ed33, type: 3}
@@ -15586,75 +15778,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1001 &1149622556238639953
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 1028593541}
-    m_Modifications:
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.267
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291928, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1149622556129291929, guid: 2c429e315de546442b9eaaba72c10916,
-        type: 3}
-      propertyPath: m_Name
-      value: Guild
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2c429e315de546442b9eaaba72c10916, type: 3}
 --- !u!1001 &1554916794076568556
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15674,8 +15797,123 @@ PrefabInstance:
       objectReference: {fileID: 615703986}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
+      propertyPath: hexBuildings.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].cost
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].type
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[6].output
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].output
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[1].isMaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[6].isMaster
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].isMaster
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].buildingName
+      value: Port
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[0].slaveBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[2].slaveBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[4].slaveBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[6].slaveBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].slaveBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[1].masterBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[3].masterBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[5].masterBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[6].masterBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].masterBuilding
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].matchingResource
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexResources.Array.data[0].resourceDescription
+      value: ' $"Produces  {outputValue} population'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexResources.Array.data[1].resourceDescription
+      value: ' $"Produces  {VariableName} population'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
       propertyPath: hexResources.Array.data[1].transformToBuilding
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexResources.Array.data[2].resourceDescription
+      value: ' $"Produces  {outputValue} population'
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
@@ -15684,13 +15922,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
+      propertyPath: hexResources.Array.data[3].resourceDescription
+      value: ' $"Produces  {outputValue} population'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
       propertyPath: hexResources.Array.data[3].transformToBuilding
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
+      propertyPath: hexResources.Array.data[4].resourceDescription
+      value: ' $"Produces  {outputValue} population'
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
       propertyPath: hexResources.Array.data[4].transformToBuilding
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexResources.Array.data[5].resourceDescription
+      value: ' $"Produces  {outputValue} population'
       objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
@@ -15717,6 +15970,17 @@ PrefabInstance:
       propertyPath: hexResources.Array.data[5].canMasterBeCreateOnTop
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].levelPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
+        type: 3}
+      propertyPath: hexBuildings.Array.data[7].levelPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1149622556129291929, guid: d5791d04db8e05a44b2846a561733aab,
+        type: 3}
     - target: {fileID: 1554916793438866702, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: m_RootOrder
@@ -16116,7 +16380,7 @@ RectTransform:
   m_Children:
   - {fileID: 4069018888110940080}
   m_Father: {fileID: 139643262}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -16926,7 +17190,7 @@ PrefabInstance:
     - target: {fileID: 1989160365937015807, guid: d15e445f8ab0347b6b1eaaa1247fe593,
         type: 3}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1989160365937015807, guid: d15e445f8ab0347b6b1eaaa1247fe593,
         type: 3}
@@ -17266,6 +17530,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
+      propertyPath: abilities.Array.data[11].abilityName
+      value: Lumberjack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
       propertyPath: abilities.Array.data[0].scoreForPlayer
       value: 10
       objectReference: {fileID: 0}
@@ -17363,6 +17632,96 @@ PrefabInstance:
         type: 3}
       propertyPath: abilities.Array.data[19].scoreForPlayer
       value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[1].abilityDescription
+      value: Allows you to harvest the ore resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[2].abilityDescription
+      value: Allows you to create  the Shield unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[3].abilityDescription
+      value: Allows you to create the Ironworks building
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[4].abilityDescription
+      value: Allows you to build  roads
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[5].abilityDescription
+      value: Allows you to create the Trader unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[6].abilityDescription
+      value: Allows you to create the Diplomat unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[7].abilityDescription
+      value: Allows you to build the Guild
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[8].abilityDescription
+      value: Allows you to harvest the Forest resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[9].abilityDescription
+      value: Allows you to harvest the animal resource and create the Horseman unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[10].abilityDescription
+      value: Allows you to create the Siege unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[11].abilityDescription
+      value: Allows you to build the Lumberjack
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[12].abilityDescription
+      value: Allows you to harvest the Fish resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[13].abilityDescription
+      value: Allows your units to enter the sea
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[14].abilityDescription
+      value: Allows your units to enter the Ocean
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[16].abilityDescription
+      value: Allows you to harvest the Fruit resource
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[17].abilityDescription
+      value: Allows you to build the Cavarly unit
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[18].abilityDescription
+      value: Allows you to build the Farm building
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: abilities.Array.data[19].abilityDescription
+      value: Allows you to build the Windmill building
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}

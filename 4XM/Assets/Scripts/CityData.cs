@@ -6,6 +6,8 @@ using UnityEngine;
 public class CityData
 {
     public string cityName;
+    public bool isCaptital;
+    public bool isConnectedToCapital;
 
     public int level = 1;
     public int targetLevelPoints = 2;
@@ -16,6 +18,7 @@ public class CityData
     public int playerIndex;
     public int range = 1;
 
+    public bool isUnderSiege;
 
     public int output;
     public List<WorldHex> cityHexes = new List<WorldHex>();

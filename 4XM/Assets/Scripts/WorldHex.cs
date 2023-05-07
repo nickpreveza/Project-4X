@@ -158,35 +158,47 @@ public class WorldHex : MonoBehaviour
         if (newUnit.playerOwnerIndex != hexData.playerOwnerIndex && hexData.playerOwnerIndex != -1)
         {
             hexData.occupiedByEnemyUnit = true;
+
+            if (hexData.hasCity)
+            {
+                cityData.isUnderSiege = true;
+                MapManager.Instance.SetHexUnderSiege(this);
+            }
         }
+        
         associatedUnit = newUnit;
     }
 
     public void UnitOut(WorldUnit newUnit)
     {
         hexData.occupied = false;
-       
-        associatedUnit = null;
+        hexData.occupiedByEnemyUnit = false;
 
-        if (hexData.occupiedByEnemyUnit)
+        if (hexData.hasCity)
         {
-            hexData.occupiedByEnemyUnit = false;
-            if (hexData.hasCity)
+            if (cityData.isUnderSiege)
             {
+                cityData.isUnderSiege = false;
+                MapManager.Instance.RemoveHexFromSiege(this);
+                cityView.UpdateSiegeState(false);
+
                 GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
             }
         }
+       
+        associatedUnit = null;
     }
 
     public void SpawnCity(string newName)
     {
-        RemoveResource();
+        RemoveResource(false, false);
 
         GameObject obj = Instantiate(MapManager.Instance.cityPrefab, transform);
         obj.transform.SetParent(resourceParent);
         cityGameObject = obj;
         hexData.hasCity = true;
-        hexData.hasBuilding = true; //maybe this will cause issues?
+        hexData.hasBuilding = true; //maybe this will cause issues? It did. 
+        hexData.buildingType = BuildingType.City;
         cityData = new CityData();
 
         cityData.cityName = newName;
@@ -235,8 +247,11 @@ public class WorldHex : MonoBehaviour
             UIManager.Instance.UpdateHUD();
         }
     }
-    public IEnumerator AddProgressPoint(int value)
+
+    bool progressPointsAddRunning = false;
+    public IEnumerator AddProgressPoint(int value, bool showQuests)
     {
+        progressPointsAddRunning = true;
         if (value == 0)
         {
             yield break;
@@ -268,6 +283,42 @@ public class WorldHex : MonoBehaviour
                 cityView.AddLevelUIPoint();
                 cityView.RemoveAllProgressPoints();
                 cityView.UpdateData();
+
+                if (showQuests)
+                {
+                    string popupTitle = cityData.cityName + " Leved Up";
+                    string popupDescr = cityData.cityName + "has grown to level " + cityData.level + "\n\n Choose your reward: ";
+
+                    if (cityData.level == 2)
+                    {
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopupReward(
+                            popupTitle,
+                            popupDescr,
+                         "+" + GameManager.Instance.productionReward + " Production",
+                         () => PopupCustomRewardProduction(),
+                         "+" + GameManager.Instance.currencyReward + " Stars",
+                         () => PopupCustomRewardStars()
+                         );
+                    }
+                    else if (cityData.level == 3)
+                    {
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopupReward(
+                            popupTitle,
+                            popupDescr,
+                         "+" + GameManager.Instance.populationReward + " Population",
+                         () => PopupCustomRewardPopulation(),
+                         "Expand Borders",
+                         () => PopupCustomRewardBorders()
+                         );
+                    }
+                }
+
+                while (UIManager.Instance.waitingForPopupReply)
+                {
+                    yield return new WaitForSeconds(0.1f);
+                }
                
                 yield return new WaitForSeconds(0.3f);
             }
@@ -276,6 +327,8 @@ public class WorldHex : MonoBehaviour
                 cityView.AddProgressUIPoint();
                 yield return new WaitForSeconds(0.3f);
             }
+
+           
         }
 
         cityView.UpdateData();
@@ -286,12 +339,85 @@ public class WorldHex : MonoBehaviour
             GameManager.Instance.activePlayer.CalculateDevelopmentScore(false);
             UIManager.Instance.UpdateHUD();
         }
-        
+
+        progressPointsAddRunning = false;
+
+    }
+
+    void PopupCustomRewardStars()
+    {
+        GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, GameManager.Instance.currencyReward);
+        UIManager.Instance.waitingForPopupReply = false;
+    }
+
+    void PopupCustomRewardProduction()
+    {
+        cityData.output++;
+        UIManager.Instance.waitingForPopupReply = false;
+    }
+
+    IEnumerator WaitForProgressPointsToAddProgressPoints(int amount)
+    {
+        while (progressPointsAddRunning)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        AddProductionPoints(amount);
+    }
+
+    IEnumerator WaitForProgressPointsToAddBorders()
+    {
+        while (progressPointsAddRunning)
+        {
+            yield return new WaitForFixedUpdate();
+        }
+
+        ExpandBorders();
+    }
+
+    void ExpandBorders()
+    {
+        cityData.range = GameManager.Instance.rangeReward;
+        List<WorldHex> hexesToAdd = MapManager.Instance.GetHexesListWithinRadius(this.hexData, GameManager.Instance.rangeReward);
+
+        foreach (WorldHex hex in hexesToAdd)
+        {
+            if (!hex.hexData.isOwnedByCity && !cityData.cityHexes.Contains(hex))
+            {
+                cityData.cityHexes.Add(hex);
+            }
+        }
+
+        foreach (WorldHex newHex in cityData.cityHexes)
+        {
+            newHex.SetAsOccupiedByCity(this);
+        }
+
+        cityView.UpdateData();
+        cityView.UpdateForCityCapture();
+    }
+
+    void PopupCustomRewardPopulation()
+    {
+        StartCoroutine(WaitForProgressPointsToAddProgressPoints(5));
+        UIManager.Instance.waitingForPopupReply = false;
+    }
+
+    void PopupCustomRewardBorders()
+    {
+        StartCoroutine(WaitForProgressPointsToAddBorders());
+        UIManager.Instance.waitingForPopupReply = false;
+    }
+
+    void AddProductionPoints(int points)
+    {
+        cityData.output += points;
     }
 
     void AddLevelPoint(int points)
     {
-        StartCoroutine(AddProgressPoint(points));
+        StartCoroutine(AddProgressPoint(points, true));
     }
 
     void RemoveLevelPoint(int points)
@@ -328,6 +454,12 @@ public class WorldHex : MonoBehaviour
         }
     }
 
+    public void CreateResource(ResourceType type)
+    {
+        GenerateResource(type);
+        UIManager.Instance.RefreshHexView();
+    }
+
     public void HarvestResource()
     {
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
@@ -352,8 +484,6 @@ public class WorldHex : MonoBehaviour
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
 
-       
-       
         UIManager.Instance.ShowHexView(this);
     }
 
@@ -416,21 +546,91 @@ public class WorldHex : MonoBehaviour
         hexData.hasBuilding = true;
         hexData.buildingType = type;
         hexData.buildingLevel = 0;
-
-        CalculateBuildingLevel();
-
         int buildingLevelPrefab = 0;
-
-        if (building.levelPrefabs.Length > hexData.buildingLevel)
+        if (type != BuildingType.Guild)
         {
-            buildingLevelPrefab = hexData.buildingLevel;
+            CalculateBuildingLevel();
+           
+
+            if (building.levelPrefabs.Length > hexData.buildingLevel)
+            {
+                buildingLevelPrefab = hexData.buildingLevel-1;
+            }
+
+            CalculatePointsForMasterBuilding();
+        }
+        else
+        {
+            hexData.buildingLevel = 1;
+            buildingLevelPrefab = 0;
+
+            parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
         }
 
         GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
-
-        CalculatePointsForMasterBuilding();
-
         UIManager.Instance.ShowHexView(this);
+    }
+
+    public void DestroyAction(bool isBuilding)
+    {
+        if (isBuilding)
+        {
+            RemoveBuilding();
+        }
+        else
+        {
+            RemoveResource(true, true);
+        }
+    }
+
+    void RemoveBuilding()
+    {
+        Building building = MapManager.Instance.GetBuildingByType(hexData.buildingType);
+
+        //recalculate master buildings surrounding this;
+        //remove level point from city
+
+        if (building.isMaster)
+        {
+            cityData.masterBuildings.Remove(building.type);
+            RemoveProgressPoint(hexData.buildingLevel);
+        }
+        else
+        {
+            RemoveProgressPoint(MapManager.Instance.GetResourceByType(building.matchingResource).output);
+        }
+      
+
+        hexData.hasBuilding = false;
+        hexData.buildingType = BuildingType.Empty;
+
+        GameObject resourceObj = resourceParent.GetChild(0).gameObject;
+        if (resourceObj != null)
+        {
+            Destroy(resourceObj);
+        }
+       
+        UIManager.Instance.ShowHexView(this);
+    }
+
+    public void CreateRoad()
+    {
+        if (hexData.hasRoad)
+        {
+            Debug.LogWarning("Tried to create road on an existing road");
+            return;
+        }
+
+        hexData.hasRoad = true;
+        //UpdateVisuals();
+        //CalculateRoadConnections
+        UpdateRoadVisuals();
+        UIManager.Instance.ShowHexView(this);
+    }
+
+    void UpdateRoadVisuals()
+    {
+
     }
 
     public void GenerateResource(ResourceType resourceType)
@@ -452,10 +652,18 @@ public class WorldHex : MonoBehaviour
         //GameObject resourceObj = Instantiate(MapManager.Instance.GetResourcePrefab)
     }
 
-    public void RemoveResource()
+    public void RemoveResource(bool applyReward, bool updateUI)
     {
         if (hexData.hasResource)
         {
+            if (applyReward)
+            {
+                if (MapManager.Instance.GetResourceByType(hexData.resourceType).canBeDestroyedForReward)
+                {
+                    GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, MapManager.Instance.GetResourceByType(hexData.resourceType).destroyReward);
+                }
+            }
+            
             hexData.resourceType = ResourceType.EMPTY;
             hexData.hasResource = false;
             hexData.moveCost = MapManager.Instance.GetMoveCostForType(hexData.type);
@@ -467,6 +675,11 @@ public class WorldHex : MonoBehaviour
             }
            
         }
+
+        hexData.resourceType = ResourceType.EMPTY;
+
+        if (updateUI)
+        UIManager.Instance.ShowHexView(this);
     }
     public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
     {
@@ -491,7 +704,7 @@ public class WorldHex : MonoBehaviour
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
 
-        List<WorldHex> cityHexes = new List<WorldHex>(adjacentHexes);
+        List<WorldHex> newCityHexes = new List<WorldHex>(adjacentHexes);
 
         if (!isThisATakeOver)
         {
@@ -500,11 +713,11 @@ public class WorldHex : MonoBehaviour
                 if (hex.hexData.isOwnedByCity)
                 {
                     //Remove hexes that already belong to other cities 
-                    cityHexes.Remove(hex);
+                    newCityHexes.Remove(hex);
                 }
             }
 
-            cityData.cityHexes = cityHexes;
+            cityData.cityHexes = newCityHexes;
 
             foreach (WorldHex newHex in cityData.cityHexes)
             {

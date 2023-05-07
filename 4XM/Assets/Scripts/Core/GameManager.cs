@@ -30,6 +30,7 @@ namespace SignedInitiative
         [Header("Debug Settings")]
         public bool devMode;
         public bool allAbilitiesUnlocked;
+        public bool startWithALotOfMoney;
         public bool infiniteCurrency;
         public bool noScenceChanges;
         public bool noSave;
@@ -54,6 +55,17 @@ namespace SignedInitiative
         public Dictionary<Abilities, AbilityData> abilitiesDictionary = new Dictionary<Abilities, AbilityData>();
         //[HideInInspector]
         List<PlayerAbilityData> defaultAbilityDatabase = new List<PlayerAbilityData>();
+
+        //ability related, maybe move
+        public int roadCost = 2;
+        public int destroyCost = 0;
+
+        //quest rewards
+        public int populationReward = 4;
+        public int rangeReward = 2;
+        public int currencyReward = 5;
+        public int visibilityReward = 4;
+        public int productionReward = 1;
         void Awake()
         {
             if (Instance == null)
@@ -191,6 +203,19 @@ namespace SignedInitiative
             LoadGame();
         }
 
+        public bool CanPlayerDestoryResourceForReward(ResourceType type)
+        {
+            if (CanPlayerHarvestResource(type))
+            {
+                return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
+            }
+            else
+            {
+                return false;
+            }
+            
+        }
+
         public bool CanPlayerHarvestResource(ResourceType type)
         {
             switch (type)
@@ -228,12 +253,18 @@ namespace SignedInitiative
         {
             GenerateAbilitiesDictionary();
             CivilizationsSetup();
-
+            if (startWithALotOfMoney)
+            {
+                foreach(Player player in sessionPlayers)
+                {
+                    player.AddStars(1000);
+                }
+            }
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
             gameReady = true;
             activePlayerIndex = 0;
-           
-            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+            
+            StartTurn(sessionPlayers[activePlayerIndex]);
 
             UIManager.Instance.OpenGamePanel();
         }
@@ -341,7 +372,7 @@ namespace SignedInitiative
             GenerateAbilitiesDatabaseForPlayers();
         }
 
-        public void SetActivePlayer(Player player)
+        public void StartTurn(Player player)
         {
             activePlayer = player;
             activePlayerIndex = player.index;
@@ -359,6 +390,8 @@ namespace SignedInitiative
                 SI_CameraController.Instance.PanToHex(player.playerCities[0]);
             }
 
+            MapManager.Instance.CheckForSiegedCities();
+
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
             //TODO: Update fog map and stuff
@@ -370,7 +403,7 @@ namespace SignedInitiative
             activePlayer.EndTurn();
             foreach(WorldHex city in activePlayer.playerCities)
             {
-                if (!city.hexData.occupiedByEnemyUnit)
+                if (!city.cityData.isUnderSiege)
                 {
                     activePlayer.AddStars(city.cityData.output);
                 }
@@ -386,7 +419,7 @@ namespace SignedInitiative
                 activePlayerIndex = 0;
             }
 
-            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+            StartTurn(sessionPlayers[activePlayerIndex]);
          
         }
         public void EndTurn(Player player)
@@ -400,7 +433,7 @@ namespace SignedInitiative
                 activePlayerIndex = 0;
             }
 
-            SetActivePlayer(sessionPlayers[activePlayerIndex]);
+            StartTurn(sessionPlayers[activePlayerIndex]);
         }
 
         public void UndoMove()
@@ -575,6 +608,7 @@ namespace SignedInitiative
 
             Abilities abilityToUnlock = abilitiesDictionary[ability].abilityToUnlock;
             player.AddScore(2, abilitiesDictionary[ability].scoreForPlayer);
+
             if (ability != Abilities.NONE)
             {
                 player.BuyAbility(ability, removeStars);
@@ -597,25 +631,28 @@ namespace SignedInitiative
                     player.abilities.unitShield = true;
                     break;
                 case Abilities.Smithery:
-                    player.abilities.smitheryBuilding = true;
+                    player.abilities.mineMasterBuilding = true;
+                    player.abilities.unitKnight = true;
                     break;
 
+                case Abilities.Archer:
+                    player.abilities.unitArcher = true;
+                    break;
                 case Abilities.Roads:
                     player.abilities.roads = true;
-              
+
                     break;
                 case Abilities.Trader:
                     player.abilities.unitTrader = true;
                     break;
-                case Abilities.Diplomat:
-                    player.abilities.unitDiplomat = true;
-                    break;
                 case Abilities.Guild:
-                    player.abilities.merchantBuilding = true;
+                    player.abilities.guildBuilding = true;
+                    player.abilities.unitDiplomat = true;
                     break;
 
                 case Abilities.Forestry:
                     player.abilities.forestHarvest = true;
+                    player.abilities.forestCut = true;
                     break;
                 case Abilities.Husbandry:
                     player.abilities.animalHarvest = true;
@@ -624,11 +661,12 @@ namespace SignedInitiative
                     player.abilities.unitTrebucet = true;
                     break;
                 case Abilities.Papermill:
-                    player.abilities.forestBuilding = true;
+                    player.abilities.forestMasterBuilding = true;
                     break;
 
                 case Abilities.Fishing:
                     player.abilities.fishHarvest = true;
+                    player.abilities.fishBuilding = true;
                     break;
                 case Abilities.Port:
                     player.abilities.portBuilding = true;
@@ -643,7 +681,6 @@ namespace SignedInitiative
 
                 case Abilities.Harvest:
                     player.abilities.fruitHarvest = true;
-                    player.abilities.unitArcher = true; //should have a distinct entry
                     break;
                 case Abilities.Horserider:
                     player.abilities.unitHorserider = true;
@@ -652,7 +689,8 @@ namespace SignedInitiative
                     player.abilities.farmHarvest = true;
                     break;
                 case Abilities.Windmill:
-                    player.abilities.farmBuilding = true;
+                    player.abilities.farmMasterBuilding = true;
+                    player.abilities.destroyAbility = true;
                     break;
             }
 
@@ -676,4 +714,5 @@ public enum CivColorType
     uiActiveColor,
     uiInactiveColor
 }
+
 

@@ -17,6 +17,7 @@ public class AbilityTree
     public bool unitHorserider;
     public bool unitTrebucet;
     public bool unitShield;
+    public bool unitKnight;
 
     //civlian unlockables
     public bool unitTrader;
@@ -31,6 +32,15 @@ public class AbilityTree
     public bool forestHarvest;
 
     public bool roads;
+    public bool destroyAbility;
+    public bool forestCut;
+
+    public bool createFish;
+    public bool createFruit;
+    public bool createForest;
+    public bool createFarm;
+    public bool createAnimals;
+    public bool createMine;
 
     /*
     public bool createForest;
@@ -40,12 +50,13 @@ public class AbilityTree
     public bool createMine; */
 
 
-    public bool forestBuilding;
-    public bool smitheryBuilding;
-    public bool farmBuilding;
+    public bool forestMasterBuilding;
+    public bool mineMasterBuilding;
+    public bool farmMasterBuilding;
+    public bool fishMasterBuilding;
     public bool fishBuilding;
     public bool portBuilding;
-    public bool merchantBuilding;
+    public bool guildBuilding;
 
 }
 
@@ -58,7 +69,7 @@ public enum Abilities //more like ability grousps
     Smithery,
     Roads,
     Trader,
-    Diplomat,
+    Archer,
     Guild,
     Forestry,
     Husbandry,

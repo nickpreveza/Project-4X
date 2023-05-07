@@ -57,7 +57,9 @@ namespace SignedInitiative
         [SerializeField] UniversalPopup universalPopup;
         public delegate void popupFunction();
         public popupFunction confirmAction;
+        public popupFunction additionalAction;
 
+        public bool waitingForPopupReply;
         void Awake()
         {
             if (Instance == null)
@@ -85,6 +87,16 @@ namespace SignedInitiative
 
             universalPopup.gameObject.SetActive(true);
             universalPopup.SetData(title, description, available);
+        }
+
+        public void OpenPopupReward(string title, string description, string option1name, popupFunction option1, string option2name, popupFunction option2)
+        {
+            waitingForPopupReply = true;
+            confirmAction = option1;
+            additionalAction = option2;
+
+            universalPopup.gameObject.SetActive(true);
+            universalPopup.SetDataForReward(title, description, option1name, option2name);
         }
 
         public void ClosePopup()

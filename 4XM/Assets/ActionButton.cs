@@ -18,6 +18,42 @@ public class ActionButton : MonoBehaviour
     int actionCost;
     UnitType unitType;
 
+    public void SetDataForDestory(HexView newHandler, WorldHex newHex, bool isBuilding)
+    {
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        if (isBuilding)
+        {
+            buttonName.text = "Destroy";
+            actionCost = GameManager.Instance.destroyCost;
+        }
+        else
+        {
+            buttonName.text = "Clear Resource";
+            actionCost = GameManager.Instance.destroyCost; 
+        }
+
+        actionCostText.text = actionCost.ToString();
+        buttonAction.onClick.AddListener(()=>DestroyAction(isBuilding));
+        CheckIfAffordable();
+    }
+
+    public void SetDataForRoad(HexView newHandler, WorldHex newHex)
+    {
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        buttonName.text = "Road";
+        actionCost = GameManager.Instance.roadCost;
+        actionCostText.text = actionCost.ToString();
+
+        buttonAction.onClick.AddListener(BuildRoadAction);
+        CheckIfAffordable();
+    }
+
     public void SetDataForUnitSpawn(HexView newHandler, WorldHex newHex, UnitType unit)
     {
         unitType = unit;
@@ -44,7 +80,7 @@ public class ActionButton : MonoBehaviour
         }
         else
         {
-            costVisual.SetActive(false);
+            costVisual.SetActive(true);
             buttonAction.interactable = false;
         }
     }
@@ -82,8 +118,16 @@ public class ActionButton : MonoBehaviour
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
-        actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).cost;
+        if (MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).transformToBuilding)
+        {
+            buttonName.text = "Build";
+        }
+        else
+        {
+            buttonName.text = "Harvest";
+        }
+        //MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+        actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).harvestCost;
 
         actionCostText.text = actionCost.ToString();
         //image also here 
@@ -102,6 +146,21 @@ public class ActionButton : MonoBehaviour
        
     }
 
+    public void SetDataForResourceCreation(HexView newHandler, WorldHex newHex, ResourceType type)
+    {
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        buttonName.text = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+        actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).creationCost;
+        actionCostText.text = actionCost.ToString();
+        //image also here 
+        buttonAction.onClick.AddListener(()=>CreateResourceButton(type));
+        CheckIfAffordable();
+
+    }
+
     public void SetDataForCityCapture(HexView newHandler, WorldHex newHex, bool isInteractable)
     {
         parentHandler = newHandler;
@@ -113,7 +172,7 @@ public class ActionButton : MonoBehaviour
         actionCost = 0;
         actionCostText.text = "";
         //image also here 
-        buttonAction.onClick.AddListener(CaptureCity);
+        buttonAction.onClick.AddListener(CaptureCityButton);
 
         buttonAction.interactable = isInteractable;
         costVisual.SetActive(false);
@@ -144,10 +203,31 @@ public class ActionButton : MonoBehaviour
         }
     }
 
-    public void CaptureCity()
+    public void CaptureCityButton()
     {
-        targetHex.associatedUnit.CityCaptureAction();
+        UIManager.Instance.OpenPopup(
+            "Capture city", 
+            "Add this city to your empire", 
+            true, 
+            () => targetHex.associatedUnit.CityCaptureAction());
     }
+
+    public void CreateResourceButton(ResourceType type)
+    {
+        UIManager.Instance.OpenPopup(
+            "Create",
+            "Create a " + MapManager.Instance.GetResourceByType(type).resourceName + " resource",
+            true,
+            () => CreateResource(type));
+    }
+
+    public void CreateResource(ResourceType type)
+    {
+        GameManager.Instance.activePlayer.RemoveStars(actionCost);
+        targetHex.CreateResource(type);
+    }
+
+   
 
     public void HarvestResource()
     {
@@ -168,6 +248,16 @@ public class ActionButton : MonoBehaviour
 
         UIManager.Instance.RefreshHexView();
         UIManager.Instance.UpdateHUD();
+    }
+
+    public void DestroyAction(bool isBuilding)
+    {
+        targetHex.DestroyAction(isBuilding);
+    }
+    
+    public void BuildRoadAction()
+    {
+        targetHex.CreateRoad();
     }
 
 

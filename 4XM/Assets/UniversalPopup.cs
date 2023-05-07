@@ -16,7 +16,22 @@ public class UniversalPopup : UIPopup
     [SerializeField] Button cancel;
     [SerializeField] TextMeshProUGUI cancelText;
 
-    
+    public void SetDataForReward(string newTitle, string newDescription, string option1name, string option2name)
+    {
+        title.text = newTitle;
+        description.text = newDescription;
+        confirm.onClick.RemoveAllListeners();
+        cancel.onClick.RemoveAllListeners();
+        confirm.interactable = true;
+
+        confirmText.text = option1name;
+        confirm.onClick.AddListener(() => UIManager.Instance.confirmAction());
+        confirm.onClick.AddListener(() => CloseWithDelay());
+
+        cancelText.text = option2name;
+        cancel.onClick.AddListener(() => UIManager.Instance.additionalAction());
+        cancel.onClick.AddListener(() => CloseWithDelay());
+    }
     public void SetData(string newTitle, string newDescription, bool available)
     {
         title.text = newTitle;

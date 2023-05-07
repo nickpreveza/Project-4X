@@ -25,6 +25,7 @@ public class Player
     public int unlockedAbiltiesCount;
 
     //Game Editable Data
+    public WorldHex capitalCity;
 
     public Dictionary<UnitType, bool> gameUnitsDictionary = new Dictionary<UnitType, bool>();
 
@@ -92,6 +93,8 @@ public class Player
            
         }
 
+        developmentScore = newDevelopmentScore;
+
         if (updateHUD)
         {
             UIManager.Instance.UpdateHUD();
@@ -116,7 +119,7 @@ public class Player
 
         foreach(WorldHex hex in playerCities)
         {
-            if (!hex.hexData.occupiedByEnemyUnit)
+            if (!hex.cityData.isUnderSiege)
             {
                 starsToReceive += hex.cityData.output;
             }
@@ -219,11 +222,13 @@ public class Player
 
     public void AddCity(WorldHex cityHex)
     {
+        cityHex.cityData.isUnderSiege = false;
         //TODO: Some security checks to make sure this is the correct tile;
         playerCities.Add(cityHex);
         cityHex.OccupyCityByPlayer(this);
 
         RecalculateAbilityCosts();
+        CalculateExpectedStars();
         SI_EventManager.Instance.OnCityCaptured(index);
     }
 
