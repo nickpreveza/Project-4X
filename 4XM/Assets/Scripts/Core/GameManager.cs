@@ -390,7 +390,7 @@ namespace SignedInitiative
             activePlayer.StartTurn();
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();
-          
+           
             if (activePlayer.lastMovedUnit != null)
             {
                 SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
@@ -400,8 +400,8 @@ namespace SignedInitiative
                 SI_CameraController.Instance.PanToHex(player.playerCities[0]);
             }
 
+            MapManager.Instance.UpdateCloudView();
             MapManager.Instance.CheckForSiegedCities();
-
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
             //TODO: Update fog map and stuff

@@ -107,6 +107,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: tree-poplar (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 160676798792014221, guid: e94515f86f06af94ba3c082f0e9a33b0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94515f86f06af94ba3c082f0e9a33b0, type: 3}
 --- !u!4 &5661525245700848940 stripped
@@ -186,6 +191,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: tree-poplar (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 160676798792014221, guid: e94515f86f06af94ba3c082f0e9a33b0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94515f86f06af94ba3c082f0e9a33b0, type: 3}
@@ -267,6 +277,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: tree-poplar
       objectReference: {fileID: 0}
+    - target: {fileID: 160676798792014221, guid: e94515f86f06af94ba3c082f0e9a33b0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94515f86f06af94ba3c082f0e9a33b0, type: 3}
 --- !u!4 &5661525246769079727 stripped
@@ -346,6 +361,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: tree-poplar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 160676798792014221, guid: e94515f86f06af94ba3c082f0e9a33b0,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e94515f86f06af94ba3c082f0e9a33b0, type: 3}

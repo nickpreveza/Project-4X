@@ -513,6 +513,47 @@ public class MapManager : MonoBehaviour
 
     */
 
+    public void UpdateCloudView()
+    {
+        if (GameManager.Instance.activePlayer.type == PlayerType.LOCAL)
+        {
+            for (int column = 0; column < mapColumns; column++)
+            {
+                for (int row = 0; row < mapRows; row++)
+                {
+                    hexes[column, row].SetHiddenState(!GameManager.Instance.activePlayer.clearedHexes.Contains(hexes[column, row]));
+                }
+            }
+        }
+    }
+
+    public void UnhideHexes(int playerIndex, WorldHex centerHex, int range)
+    {
+        List<WorldHex> hexesToUnhide = GetHexesListWithinRadius(centerHex.hexData, range);
+        if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
+        {
+            foreach (WorldHex hex in hexesToUnhide)
+            {
+                hex.SetHiddenState(false);
+                if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                {
+                    GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
+                }
+
+            }
+        }
+        else
+        {
+            foreach (WorldHex hex in hexesToUnhide)
+            {
+                if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                {
+                    GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
+                }
+            }
+        }
+        
+    }
 
     public void SetHexUnderSiege(WorldHex hex)
     {

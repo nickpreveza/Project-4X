@@ -32,7 +32,7 @@ public class WorldHex : MonoBehaviour
     //Material rimMaterial;
 
 
-    public bool isHidden = true;
+    bool isHidden = true;
 
 
     private void Awake()
@@ -58,12 +58,19 @@ public class WorldHex : MonoBehaviour
         HideHighlight();
     }
 
-    public void ShowCloud()
+    public void SetHiddenState(bool hiddenState)
     {
         if (cloud != null)
         {
-            cloud.SetActive(true);
-            isHidden = true;
+            cloud.SetActive(hiddenState);
+            isHidden = hiddenState;
+            resourceParent.gameObject.SetActive(!hiddenState);
+            unitParent.gameObject.SetActive(!hiddenState);
+
+            if (!hiddenState)
+            {
+                RandomizeVisualElevation();
+            }
         }
     }
 
@@ -72,14 +79,7 @@ public class WorldHex : MonoBehaviour
         border?.SetActive(false);
     }
 
-    public void HideCloud()
-    {
-        if (cloud != null)
-        {
-            cloud.SetActive(false);
-            isHidden = false;
-        }
-    }
+   
 
 
     public void ShowHighlight(bool combat)
@@ -118,7 +118,7 @@ public class WorldHex : MonoBehaviour
         }
 
         HideBorder();
-        HideCloud();
+        SetHiddenState(true);
     }
     public void SetElevationFromType()
     {
@@ -201,7 +201,9 @@ public class WorldHex : MonoBehaviour
                 MapManager.Instance.SetHexUnderSiege(this);
             }
         }
-        
+
+        MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1);
+
         associatedUnit = newUnit;
     }
 
@@ -422,13 +424,12 @@ public class WorldHex : MonoBehaviour
             if (!hex.hexData.isOwnedByCity && !cityData.cityHexes.Contains(hex))
             {
                 cityData.cityHexes.Add(hex);
+                hex.SetAsOccupiedByCity(this);
             }
         }
 
-        foreach (WorldHex newHex in cityData.cityHexes)
-        {
-            newHex.SetAsOccupiedByCity(this);
-        }
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1);
+
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
@@ -775,6 +776,7 @@ public class WorldHex : MonoBehaviour
 
         cityView.gameObject.SetActive(true);
 
+        MapManager.Instance.UnhideHexes(player.index, this, cityData.range);
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
@@ -785,7 +787,7 @@ public class WorldHex : MonoBehaviour
 
         }
 
-  
+        
 
     }
 
@@ -798,6 +800,11 @@ public class WorldHex : MonoBehaviour
 
     public void Select(bool isRepeat)
     {
+        if (isHidden)
+        {
+            wiggler?.Wiggle();
+            return;
+        }
         //if a unit is moving 
         if (UnitManager.Instance.hexSelectMode)
         {
@@ -879,6 +886,12 @@ public class WorldHex : MonoBehaviour
 
     public void RandomizeVisualElevation()
     {
+        if (isHidden)
+        {
+            hexData.rndVisualElevation = 0f;
+            return;
+        }
+
         switch (hexData.type)
         {
             case TileType.DEEPSEA:
@@ -902,7 +915,6 @@ public class WorldHex : MonoBehaviour
             case TileType.ICE:
                 hexData.rndVisualElevation = Random.Range(-.5f, .5f);
                 break;
-
         }
     }
 

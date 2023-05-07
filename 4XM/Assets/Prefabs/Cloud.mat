@@ -1,5 +1,52 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!28 &-5883073076343160121
+Texture2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: z__ShadingGradientTextureTex{"mode":0,"colorKeys":[{"color":{"r":0.28301888704299929,"g":0.06541474908590317,"b":0.24954140186309815,"a":1.0},"time":0.0},{"color":{"r":1.0,"g":1.0,"b":1.0,"a":1.0},"time":1.0}],"alphaKeys":[{"alpha":1.0,"time":0.0},{"alpha":1.0,"time":1.0}]}
+  m_ImageContentsHash:
+    serializedVersion: 2
+    Hash: 00000000000000000000000000000000
+  m_ForcedFallbackFormat: 4
+  m_DownscaleFallback: 0
+  m_IsAlphaChannelOptional: 0
+  serializedVersion: 2
+  m_Width: 256
+  m_Height: 1
+  m_CompleteImageSize: 1024
+  m_MipsStripped: 0
+  m_TextureFormat: 5
+  m_MipCount: 1
+  m_IsReadable: 1
+  m_IsPreProcessed: 0
+  m_IgnoreMasterTextureLimit: 0
+  m_StreamingMipmaps: 0
+  m_StreamingMipmapsPriority: 0
+  m_VTOnly: 0
+  m_AlphaIsTransparency: 0
+  m_ImageCount: 1
+  m_TextureDimension: 2
+  m_TextureSettings:
+    serializedVersion: 2
+    m_FilterMode: 1
+    m_Aniso: 1
+    m_MipBias: 0
+    m_WrapU: 1
+    m_WrapV: 1
+    m_WrapW: 1
+  m_LightmapFormat: 0
+  m_ColorSpace: 1
+  m_PlatformBlob: 
+  image data: 1024
+  _typelessdata: ff481140ff491240ff4a1341ff4a1342ff4b1443ff4c1543ff4c1644ff4d1745ff4e1846ff4f1946ff4f1a47ff501b48ff511c49ff511d49ff521e4aff531f4bff54204cff54214cff55224dff56224eff57234fff57244fff582550ff592651ff592752ff5a2852ff5b2953ff5c2a54ff5c2b55ff5d2c55ff5e2d56ff5e2e57ff5f2f58ff603058ff613059ff61315aff62325bff63335bff63345cff64355dff65365eff66375eff66385fff673960ff683a61ff683b61ff693c62ff6a3d63ff6b3e64ff6b3e64ff6c3f65ff6d4066ff6d4167ff6e4267ff6f4368ff704469ff70456aff71466aff72476bff72486cff73496dff744a6dff754b6eff754c6fff764c70ff774d70ff774e71ff784f72ff795073ff7a5173ff7a5274ff7b5375ff7c5476ff7d5576ff7d5677ff7e5778ff7f5879ff7f5979ff805a7aff815b7bff825b7cff825c7cff835d7dff845e7eff845f7fff85607fff866180ff876281ff876382ff886482ff896583ff896684ff8a6785ff8b6885ff8c6986ff8c6987ff8d6a88ff8e6b88ff8e6c89ff8f6d8aff906e8bff916f8bff91708cff92718dff93728eff93738eff94748fff957590ff967691ff967791ff977792ff987893ff987994ff997a94ff9a7b95ff9b7c96ff9b7d97ff9c7e97ff9d7f98ff9d8099ff9e819aff9f829affa0839bffa0849cffa1859dffa2869dffa3869effa3879fffa488a0ffa589a0ffa58aa1ffa68ba2ffa78ca3ffa88da3ffa88ea4ffa98fa5ffaa90a6ffaa91a6ffab92a7ffac93a8ffad94a9ffad94a9ffae95aaffaf96abffaf97acffb098acffb199adffb29aaeffb29bafffb39cafffb49db0ffb49eb1ffb59fb2ffb6a0b2ffb7a1b3ffb7a2b4ffb8a2b5ffb9a3b5ffb9a4b6ffbaa5b7ffbba6b8ffbca7b8ffbca8b9ffbda9baffbeaabbffbeabbbffbfacbcffc0adbdffc1aebeffc1afbeffc2b0bfffc3b0c0ffc3b1c1ffc4b2c1ffc5b3c2ffc6b4c3ffc6b5c4ffc7b6c4ffc8b7c5ffc9b8c6ffc9b9c7ffcabac7ffcbbbc8ffcbbcc9ffccbdcaffcdbecaffcebfcbffcebfccffcfc0cdffd0c1cdffd0c2ceffd1c3cfffd2c4d0ffd3c5d0ffd3c6d1ffd4c7d2ffd5c8d3ffd5c9d3ffd6cad4ffd7cbd5ffd8ccd6ffd8cdd6ffd9cdd7ffdaced8ffdacfd9ffdbd0d9ffdcd1daffddd2dbffddd3dcffded4dcffdfd5ddffdfd6deffe0d7dfffe1d8dfffe2d9e0ffe2dae1ffe3dbe2ffe4dbe2ffe4dce3ffe5dde4ffe6dee5ffe7dfe5ffe7e0e6ffe8e1e7ffe9e2e8ffe9e3e8ffeae4e9ffebe5eaffece6ebffece7ebffede8ecffeee9edffefeaeeffefeaeefff0ebeffff1ecf0fff1edf1fff2eef1fff3eff2fff4f0f3fff4f1f4fff5f2f4fff6f3f5fff6f4f6fff7f5f7fff8f6f7fff9f7f8fff9f8f9fffaf8fafffbf9fafffbfafbfffcfbfcfffdfcfdfffefdfdfffefefeffffffff
+  m_StreamData:
+    serializedVersion: 2
+    offset: 0
+    size: 0
+    path: 
 --- !u!114 &-1791706993824106797
 MonoBehaviour:
   m_ObjectHideFlags: 11
@@ -21,24 +68,43 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Cloud
-  m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
-  m_ValidKeywords: []
+  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
+  m_ValidKeywords:
+  - _ENVIRONMENTREFLECTIONS_OFF
+  - _SPECULARHIGHLIGHTS_OFF
+  - _SPECULAR_SETUP
   m_InvalidKeywords: []
   m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap:
     RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - Shape_Texture:
+        m_Texture: {fileID: 2800000, guid: 5aba294e21853d84f81ce434f5d99484, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _AOTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _BackgroundCubemap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _CloudsCubemap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -58,12 +124,44 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _IntersectionFoamTexture:
+        m_Texture: {fileID: 2800000, guid: 772031b03d9d46e4ab03e15c8e17718c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MainTexture:
+        m_Texture: {fileID: 2800000, guid: 745d5656113d0314088329f178248c75, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MoonTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 5aba294e21853d84f81ce434f5d99484, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal:
+        m_Texture: {fileID: 2800000, guid: 16405ef759e21ba4ebc5b927ccaaf71c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal1:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Normal2:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NormalsTexture:
+        m_Texture: {fileID: 2800000, guid: a41da5f5671718b47bbc71e9ef691103, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OcclusionMap:
@@ -74,7 +172,39 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _PatternCubemap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ShadingGradientTexture:
+        m_Texture: {fileID: -5883073076343160121}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SnowNormal:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _StarsCubemap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SunTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurfaceFoamTexture:
+        m_Texture: {fileID: 2800000, guid: 772031b03d9d46e4ab03e15c8e17718c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TwinklingTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _WaterColorGradientTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -92,46 +222,304 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - BILLBOARD_FACE_CAMERA_POSITION: 0
+    - Billboard_Scale: 0.07
+    - FOAM_SHADOWS: 1
+    - Fill_Impact: 0.499
+    - INTERSECTION_EFFECTS: 1
+    - Offset_Along_Normal: 0.08
+    - REFRACTION: 0
+    - SHORE_MOVEMENT: 0
+    - SURFACE_FOAM: 0
+    - Space_0: 0
     - Vector1_38BD3441: 0.4
+    - Vector1_8dd6492e16194799b37d5efeb9926b89: 1
     - Vector1_CF8B0D8D: 6
     - Vector1_ED5ABFD9: 0.05
     - Vector1_F3F6B787: 0
+    - WATER_LIGHTING: 1
+    - WORLD_SPACE_UV: 1
+    - _AOEnable: 0
+    - _AOPower: 1
+    - _AOuv: 0
+    - _AllowAlphaOverflow: 0
     - _AlphaClip: 0
+    - _AlphaThreshold: 0.488
+    - _AmbientPower: 0
+    - _Amplitude: 1
+    - _BackgroundCat: 1
+    - _BackgroundExposure: 1
+    - _BackgroundMode: 0
+    - _Banner: 1
     - _Blend: 0
     - _BlendOp: 0
+    - _BlurAmount: 0.0128
+    - _Brightness: 0
     - _BumpScale: 1
+    - _CameraDistanceFadeClose: 0
+    - _CameraDistanceFadeFar: 10
+    - _CausticsShadowMask: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
+    - _CloudsCat: 1
+    - _CloudsHeight: 0
+    - _CloudsIntensity: 1
+    - _CloudsLitbySun: 0
+    - _CloudsRotation: 360
+    - _CloudsRotationSpeed: 0.5
+    - _ColorCorrectionEnable: 0
     - _Cull: 2
     - _Cutoff: 0.5
+    - _Depth: 100
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
+    - _DirX: 44
+    - _DirY: 45.9
+    - _DitherTexelSize: 1
+    - _DitherThreshold: 0
+    - _DontMix: 0
     - _DstBlend: 0
-    - _EnvironmentReflections: 1
+    - _EdgeWidth: 0.05
+    - _EnableBuiltinFog: 0
+    - _EnableClouds: 0
+    - _EnableCloudsRotation: 0
+    - _EnableFogMessage: 0
+    - _EnableMoon: 0
+    - _EnablePatternOverlay: 0
+    - _EnableStars: 0
+    - _EnableStarsRotation: 0
+    - _EnableStarsTwinkling: 0
+    - _EnableSun: 0
+    - _EnvironmentReflections: 0
+    - _EquatorHeight: 0.5
+    - _EquatorSmoothness: 0.5
+    - _Exponent: 1
+    - _Fade: 1
+    - _FoamShadowDepth: 10
+    - _FoamShadowStrength: 0.45
+    - _FogCat: 1
+    - _FogFill: 0
+    - _FogHeight: 10
+    - _FogSmoothness: 0
+    - _FogYStartPos: 0
+    - _FresnelPower: 10
     - _GlossMapScale: 0
-    - _Glossiness: 0
+    - _Glossiness: 0.347
     - _GlossyReflections: 0
-    - _Metallic: 0
+    - _GradSettings_B: 0
+    - _GradSettings_D: 0
+    - _GradSettings_F: 0
+    - _GradSettings_L: 0
+    - _GradSettings_R: 0
+    - _GradSettings_T: 0
+    - _GradientHeight_B: 1
+    - _GradientHeight_D: 1
+    - _GradientHeight_F: 1
+    - _GradientHeight_G: 1
+    - _GradientHeight_L: 1
+    - _GradientHeight_R: 1
+    - _GradientHeight_T: 1
+    - _GradientSpace: 1
+    - _HFogEnable: 0
+    - _Intensity: 2.62
+    - _IntersectionFoamBlend: 0.37
+    - _IntersectionFoamDepth: 0.72
+    - _IntersectionFoamScale: 0.19
+    - _IntersectionFoamShadowProjection: 4.6
+    - _IntersectionWaterBlend: 0
+    - _LMPower: 1
+    - _LightingHardness: 0
+    - _LightingSmoothness: 0.71
+    - _LmapBlendingMode: 0
+    - _LmapEnable: 0
+    - _MainTexturePower: 0.09
+    - _Metallic: 0.341
+    - _Mode: 0
+    - _MoonCat: 1
+    - _MoonIntensity: 1
+    - _MoonSize: 0.5
+    - _NoiseAmount: 0.5
+    - _NoiseScale: 1
+    - _NormalStrength: 0.25
+    - _NormalStrength1: 0.17
+    - _NormalStrength2: 0.8
+    - _NormalsStrength: 0.42
     - _OcclusionStrength: 1
+    - _OtherSettings: 1
+    - _OutlineWidth: 0.29
     - _Parallax: 0.005
-    - _QueueControl: 0
+    - _PatternCat: 1
+    - _PatternContrast: 0.5
+    - _PlanarReflectionFresnel: 2.5
+    - _PlanarReflectionStrength: 0.82
+    - _QueueControl: 1
     - _QueueOffset: 0
+    - _RealtimeShadow: 0
     - _ReceiveShadows: 1
+    - _RefractionStrength: 0.022
+    - _RimEnable: 0
+    - _RimPower: 1
+    - _Rotation_B: 0
+    - _Rotation_D: 0
+    - _Rotation_F: 0
+    - _Rotation_G: 0
+    - _Rotation_L: 0
+    - _Rotation_R: 0
+    - _Rotation_T: 0
     - _SampleGI: 0
+    - _Saturation: 0
+    - _Shading_B: 0
+    - _Shading_D: 2
+    - _Shading_F: 2
+    - _Shading_L: 2
+    - _Shading_R: 2
+    - _Shading_T: 2
+    - _ShadowBlend: 0
+    - _ShadowInfluence: 0
+    - _ShadowStrength: 0.068
+    - _ShoreBlend: 1
+    - _ShoreDepth: 0.5
+    - _ShoreFade: 1
+    - _ShoreFoamBreakupScale: 0
+    - _ShoreFoamBreakupStrength: 0
+    - _ShoreFoamFrequency: 0
+    - _ShoreFoamSpeed: 0
+    - _ShoreFoamWidth: 0
+    - _ShowAO: 1
+    - _ShowAmbientSettings: 0
+    - _ShowBack: 1
+    - _ShowBottom: 1
+    - _ShowColorCorrection: 1
+    - _ShowCustomShading: 1
+    - _ShowFog: 1
+    - _ShowFront: 1
+    - _ShowGlobalGradientSettings: 0
+    - _ShowLMap: 1
+    - _ShowLeft: 1
+    - _ShowRight: 1
+    - _ShowTexture: 1
+    - _ShowTop: 1
+    - _SkyboxCat: 1
+    - _SkyboxOffset: 0
+    - _SkyboxRotation: 0
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
-    - _SpecularHighlights: 1
+    - _SnowAmount: 0.75
+    - _SnowGlossiness: 0.5
+    - _SnowMetallic: 0
+    - _SpecularHighlights: 0
+    - _Speed: 1.25
     - _SrcBlend: 1
+    - _StarsBottomMask: 0
+    - _StarsCat: 1
+    - _StarsHeightMask: 0
+    - _StarsIntensity: 2
+    - _StarsLayer: 2
+    - _StarsRotation: 360
+    - _StarsRotationSpeed: 0.5
+    - _StarsSize: 0.5
+    - _StarsSunMask: 0
+    - _SunCat: 1
+    - _SunIntensity: 1
+    - _SunSize: 0.5
     - _Surface: 0
-    - _WorkflowMode: 1
+    - _SurfaceFoamBlend: 1
+    - _SurfaceFoamHeightMask: 0
+    - _SurfaceFoamHeightMaskSmoothness: 0
+    - _SurfaceFoamShadowProjection: 15
+    - _TessellationUniform: 27.1
+    - _TwinklingContrast: 1
+    - _TwinklingSpeed: 0.05
+    - _UnderwaterRefractionStrength: 0.099
+    - _UnityFogEnable: 0
+    - _UvFadeX: 0.1
+    - _UvFadeY: 0.1
+    - _WaterColorDepth: 1.32
+    - _WaterColorHorizonDistance: 20
+    - _WorkflowMode: 0
     - _ZTest: 4
     - _ZWrite: 1
+    - _ZWriteOverride: 0
     m_Colors:
     - Color_28180829: {r: 0.5019608, g: 0.30196077, b: 0.058823504, a: 1}
     - Color_57D43A16: {r: 0.95283014, g: 0.95283014, b: 0.95283014, a: 0}
     - Color_F689E8B9: {r: 0.9245283, g: 0.6391348, b: 0.29218578, a: 1}
+    - Color_e33122dd1341407eb6ef24a34b660f09: {r: 0, g: 0, b: 0, a: 0}
+    - _AOColor: {r: 0, g: 0, b: 0, a: 1}
+    - _AmbientColor: {r: 0, g: 0, b: 0, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudsLightColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudsShadowColor: {r: 0.49803913, g: 0.7450981, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1: {r: 1, g: 1, b: 1, a: 0}
+    - _Color1_B: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1_D: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1_F: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1_L: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1_R: {r: 1, g: 1, b: 1, a: 1}
+    - _Color1_T: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2: {r: 1, g: 1, b: 1, a: 0}
+    - _Color2_B: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_D: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_F: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_L: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_R: {r: 1, g: 1, b: 1, a: 1}
+    - _Color2_T: {r: 1, g: 1, b: 1, a: 1}
+    - _Color_Fog: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _EdgeColor: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _EquatorColor: {r: 1, g: 0.747, b: 0, a: 1}
+    - _FlowDirection1: {r: 0.05, g: 0, b: 0, a: 1}
+    - _FlowDirection2: {r: 0, g: 0.05, b: 0, a: 1}
+    - _GizmoPosition_B: {r: 0, g: 0, b: 10, a: 10}
+    - _GizmoPosition_D: {r: 0, g: 0, b: 10, a: 10}
+    - _GizmoPosition_F: {r: 0, g: 0, b: 10, a: 10}
+    - _GizmoPosition_L: {r: 0, g: 0, b: 10, a: 10}
+    - _GizmoPosition_R: {r: 0, g: 0, b: 10, a: 10}
+    - _GizmoPosition_T: {r: 0, g: 0, b: 10, a: 10}
+    - _GradientXStartPos_D: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientXStartPos_T: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientYStartPos_B: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientYStartPos_F: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientYStartPos_G: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientYStartPos_L: {r: 0, g: 0, b: 0, a: 0}
+    - _GradientYStartPos_R: {r: 0, g: 0, b: 0, a: 0}
+    - _GroundColor: {r: 0.49803913, g: 0.49699998, b: 0, a: 1}
+    - _IntersectionFoamColor: {r: 1, g: 1, b: 1, a: 1}
+    - _IntersectionFoamMovement: {r: 0, g: 0, b: 0, a: 0}
+    - _IntersectionFoamSampling: {r: 1, g: 1, b: 0, a: 0}
+    - _LMColor: {r: 0, g: 0, b: 0, a: 1}
+    - _LightingDiffuseColor: {r: 0, g: 0, b: 0, a: 0}
+    - _LightingSpecularColor: {r: 1, g: 1, b: 1, a: 0}
+    - _MoonColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MovementDirection: {r: 1, g: -1, b: 0, a: 1}
+    - _NoiseSpeed: {r: 0, g: 0, b: 0, a: 0}
+    - _NormalsMovement: {r: 0.04, g: 0.36, b: 0, a: 0}
+    - _OutlineColor: {r: 1, g: 1, b: 1, a: 1}
+    - _RimColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ScrollDirection: {r: 1, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
+    - _ShoreColor: {r: 0, g: 0, b: 0, a: 0.6745098}
+    - _SkyColor: {r: 0.49803913, g: 0.7450981, b: 1, a: 1}
+    - _SkyboxRotationAxis: {r: 0, g: 1, b: 0, a: 0}
+    - _SnowColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SnowDirection: {r: 0, g: 1, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
+    - _StarsRotationAxis: {r: 0, g: 1, b: 0, a: 0}
+    - _SunColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SurfaceFoamColor1: {r: 1, g: 1, b: 1, a: 0.3215686}
+    - _SurfaceFoamColor2: {r: 1, g: 1, b: 1, a: 0.7294118}
+    - _SurfaceFoamMovement: {r: 0.7, g: 0, b: 0.47, a: 0.01}
+    - _SurfaceFoamSampling: {r: 0, g: 0, b: 0, a: 0}
+    - _SurfaceFoamTilingAndOffset: {r: -1, g: -1, b: 0.57, a: 0.22}
+    - _TintColor: {r: 0, g: 0, b: 0, a: 1}
+    - _UpVector: {r: 0.49885246, g: 0.6959128, b: 0.5165768, a: 0}
+    - _WaterColorDeep: {r: 1, g: 1, b: 1, a: 0.31764707}
+    - _WaterColorHorizon: {r: 0.9811321, g: 0.9811321, b: 0.9811321, a: 0.4392157}
+    - _WaterColorShallow: {r: 1, g: 0, b: 0, a: 0.3882353}
+    - _WaterColorUnderwater: {r: 1, g: 1, b: 1, a: 1}
+    - _WaveColor: {r: 1, g: 1, b: 1, a: 1}
+    - _WaveDirections: {r: 0, g: 0.64, b: 1, a: 0.33}
+    - _WaveVisuals: {r: 0.122, g: 1, b: 0.37, a: 0}
+    - _WindDirection: {r: 1, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []

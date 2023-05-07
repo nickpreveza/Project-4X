@@ -214,7 +214,6 @@ MonoBehaviour:
   parentCity: {fileID: 0}
   cityView: {fileID: 0}
   adjacentHexes: []
-  isHidden: 1
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,12 +324,27 @@ PrefabInstance:
     - target: {fileID: 4652149411839743343, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_RootOrder
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.9475113
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.562878
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.9475113
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
@@ -340,12 +354,12 @@ PrefabInstance:
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.318
+      value: -0.281
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
