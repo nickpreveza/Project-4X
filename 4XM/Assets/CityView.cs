@@ -27,11 +27,26 @@ public class CityView : MonoBehaviour
     int lastEnabledProgressPointIndex = -1;
     [SerializeField] GameObject cityCaptureIcon;
     [SerializeField] GameObject capitalIcon;
+
+    CanvasGroup canvasGroup;
     public void SetData(WorldHex hex)
     {
         parentHex = hex;
         capitalIcon.SetActive(false);
         cityCaptureIcon.SetActive(false);
+        canvasGroup = GetComponent<CanvasGroup>();
+    }
+
+    public void SetCanvasGroupAlpha(bool isHidden)
+    {
+        if (isHidden)
+        {
+            canvasGroup.alpha = 0;
+        }
+        else
+        {
+            canvasGroup.alpha = 1;
+        }
     }
 
     public void UpdateForCityCapture()

@@ -66,6 +66,20 @@ public class WorldHex : MonoBehaviour
             isHidden = hiddenState;
             resourceParent.gameObject.SetActive(!hiddenState);
             unitParent.gameObject.SetActive(!hiddenState);
+            if (hexData.type == TileType.MOUNTAIN)
+            {
+                if (hexGameObject.transform.childCount > 0) 
+                {
+                    hexGameObject.transform.GetChild(0).gameObject.SetActive(!hiddenState);
+                }
+            }
+            if (hexData.hasCity)
+            {
+                if (cityView != null)
+                {
+                    cityView.SetCanvasGroupAlpha(hiddenState);
+                }
+            }
 
             if (!hiddenState)
             {
@@ -776,7 +790,7 @@ public class WorldHex : MonoBehaviour
 
         cityView.gameObject.SetActive(true);
 
-        MapManager.Instance.UnhideHexes(player.index, this, cityData.range);
+        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1);
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
@@ -886,6 +900,11 @@ public class WorldHex : MonoBehaviour
 
     public void RandomizeVisualElevation()
     {
+        hexData.rndVisualElevation = 0f;
+        return;
+
+        //skip out of random visual elevation for now to better fit the new style
+
         if (isHidden)
         {
             hexData.rndVisualElevation = 0f;
