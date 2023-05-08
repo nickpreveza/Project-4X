@@ -14,6 +14,7 @@ public class WorldUnit : MonoBehaviour
     Vector3 oldPosition;
     Vector3 newPosition;
     Vector3 currentVelocity;
+    Vector3 currentRotationVelocity;
     float smoothTime = 0.5f;
     bool shouldMove;
 
@@ -49,6 +50,11 @@ public class WorldUnit : MonoBehaviour
     bool attackIsRanged;
     UnitView unitView;
     GameObject visualUnit;
+
+    [SerializeField] Direction unitDir = Direction.RightUp;
+    bool shouldRotate;
+    Vector3 targetRotation;
+
     public bool BelongsToActivePlayer
     {
         get
@@ -95,6 +101,18 @@ public class WorldUnit : MonoBehaviour
                 currentVelocity = Vector3.zero;
             }
         }
+
+        if (shouldRotate)
+        {
+           visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
+
+            if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
+            {
+                shouldRotate = false;
+                visualUnit.transform.eulerAngles = targetRotation;
+                currentRotationVelocity = Vector3.zero;
+            }
+        }
     }
 
     public void SetHexPath(WorldHex[] newHexPath)
@@ -134,15 +152,22 @@ public class WorldUnit : MonoBehaviour
         unitView = transform.GetChild(0).GetComponent<UnitView>();
         unitView.SetData(this);
 
+        if (this.transform.childCount > 1)
+        {
+            visualUnit = transform.GetChild(1).gameObject;
+        }
+
         if (visualUnit == null)
         {
-            Instantiate(referenceData.GetPrefab(), this.transform);
+            visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
         }
         else
         {
             Destroy(visualUnit);
-            Instantiate(referenceData.GetPrefab(), this.transform);
+            visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
         }
+
+        UpdateVisualsDirection();
     }
 
     void ExhaustActions()
@@ -265,7 +290,48 @@ public class WorldUnit : MonoBehaviour
         unitView?.UpdateData();
     }
 
-    public void AutomoveRandomly()
+    public void UpdateDirection(WorldHex origin, WorldHex target)
+    {
+        Direction dir = MapManager.Instance.GetHexDirection(origin, target);
+
+        if (dir != unitDir)
+        {
+            unitDir = dir;
+            UpdateVisualsDirection();
+        }
+    }
+
+    void UpdateVisualsDirection()
+    {
+        targetRotation = Vector3.zero;
+
+        switch (unitDir)
+        {
+            case Direction.RightUp:
+                targetRotation.y = 45;
+                break;
+            case Direction.Right:
+                targetRotation.y = 90;
+                break;
+            case Direction.RightDown:
+                targetRotation.y = 135;
+                break;
+            case Direction.LeftDown:
+                targetRotation.y = 225;
+                break;
+            case Direction.Left:
+                targetRotation.y = 270;
+                break;
+            case Direction.LeftUp:
+                targetRotation.y = 315;
+                break;
+
+        }
+
+        shouldRotate = true;
+    }
+
+        public void AutomoveRandomly()
     {
         List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, unitReference.walkRange);
         
@@ -366,6 +432,8 @@ public class WorldUnit : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+
+
     public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
         Deselect();
@@ -374,7 +442,7 @@ public class WorldUnit : MonoBehaviour
         r = newHex.hexData.R;
 
         oldPosition = parentHex.hexData.PositionFromCamera();
-
+        UpdateDirection(parentHex, newHex);
         parentHex.UnitOut(this);
 
         parentHex = newHex;

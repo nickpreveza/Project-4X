@@ -839,6 +839,44 @@ public class MapManager : MonoBehaviour
         return results;
     }
 
+    public Direction GetHexDirection(WorldHex hexOrigin, WorldHex hexTarget)
+    {
+        Debug.Log("Hex Origin: " + hexOrigin.hexData.C + "," + hexOrigin.hexData.R + " to " + "Hex Target: " + hexTarget.hexData.C + "," + hexTarget.hexData.R);
+        
+        if (hexOrigin.hexData.C == hexTarget.hexData.C)
+        {
+            if (hexTarget.hexData.R > hexOrigin.hexData.R)
+            {
+                return Direction.RightUp;
+            }
+            else if (hexTarget.hexData.R < hexOrigin.hexData.R)
+            {
+                return Direction.LeftDown;
+            }
+        }
+        else if (hexOrigin.hexData.R == hexTarget.hexData.R)
+        {
+            if (hexTarget.hexData.C > hexOrigin.hexData.C)
+            {
+                return Direction.Right;
+            }
+            else if (hexTarget.hexData.C < hexOrigin.hexData.C)
+            {
+                return Direction.Left;
+            }
+        }
+        else if (hexOrigin.hexData.R < hexTarget.hexData.R && hexOrigin.hexData.C > hexTarget.hexData.C)
+        {
+            return Direction.LeftUp;
+        }
+        else if (hexOrigin.hexData.C < hexTarget.hexData.C && hexOrigin.hexData.R > hexTarget.hexData.R)
+        {
+            return Direction.RightDown;
+        }
+
+        return Direction.Right;
+    }
+
     public WorldHex GetHexAt(int x, int y)
     {
         if (hexes == null)
@@ -980,6 +1018,16 @@ public enum BuildingType
     Port,
     City,
     Empty,
+}
+
+public enum Direction
+{
+    RightUp,
+    Right,
+    RightDown,
+    LeftDown,
+    Left, 
+    LeftUp
 }
 
 

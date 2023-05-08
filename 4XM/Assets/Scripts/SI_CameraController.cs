@@ -439,7 +439,7 @@ public class SI_CameraController : MonoBehaviour
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                
                 SelectTile(newTile);
-                PanToHex(newTile);
+                //PanToHex(newTile);
             }
             else
             {

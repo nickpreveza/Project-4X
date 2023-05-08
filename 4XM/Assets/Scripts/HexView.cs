@@ -335,7 +335,7 @@ public class HexView : MonoBehaviour
         {
             if (unit.isInteractable || unit.buttonActionPossible)
             {
-                hexDescription.text = "This unit has available actioEns";
+                hexDescription.text = "This unit has available actions";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             }
             else
