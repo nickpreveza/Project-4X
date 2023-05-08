@@ -527,6 +527,25 @@ public class MapManager : MonoBehaviour
         }
     }
 
+    public void DebugUnhideHexesForAllPlayers()
+    {
+        for (int column = 0; column < mapColumns; column++)
+        {
+            for (int row = 0; row < mapRows; row++)
+            {
+                foreach (Player player in GameManager.Instance.sessionPlayers)
+                {
+                    if (!player.clearedHexes.Contains(hexes[column, row]))
+                    {
+                       player.clearedHexes.Add(hexes[column, row]);
+                    }
+                }
+            }
+        }
+
+        UpdateCloudView();
+    }
+
     public void UnhideHexes(int playerIndex, WorldHex centerHex, int range)
     {
         List<WorldHex> hexesToUnhide = GetHexesListWithinRadius(centerHex.hexData, range);
@@ -624,7 +643,7 @@ public class MapManager : MonoBehaviour
         {
             if (hexesWhereCityCanSpawn.Count <= 0)
             {
-                Debug.LogWarning("No more availabel spaces where found for citis");
+                Debug.LogWarning("No more available spaces where found for citis");
                 break;
             }
 
@@ -638,7 +657,7 @@ public class MapManager : MonoBehaviour
             worldCities.Add(newCity);
             citiesSpawned++;
 
-            hexesInRadius = GetHexesListWithinRadius(newCity.hexData, 3);
+            hexesInRadius = GetHexesListWithinRadius(newCity.hexData, 2);
 
             foreach (WorldHex hex in hexesInRadius)
             {

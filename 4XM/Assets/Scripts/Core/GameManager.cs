@@ -31,6 +31,7 @@ namespace SignedInitiative
         public bool devMode;
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;
+        public bool noFog;
         public bool createStuff;
         public bool infiniteCurrency;
         public bool noScenceChanges;
@@ -269,6 +270,10 @@ namespace SignedInitiative
                 {
                     player.AddStars(1000);
                 }
+            }
+            if (noFog)
+            {
+                MapManager.Instance.DebugUnhideHexesForAllPlayers();
             }
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
             gameReady = true;

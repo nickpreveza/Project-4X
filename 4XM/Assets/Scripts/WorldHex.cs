@@ -488,7 +488,9 @@ public class WorldHex : MonoBehaviour
 
     void CalculateBuildingLevel()
     {
-        foreach(WorldHex hex in adjacentHexes)
+        hexData.buildingLevel++;
+
+        foreach (WorldHex hex in adjacentHexes)
         {
             if (hex.hexData.hasBuilding)
             {

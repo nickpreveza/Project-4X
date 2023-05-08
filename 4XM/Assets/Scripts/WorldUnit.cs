@@ -51,7 +51,7 @@ public class WorldUnit : MonoBehaviour
     UnitView unitView;
     GameObject visualUnit;
 
-    [SerializeField] Direction unitDir = Direction.RightUp;
+    [SerializeField] Direction unitDir = Direction.RightDown;
     bool shouldRotate;
     Vector3 targetRotation;
 
@@ -167,7 +167,7 @@ public class WorldUnit : MonoBehaviour
             visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
         }
 
-        UpdateVisualsDirection();
+        UpdateVisualsDirection(false);
     }
 
     void ExhaustActions()
@@ -290,18 +290,18 @@ public class WorldUnit : MonoBehaviour
         unitView?.UpdateData();
     }
 
-    public void UpdateDirection(WorldHex origin, WorldHex target)
+    public void UpdateDirection(WorldHex origin, WorldHex target, bool animate)
     {
         Direction dir = MapManager.Instance.GetHexDirection(origin, target);
 
         if (dir != unitDir)
         {
             unitDir = dir;
-            UpdateVisualsDirection();
+            UpdateVisualsDirection(animate);
         }
     }
 
-    void UpdateVisualsDirection()
+    void UpdateVisualsDirection(bool animate)
     {
         targetRotation = Vector3.zero;
 
@@ -328,7 +328,14 @@ public class WorldUnit : MonoBehaviour
 
         }
 
-        shouldRotate = true;
+        if (animate)
+        {
+            shouldRotate = true;
+        }
+        else
+        {
+            visualUnit.transform.eulerAngles = targetRotation;
+        }
     }
 
         public void AutomoveRandomly()
@@ -442,7 +449,7 @@ public class WorldUnit : MonoBehaviour
         r = newHex.hexData.R;
 
         oldPosition = parentHex.hexData.PositionFromCamera();
-        UpdateDirection(parentHex, newHex);
+        UpdateDirection(parentHex, newHex, true);
         parentHex.UnitOut(this);
 
         parentHex = newHex;
