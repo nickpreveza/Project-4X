@@ -205,7 +205,65 @@ public class UnitManager : MonoBehaviour
         if (hexesInAttackRange.Contains(hex)) { return true; }
         else { return false; }
     }
+    public List<WorldHex> GetWalkableHexes(WorldUnit unit)
+    {
+        WorldHex center = unit.parentHex;
+        int range = unit.unitReference.walkRange;
 
+        List<WorldHex> hexesInRange  = MapManager.Instance.GetHexesListWithinRadius(center.hexData, range);
+
+        if (hexesInRange.Contains(center))
+        {
+            hexesInRange.Remove(center);
+        }
+
+        List<WorldHex> hexesToRemove = new List<WorldHex>();
+
+
+        foreach (WorldHex hex in hexesInRange)
+        {
+            if (hex.hexData.occupied)
+            {
+                hexesToRemove.Add(hex);
+                continue;
+            }
+
+            switch (hex.hexData.type)
+            {
+                case TileType.DEEPSEA:
+                    if (!GameManager.Instance.activePlayer.abilities.travelOcean)
+                    {
+                        hexesToRemove.Add(hex);
+                    }
+                    break;
+                case TileType.SEA:
+                    if (!GameManager.Instance.activePlayer.abilities.travelSea)
+                    {
+                        hexesToRemove.Add(hex);
+                    }
+                    break;
+                case TileType.MOUNTAIN:
+                    if (!GameManager.Instance.activePlayer.abilities.travelMountain)
+                    {
+                        hexesToRemove.Add(hex);
+                    }
+                    break;
+                case TileType.ICE:
+                    hexesToRemove.Add(hex);
+                    break;
+            }
+        }
+
+        foreach (WorldHex hex in hexesToRemove)
+        {
+            if (hexesInRange.Contains(hex))
+            {
+                hexesInRange.Remove(hex);
+            }
+        }
+
+        return hexesInRange;
+    }
     public void FindWalkableHexes(WorldHex hexCenter, int range)
     {
         startHex = hexCenter;
@@ -344,7 +402,7 @@ public class UnitManager : MonoBehaviour
                 yield return new WaitForSeconds(.1f);
             }
             waitingForCameraPan = true;
-            unit.AutomoveRandomly();
+            //unit.AutomoveRandomly();
             yield return new WaitForSeconds(0.5f);
             while (waitingForCameraPan)
             {

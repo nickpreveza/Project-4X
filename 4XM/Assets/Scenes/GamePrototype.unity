@@ -17182,22 +17182,27 @@ PrefabInstance:
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: noFog
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: createStuff
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: visibilityReward
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: allAbilitiesUnlocked
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: startWithALotOfMoney
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}

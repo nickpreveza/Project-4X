@@ -338,17 +338,21 @@ public class WorldUnit : MonoBehaviour
         }
     }
 
-        public void AutomoveRandomly()
+    public bool TryToMoveRandomly()
     {
-        List<WorldHex> hexesInRadius = MapManager.Instance.GetHexesListWithinRadius(parentHex.hexData, unitReference.walkRange);
-        
-        if (hexesInRadius.Contains(parentHex))
+        bool hasValidMove;
+        List<WorldHex> hexesInRadius = UnitManager.Instance.GetWalkableHexes(this);
+        if (hexesInRadius.Count > 0)
         {
-            hexesInRadius.Remove(parentHex);
+            WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
+            Move(selecedHex, true);
+            return true;
+        }
+        else
+        {
+            return false;
         }
 
-        WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
-        Move(selecedHex, true);
     }
 
 
@@ -408,7 +412,7 @@ public class WorldUnit : MonoBehaviour
 
         if (enemyUnit.AttemptToKill(unitReference.attack))
         {
-            enemyUnit.Death();
+            enemyUnit.Death(true);
 
             if (!attackIsRanged)
             {
@@ -420,7 +424,7 @@ public class WorldUnit : MonoBehaviour
         {
             if (AttemptToKill(enemyUnit.unitReference.attack))
             {
-                Death();
+                Death(true);
                 return;
             }
 
@@ -428,7 +432,7 @@ public class WorldUnit : MonoBehaviour
         }
     }
 
-    void Death()
+    public void Death(bool affectStats)
     {
         Deselect();
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);

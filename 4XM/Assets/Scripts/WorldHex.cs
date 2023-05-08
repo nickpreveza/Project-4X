@@ -339,9 +339,22 @@ public class WorldHex : MonoBehaviour
                 if (showQuests)
                 {
                     string popupTitle = cityData.cityName + " Leved Up";
-                    string popupDescr = cityData.cityName + "has grown to level " + cityData.level + "\n\n Choose your reward: ";
+                    string popupDescr = cityData.cityName + " has grown to level " + cityData.level + "\n\n Choose your reward: ";
 
+   
                     if (cityData.level == 2)
+                    {
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopupReward(
+                            popupTitle,
+                            popupDescr,
+                         "+" + GameManager.Instance.unitReward.ToString() + " Unit",
+                         () => PopUpCustomRewardUnit(),
+                         "+" + GameManager.Instance.visibilityReward + " Visibility",
+                         () => PopUpCustomRewardVisibility()
+                         );
+                    }
+                    if (cityData.level == 3)
                     {
                         UIManager.Instance.waitingForPopupReply = true;
                         UIManager.Instance.OpenPopupReward(
@@ -353,7 +366,7 @@ public class WorldHex : MonoBehaviour
                          () => PopupCustomRewardStars()
                          );
                     }
-                    else if (cityData.level == 3)
+                    else if (cityData.level == 4)
                     {
                         UIManager.Instance.waitingForPopupReply = true;
                         UIManager.Instance.OpenPopupReward(
@@ -394,6 +407,45 @@ public class WorldHex : MonoBehaviour
 
         progressPointsAddRunning = false;
 
+    }
+
+    /* 
+           public int visibilityReward = 2;
+public UnitType unitReward = UnitType.Melee;//shouldnotbe
+//level 3
+public int currencyReward = 5;
+public int productionReward = 1;
+//level 4
+public int populationReward = 3;
+public int rangeReward = 2;
+
+    */
+
+    void PopUpCustomRewardVisibility()
+    {
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward );
+        UIManager.Instance.waitingForPopupReply = false;
+    }
+
+    void PopUpCustomRewardUnit()
+    {
+        if (hexData.occupied)
+        {
+            WorldUnit unit = associatedUnit;
+            if (associatedUnit.TryToMoveRandomly())
+            {
+                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+            }
+            else
+            {
+                associatedUnit.Death(false);
+                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+            }
+        }
+        else
+        {
+            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+        }
     }
 
     void PopupCustomRewardStars()

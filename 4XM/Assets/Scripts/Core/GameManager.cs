@@ -63,11 +63,19 @@ namespace SignedInitiative
         public int destroyCost = 0;
 
         //quest rewards
-        public int populationReward = 4;
-        public int rangeReward = 2;
+        //level 2
+        public int visibilityReward = 2;
+        public UnitType unitReward = UnitType.Melee;//shouldnotbe
+        //level 3
         public int currencyReward = 5;
-        public int visibilityReward = 4;
         public int productionReward = 1;
+        //level 4
+        public int populationReward = 3;
+        public int rangeReward = 2;
+        //level 5
+        //maybe special unit..uuuuugh
+       
+        
         void Awake()
         {
             if (Instance == null)

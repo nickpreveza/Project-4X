@@ -222,6 +222,15 @@ public class SI_CameraController : MonoBehaviour
 
     void AutoHexPan()
     {
+        if (targetCameraPosition.z < calculatedBounds.x)
+        {
+            targetCameraPosition.z = calculatedBounds.x;
+        }
+        if (targetCameraPosition.z > calculatedBounds.y)
+        {
+            targetCameraPosition.z = calculatedBounds.y;
+        }
+
         this.transform.position = Vector3.SmoothDamp(this.transform.position, targetCameraPosition, ref currentVelocity, smoothTime);
 
         if (Vector3.Distance(this.transform.position, targetCameraPosition) < 0.1)
