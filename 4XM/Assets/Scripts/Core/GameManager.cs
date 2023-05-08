@@ -74,8 +74,11 @@ namespace SignedInitiative
         public int rangeReward = 2;
         //level 5
         //maybe special unit..uuuuugh
-       
-        
+
+        public bool gameIsNetworked;
+        public ulong activePlayerClientID;
+
+        public bool isHost;
         void Awake()
         {
             if (Instance == null)
@@ -399,7 +402,7 @@ namespace SignedInitiative
         {
             activePlayer = player;
             activePlayerIndex = player.index;
-
+            activePlayerClientID = player.clientID;
             activePlayer.StartTurn();
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();

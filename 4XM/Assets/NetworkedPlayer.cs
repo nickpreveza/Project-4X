@@ -6,7 +6,6 @@ using SignedInitiative;
 
 public class NetworkedPlayer : NetworkBehaviour
 {
-    public int playerIndex;
     public Player player;
     public NetworkTurnData localTurnData;
     public NetworkVariable<NetworkTurnData> turnData = new NetworkVariable<NetworkTurnData>(
@@ -22,12 +21,14 @@ public class NetworkedPlayer : NetworkBehaviour
         if (!IsServer && IsOwner) //Only send an RPC to the server on the client that owns the NetworkObject that owns this NetworkBehaviour instance
         {
             TestServerRpc(0, NetworkObjectId);
+
+            if (Initializer.Instance != null)
+            {
+                Initializer.Instance.Subscribe(this);
+            }
         }
 
-        if (Initializer.Instance != null)
-        {
-            Initializer.Instance.Subscribe(this);
-        }
+       
     }
 
     public void Update()

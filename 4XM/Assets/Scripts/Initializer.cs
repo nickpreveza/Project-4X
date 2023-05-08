@@ -28,6 +28,8 @@ namespace SignedInitiative
 
         public bool skipMenuForNetworking;
         bool waitingForPlayers;
+
+        [SerializeField] int tempSeed;
         private void Awake()
         {
             Instance = this;
@@ -75,12 +77,34 @@ namespace SignedInitiative
 
         public void NetworkStart()
         {
+            if (GameManager.Instance.isHost)
+            {
+                SetSeedServerRpc();
+                BroadcastSeedAndStartRpc(tempSeed);
+            }
+        }
+
+        [ServerRpc]
+        void SetSeedServerRpc()
+        {
+            Random.InitState(Random.Range(1000, 9999));
+            tempSeed = Random.Range(1000, 9999);
+        }
+
+        [ClientRpc]
+        void BroadcastSeedAndStartRpc(int seed)
+        {
+            MapManager.Instance.seed = seed;
+            Debug.Log("Host should have broadcasted seed: " + seed);
+
             networkLoading.SetActive(false);
             GameManager.Instance.sessionPlayers[0].SetupForNetworkPlay(networkedPlayers[0]);
             GameManager.Instance.sessionPlayers[1].SetupForNetworkPlay(networkedPlayers[1]);
+            GameManager.Instance.gameIsNetworked = true;
             dataHandler.FetchData();
             processing = true;
         }
+
 
         public void StartAsHost()
         {
@@ -95,13 +119,15 @@ namespace SignedInitiative
         public void StartClient()
         {
             NetworkManager.Singleton.StartClient();
-            waitingForPlayers = true;
+            //waitingForPlayers = true;
             networkMenu.SetActive(false);
+            networkLoading.SetActive(true);
         }
 
         public void StartHost()
         {
             NetworkManager.Singleton.StartHost();
+            GameManager.Instance.isHost = true;
             waitingForPlayers = true;
             networkMenu.SetActive(false);
         }

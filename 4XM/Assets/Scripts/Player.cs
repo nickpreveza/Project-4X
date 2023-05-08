@@ -45,9 +45,11 @@ public class Player
     public List<WorldHex> clearedHexes = new List<WorldHex>();
     NetworkedPlayer networkedPlayer;
 
+    public ulong clientID;
     public void SetupForNetworkPlay(NetworkedPlayer newNetworkPlayer)
     {
         networkedPlayer = newNetworkPlayer;
+        clientID = newNetworkPlayer.OwnerClientId;
         type = PlayerType.ONLINE;
     }
     public void StartTurn()
