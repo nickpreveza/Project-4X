@@ -43,6 +43,13 @@ public class Player
     public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
 
     public List<WorldHex> clearedHexes = new List<WorldHex>();
+    NetworkedPlayer networkedPlayer;
+
+    public void SetupForNetworkPlay(NetworkedPlayer newNetworkPlayer)
+    {
+        networkedPlayer = newNetworkPlayer;
+        type = PlayerType.ONLINE;
+    }
     public void StartTurn()
     {
         List<TurnAction> activeTurnActions = new List<TurnAction>();
