@@ -62,11 +62,42 @@ public class HexView : MonoBehaviour
         {
             if (hex.hexData.hasResource)
             {
-                hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                hexDescription.text = "This  "+ hexName.text.ToLower() + " resource is outside of your empire's borders";
-                GenerateResourceButton(false);
+                if (hex.hexData.resourceType == ResourceType.MONUMENT)
+                {
+                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+
+                  
+                    if (hex.hexData.occupied)
+                    {
+                        if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
+                        {
+                            hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
+                            GenerateResourceButton(true);
+                        }
+                        else
+                        {
+                            hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
+                            GenerateResourceButton(false);
+                        }
+                    }
+                    else
+                    {
+                        hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
+                        GenerateResourceButton(false);
+                      
+                    }                    
+                }
+                else
+                {
+                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+                    hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
+                    GenerateResourceButton(false);
+                }
+               
             }
             else if (hex.hexData.hasBuilding)
             {
@@ -132,40 +163,80 @@ public class HexView : MonoBehaviour
             }
             else if (hex.hexData.hasResource)
             {
-                hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                bool resourceButtonState = false;
+                if (hex.hexData.resourceType == ResourceType.MONUMENT)
+                {
+                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
 
-                if (hex.hexData.occupied && hex.hexData.occupiedByEnemyUnit)
-                {
-                    hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
-                    resourceButtonState = false;
-                }
-                else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
-                {
-                    hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
-                    resourceButtonState = true;
+
+                    if (hex.hexData.occupied)
+                    {
+                        if (hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                        {
+                            if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
+                            {
+                                hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
+                                GenerateResourceButton(true);
+                            }
+                            else
+                            {
+                                hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
+                                GenerateResourceButton(false);
+                            }
+                        }
+                        else
+                        {
+                            hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
+                            GenerateResourceButton(false);
+                        }
+                        
+                    }
+                    else
+                    {
+                        hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
+                        GenerateResourceButton(false);
+
+                    }
                 }
                 else
                 {
-                    hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
-                    resourceButtonState = false;
+                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+                    bool resourceButtonState = false;
+
+                    if (hex.hexData.occupied && hex.hexData.occupiedByEnemyUnit)
+                    {
+                        hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
+                        resourceButtonState = false;
+                    }
+                    else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+                    {
+                        hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
+                        resourceButtonState = true;
+                    }
+                    else
+                    {
+                        hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
+                        resourceButtonState = false;
+                    }
+
+                    GenerateResourceButton(resourceButtonState);
+
+                    if (GameManager.Instance.CanPlayerDestoryResourceForReward(hex.hexData.resourceType))
+                    {
+                        GenerateDestroyButton(false);
+                    }
+
+                    if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
+                    {
+                        CheckMasterBuildingButtons();
+                    }
+
                 }
 
-                GenerateResourceButton(resourceButtonState);
 
-                if (GameManager.Instance.CanPlayerDestoryResourceForReward(hex.hexData.resourceType))
-                {
-                    GenerateDestroyButton(false);
-                }
-
-                if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
-                {
-                    CheckMasterBuildingButtons();
-                }
-
-                
             }
             else
             {

@@ -18,6 +18,7 @@ public class WorldHex : MonoBehaviour
     [SerializeField] GameObject hexHighlight;
     [SerializeField] GameObject cloud;
     [SerializeField] GameObject border;
+    [SerializeField] Transform particleParent;
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
@@ -29,11 +30,12 @@ public class WorldHex : MonoBehaviour
     //3 - Hex Highlight
     //4 - Road Layer
     //5 - Fog Layer
+    //6 - Particle Layer
     //Material rimMaterial;
 
 
     bool isHidden = true;
-
+    GameObject activeParticle;
 
     private void Awake()
     {
@@ -43,6 +45,7 @@ public class WorldHex : MonoBehaviour
         hexHighlight = transform.GetChild(3).gameObject;
         cloud = transform.GetChild(5).GetChild(0).gameObject;
         border = transform.GetChild(6).GetChild(0).gameObject;
+        particleParent = transform.GetChild(7);
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
         RandomizeVisualElevation();
     }
@@ -56,6 +59,23 @@ public class WorldHex : MonoBehaviour
         wiggler = GetComponent<Wiggler>();
         //rimMaterial = hexGameObject.GetComponent<MeshRenderer>().materials[0];
         HideHighlight();
+    }
+
+    public void SpawnParticle(GameObject particlePrefab)
+    {
+        if (activeParticle == null && particlePrefab != null)
+        {
+            activeParticle = Instantiate(particlePrefab, particleParent);
+            Invoke("DestroyParticle", 1f);
+        }
+    }
+
+    void DestroyParticle()
+    {
+        if (activeParticle != null)
+        {
+            Destroy(activeParticle);
+        }
     }
 
     public void SetHiddenState(bool hiddenState)
@@ -750,6 +770,12 @@ public int rangeReward = 2;
             return;
         }
 
+        if (hexData.hasResource)
+        {
+            Debug.LogError("Tried to generate resource on top of resource without removing the previous resource");
+            return;
+        }
+
         Resource selectedResource = MapManager.Instance.GetResourceByType(resourceType);
 
         GameObject obj = Instantiate(selectedResource.prefab, resourceParent);
@@ -943,6 +969,7 @@ public int rangeReward = 2;
         newMaterials[0] = UnitManager.Instance.highlightHex;
         hexGameObject.GetComponent<MeshRenderer>().materials = newMaterials; */
         ShowHighlight(false);
+        SpawnParticle(GameManager.Instance.GetParticleInteractionByType(hexData.type));
         wiggler?.Wiggle();
 
         if (hexData.isOwnedByCity)

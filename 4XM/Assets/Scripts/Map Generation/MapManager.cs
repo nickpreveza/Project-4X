@@ -11,6 +11,7 @@ public class MapManager : MonoBehaviour
     public int mapRows;
     public int mapColumns;
     public int citiesNum; //maybe this should be a variable based on mapsize 
+    public int monumentsNum;
 
     public bool useNewMapGeneration;
     [Header("New Simple Map Generation")]
@@ -46,6 +47,7 @@ public class MapManager : MonoBehaviour
 
 
     public List<WorldHex> hexesWhereCityCanSpawn = new List<WorldHex>();
+    public List<WorldHex> hexesWhereMonumentsCanSpawn = new List<WorldHex>();
     public List<WorldHex> worldCities = new List<WorldHex>();
 
     public Resource[] hexResources;
@@ -225,6 +227,8 @@ public class MapManager : MonoBehaviour
                 return hexResources[4];
             case ResourceType.FISH:
                 return hexResources[5];
+            case ResourceType.MONUMENT:
+                return hexResources[6];
 
         }
 
@@ -456,71 +460,6 @@ public class MapManager : MonoBehaviour
         SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
-    /*
-     *  
-                    //filter the hexes into lists for other uses 
-                    switch (tile.hexData.type)
-                    {
-                        case TileType.DEEPSEA:
-                            break;
-                        case TileType.SEA:
-                            if (Random.Range(0f,1f) < hexResources[5].spawnChanceRate)
-                            {
-                                tile.GenerateResource(ResourceType.FISH);
-                            }
-                            break;
-                        case TileType.SAND:
-                            if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
-                            {
-                                tile.GenerateResource(ResourceType.FRUIT);
-                            }
-                            hexesWhereCityCanSpawn.Add(tile);
-                            walkableTiles.Add(tile);
-                            break;
-                        case TileType.GRASS:
-                            if (Random.Range(0f, 1f) < hexResources[0].spawnChanceRate)
-                            {
-                                if (Random.Range(0f, 1f) < 0.4)
-                                {
-                                    tile.GenerateResource(ResourceType.FRUIT);
-                                }
-                                else
-                                {
-                                    tile.GenerateResource(ResourceType.FOREST);
-                                }
-                            }
-                            walkableTiles.Add(tile);
-                            hexesWhereCityCanSpawn.Add(tile);
-                            break;
-                        case TileType.HILL:
-                            if (Random.Range(0f, 1f) < hexResources[3].spawnChanceRate)
-                            {
-                                if (Random.Range(0f, 1f) < 0.5)
-                                {
-                                    tile.GenerateResource(ResourceType.FOREST);
-                                }
-                                else
-                                {
-                                    tile.GenerateResource(ResourceType.FARM);
-                                }
-                               
-                            }
-                            walkableTiles.Add(tile);
-                            hexesWhereCityCanSpawn.Add(tile);
-                            break;
-                        case TileType.MOUNTAIN:
-                            if (Random.Range(0f, 1f) < hexResources[4].spawnChanceRate)
-                            {
-                                tile.GenerateResource(ResourceType.MINE);
-                            }
-                            break;
-                        case TileType.ICE:
-                            break;
-
-                    }
-
-    */
-
     public void UpdateCloudView()
     {
         if (GameManager.Instance.activePlayer.type == PlayerType.LOCAL)
@@ -646,6 +585,8 @@ public class MapManager : MonoBehaviour
         int citiesSpawned = 0;
         Random.InitState(seed);
         List<WorldHex> hexesInRadius = new List<WorldHex>();
+        List<WorldHex> hexesInRadiusForMonument = new List<WorldHex>();
+        hexesWhereMonumentsCanSpawn = new List<WorldHex>(hexesWhereCityCanSpawn);
 
         for (int i = 0; i < citiesNum; i++)
         {
@@ -657,7 +598,7 @@ public class MapManager : MonoBehaviour
 
             int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
             WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
-           // GenerateResources(newCity);
+            // GenerateResources(newCity);
             int cityNameIndex = (Random.Range(0, availableCityNames.Count));
             string cityName = availableCityNames[cityNameIndex];
             availableCityNames.RemoveAt(cityNameIndex);
@@ -680,38 +621,102 @@ public class MapManager : MonoBehaviour
                 hexesInRadius.Remove(newCity);
             }
 
-            for(int x = 0; x < hexesInRadius.Count; x++)
+            hexesInRadiusForMonument = GetHexesListWithinRadius(newCity.hexData, 1);
+
+            foreach (WorldHex hex in hexesInRadiusForMonument)
+            {
+                if (hexesWhereMonumentsCanSpawn.Contains(hex))
+                {
+                    hexesWhereMonumentsCanSpawn.Remove(hex);
+                }
+            }
+
+            for (int x = 0; x < hexesInRadius.Count; x++)
             {
                 switch (hexesInRadius[x].hexData.type)
                 {
                     case TileType.SAND:
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FARM);
+                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+
+                        }
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
                         break;
                     case TileType.GRASS:
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FARM);
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FOREST);
+                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                           
+                        }
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
+                      
                         break;
                     case TileType.HILL:
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT);
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FOREST);
-                        TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL);
+                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+
+                        }
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
                         break;
                     case TileType.MOUNTAIN:
                         TryToPlantResource(hexesInRadius[x], ResourceType.MINE);
+                        if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                        {
+                            hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                        }
                         break;
                     case TileType.SEA:
                         TryToPlantResource(hexesInRadius[x], ResourceType.FISH);
+                        if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                        {
+                            hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                        }
                         break;
                 }
             }
-        }
-
-
-        foreach(WorldHex generatedCity in worldCities)
-        {
-           // CalculateDistanceFromOtherCities(generatedCity);
         }
 
         List<WorldHex> worldCitiesToAssign = new List<WorldHex>(worldCities);
@@ -720,27 +725,64 @@ public class MapManager : MonoBehaviour
         {
             //TODO: Change this to a distance based algorithm
             int randomCity = Random.Range(0, worldCitiesToAssign.Count);
-            
+
             //walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
-           
+
             ClaimCityByPlayer(player, worldCitiesToAssign[randomCity]);
             worldCitiesToAssign.RemoveAt(randomCity);
+        }
+
+        GenerateMonuments();
+    }
+
+    void GenerateMonuments()
+    {
+        //define the number of cities to spawn based on map size: made this a public var
+        int monumentsSpawned = 0;
+        List<WorldHex> hexesInRadius = new List<WorldHex>();
+
+        for (int i = 0; i < monumentsNum; i++)
+        {
+            if (hexesWhereMonumentsCanSpawn.Count <= 0)
+            {
+                Debug.LogWarning("No more available spaces where found for citis");
+                break;
+            }
+
+            int randomTileIndex = Random.Range(0, hexesWhereMonumentsCanSpawn.Count);
+            WorldHex monumentHex = hexesWhereMonumentsCanSpawn[randomTileIndex];
+
+            monumentHex.GenerateResource(ResourceType.MONUMENT);
+            monumentsSpawned++;
+
+            hexesInRadius = GetHexesListWithinRadius(monumentHex.hexData, 1);
+
+            foreach (WorldHex hex in hexesInRadius)
+            {
+                if (hexesWhereMonumentsCanSpawn.Contains(hex))
+                {
+                    hexesWhereMonumentsCanSpawn.Remove(hex);
+                }
+            }
         }
     }
 
 
 
-    public void TryToPlantResource(WorldHex hex, ResourceType type)
+    public bool TryToPlantResource(WorldHex hex, ResourceType type)
     {
         if (hex.hexData.hasResource)
         {
-            return;
+            return false;
         }
 
         if (Random.Range(0f,1f) < GetResourceBiomeSpawnChanceRate(type, hex.hexData.type))
         {
             hex.GenerateResource(type);
+            return true;
         }
+
+        return false;
     }
 
     public float GetResourceBiomeSpawnChanceRate(ResourceType resourceType, TileType tileType)
@@ -1030,6 +1072,7 @@ public enum ResourceType
     MINE = 3,
     FISH = 4,
     FARM = 5,
+    MONUMENT = 6,
     EMPTY = 6
 }
 

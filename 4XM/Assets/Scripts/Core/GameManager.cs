@@ -79,6 +79,10 @@ namespace SignedInitiative
         public ulong activePlayerClientID;
 
         public bool isHost;
+
+        [SerializeField] GameObject waterInteractionParticle;
+        [SerializeField] GameObject landInternactionParticle;
+
         void Awake()
         {
             if (Instance == null)
@@ -157,6 +161,24 @@ namespace SignedInitiative
             {
                 CreatePrefs();
             }
+        }
+
+        public GameObject GetParticleInteractionByType(TileType type)
+        {
+            switch (type)
+            {
+                case TileType.DEEPSEA:
+                case TileType.SEA:
+                    return waterInteractionParticle;
+                case TileType.SAND:
+                case TileType.GRASS:
+                case TileType.HILL:
+                case TileType.MOUNTAIN:
+                case TileType.ICE:
+                    return landInternactionParticle;
+            }
+
+            return null;
         }
         void CreatePrefs()
         {
