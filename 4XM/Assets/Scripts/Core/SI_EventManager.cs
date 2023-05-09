@@ -20,6 +20,8 @@ public class SI_EventManager : MonoBehaviour
 
 
     public event Action<int> onTurnEnded;
+    public event Action<int> onTurnStarted;
+
     public event Action<int> onCityCaptured;
     public event Action<int> onTransactionMade;
     //Camera
@@ -28,6 +30,9 @@ public class SI_EventManager : MonoBehaviour
     public event Action<WorldUnit> onUnitAction;
 
     public event Action<int> onAbilityUnlocked;
+
+    public event Action<WorldHex> cityGiveOuput;
+
     void Awake()
     {
         if (Instance == null)
@@ -98,5 +103,10 @@ public class SI_EventManager : MonoBehaviour
     public void OnTurnEnded(int playerIndex)
     {
         onTurnEnded?.Invoke(playerIndex);
+    }
+
+    public void OnTurnStarted(int playerIndex)
+    {
+        onTurnStarted?.Invoke(playerIndex);
     }
 }

@@ -18,6 +18,7 @@ public class UniversalPopup : UIPopup
 
     public void SetDataForReward(string newTitle, string newDescription, string option1name, string option2name)
     {
+        cancel.gameObject.SetActive(true);
         title.text = newTitle;
         description.text = newDescription;
         confirm.onClick.RemoveAllListeners();
@@ -34,6 +35,7 @@ public class UniversalPopup : UIPopup
     }
     public void SetData(string newTitle, string newDescription, bool available, string option1name, string option2name)
     {
+        cancel.gameObject.SetActive(true);
         title.text = newTitle;
         description.text = newDescription;
         confirm.onClick.RemoveAllListeners();
@@ -49,6 +51,19 @@ public class UniversalPopup : UIPopup
         confirm.onClick.AddListener(()=> CloseWithDelay());
         cancel.onClick.RemoveAllListeners();
         cancel.onClick.AddListener(Close);
+    }
+
+    public void SetDataForMonument(string newTitle, string newDescription, string option1name)
+    {
+        title.text = newTitle;
+        description.text = newDescription;
+        confirm.onClick.RemoveAllListeners();
+        cancel.onClick.RemoveAllListeners();
+        confirm.interactable = true;
+        cancel.gameObject.SetActive(false);
+        confirmText.text = option1name;
+        confirm.onClick.AddListener(() => UIManager.Instance.confirmAction());
+        confirm.onClick.AddListener(() => CloseWithDelay());
     }
 
     public void CloseWithDelay()

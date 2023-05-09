@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6960092923245066870}
   - component: {fileID: 7053421283157885174}
   - component: {fileID: 593717876787772664}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -68,9 +68,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b6139c7d965274147b75f7a5ca14c812, type: 2}
-  m_sharedMaterial: {fileID: 3767739574050362353, guid: b6139c7d965274147b75f7a5ca14c812,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -150,7 +149,7 @@ GameObject:
   - component: {fileID: 1223574671371912173}
   - component: {fileID: 2265831450104712447}
   - component: {fileID: 7739102788163557425}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityViewCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -289,7 +288,7 @@ GameObject:
   - component: {fileID: 6499913824478971207}
   - component: {fileID: 3055560854259470555}
   - component: {fileID: 1395040212668563711}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: LevelBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -366,7 +365,7 @@ GameObject:
   - component: {fileID: 1400136847009699081}
   - component: {fileID: 931284087245798902}
   - component: {fileID: 1478663112717734208}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: Capital
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -442,7 +441,7 @@ GameObject:
   - component: {fileID: 8688614985902757246}
   - component: {fileID: 8688614985902757244}
   - component: {fileID: 8688614985902757247}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityNameHolder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -519,7 +518,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8688614986121901820}
   - component: {fileID: 38823010137594125}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: LevelItems
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,7 +582,7 @@ GameObject:
   - component: {fileID: 8688614986730077636}
   - component: {fileID: 8688614986730077634}
   - component: {fileID: 8688614986730077637}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: OutputBackground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -660,7 +659,7 @@ GameObject:
   - component: {fileID: 8688614986907839470}
   - component: {fileID: 8688614986907839468}
   - component: {fileID: 8688614986907839471}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -796,7 +795,7 @@ GameObject:
   - component: {fileID: 8688614987275610036}
   - component: {fileID: 8688614987275610034}
   - component: {fileID: 8688614987275610037}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityOutput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -853,9 +852,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: b6139c7d965274147b75f7a5ca14c812, type: 2}
-  m_sharedMaterial: {fileID: 3767739574050362353, guid: b6139c7d965274147b75f7a5ca14c812,
-    type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -932,7 +930,7 @@ GameObject:
   - component: {fileID: 2096492477688596643}
   - component: {fileID: 3915106292598040776}
   - component: {fileID: 5193011965601033263}
-  m_Layer: 11
+  m_Layer: 6
   m_Name: CityCapture
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1006,6 +1004,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3015359523645765267, guid: 66d48a0545656df4db5831789d458e6f,
         type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3015359523645765267, guid: 66d48a0545656df4db5831789d458e6f,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1013,6 +1016,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LevelPointUI (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176660686021326968, guid: 66d48a0545656df4db5831789d458e6f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4176660686021326971, guid: 66d48a0545656df4db5831789d458e6f,
         type: 3}
@@ -1136,6 +1144,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 3015359523645765267, guid: 66d48a0545656df4db5831789d458e6f,
         type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3015359523645765267, guid: 66d48a0545656df4db5831789d458e6f,
+        type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
@@ -1143,6 +1156,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: LevelPointUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 4176660686021326968, guid: 66d48a0545656df4db5831789d458e6f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 4176660686021326971, guid: 66d48a0545656df4db5831789d458e6f,
         type: 3}

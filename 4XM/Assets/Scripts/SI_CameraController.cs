@@ -434,6 +434,7 @@ public class SI_CameraController : MonoBehaviour
     {
         if (IsPointerOverUIObject())
         {
+            Debug.Log("Mouse is over GUI");
             return;
         }
 
@@ -445,6 +446,7 @@ public class SI_CameraController : MonoBehaviour
         {
             if (hit.transform.CompareTag("Tile"))
             {
+                Debug.Log("Mouse is over Tile");
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                
                 SelectTile(newTile);
@@ -452,11 +454,13 @@ public class SI_CameraController : MonoBehaviour
             }
             else
             {
+                Debug.Log("Mouse is over " + hit.transform.tag);
                 selectedTile = null;
             }
         }
         else
         {
+            Debug.Log("Mouse did not hit");
             selectedTile = null;
         }
     }

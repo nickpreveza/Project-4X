@@ -78,7 +78,7 @@ public class HexView : MonoBehaviour
                         }
                         else
                         {
-                            hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
+                            hexDescription.text = "The " + hexName.text.ToLower() + " can be claimed on the next turn";
                             GenerateResourceButton(false);
                         }
                     }
@@ -420,6 +420,12 @@ public class HexView : MonoBehaviour
                 GenerateCityCaptureButton(unit.buttonActionPossible);
             }
 
+            if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
+            {
+                hexDescription.text = "Claim the monument for a reward";
+                GenerateResourceButton(unit.buttonActionPossible);
+            }
+
         }
         else
         {
@@ -465,7 +471,7 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable);
     }
 
-    void GenerateResourceButton(bool shouldBeInteractable)
+    void GenerateResourceButton(bool shouldBeInteractable) 
     {
         //update this to support multiple resources on the same hex
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);

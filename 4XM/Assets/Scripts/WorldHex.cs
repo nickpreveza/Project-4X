@@ -22,6 +22,7 @@ public class WorldHex : MonoBehaviour
     [SerializeField] GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
+    CityVisualHelper visualHelper;
 
     public List<WorldHex> adjacentHexes = new List<WorldHex>();
     //0 - Visual Layer 
@@ -232,11 +233,23 @@ public class WorldHex : MonoBehaviour
             if (hexData.hasCity)
             {
                 cityData.isUnderSiege = true;
+                if (visualHelper != null)
+                {
+                    visualHelper.citySiegeEffect.SetActive(true);
+                }
+                cityView.UpdateSiegeState(true);
                 MapManager.Instance.SetHexUnderSiege(this);
             }
         }
 
-        MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1);
+        if(hexData.type != TileType.MOUNTAIN)
+        {
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1);
+        }
+        else
+        {
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2);
+        }
 
         associatedUnit = newUnit;
     }
@@ -254,7 +267,16 @@ public class WorldHex : MonoBehaviour
                 MapManager.Instance.RemoveHexFromSiege(this);
                 cityView.UpdateSiegeState(false);
 
-                GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+                if (hexData.playerOwnerIndex != -1)
+                {
+                    GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+                }
+
+                if (visualHelper != null)
+                {
+                    visualHelper.citySiegeEffect.SetActive(false);
+                }
+
             }
         }
        
@@ -284,6 +306,7 @@ public class WorldHex : MonoBehaviour
         cityView.SetData(this);
         cityView.gameObject.SetActive(false);
     }
+
     public IEnumerator RemoveProgressPoint(int value)
     {
         for (int i = 0; i < value; i++)
@@ -355,6 +378,10 @@ public class WorldHex : MonoBehaviour
                 cityView.AddLevelUIPoint();
                 cityView.RemoveAllProgressPoints();
                 cityView.UpdateData();
+                if (visualHelper != null)
+                {
+                    visualHelper.cityLevelEffect.SetActive(true);
+                }
 
                 if (showQuests)
                 {
@@ -380,8 +407,8 @@ public class WorldHex : MonoBehaviour
                         UIManager.Instance.OpenPopupReward(
                             popupTitle,
                             popupDescr,
-                         "+" + GameManager.Instance.productionReward + " Production",
-                         () => PopupCustomRewardProduction(),
+                          "Expand Borders",
+                         () => PopupCustomRewardBorders(),
                          "+" + GameManager.Instance.currencyReward + " Stars",
                          () => PopupCustomRewardStars()
                          );
@@ -394,8 +421,8 @@ public class WorldHex : MonoBehaviour
                             popupDescr,
                          "+" + GameManager.Instance.populationReward + " Population",
                          () => PopupCustomRewardPopulation(),
-                         "Expand Borders",
-                         () => PopupCustomRewardBorders()
+                         "+" + GameManager.Instance.productionReward + " Production",
+                         () => PopupCustomRewardProduction()
                          );
                     }
                 }
@@ -406,6 +433,10 @@ public class WorldHex : MonoBehaviour
                 }
                
                 yield return new WaitForSeconds(0.3f);
+                if (visualHelper != null)
+                {
+                    visualHelper.cityLevelEffect.SetActive(false);
+                }
             }
             else
             {
@@ -590,7 +621,15 @@ public int rangeReward = 2;
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
 
-        if (MapManager.Instance.GetResourceByType(hexData.resourceType).transformToBuilding)
+        Resource resource = MapManager.Instance.GetResourceByType(hexData.resourceType);
+
+        if (resource.type == ResourceType.MONUMENT)
+        {
+            int randomReward = Random.Range(0, 3);
+            GameManager.Instance.MonumentReward(randomReward);
+
+        }
+        else if (resource.transformToBuilding)
         {
             hexData.hasBuilding = true;
             hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
@@ -598,13 +637,21 @@ public int rangeReward = 2;
             GameObject obj = Instantiate(MapManager.Instance.GetBuildingByType(hexData.buildingType).levelPrefabs[0], resourceParent);
 
             CheckForMasterBuilding();
+
+            if (resource.output > 0)
+            {
+                parentCity.AddLevelPoint(resource.output);
+            }
+
         }
         else
         {
-           //I thought somewthing else could happen here
-        }
+            if (resource.output > 0)
+            {
+                parentCity.AddLevelPoint(resource.output);
+            }
 
-        parentCity.AddLevelPoint(MapManager.Instance.GetResourceByType(hexData.resourceType).output);
+        }
 
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
@@ -840,11 +887,24 @@ public int rangeReward = 2;
 
         cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, resourceParent);
         //cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
+
+        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
+
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
 
         List<WorldHex> newCityHexes = new List<WorldHex>(adjacentHexes);
+
+        Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
+
+
+        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].color = newColor;
+        //TODO: Set outline material color only perimiter; 
+
+        border.SetActive(true);
+        border.GetComponent<MeshRenderer>().materials[0].color = newColor;
+
 
         if (!isThisATakeOver)
         {
@@ -858,11 +918,14 @@ public int rangeReward = 2;
             }
 
             cityData.cityHexes = newCityHexes;
+            cityData.output = GameManager.Instance.startCityOutput;
 
             foreach (WorldHex newHex in cityData.cityHexes)
             {
                 newHex.SetAsOccupiedByCity(this);
             }
+
+
         }
         else
         {
@@ -880,14 +943,6 @@ public int rangeReward = 2;
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
         cityView.InitialLevelSetup();
-        
-        if (spawnUnit)
-        {
-
-        }
-
-        
-
     }
 
     public void Deselect()

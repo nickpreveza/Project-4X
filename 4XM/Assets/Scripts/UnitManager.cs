@@ -290,7 +290,7 @@ public class UnitManager : MonoBehaviour
             switch (hex.hexData.type)
             {
                 case TileType.DEEPSEA:
-                    if (GameManager.Instance.activePlayer.abilities.travelOcean)
+                    if (GameManager.Instance.activePlayer.abilities.travelOcean || selectedUnit.unitReference.flyAbility)
                     {
                         hex.ShowHighlight(false);
                     }
@@ -300,7 +300,7 @@ public class UnitManager : MonoBehaviour
                     }
                     break;
                 case TileType.SEA:
-                    if (GameManager.Instance.activePlayer.abilities.travelSea)
+                    if (GameManager.Instance.activePlayer.abilities.travelSea || selectedUnit.unitReference.flyAbility)
                     {
                         hex.ShowHighlight(false);
                     }
@@ -310,7 +310,7 @@ public class UnitManager : MonoBehaviour
                     }
                     break;
                 case TileType.MOUNTAIN:
-                    if (GameManager.Instance.activePlayer.abilities.travelMountain)
+                    if (GameManager.Instance.activePlayer.abilities.travelMountain || selectedUnit.unitReference.flyAbility)
                     {
                         hex.ShowHighlight(false);
                     }
@@ -456,7 +456,9 @@ public class UnitData
     [Header("Unit Stats")]
     public int level;
     public int health;
+    public int heal;
     public int attack;
+    public int counterAttack;
     public int defense;
     public int walkRange;
     public int attackRange;
@@ -465,6 +467,10 @@ public class UnitData
     public int moveCharges;
 
     [Header("Unit Abilities")]
+    public bool flyAbility;
+    public bool attackContinuisly;
+    public bool canHeal;
+    public bool healAtTurnEnd;
     public bool canAttackAfterMove;
     public bool canMoveAfterAttack;
 

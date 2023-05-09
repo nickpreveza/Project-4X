@@ -72,6 +72,7 @@ namespace SignedInitiative
         //level 4
         public int populationReward = 3;
         public int rangeReward = 2;
+        public int startCityOutput = 2;
         //level 5
         //maybe special unit..uuuuugh
 
@@ -317,6 +318,74 @@ namespace SignedInitiative
             UIManager.Instance.OpenGamePanel();
         }
 
+        public void MonumentReward(int rewardIndex)
+        {
+            string popupTitle = "Monument Claimed";
+            string popupDescr = "You've received a reward";
+
+            switch (rewardIndex)
+            {
+                case 0:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "+" + currencyReward.ToString() + " Stars",
+                     () => PopupCustomRewardCurrency()
+                     );
+                    break;
+                case 1:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "+" + currencyReward.ToString() + " Stars",
+                     () => PopupCustomRewardCurrency()
+                     );
+                    break;
+                case 2:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "+" + currencyReward.ToString() + " Stars",
+                     () => PopupCustomRewardCurrency()
+                     );
+                    break;
+                case 3:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "+" + currencyReward.ToString() + " Stars",
+                     () => PopupCustomRewardCurrency()
+                     );
+                    break;
+                case 4:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "+" + currencyReward.ToString() + " Stars",
+                     () => PopupCustomRewardCurrency()
+                     );
+                    break;
+            }
+        }
+
+        public void PopupCustomRewardCurrency()
+        {
+            AddStars(activePlayerIndex, currencyReward);
+            UIManager.Instance.waitingForPopupReply = false;
+        }
+
+        public void PopupCustomRewardVisibility()
+        {
+
+        }
+
+        //TODO reward unit at monument location 
+
 
         void CivilizationsSetup()
         {
@@ -442,7 +511,8 @@ namespace SignedInitiative
             MapManager.Instance.CheckForSiegedCities();
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
-            //TODO: Update fog map and stuff
+
+            SI_EventManager.Instance.OnTurnStarted(activePlayerIndex);
         }
 
         public void LocalEndTurn()
@@ -470,6 +540,7 @@ namespace SignedInitiative
             StartTurn(sessionPlayers[activePlayerIndex]);
          
         }
+
         public void EndTurn(Player player)
         {
             //TODO: Stuff about ending turn and checkign movement;

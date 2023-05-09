@@ -211,6 +211,7 @@ MonoBehaviour:
   hexHighlight: {fileID: 1082095926294796528}
   cloud: {fileID: 0}
   border: {fileID: 0}
+  particleParent: {fileID: 0}
   cityGameObject: {fileID: 0}
   parentCity: {fileID: 0}
   cityView: {fileID: 0}
@@ -361,7 +362,7 @@ PrefabInstance:
     - target: {fileID: 4652149411839743343, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}

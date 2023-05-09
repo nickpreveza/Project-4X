@@ -70,12 +70,14 @@ public class WorldUnit : MonoBehaviour
       
         oldPosition = newPosition = this.transform.position;
         SI_EventManager.Instance.onTurnEnded += OnTurnEnded;
+        SI_EventManager.Instance.onTurnStarted += OnTurnStarted;
        // SI_EventManager.Instance.onUni
     }
 
     private void OnDestroy()
     {
         SI_EventManager.Instance.onTurnEnded -= OnTurnEnded;
+        SI_EventManager.Instance.onTurnStarted -= OnTurnStarted;
     }
 
 
@@ -84,7 +86,15 @@ public class WorldUnit : MonoBehaviour
         //if this is the end of this players turn, reset the checks. 
         if (playerOwnerIndex == playerIndex)
         {
-            ResetActions();
+            ResetActions(true);
+        }
+    }
+
+    public void OnTurnStarted(int playerIndex)
+    {
+        if(playerOwnerIndex == playerIndex)
+        {
+            ResetActions(false);
         }
     }
 
@@ -150,7 +160,7 @@ public class WorldUnit : MonoBehaviour
         }
         else
         {
-            ResetActions();
+            ResetActions(false);
         }
 
         unitView = transform.GetChild(0).GetComponent<UnitView>();
@@ -194,7 +204,7 @@ public class WorldUnit : MonoBehaviour
         ValidateRemainigActions();
     }
 
-    void ResetActions()
+    void ResetActions(bool isEndOfTurn)
     {
         hasMoved = false;
         hasAttacked = false;
@@ -203,6 +213,23 @@ public class WorldUnit : MonoBehaviour
         noWalkHexInRange = false;
         noAttackHexInRange = false;
         buttonActionPossible = true;
+
+        if (isEndOfTurn)
+        {
+            if (unitReference.healAtTurnEnd)
+            {
+                Heal(unitReference.heal);
+            }
+        }
+        else
+        {
+            if (unitReference.canHeal)
+            {
+                Heal(unitReference.heal);
+            }
+        }
+      
+
         ValidateRemainigActions();
     }
 
@@ -217,6 +244,12 @@ public class WorldUnit : MonoBehaviour
         //more checks here to be double sure;
 
         GameManager.Instance.activePlayer.AddCity(parentHex);
+        ExhaustActions();
+        OnActionEnded();
+    }
+
+    public void MonumentCapture()
+    {
         ExhaustActions();
         OnActionEnded();
     }
@@ -418,6 +451,11 @@ public class WorldUnit : MonoBehaviour
     {
         currentHealth = Mathf.Clamp(value, 0, unitReference.health);
     }
+
+    public void HealWithDefaultValue()
+    {
+        Heal(unitReference.heal);
+    }
     public void Attack(WorldHex enemyHex)
     {
         WorldUnit enemyUnit = enemyHex.associatedUnit;
@@ -512,7 +550,7 @@ public class WorldUnit : MonoBehaviour
         newPosition = parentHex.hexData.PositionFromCamera();
         shouldMove = true;
         /*
-        //this si visual only
+        //this is visual only
         if (Vector3.Distance(oldPosition, newPosition) > 2)
         {
             //Skip animation
