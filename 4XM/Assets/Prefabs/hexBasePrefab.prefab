@@ -172,7 +172,7 @@ MonoBehaviour:
     R: 0
     S: 0
     moveCost: 1
-    type: 0
+    type: 4
     requirment: 0
     occupied: 0
     occupiedByEnemyUnit: 0
@@ -329,7 +329,7 @@ PrefabInstance:
     - target: {fileID: 4652149411839743343, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
@@ -405,7 +405,17 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: 7678ad2e363b23e4cb564ea45cc6592e, type: 2}
+      objectReference: {fileID: 2100000, guid: 39e5cd45891d2544b9572d1b46f42cea, type: 2}
+    - target: {fileID: 6597559383674041530, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 39e5cd45891d2544b9572d1b46f42cea, type: 2}
+    - target: {fileID: 6597559383674041530, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_Materials.Array.data[2]
+      value: 
+      objectReference: {fileID: 2100000, guid: 39e5cd45891d2544b9572d1b46f42cea, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ce07966a271c5ec468076194e873fe18, type: 3}
 --- !u!4 &4926657674728507042 stripped
@@ -660,6 +670,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: hexHighlight
+      objectReference: {fileID: 0}
+    - target: {fileID: 7709702971931608351, guid: 820cc79646020214f8f5fb09976d09cb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 7
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 820cc79646020214f8f5fb09976d09cb, type: 3}

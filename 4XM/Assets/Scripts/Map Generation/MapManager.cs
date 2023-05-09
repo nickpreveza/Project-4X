@@ -394,6 +394,14 @@ public class MapManager : MonoBehaviour
                         }
                     }
 
+                    if (regionMap[row * mapRows + column] == TileType.ICE)
+                    {
+                        if (currentHeight >= regions[6].height)
+                        {
+                            regionMap[row * mapRows + column] = regions[6].type;
+                        }
+
+                    }
 
                     //absolute ice in the top and bottom
                     if (row == 0 || row == mapRows - 1)

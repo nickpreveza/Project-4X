@@ -22,13 +22,16 @@ public class NetworkedPlayer : NetworkBehaviour
         {
             TestServerRpc(0, NetworkObjectId);
 
-            if (Initializer.Instance != null)
-            {
-                Initializer.Instance.Subscribe(this);
-            }
         }
 
-       
+
+        if (Initializer.Instance != null)
+        {
+            Initializer.Instance.Subscribe(this);
+        }
+
+
+
     }
 
     public void Update()

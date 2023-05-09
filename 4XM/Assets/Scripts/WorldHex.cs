@@ -205,7 +205,7 @@ public class WorldHex : MonoBehaviour
     public void UnitIn(WorldUnit newUnit)
     {
         hexData.occupied = true;
-        if (newUnit.playerOwnerIndex != hexData.playerOwnerIndex && hexData.playerOwnerIndex != -1)
+        if (newUnit.playerOwnerIndex != hexData.playerOwnerIndex)
         {
             hexData.occupiedByEnemyUnit = true;
 
@@ -807,8 +807,13 @@ public int rangeReward = 2;
             isThisATakeOver = true;
         }
        
+        if (cityGameObject != null)
+        {
+            Destroy(cityGameObject);
+        }
 
-        cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
+        cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, resourceParent);
+        //cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;

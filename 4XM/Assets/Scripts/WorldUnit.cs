@@ -54,6 +54,7 @@ public class WorldUnit : MonoBehaviour
     [SerializeField] Direction unitDir = Direction.RightDown;
     bool shouldRotate;
     Vector3 targetRotation;
+    Animator visualAnim;
 
     public bool BelongsToActivePlayer
     {
@@ -99,6 +100,7 @@ public class WorldUnit : MonoBehaviour
                 shouldMove = false;
                 this.transform.position = newPosition;
                 currentVelocity = Vector3.zero;
+                visualAnim.SetTrigger("Idle");
             }
         }
 
@@ -135,6 +137,8 @@ public class WorldUnit : MonoBehaviour
         currentAttack = unitReference.attack;
         currentDefense = unitReference.defense;
 
+        civColor = GameManager.Instance.GetCivilizationColor(playerIndex, CivColorType.unitColor);
+
         if (unitReference.attackRange > 1)
         {
             attackIsRanged = true;
@@ -160,11 +164,21 @@ public class WorldUnit : MonoBehaviour
         if (visualUnit == null)
         {
             visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
+            visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+            visualAnim.SetTrigger("Idle");
+
+            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            renderer.materials[0].SetColor("_ColorShift", civColor);
         }
         else
         {
             Destroy(visualUnit);
             visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
+            visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+            visualAnim.SetTrigger("Idle");
+
+            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            renderer.materials[0].SetColor("_ColorShift", civColor);
         }
 
         UpdateVisualsDirection(false);
@@ -272,8 +286,8 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
-                visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+                //visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
+                //visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
             }
           
         }
@@ -281,8 +295,8 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
-                visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+                //visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
+                //visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
             }
            
         }
@@ -385,7 +399,8 @@ public class WorldUnit : MonoBehaviour
 
     public bool AttemptToKill(int value)
     {
-        currentHealth -= value;
+
+        currentHealth -= value - currentDefense;
         unitView.UpdateData();
         if (currentHealth <= 0)
         {
@@ -407,8 +422,32 @@ public class WorldUnit : MonoBehaviour
     {
         WorldUnit enemyUnit = enemyHex.associatedUnit;
 
+        switch (type)
+        {
+            case UnitType.Defensive:
+            case UnitType.Trader:
+            case UnitType.Diplomat:
+            case UnitType.Melee:
+                visualAnim.SetTrigger("AttackSword");
+                break;
+            case UnitType.Ranged:
+                visualAnim.SetTrigger("AttackBow");
+                break;
+            case UnitType.Cavalry:
+                visualAnim.SetTrigger("AttackHorse");
+                break;
+            case UnitType.Siege:
+                visualAnim.SetTrigger("AttackShield");
+                break;
+        }
+
         currentAttackCharges--;
         hasAttacked = true;
+
+        if (unitReference.canMoveAfterAttack)
+        {
+            currentMovePoints++;
+        }
 
         if (enemyUnit.AttemptToKill(unitReference.attack))
         {
@@ -427,9 +466,11 @@ public class WorldUnit : MonoBehaviour
                 Death(true);
                 return;
             }
-
+            visualAnim.SetTrigger("Evade");
             UnitManager.Instance.SelectUnit(this);
         }
+
+        UnitManager.Instance.SelectUnit(this);
     }
 
     public void Death(bool affectStats)
@@ -447,6 +488,7 @@ public class WorldUnit : MonoBehaviour
 
     public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
+        visualAnim.SetTrigger("Walk");
         Deselect();
 
         c = newHex.hexData.C;
@@ -490,7 +532,7 @@ public class WorldUnit : MonoBehaviour
 
         if (parentHex.hexData.hasCity)
         {
-            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex && parentHex.hexData.playerOwnerIndex != -1)
+            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex)
             {
                 MapManager.Instance.SetHexUnderSiege(parentHex);
             }

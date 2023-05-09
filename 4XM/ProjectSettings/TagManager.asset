@@ -4,6 +4,7 @@
 TagManager:
   serializedVersion: 2
   tags:
+  - FxTemporaire
   - Unit
   - Tile
   layers:
@@ -13,13 +14,13 @@ TagManager:
   - 
   - Water
   - UI
-  - Unit
-  - Interactables
-  - Highlight
-  - Hex
-  - RenderTexturePreview
   - WorldUI
+  - Interactables
   - Cloud
+  - 
+  - 
+  - 
+  - 
   - 
   - 
   - 

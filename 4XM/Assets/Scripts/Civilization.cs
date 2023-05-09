@@ -8,9 +8,12 @@ public class Civilization
     public string name;
     public UnitData[] unitOverrides;
     public Color unitColor;
+    public Color unitInactive;
     public Color uiColorActive;
     public Color uiColorInactive;
     public Color borderColor;
+
+    public GameObject cityObject;
 
     public Dictionary<UnitType, UnitData> unitDictionary = new Dictionary<UnitType, UnitData>();
 

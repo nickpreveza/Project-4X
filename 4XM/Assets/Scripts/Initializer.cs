@@ -27,6 +27,7 @@ namespace SignedInitiative
         [SerializeField] GameObject networkLoading;
 
         public bool skipMenuForNetworking;
+        bool openForConnections;
         bool waitingForPlayers;
 
         [SerializeField] int tempSeed;
@@ -50,6 +51,29 @@ namespace SignedInitiative
             InitializeGame();
         }
 
+        private void Update()
+        {
+            if (processing)
+            {
+                if (mapGenerated && dataLoaded && unitsPlaced)
+                {
+                    processing = false;
+                    GameManager.Instance.StartGame();
+                }
+            }
+
+            if (waitingForPlayers)
+            {
+                if (networkedPlayersCount == 2)
+                {
+                    NetworkStart();
+                    openForConnections = false;
+                    waitingForPlayers = false;
+                }
+            }
+        }
+
+
         void InitializeGame()
         {
             ResetChecks();
@@ -67,6 +91,23 @@ namespace SignedInitiative
                 networkMenu.SetActive(true);
                 networkLoading.SetActive(true);
             }
+        }
+
+        public void StartClient()
+        {
+            NetworkManager.Singleton.StartClient();
+            //waitingForPlayers = true;
+            networkMenu.SetActive(false);
+            networkLoading.SetActive(true);
+        }
+
+        public void StartHost()
+        {
+            NetworkManager.Singleton.StartHost();
+            GameManager.Instance.isHost = true;
+            openForConnections = true;
+            waitingForPlayers = true;
+            networkMenu.SetActive(false);
         }
 
         public void LocalStart()
@@ -95,7 +136,7 @@ namespace SignedInitiative
         void BroadcastSeedAndStartRpc(int seed)
         {
             MapManager.Instance.seed = seed;
-            Debug.Log("Host should have broadcasted seed: " + seed);
+            Debug.LogError("Host broadcasted seed: " + seed);
 
             networkLoading.SetActive(false);
             GameManager.Instance.sessionPlayers[0].SetupForNetworkPlay(networkedPlayers[0]);
@@ -106,35 +147,10 @@ namespace SignedInitiative
         }
 
 
-        public void StartAsHost()
-        {
-            StartHost();
-        }
-
-        public void StartAsClient()
-        {
-            StartClient();
-        }
-
-        public void StartClient()
-        {
-            NetworkManager.Singleton.StartClient();
-            //waitingForPlayers = true;
-            networkMenu.SetActive(false);
-            networkLoading.SetActive(true);
-        }
-
-        public void StartHost()
-        {
-            NetworkManager.Singleton.StartHost();
-            GameManager.Instance.isHost = true;
-            waitingForPlayers = true;
-            networkMenu.SetActive(false);
-        }
 
         public void Subscribe(NetworkedPlayer player)
         {
-            if (networkedPlayersCount < 2)
+            if (GameManager.Instance.isHost && openForConnections && networkedPlayersCount < 2)
             {
                 if (!networkedPlayers.Contains(player))
                 {
@@ -144,27 +160,7 @@ namespace SignedInitiative
             }
         }
 
-        private void Update()
-        {
-            if (processing)
-            {
-                if (mapGenerated && dataLoaded && unitsPlaced)
-                {
-                    processing = false;
-                    GameManager.Instance.StartGame();
-                }
-            }
-
-            if (waitingForPlayers)
-            {
-                if (networkedPlayersCount == 2)
-                {
-                    NetworkStart();
-                    waitingForPlayers = false;
-                }
-            }
-        }
-
+    
         void ResetChecks()
         {
             dataLoaded = false;

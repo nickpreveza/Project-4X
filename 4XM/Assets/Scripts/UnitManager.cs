@@ -22,8 +22,7 @@ public class UnitManager : MonoBehaviour
     List<WorldHex> hexesInWalkRange = new List<WorldHex>();
     List<WorldHex> hexesInAttackRange = new List<WorldHex>();
 
-    [SerializeField] GameObject worldUnitPrefab;
-
+    [SerializeField] GameObject emptyUnitPrefab;
     void Awake()
     {
         if (Instance == null)
@@ -129,12 +128,15 @@ public class UnitManager : MonoBehaviour
         }
         player.AddScore(3, unitData.scoreForPlayer);
 
-        GameObject obj = Instantiate(worldUnitPrefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+        GameObject obj = Instantiate(emptyUnitPrefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
+
         obj.transform.localPosition = Vector3.zero;
+
         WorldUnit unit = obj.GetComponent<WorldUnit>();
+        player.AddUnit(unit);
         unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves);
 
-        player.AddUnit(unit);
+        
     }
 
    
@@ -150,7 +152,7 @@ public class UnitManager : MonoBehaviour
 
         selectedUnit = newUnit;
 
-        if (GameManager.Instance.activePlayer.index == newUnit.playerOwnerIndex)
+        if (GameManager.Instance.activePlayer.index == selectedUnit.playerOwnerIndex)
         {
            
             if (selectedUnit.currentMovePoints > 0)

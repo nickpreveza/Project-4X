@@ -1,0 +1,181 @@
+fileFormatVersion: 2
+guid: db79a52f94119ff4a947f2c2f8a96a4b
+ModelImporter:
+  serializedVersion: 21300
+  internalIDToNameTable:
+  - first:
+      74: -8997377277727606269
+    second: Run_TwoHanded
+  - first:
+      74: 8756677579850866384
+    second: Run_OneHanded
+  - first:
+      74: 3215183921529390708
+    second: Run_Shield
+  - first:
+      74: 4365115921327333586
+    second: Walk_TwoHanded
+  - first:
+      74: 5694352644843960393
+    second: Walk_OneHanded
+  - first:
+      74: -4328730842074585092
+    second: Walk_Shield
+  - first:
+      74: 5539831331247536789
+    second: Jump
+  - first:
+      74: -4630339522487117836
+    second: Die
+  - first:
+      74: -1730680539021962063
+    second: Die_Shield
+  - first:
+      74: -2136702051425993363
+    second: Evade
+  - first:
+      74: -501263085600718711
+    second: Attack_Knight
+  - first:
+      74: -4436950275787041040
+    second: Attack_Leader
+  - first:
+      74: -8406228778870876095
+    second: Attack_Sword
+  - first:
+      74: -3977221100284721637
+    second: Attack_Lance
+  - first:
+      74: 7269372806198599783
+    second: Attack_Bow
+  - first:
+      74: 5594219506194216640
+    second: Horse_Run
+  - first:
+      74: 7986521445804649229
+    second: Horse_Walk
+  - first:
+      74: -244787203437420862
+    second: Horse_Die
+  - first:
+      74: 1182536012516277539
+    second: Horse_Evade
+  - first:
+      74: -5140565975590079004
+    second: Horse_Jump
+  - first:
+      74: 5733540931037313733
+    second: Horse_Attack
+  - first:
+      74: 3421422838754495145
+    second: Idle_OneHanded
+  - first:
+      74: 7678623618814371131
+    second: Idle_Shield
+  - first:
+      74: 5752088981400867520
+    second: Idle_TwoHanded
+  - first:
+      74: 4084099625345711099
+    second: Horse_Idle
+  externalObjects: {}
+  materials:
+    materialImportMode: 2
+    materialName: 0
+    materialSearch: 1
+    materialLocation: 1
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    resampleCurves: 1
+    optimizeGameObjects: 0
+    removeConstantScaleCurves: 1
+    motionNodeName: 
+    rigImportErrors: 
+    rigImportWarnings: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    importAnimatedCustomProperties: 0
+    importConstraints: 0
+    animationCompression: 1
+    animationRotationError: 0.5
+    animationPositionError: 0.5
+    animationScaleError: 0.5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    extraUserProperties: []
+    clipAnimations: []
+    isReadable: 0
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 1
+    meshCompression: 0
+    addColliders: 0
+    useSRGBMaterialColor: 1
+    sortHierarchyByName: 1
+    importVisibility: 1
+    importBlendShapes: 1
+    importCameras: 1
+    importLights: 1
+    nodeNameCollisionStrategy: 1
+    fileIdsGeneration: 2
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    keepQuads: 0
+    weldVertices: 1
+    bakeAxisConversion: 0
+    preserveHierarchy: 0
+    skinWeightsMode: 0
+    maxBonesPerVertex: 4
+    minBoneWeight: 0.001
+    optimizeBones: 1
+    meshOptimizationFlags: -1
+    indexFormat: 0
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVMarginMethod: 1
+    secondaryUVMinLightmapResolution: 40
+    secondaryUVMinObjectScale: 1
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
+    legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
+    blendShapeNormalImportMode: 1
+    normalSmoothingSource: 0
+  referencedClips: []
+  importAnimation: 1
+  humanDescription:
+    serializedVersion: 3
+    human: []
+    skeleton: []
+    armTwist: 0.5
+    foreArmTwist: 0.5
+    upperLegTwist: 0.5
+    legTwist: 0.5
+    armStretch: 0.05
+    legStretch: 0.05
+    feetSpacing: 0
+    globalScale: 1
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+    hasExtraRoot: 0
+    skeletonHasParents: 1
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  autoGenerateAvatarMappingIfUnspecified: 1
+  animationType: 2
+  humanoidOversampling: 1
+  avatarSetup: 0
+  addHumanoidExtraRootOnlyWhenUsingAvatar: 1
+  remapMaterialsIfMaterialImportModeIsNone: 0
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
