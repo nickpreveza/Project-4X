@@ -23,6 +23,15 @@ public class UnitManager : MonoBehaviour
     List<WorldHex> hexesInAttackRange = new List<WorldHex>();
 
     [SerializeField] GameObject emptyUnitPrefab;
+
+    public GameObject unitSpawnParticle;
+    public GameObject unitAttackParticle;
+    public GameObject unitDeathParticle;
+    public GameObject unitHealParticle;
+    public GameObject unitHitParticle;
+    public GameObject unitWalkParticle;
+    public GameObject unitSelectParticle;
+
     void Awake()
     {
         if (Instance == null)
@@ -135,8 +144,6 @@ public class UnitManager : MonoBehaviour
         WorldUnit unit = obj.GetComponent<WorldUnit>();
         player.AddUnit(unit);
         unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves);
-
-        
     }
 
    
@@ -157,15 +164,23 @@ public class UnitManager : MonoBehaviour
            
             if (selectedUnit.currentMovePoints > 0)
             {
-                FindWalkableHexes(newUnit.parentHex, newUnit.unitReference.walkRange);
+                FindWalkableHexes(newUnit);
             }
 
             if (selectedUnit.currentAttackCharges > 0)
             {
-                FindAttackableHexes(newUnit.parentHex, newUnit.unitReference.attackRange);
+                FindAttackableHexes(newUnit);
             }
 
-            selectedUnit.ValidateRemainigActions();
+            if (selectedUnit.isBoat || selectedUnit.isShip)
+            {
+                selectedUnit.ValidateRemainigActions(selectedUnit.boatReference);
+            }
+            else
+            {
+                selectedUnit.ValidateRemainigActions(selectedUnit.unitReference);
+            }
+          
 
             if (selectedUnit.isInteractable)
             {
@@ -266,14 +281,15 @@ public class UnitManager : MonoBehaviour
 
         return hexesInRange;
     }
-    public void FindWalkableHexes(WorldHex hexCenter, int range)
+    public void FindWalkableHexes(WorldUnit targetUnit)
     {
-        startHex = hexCenter;
-        hexesInWalkRange = MapManager.Instance.GetHexesListWithinRadius(hexCenter.hexData, range);
+        int range = targetUnit.currentWalkRange;
+        startHex = targetUnit.parentHex;
+        hexesInWalkRange = MapManager.Instance.GetHexesListWithinRadius(startHex.hexData, range);
 
-        if (hexesInWalkRange.Contains(hexCenter))
+        if (hexesInWalkRange.Contains(startHex))
         {
-            hexesInWalkRange.Remove(hexCenter);
+            hexesInWalkRange.Remove(startHex);
         }
 
         List<WorldHex> hexesToRemove = new List<WorldHex>();
@@ -344,10 +360,12 @@ public class UnitManager : MonoBehaviour
         }
     }
 
-    void FindAttackableHexes(WorldHex hexCenter, int attackRange)
+    void FindAttackableHexes(WorldUnit targetUnit)
     {
-        startHex = hexCenter;
-        hexesInAttackRange = MapManager.Instance.GetHexesListWithinRadius(hexCenter.hexData, attackRange);
+        startHex = targetUnit.parentHex;
+        int range = targetUnit.currentAttackRange;
+
+        hexesInAttackRange = MapManager.Instance.GetHexesListWithinRadius(startHex.hexData, range);
         List<WorldHex> hexesToRemove = new List<WorldHex>();
         foreach(WorldHex hex in hexesInAttackRange)
         {
@@ -498,5 +516,7 @@ public enum UnitType
     Siege,
     Defensive,
     Trader,
-    Diplomat
+    Diplomat,
+    Boat,
+    Ship
 }

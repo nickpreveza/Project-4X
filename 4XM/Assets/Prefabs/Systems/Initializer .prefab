@@ -44,7 +44,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc1a2510febcccd48901535963d1028f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  networkedPlayers: []
   mapGenerator: {fileID: 0}
   dataHandler: {fileID: 0}
   playerManager: {fileID: 0}
   cameraController: {fileID: 0}
+  networkedPlayersCount: 0
+  networkMenu: {fileID: 0}
+  networkLoading: {fileID: 0}
+  skipMenuForNetworking: 1
+  tempSeed: 0

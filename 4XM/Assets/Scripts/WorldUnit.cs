@@ -24,6 +24,7 @@ public class WorldUnit : MonoBehaviour
     public int r;
 
     public UnitType type;
+    public UnitData boatReference;
     public Civilizations civilization;
     public int playerOwnerIndex = -1;
 
@@ -32,6 +33,9 @@ public class WorldUnit : MonoBehaviour
     public int currentAttack;
     public int currentDefense;
     public int currentLevel;
+
+    public int currentWalkRange;
+    public int currentAttackRange;
 
     public int currentMovePoints = 1;
     public int currentAttackCharges = 1;
@@ -46,6 +50,7 @@ public class WorldUnit : MonoBehaviour
     public bool isInteractable;
 
     public Color civColor;
+    Color inactiveColor;
 
     bool attackIsRanged;
     UnitView unitView;
@@ -55,6 +60,14 @@ public class WorldUnit : MonoBehaviour
     bool shouldRotate;
     Vector3 targetRotation;
     Animator visualAnim;
+
+    Transform particleLayer;
+    Transform unitVisualLayer;
+    Transform boatsLayer;
+    GameObject activeParticle;
+    GameObject currentBoat;
+    public bool isBoat;
+    public bool isShip;
 
     public bool BelongsToActivePlayer
     {
@@ -66,18 +79,132 @@ public class WorldUnit : MonoBehaviour
 
     void Start()
     {
-        wiggler = GetComponent<Wiggler>();
-      
-        oldPosition = newPosition = this.transform.position;
-        SI_EventManager.Instance.onTurnEnded += OnTurnEnded;
-        SI_EventManager.Instance.onTurnStarted += OnTurnStarted;
-       // SI_EventManager.Instance.onUni
+       
+        // SI_EventManager.Instance.onUni
     }
 
     private void OnDestroy()
     {
         SI_EventManager.Instance.onTurnEnded -= OnTurnEnded;
         SI_EventManager.Instance.onTurnStarted -= OnTurnStarted;
+    }
+
+    public void SpawnParticle(GameObject particlePrefab, bool overridePriority = false)
+    {
+        if (activeParticle == null && particlePrefab != null)
+        {
+            activeParticle = Instantiate(particlePrefab, particleLayer);
+            Invoke("DestroyParticle", 1f);
+        }
+        else if (overridePriority && particlePrefab != null)
+        {
+            DestroyParticle();
+            activeParticle = Instantiate(particlePrefab, particleLayer);
+        }
+    }
+
+    void DestroyParticle()
+    {
+        if (activeParticle != null)
+        {
+            Destroy(activeParticle);
+        }
+    }
+
+    public void EnableBoat()
+    {
+        isBoat = true;
+
+        if (currentBoat != null)
+        {
+            Destroy(currentBoat);
+        }
+
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+        // I don't like it either don't judge me 
+        currentBoat = Instantiate(
+            GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).civilization).boatPrefab,
+            boatsLayer);
+
+        boatReference = UnitManager.Instance.GetUnitDataByType(UnitType.Boat, unitReference.civType);
+
+        currentAttack = boatReference.attack;
+        currentDefense = boatReference.defense;
+        currentWalkRange = boatReference.walkRange;
+        currentAttackRange = boatReference.attackRange;
+
+
+        ExhaustActions();
+    }
+
+    //walking should not play 
+    //pathfinding = ship 
+    //change unit reference in regards to combat 
+
+    public void EnableShip()
+    {
+        isShip = true;
+        visualUnit.SetActive(false);
+
+        if (currentBoat != null)
+        {
+            Destroy(currentBoat);
+        }
+
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+        // I don't like it either don't judge me 
+        currentBoat = Instantiate(
+            GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).civilization).shipPrefab,
+            boatsLayer);
+
+        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+        if (helper != null)
+        {
+            foreach (GameObject obj in helper.objectsToChangeMaterials)
+            {
+                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+            }
+        }
+
+        boatReference = UnitManager.Instance.GetUnitDataByType(UnitType.Ship, unitReference.civType);
+
+        currentAttack = boatReference.attack;
+        currentDefense = boatReference.defense;
+        currentWalkRange = boatReference.walkRange;
+        currentAttackRange = boatReference.attackRange;
+
+        ExhaustActions();
+    }
+
+    //how we apply player materials in visual update
+    //how we do hexfinding
+    //change unit reference in regards to combat 
+
+    public void DisableBoats()
+    {
+        visualUnit.SetActive(true);
+
+        isBoat = false;
+        isShip = false;
+
+        currentBoat = null;
+
+        foreach (Transform child in boatsLayer)
+        {
+            Destroy(child.gameObject);
+        }
+
+        currentAttack = unitReference.attack;
+        currentDefense = unitReference.defense;
+        currentWalkRange = unitReference.walkRange;
+        currentAttackRange = unitReference.attackRange;
+
+        if (currentAttackRange > 1)
+        {
+            attackIsRanged = true;
+        }
+
+        ExhaustActions();
     }
 
 
@@ -92,7 +219,7 @@ public class WorldUnit : MonoBehaviour
 
     public void OnTurnStarted(int playerIndex)
     {
-        if(playerOwnerIndex == playerIndex)
+        if (playerOwnerIndex == playerIndex)
         {
             ResetActions(false);
         }
@@ -116,7 +243,7 @@ public class WorldUnit : MonoBehaviour
 
         if (shouldRotate)
         {
-           visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
+            visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
 
             if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
             {
@@ -134,6 +261,17 @@ public class WorldUnit : MonoBehaviour
 
     public void SpawnSetup(WorldHex newHex, int playerIndex, UnitData referenceData, bool exhaustOnSpawn)
     {
+        wiggler = GetComponent<Wiggler>();
+
+        oldPosition = newPosition = this.transform.position;
+        SI_EventManager.Instance.onTurnEnded += OnTurnEnded;
+        SI_EventManager.Instance.onTurnStarted += OnTurnStarted;
+
+        unitView = transform.GetChild(0).GetComponent<UnitView>();
+        unitVisualLayer = transform.GetChild(1);
+        particleLayer = transform.GetChild(2);
+        boatsLayer = transform.GetChild(3);
+
         unitReference = referenceData;
         playerOwnerIndex = playerIndex;
 
@@ -146,10 +284,13 @@ public class WorldUnit : MonoBehaviour
         currentHealth = unitReference.health;
         currentAttack = unitReference.attack;
         currentDefense = unitReference.defense;
+        currentWalkRange = unitReference.walkRange;
+        currentAttackRange = unitReference.attackRange;
 
         civColor = GameManager.Instance.GetCivilizationColor(playerIndex, CivColorType.unitColor);
+        inactiveColor = GameManager.Instance.GetCivilizationColor(playerIndex, CivColorType.unitInactiveColor);
 
-        if (unitReference.attackRange > 1)
+        if (currentAttackRange > 1)
         {
             attackIsRanged = true;
         }
@@ -163,13 +304,8 @@ public class WorldUnit : MonoBehaviour
             ResetActions(false);
         }
 
-        unitView = transform.GetChild(0).GetComponent<UnitView>();
         unitView.SetData(this);
-
-        if (this.transform.childCount > 1)
-        {
-            visualUnit = transform.GetChild(1).gameObject;
-        }
+        visualUnit = unitVisualLayer.GetChild(0).gameObject;
 
         if (visualUnit == null)
         {
@@ -191,6 +327,7 @@ public class WorldUnit : MonoBehaviour
             renderer.materials[0].SetColor("_ColorShift", civColor);
         }
 
+        SpawnParticle(UnitManager.Instance.unitSpawnParticle);
         UpdateVisualsDirection(false);
     }
 
@@ -201,36 +338,73 @@ public class WorldUnit : MonoBehaviour
         hasMoved = true;
         hasAttacked = true;
 
-        ValidateRemainigActions();
+        if (isBoat || isShip)
+        {
+            ValidateRemainigActions(boatReference);
+        }
+        else
+        {
+            ValidateRemainigActions(unitReference);
+        }
+       
     }
 
     void ResetActions(bool isEndOfTurn)
     {
         hasMoved = false;
         hasAttacked = false;
-        currentAttackCharges = unitReference.attackCharges;
-        currentMovePoints = unitReference.moveCharges;
+
         noWalkHexInRange = false;
         noAttackHexInRange = false;
         buttonActionPossible = true;
 
-        if (isEndOfTurn)
+        if (isBoat || isShip)
         {
-            if (unitReference.healAtTurnEnd)
+
+            currentAttackCharges = boatReference.attackCharges;
+            currentMovePoints = boatReference.moveCharges;
+
+            if (isEndOfTurn)
             {
-                Heal(unitReference.heal);
+                if (boatReference.healAtTurnEnd)
+                {
+                    Heal(boatReference.heal);
+                }
             }
+            else
+            {
+                if (boatReference.canHeal)
+                {
+                    Heal(boatReference.heal);
+                }
+            }
+
+            ValidateRemainigActions(boatReference);
         }
         else
         {
-            if (unitReference.canHeal)
-            {
-                Heal(unitReference.heal);
-            }
-        }
-      
 
-        ValidateRemainigActions();
+            currentAttackCharges = unitReference.attackCharges;
+            currentMovePoints = unitReference.moveCharges;
+
+            if (isEndOfTurn)
+            {
+                if (unitReference.healAtTurnEnd)
+                {
+                    Heal(unitReference.heal);
+                }
+            }
+            else
+            {
+                if (unitReference.canHeal)
+                {
+                    Heal(unitReference.heal);
+                }
+            }
+
+            ValidateRemainigActions(unitReference);
+        }
+       
     }
 
     public void CityCaptureAction()
@@ -244,6 +418,7 @@ public class WorldUnit : MonoBehaviour
         //more checks here to be double sure;
 
         GameManager.Instance.activePlayer.AddCity(parentHex);
+        visualAnim.SetTrigger("Capture");
         ExhaustActions();
         OnActionEnded();
     }
@@ -260,12 +435,11 @@ public class WorldUnit : MonoBehaviour
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
     
-    public void ValidateRemainigActions()
+    public void ValidateRemainigActions(UnitData unitDataToVerify)
     {
-        
         if (hasMoved)
         {
-            if (!unitReference.canAttackAfterMove)
+            if (!unitDataToVerify.canAttackAfterMove)
             {
                 currentAttackCharges = 0;
             }
@@ -273,7 +447,7 @@ public class WorldUnit : MonoBehaviour
 
         if (hasAttacked)
         {
-            if (!unitReference.canMoveAfterAttack)
+            if (!unitDataToVerify.canMoveAfterAttack)
             {
                 currentMovePoints = 0;
             }
@@ -319,8 +493,23 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                //visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitActive;
-                //visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+                if (!isShip)
+                {
+                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+                    renderer.materials[0].SetColor("_ColorShift", civColor);
+                }
+                else
+                {
+                    BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+                    if (helper != null)
+                    {
+                        foreach(GameObject obj in helper.objectsToChangeMaterials)
+                        {
+                            obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                        }
+                    }
+                }
+                
             }
           
         }
@@ -328,8 +517,23 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                //visualUnit.GetComponent<MeshRenderer>().material = UnitManager.Instance.unitUsed;
-                //visualUnit.GetComponent<MeshRenderer>().material.color = civColor;
+                if (!isShip)
+                {
+                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+                    renderer.materials[0].SetColor("_ColorShift", inactiveColor);
+                }
+                else
+                {
+                    BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+                    if (helper != null)
+                    {
+                        foreach (GameObject obj in helper.objectsToChangeMaterials)
+                        {
+                            obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
+                        }
+                    }
+                }
+               
             }
            
         }
@@ -432,7 +636,6 @@ public class WorldUnit : MonoBehaviour
 
     public bool AttemptToKill(int value)
     {
-
         currentHealth -= value - currentDefense;
         unitView.UpdateData();
         if (currentHealth <= 0)
@@ -441,6 +644,9 @@ public class WorldUnit : MonoBehaviour
         }
         else
         {
+            SpawnParticle(UnitManager.Instance.unitHitParticle, true);
+            visualAnim.SetTrigger("Evade");
+      
             return false;
         }
 
@@ -449,6 +655,7 @@ public class WorldUnit : MonoBehaviour
 
     public void Heal(int value)
     {
+        SpawnParticle(UnitManager.Instance.unitHealParticle);
         currentHealth = Mathf.Clamp(value, 0, unitReference.health);
     }
 
@@ -456,6 +663,7 @@ public class WorldUnit : MonoBehaviour
     {
         Heal(unitReference.heal);
     }
+
     public void Attack(WorldHex enemyHex)
     {
         WorldUnit enemyUnit = enemyHex.associatedUnit;
@@ -487,24 +695,33 @@ public class WorldUnit : MonoBehaviour
             currentMovePoints++;
         }
 
+        StartCoroutine(FightSequence(enemyHex, enemyUnit));
+        
+    }
+
+    IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
+    {
+        yield return new WaitForSeconds(0.1f);
         if (enemyUnit.AttemptToKill(unitReference.attack))
         {
             enemyUnit.Death(true);
 
             if (!attackIsRanged)
             {
+                yield return new WaitForSeconds(0.3f);
                 Move(enemyHex, true);
             }
-           
+
         }
         else
         {
+            yield return new WaitForSeconds(0.2f);
             if (AttemptToKill(enemyUnit.unitReference.attack))
             {
                 Death(true);
-                return;
+                yield break;
             }
-            visualAnim.SetTrigger("Evade");
+
             UnitManager.Instance.SelectUnit(this);
         }
 
@@ -518,15 +735,15 @@ public class WorldUnit : MonoBehaviour
         //Do some cool UI stuff
         //Maybe particles
         //def sound
-        parentHex.UnitOut(this);
+        parentHex.UnitOut(this, true);
         Destroy(this.gameObject);
     }
-
 
 
     public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
         visualAnim.SetTrigger("Walk");
+        SpawnParticle(UnitManager.Instance.unitWalkParticle);
         Deselect();
 
         c = newHex.hexData.C;
@@ -595,6 +812,7 @@ public class WorldUnit : MonoBehaviour
         parentHex.ShowHighlight(false);
         if (GameManager.Instance.activePlayer.index == playerOwnerIndex)
         {
+            SpawnParticle(UnitManager.Instance.unitSelectParticle);
             UnitManager.Instance.SelectUnit(this);
 
         }

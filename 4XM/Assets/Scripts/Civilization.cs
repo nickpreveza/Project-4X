@@ -14,6 +14,8 @@ public class Civilization
     public Color borderColor;
 
     public GameObject cityObject;
+    public GameObject boatPrefab;
+    public GameObject shipPrefab;
 
     public Dictionary<UnitType, UnitData> unitDictionary = new Dictionary<UnitType, UnitData>();
 

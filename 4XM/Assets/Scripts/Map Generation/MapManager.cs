@@ -195,6 +195,8 @@ public class MapManager : MonoBehaviour
 
             case BuildingType.Guild:
                 return hexBuildings[6];
+            case BuildingType.Port:
+                return hexBuildings[7];
         }
 
         Debug.LogError("Building for Building Type was not found");
@@ -534,7 +536,7 @@ public class MapManager : MonoBehaviour
         if (hexesUnderSiege.Contains(hex))
         {
             hexesUnderSiege.Remove(hex);
-            hex.cityView?.UpdateSiegeState(false);
+            hex.cityView?.UpdateSiegeState(false, false);
         }
     }
 
@@ -544,7 +546,7 @@ public class MapManager : MonoBehaviour
         {
             foreach(WorldHex hex in hexesUnderSiege)
             {
-                hex.cityView?.UpdateSiegeState(true);
+                hex.cityView?.UpdateSiegeState(true, true);
             }
         }
     }
@@ -631,6 +633,8 @@ public class MapManager : MonoBehaviour
                 }
             }
 
+            //TODO: spawn cheaper resources closer to the city - min 2
+
             for (int x = 0; x < hexesInRadius.Count; x++)
             {
                 switch (hexesInRadius[x].hexData.type)
@@ -642,7 +646,6 @@ public class MapManager : MonoBehaviour
                             {
                                 hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                             }
-
                         }
                         else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
                         {
@@ -675,7 +678,14 @@ public class MapManager : MonoBehaviour
                                 hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                             }
                         }
-                      
+                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
+                        {
+                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            {
+                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                            }
+                        }
+
                         break;
                     case TileType.HILL:
                         if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
@@ -1066,14 +1076,14 @@ public enum TileType
 
 public enum ResourceType
 {
-    FRUIT = 0,
-    FOREST = 1,
-    ANIMAL = 2,
-    MINE = 3,
-    FISH = 4,
-    FARM = 5,
-    MONUMENT = 6,
-    EMPTY = 6
+    FRUIT,
+    FOREST,
+    ANIMAL,
+    MINE,
+    FISH,
+    FARM,
+    EMPTY,
+    MONUMENT,
 }
 
 public enum BuildingType

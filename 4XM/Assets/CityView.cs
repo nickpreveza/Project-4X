@@ -26,6 +26,7 @@ public class CityView : MonoBehaviour
 
     int lastEnabledProgressPointIndex = -1;
     [SerializeField] GameObject cityCaptureIcon;
+    [SerializeField] GameObject cityCaptureIconInactive;
     [SerializeField] GameObject capitalIcon;
 
     CanvasGroup canvasGroup;
@@ -70,8 +71,9 @@ public class CityView : MonoBehaviour
         cityOutput.text = parentHex.cityData.output.ToString();
     }
 
-    public void UpdateSiegeState(bool showSiegeIcon)
+    public void UpdateSiegeState(bool showSiegeIcon, bool isIconActive)
     {
+        cityCaptureIconInactive.SetActive(isIconActive);
         cityCaptureIcon.SetActive(showSiegeIcon);
     }
     public void AddLevelUIPoint()

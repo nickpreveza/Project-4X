@@ -40,6 +40,19 @@ public class ActionButton : MonoBehaviour
         CheckIfAffordable();
     }
 
+    public void SetDataForShipButton(HexView newHandler, WorldHex newHex)
+    {
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        buttonName.text = "Upgrade to Ship";
+        actionCost = newHex.associatedUnit.boatReference.cost; 
+        actionCostText.text = actionCost.ToString();
+        buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
+        CheckIfAffordable();
+    }
+
     public void SetDataForRoad(HexView newHandler, WorldHex newHex)
     {
         parentHandler = newHandler;
@@ -201,6 +214,11 @@ public class ActionButton : MonoBehaviour
             costVisual.SetActive(true);
             buttonAction.interactable = false;
         }
+    }
+
+    public void ShipCreationButton(WorldUnit unit)
+    {
+        unit.EnableShip();
     }
 
     public void CaptureCityButton()

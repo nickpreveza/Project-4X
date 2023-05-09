@@ -237,7 +237,8 @@ public class WorldHex : MonoBehaviour
                 {
                     visualHelper.citySiegeEffect.SetActive(true);
                 }
-                cityView.UpdateSiegeState(true);
+                cityView.gameObject.SetActive(true);
+                cityView.UpdateSiegeState(true, true);
                 MapManager.Instance.SetHexUnderSiege(this);
             }
         }
@@ -251,10 +252,27 @@ public class WorldHex : MonoBehaviour
             MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2);
         }
 
+
         associatedUnit = newUnit;
+
+        if (hexData.type == TileType.SEA || hexData.type == TileType.DEEPSEA)
+        {
+            if (!associatedUnit.isBoat)
+            {
+                associatedUnit.EnableBoat();
+            }
+           
+        }
+        else if (hexData.type != TileType.SEA || hexData.type != TileType.DEEPSEA)
+        {
+            if (associatedUnit.isBoat || associatedUnit.isShip)
+            {
+                associatedUnit.DisableBoats();
+            }
+        }
     }
 
-    public void UnitOut(WorldUnit newUnit)
+    public void UnitOut(WorldUnit newUnit, bool unitDied = false)
     {
         hexData.occupied = false;
         hexData.occupiedByEnemyUnit = false;
@@ -265,7 +283,7 @@ public class WorldHex : MonoBehaviour
             {
                 cityData.isUnderSiege = false;
                 MapManager.Instance.RemoveHexFromSiege(this);
-                cityView.UpdateSiegeState(false);
+                cityView.UpdateSiegeState(false, false);
 
                 if (hexData.playerOwnerIndex != -1)
                 {
@@ -281,6 +299,11 @@ public class WorldHex : MonoBehaviour
         }
        
         associatedUnit = null;
+
+        if (unitDied)
+        {
+            SpawnParticle(UnitManager.Instance.unitDeathParticle);
+        }
     }
 
     public void SpawnCity(string newName)
@@ -625,12 +648,14 @@ public int rangeReward = 2;
 
         if (resource.type == ResourceType.MONUMENT)
         {
+            associatedUnit.MonumentCapture();
             int randomReward = Random.Range(0, 3);
             GameManager.Instance.MonumentReward(randomReward);
-
+           
         }
         else if (resource.transformToBuilding)
         {
+            SpawnParticle(GameManager.Instance.resourceHarvestParticle);
             hexData.hasBuilding = true;
             hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
 
@@ -646,6 +671,7 @@ public int rangeReward = 2;
         }
         else
         {
+            SpawnParticle(GameManager.Instance.resourceHarvestParticle);
             if (resource.output > 0)
             {
                 parentCity.AddLevelPoint(resource.output);
@@ -899,9 +925,9 @@ public int rangeReward = 2;
         Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
 
 
-        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].color = newColor;
-        //TODO: Set outline material color only perimiter; 
 
+        //TODO: Set outline material color only perimiter; 
+        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor); 
         border.SetActive(true);
         border.GetComponent<MeshRenderer>().materials[0].color = newColor;
 
@@ -942,7 +968,12 @@ public int rangeReward = 2;
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
-        cityView.InitialLevelSetup();
+        cityView.UpdateSiegeState(false, false);
+        if (!isThisATakeOver)
+        {
+            cityView.InitialLevelSetup();
+        }
+       
     }
 
     public void Deselect()

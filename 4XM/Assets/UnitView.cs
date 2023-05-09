@@ -26,6 +26,11 @@ public class UnitView : MonoBehaviour
 
     public void UpdateData()
     {
+        if (parentUnit == null)
+        {
+            SetData(transform.parent.GetComponent<WorldUnit>());
+            return;
+        }
         unitHealth.text = parentUnit.currentHealth.ToString();
         if (parentUnit.isInteractable)
         {

@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5448783926505063728
 Transform:
   m_ObjectHideFlags: 0
@@ -64,7 +64,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 2368
+    m_Bits: 2112
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   outOfBounds: 0
-  internalBoundsZ: {x: -5, y: 33}
+  mapVerticalBounds: {x: -15, y: 50}
   selectedTile: {fileID: 0}
   internalTouchTimer: 0.3002439
   timeToRegisterTap: 0.1
@@ -170,7 +170,7 @@ MonoBehaviour:
   interactableMask:
     serializedVersion: 2
     m_Bits: 656
-  cameraOffsetFromPanTarget: {x: 22, y: 0, z: -35}
+  cameraOffsetFromPanTarget: {x: 12, y: 0, z: -30}
   minHeight: 10
   maxHeight: 20
   repeatSelection: 0
@@ -240,7 +240,7 @@ Camera:
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 695
+    m_Bits: 6135
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0

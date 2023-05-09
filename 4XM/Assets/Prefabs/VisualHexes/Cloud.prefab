@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8965481602586984560}
   - component: {fileID: 6597559383674041530}
   - component: {fileID: 2847704123008266686}
-  m_Layer: 7
+  m_Layer: 8
   m_Name: Cloud
   m_TagString: Tile
   m_Icon: {fileID: 0}
@@ -26,9 +26,9 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4652149411839743343}
-  m_LocalRotation: {x: 0.00000008146034, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0.334, z: 0}
-  m_LocalScale: {x: 1.01, y: 0.5, z: 1.01}
+  m_LocalScale: {x: 0.95, y: 0.10437666, z: 0.95}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

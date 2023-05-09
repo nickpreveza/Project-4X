@@ -61,16 +61,26 @@ MonoBehaviour:
   gameCivilizations:
   - name: Greeks
     unitOverrides: []
-    unitColor: {r: 0, g: 0.61094916, b: 0.8113208, a: 1}
+    unitColor: {r: 0.0032484946, g: 0.5198052, b: 0.6886792, a: 1}
+    unitInactive: {r: 0, g: 0.31309974, b: 0.41509432, a: 1}
     uiColorActive: {r: 0, g: 0.6117647, b: 0.8117647, a: 1}
-    uiColorInactive: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.64705884}
-    borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 1}
+    uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.64705884}
+    borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
+    cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
+      type: 3}
+    boatPrefab: {fileID: 0}
+    shipPrefab: {fileID: 0}
   - name: Romans
     unitOverrides: []
-    unitColor: {r: 0.75338453, g: 0.28261834, b: 0.8207547, a: 1}
+    unitColor: {r: 0.6715603, g: 0.1511659, b: 0.745283, a: 1}
+    unitInactive: {r: 0, g: 0, b: 0, a: 0}
     uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
-    uiColorInactive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.64705884}
-    borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
+    uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.64705884}
+    borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
+    cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
+      type: 3}
+    boatPrefab: {fileID: 0}
+    shipPrefab: {fileID: 0}
   data:
     day: 0
     hour: 0
@@ -94,7 +104,10 @@ MonoBehaviour:
   playerDead: 0
   menuActive: 0
   devMode: 0
-  allAbilitiesUnlocked: 1
+  allAbilitiesUnlocked: 0
+  startWithALotOfMoney: 0
+  noFog: 1
+  createStuff: 0
   infiniteCurrency: 0
   noScenceChanges: 0
   noSave: 0
@@ -114,6 +127,7 @@ MonoBehaviour:
       unitHorserider: 0
       unitTrebucet: 0
       unitShield: 0
+      unitKnight: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -123,23 +137,39 @@ MonoBehaviour:
       animalHarvest: 0
       forestHarvest: 0
       roads: 0
-      forestBuilding: 0
-      smitheryBuilding: 0
-      farmBuilding: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
       fishBuilding: 0
       portBuilding: 0
-      merchantBuilding: 0
+      guildBuilding: 0
     index: 0
     name: Greeks
-    score: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
     turnCount: 0
     stars: 5
+    expectedStars: 0
     unlockedAbiltiesCount: 0
+    capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
   - type: 0
     civilization: 1
     abilities:
@@ -151,6 +181,7 @@ MonoBehaviour:
       unitHorserider: 0
       unitTrebucet: 0
       unitShield: 0
+      unitKnight: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -160,23 +191,39 @@ MonoBehaviour:
       animalHarvest: 0
       forestHarvest: 0
       roads: 0
-      forestBuilding: 0
-      smitheryBuilding: 0
-      farmBuilding: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
       fishBuilding: 0
       portBuilding: 0
-      merchantBuilding: 0
+      guildBuilding: 0
     index: 1
     name: Romans
-    score: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
     turnCount: 0
     stars: 5
+    expectedStars: 0
     unlockedAbiltiesCount: 0
+    capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
   activePlayer:
     type: 0
     civilization: 0
@@ -189,6 +236,7 @@ MonoBehaviour:
       unitHorserider: 0
       unitTrebucet: 0
       unitShield: 0
+      unitKnight: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -198,23 +246,39 @@ MonoBehaviour:
       animalHarvest: 0
       forestHarvest: 0
       roads: 0
-      forestBuilding: 0
-      smitheryBuilding: 0
-      farmBuilding: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
       fishBuilding: 0
       portBuilding: 0
-      merchantBuilding: 0
+      guildBuilding: 0
     index: 0
     name: 
-    score: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
     turnCount: 0
     stars: 0
+    expectedStars: 0
     unlockedAbiltiesCount: 0
+    capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
   activePlayerIndex: 0
   abilities:
   - abilityID: 0
@@ -222,104 +286,120 @@ MonoBehaviour:
     abilityDescription: Allows units to traverse mountains
     abilityIcon: {fileID: 0}
     abilityCost: 1
+    scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 1
   - abilityID: 1
     abilityName: Mining
-    abilityDescription: Allows you to harvest the mine resource
+    abilityDescription: Allows you to harvest the ore resource
     abilityIcon: {fileID: 0}
     abilityCost: 2
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 2
   - abilityID: 2
     abilityName: Shields
-    abilityDescription: 
+    abilityDescription: Allows you to create  the Shield unit
     abilityIcon: {fileID: 0}
     abilityCost: 3
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 3
   - abilityID: 3
     abilityName: Smithery
-    abilityDescription: 
+    abilityDescription: Allows you to create the Ironworks building
     abilityIcon: {fileID: 0}
     abilityCost: 4
+    scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 4
     abilityName: Roads
-    abilityDescription: 
+    abilityDescription: Allows you to build  roads
     abilityIcon: {fileID: 0}
     abilityCost: 1
+    scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 5
   - abilityID: 5
     abilityName: Trader
-    abilityDescription: 
+    abilityDescription: Allows you to create the Trader unit
     abilityIcon: {fileID: 0}
     abilityCost: 2
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 6
   - abilityID: 6
     abilityName: Diplomat
-    abilityDescription: 
+    abilityDescription: Allows you to create the Diplomat unit
     abilityIcon: {fileID: 0}
     abilityCost: 3
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 7
   - abilityID: 7
     abilityName: Guild
-    abilityDescription: 
+    abilityDescription: Allows you to build the Guild
     abilityIcon: {fileID: 0}
     abilityCost: 4
+    scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 8
     abilityName: Forestry
-    abilityDescription: 
+    abilityDescription: Allows you to harvest the Forest resource
     abilityIcon: {fileID: 0}
     abilityCost: 1
+    scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 9
   - abilityID: 9
     abilityName: Husbandry
-    abilityDescription: 
+    abilityDescription: Allows you to harvest the animal resource and create the
+      Horseman unit
     abilityIcon: {fileID: 0}
     abilityCost: 2
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 10
   - abilityID: 10
     abilityName: Engineering
-    abilityDescription: 
+    abilityDescription: Allows you to create the Siege unit
     abilityIcon: {fileID: 0}
     abilityCost: 3
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 11
   - abilityID: 11
-    abilityName: Papermill
-    abilityDescription: 
+    abilityName: Lumberjack
+    abilityDescription: Allows you to build the Lumberjack
     abilityIcon: {fileID: 0}
     abilityCost: 4
+    scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 12
     abilityName: Fishing
-    abilityDescription: 
+    abilityDescription: Allows you to harvest the Fish resource
     abilityIcon: {fileID: 0}
     abilityCost: 1
+    scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 13
   - abilityID: 13
     abilityName: Port
-    abilityDescription: 
+    abilityDescription: Allows your units to enter the sea
     abilityIcon: {fileID: 0}
     abilityCost: 2
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 14
   - abilityID: 14
     abilityName: Open Sea
-    abilityDescription: 
+    abilityDescription: Allows your units to enter the Ocean
     abilityIcon: {fileID: 0}
     abilityCost: 3
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 15
   - abilityID: 15
@@ -327,33 +407,55 @@ MonoBehaviour:
     abilityDescription: 
     abilityIcon: {fileID: 0}
     abilityCost: 4
+    scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 16
     abilityName: Harvest
-    abilityDescription: 
+    abilityDescription: Allows you to harvest the Fruit resource
     abilityIcon: {fileID: 0}
     abilityCost: 1
+    scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 17
   - abilityID: 17
     abilityName: Horserider
-    abilityDescription: 
+    abilityDescription: Allows you to build the Cavarly unit
     abilityIcon: {fileID: 0}
     abilityCost: 2
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 18
   - abilityID: 18
     abilityName: Farming
-    abilityDescription: 
+    abilityDescription: Allows you to build the Farm building
     abilityIcon: {fileID: 0}
     abilityCost: 3
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 19
   - abilityID: 19
     abilityName: Windmill
-    abilityDescription: 
+    abilityDescription: Allows you to build the Windmill building
     abilityIcon: {fileID: 0}
     abilityCost: 4
+    scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
+  roadCost: 2
+  destroyCost: 0
+  visibilityReward: 3
+  unitReward: 0
+  currencyReward: 7
+  productionReward: 2
+  populationReward: 4
+  rangeReward: 2
+  startCityOutput: 2
+  gameIsNetworked: 0
+  activePlayerClientID: 0
+  isHost: 0
+  waterInteractionParticle: {fileID: 2514477051162372762, guid: b0b23206aa6084f73b3bb1600feda1b6,
+    type: 3}
+  landInternactionParticle: {fileID: 4906663640453830002, guid: a074e3cf37325d2468d363ba8c90f10d,
+    type: 3}
+  resourceHarvestParticle: {fileID: 0}

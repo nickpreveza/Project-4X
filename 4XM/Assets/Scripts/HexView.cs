@@ -25,19 +25,208 @@ public class HexView : MonoBehaviour
         SetData(hex, unit);
     }
 
-   
-
-    void ShowHex()
+    public void SetData(WorldHex newHex, WorldUnit newUnit = null)
     {
-        if (hex.hexData.hasCity)
+        unit = null;
+
+        foreach (Transform child in horizontalScrollParent)
+        {
+            Destroy(child.gameObject);
+        }
+
+        hex = newHex;
+        unit = newUnit;
+
+        if (unit != null)
+        {
+            isUnitView = true;
+        }
+        else
+        {
+            isUnitView = false;
+        }
+
+        if (isUnitView)
+        {
+            ShowUnit();
+        }
+        else
+        {
+            if (hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayerIndex)
+            {
+                if (hex.hexData.hasCity)
+                {
+                    ShowCity(false);
+                }
+                else if (hex.hexData.hasBuilding)
+                {
+                    ShowBuilding(false);
+                }
+                else if (hex.hexData.hasResource)
+                {
+                    if (hex.hexData.resourceType == ResourceType.MONUMENT)
+                    {
+                        ShowMonument();
+                    }
+                    else
+                    {
+                        ShowResource(false);
+                    }
+                }
+                else
+                {
+                    ShowHex(false);
+                }
+
+            }
+            else
+            {
+                if (hex.hexData.hasCity)
+                {
+                    ShowCity(true);
+                }
+                else if (hex.hexData.hasBuilding)
+                {
+                    ShowBuilding(true);
+                    RoadCheck();
+                }
+                else if (hex.hexData.hasResource)
+                {
+                    if (hex.hexData.resourceType == ResourceType.MONUMENT)
+                    {
+                        ShowMonument();
+                    }
+                    else
+                    {
+                        ShowResource(true);
+                    }
+
+                    RoadCheck();
+                }
+                else
+                {
+                    ShowHex(true);
+                    RoadCheck();
+                }
+            }
+        }
+    }
+
+    void RoadCheck()
+    {
+
+        if (GameManager.Instance.activePlayer.abilities.roads && !hex.hexData.hasRoad)
+        {
+            if (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex || hex.hexData.playerOwnerIndex == -1)
+            {
+                if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
+                {
+                    GenerateRoadButton();
+                }
+            }
+
+        }
+
+    }
+
+    void ShowHex(bool isOwner)
+    {
+        if (isOwner)
+        {
+            hexName.text = SetName(hex.hexData.type);
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+            hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex in your empire";
+
+
+            switch (hex.hexData.type)
+            {
+                case TileType.SEA:
+                    if (GameManager.Instance.activePlayer.abilities.portBuilding)
+                    {
+                        GeneratePortButton();
+                    }
+                    if (GameManager.Instance.activePlayer.abilities.createFish)
+                    {
+                        GenerateCreationButton(ResourceType.FISH);
+                    }
+                    break;
+                case TileType.GRASS:
+                case TileType.SAND:
+                case TileType.HILL:
+
+                    CheckMasterBuildingButtons();
+
+                    if (GameManager.Instance.activePlayer.abilities.guildBuilding)
+                    {
+                        if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
+                        {
+                            GenerateGuildButton();
+                        }
+                    }
+
+                    if (GameManager.Instance.activePlayer.abilities.createAnimals)
+                    {
+                        GenerateCreationButton(ResourceType.ANIMAL);
+                    }
+                    if (GameManager.Instance.activePlayer.abilities.createForest)
+                    {
+                        GenerateCreationButton(ResourceType.FOREST);
+                    }
+                    if (GameManager.Instance.activePlayer.abilities.createFarm)
+                    {
+                        GenerateCreationButton(ResourceType.FARM);
+                    }
+                    if (GameManager.Instance.activePlayer.abilities.createFruit)
+                    {
+                        GenerateCreationButton(ResourceType.FRUIT);
+                    }
+                    break;
+                case TileType.MOUNTAIN:
+                    if (GameManager.Instance.activePlayer.abilities.createMine)
+                    {
+                        GenerateCreationButton(ResourceType.MINE);
+                    }
+                    break;
+            }
+        }
+        else
+        {
+            hexName.text = SetName(hex.hexData.type);
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+            hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex.";
+        }
+    }
+
+    void ShowCity(bool isOwner)
+    {
+        if (isOwner)
         {
             hexName.text = hex.cityData.cityName;
-            hexDescription.text = "Move a unit here to capture this city";
+
+            hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
+
+            GenerateUnitButtons();
+
+            if (hex.hexData.occupied)
+            {
+                hexDescription.text = "You cannot create a unit while the city is occupied";
+            }
+            else
+            {
+                hexDescription.text = "Buy more units to expand your empire";
+            }
+        }
+        else
+        {
+            hexName.text = hex.cityData.cityName;
+            hexDescription.text = "This city belongs to the " + 
+                GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
 
             if (hex.hexData.playerOwnerIndex == -1) //city is unclaimed
             {
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-
             }
             else
             {
@@ -56,253 +245,161 @@ public class HexView : MonoBehaviour
                     GenerateCityCaptureButton(hex.associatedUnit.buttonActionPossible);
                 }
             }
-
-        }
-        else
-        {
-            if (hex.hexData.hasResource)
-            {
-                if (hex.hexData.resourceType == ResourceType.MONUMENT)
-                {
-                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-
-                  
-                    if (hex.hexData.occupied)
-                    {
-                        if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
-                        {
-                            hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
-                            GenerateResourceButton(true);
-                        }
-                        else
-                        {
-                            hexDescription.text = "The " + hexName.text.ToLower() + " can be claimed on the next turn";
-                            GenerateResourceButton(false);
-                        }
-                    }
-                    else
-                    {
-                        hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
-                        GenerateResourceButton(false);
-                      
-                    }                    
-                }
-                else
-                {
-                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                    hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
-                    GenerateResourceButton(false);
-                }
-               
-            }
-            else if (hex.hexData.hasBuilding)
-            {
-                hexName.text = MapManager.Instance.GetBuildingByType(hex.hexData.buildingType).buildingName;
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-
-                hexDescription.text = "This hex has a " + hexName.text + " building";
-            }
-            else
-            {
-                hexName.text = SetName(hex.hexData.type);
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex.";
-            }
-
-            if (GameManager.Instance.activePlayer.abilities.roads && !hex.hexData.hasRoad && hex.hexData.playerOwnerIndex == -1)
-            {
-                if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
-                {
-                    GenerateRoadButton();
-                }
-            }
-           
         }
     }
 
-    void ShowPlayerHex()
-    {
-        if (hex.hexData.hasCity)
-        {
-            hexName.text = hex.cityData.cityName;
 
-            hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
-            
-            GenerateUnitButtons();
-            
-            if (hex.hexData.occupied)
+    void ShowResource(bool isOwner) //Not Monument
+    {
+        if (isOwner)
+        {
+            hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+            bool resourceButtonState = false;
+
+            if (hex.hexData.occupied && hex.hexData.occupiedByEnemyUnit)
             {
-                hexDescription.text = "You cannot create a unit while the city is occupied";
+                hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
+                resourceButtonState = false;
+            }
+            else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+            {
+                hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
+                resourceButtonState = true;
             }
             else
             {
-                hexDescription.text = "Buy more units to expand your empire";
+                hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
+                resourceButtonState = false;
+            }
+
+            GenerateResourceButton(resourceButtonState);
+
+            if (GameManager.Instance.CanPlayerDestoryResourceForReward(hex.hexData.resourceType))
+            {
+                GenerateDestroyButton(false);
+            }
+
+            if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
+            {
+                CheckMasterBuildingButtons();
+            }
+        }
+        else
+        {
+            hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+            hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
+            GenerateResourceButton(false);
+        }
+    }
+
+    void ShowMonument()
+    {
+        hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
+        hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+        hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+
+        if (hex.hexData.occupied)
+        {
+            if (hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+            {
+                if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
+                {
+                    hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
+                    GenerateResourceButton(true);
+                }
+                else
+                {
+                    hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
+                    GenerateResourceButton(false);
+                }
+            }
+            else
+            {
+                hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
+                GenerateResourceButton(false);
             }
 
         }
         else
         {
-            if (hex.hexData.hasBuilding)
+            hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
+            GenerateResourceButton(false);
+        }
+    }
+
+    
+
+    void ShowBuilding(bool isOwner)
+    {
+        if (isOwner)
+        {
+            hexName.text = MapManager.Instance.GetBuildingByType(hex.hexData.buildingType).buildingName;
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+
+            hexDescription.text = "This hex has a " + hexName.text + " building";
+
+            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
             {
-                hexName.text = MapManager.Instance.GetBuildingByType(hex.hexData.buildingType).buildingName;
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-
-                hexDescription.text = "This hex has a " + hexName.text + " building";
-
-                if (GameManager.Instance.activePlayer.abilities.destroyAbility)
-                {
-                    GenerateDestroyButton(true);
-                }
+                GenerateDestroyButton(true);
             }
-            else if (hex.hexData.hasResource)
+        }
+        else
+        {
+            hexName.text = MapManager.Instance.GetBuildingByType(hex.hexData.buildingType).buildingName;
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+            hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
+
+            hexDescription.text = "This hex has a " + hexName.text + " building";
+        }
+    }
+
+    void ShowUnit()
+    {
+        hexName.text = unit.unitReference.name;
+        hexAvatar.color = Color.white; //TODO: change avatar with related icon
+
+        if (unit.playerOwnerIndex == GameManager.Instance.activePlayer.index)
+        {
+            if (unit.isInteractable || unit.buttonActionPossible)
             {
-                if (hex.hexData.resourceType == ResourceType.MONUMENT)
-                {
-                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-
-
-                    if (hex.hexData.occupied)
-                    {
-                        if (hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
-                        {
-                            if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
-                            {
-                                hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
-                                GenerateResourceButton(true);
-                            }
-                            else
-                            {
-                                hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
-                                GenerateResourceButton(false);
-                            }
-                        }
-                        else
-                        {
-                            hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
-                            GenerateResourceButton(false);
-                        }
-                        
-                    }
-                    else
-                    {
-                        hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
-                        GenerateResourceButton(false);
-
-                    }
-                }
-                else
-                {
-                    hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
-                    hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                    hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                    bool resourceButtonState = false;
-
-                    if (hex.hexData.occupied && hex.hexData.occupiedByEnemyUnit)
-                    {
-                        hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
-                        resourceButtonState = false;
-                    }
-                    else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
-                    {
-                        hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
-                        resourceButtonState = true;
-                    }
-                    else
-                    {
-                        hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
-                        resourceButtonState = false;
-                    }
-
-                    GenerateResourceButton(resourceButtonState);
-
-                    if (GameManager.Instance.CanPlayerDestoryResourceForReward(hex.hexData.resourceType))
-                    {
-                        GenerateDestroyButton(false);
-                    }
-
-                    if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
-                    {
-                        CheckMasterBuildingButtons();
-                    }
-
-                }
-
-
+                hexDescription.text = "This unit has available actions";
+                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             }
             else
             {
-                hexName.text = SetName(hex.hexData.type);
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-                hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
-                hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex in your empire";
-
-               
-
-
-                switch (hex.hexData.type)
-                {
-                    case TileType.GRASS:
-                    case TileType.SAND:
-                    case TileType.HILL:
-                        CheckMasterBuildingButtons();
-
-                        if (GameManager.Instance.activePlayer.abilities.guildBuilding)
-                        {
-                            if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
-                            {
-                                GenerateGuildButton();
-                            }
-                        }
-
-                        if (GameManager.Instance.activePlayer.abilities.createAnimals)
-                        {
-                            GenerateCreationButton(ResourceType.ANIMAL);
-                        }
-                        if (GameManager.Instance.activePlayer.abilities.createForest)
-                        {
-                            GenerateCreationButton(ResourceType.FOREST);
-                        }
-                        if (GameManager.Instance.activePlayer.abilities.createFarm)
-                        {
-                            GenerateCreationButton(ResourceType.FARM);
-                        }
-                        if (GameManager.Instance.activePlayer.abilities.createFruit)
-                        {
-                            GenerateCreationButton(ResourceType.FRUIT);
-                        }
-                        break;
-                    case TileType.SEA:
-                        if (GameManager.Instance.activePlayer.abilities.createFish)
-                        {
-                            GenerateCreationButton(ResourceType.FISH);
-                        }
-                        break;
-                    case TileType.MOUNTAIN:
-                        if (GameManager.Instance.activePlayer.abilities.createMine)
-                        {
-                            GenerateCreationButton(ResourceType.MINE);
-                        }
-                        break;
-                }
-               
+                hexDescription.text = "This unit does not have any actions left";
+                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
             }
 
-            if (GameManager.Instance.activePlayer.abilities.roads && !hex.hexData.hasRoad)
+            if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
             {
-                if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
-                {
-                    GenerateRoadButton();
-                }
+                GenerateCityCaptureButton(unit.buttonActionPossible);
             }
+
+            if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
+            {
+                GenerateResourceButton(unit.buttonActionPossible);
+            }
+
+            if (hex.hexData.type == TileType.SEA || hex.hexData.type == TileType.DEEPSEA) //change this to port
+            {
+                if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
+                {
+                    GenerateShipButton();
+                }
+               
+            }
+
+        }
+        else
+        {
+            hexDescription.text = "This unit belongs to a different player";
+            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
         }
     }
 
@@ -358,82 +455,6 @@ public class HexView : MonoBehaviour
         }
     }
 
-    public void SetData(WorldHex newHex, WorldUnit newUnit = null)
-    {
-        unit = null;
-
-        foreach(Transform child in horizontalScrollParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        hex = newHex;
-        unit = newUnit;
-
-        if (unit != null)
-        {
-            isUnitView = true;
-        }
-        else
-        {
-            isUnitView = false;
-        }
-
-        if (isUnitView)
-        {
-            ShowUnit();
-        }
-        else
-        {
-            if (hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayerIndex)
-            {
-                ShowHex();
-            }
-            else
-            {
-                ShowPlayerHex();
-            }
-           
-        }        
-    }
-
-    void ShowUnit()
-    {
-        hexName.text = unit.unitReference.name;
-        hexAvatar.color = Color.white; //TODO: change avatar with related icon
-
-        if (unit.playerOwnerIndex == GameManager.Instance.activePlayer.index)
-        {
-            if (unit.isInteractable || unit.buttonActionPossible)
-            {
-                hexDescription.text = "This unit has available actions";
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
-            }
-            else
-            {
-                hexDescription.text = "This unit does not have any actions left";
-                hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
-            }
-
-            if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
-            {
-                GenerateCityCaptureButton(unit.buttonActionPossible);
-            }
-
-            if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
-            {
-                hexDescription.text = "Claim the monument for a reward";
-                GenerateResourceButton(unit.buttonActionPossible);
-            }
-
-        }
-        else
-        {
-            hexDescription.text = "This unit belongs to a different player";
-            hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
-        }
-    }
-
     void GenerateUnitButtons()
     {
        // List<Units>
@@ -452,6 +473,18 @@ public class HexView : MonoBehaviour
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
         obj.GetComponent<ActionButton>().SetDataForDestory(this, hex, isBuilding);
+    }
+
+    void GenerateShipButton()
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForShipButton(this, hex);
+    }
+
+    void GeneratePortButton()
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Port, true);
     }
 
     void GenerateGuildButton()

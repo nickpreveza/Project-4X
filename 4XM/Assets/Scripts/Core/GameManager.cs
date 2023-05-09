@@ -83,6 +83,7 @@ namespace SignedInitiative
 
         [SerializeField] GameObject waterInteractionParticle;
         [SerializeField] GameObject landInternactionParticle;
+        public GameObject resourceHarvestParticle;
 
         void Awake()
         {
@@ -853,6 +854,7 @@ public enum CivColorType
 {
     borderColor,
     unitColor,
+    unitInactiveColor,
     uiActiveColor,
     uiInactiveColor
 }

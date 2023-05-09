@@ -44,16 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23c8422b4d73488419e03c71ba9c4e21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapRows: 32
-  mapColumns: 32
-  citiesNum: 10
+  mapRows: 28
+  mapColumns: 28
+  citiesNum: 18
+  monumentsNum: 10
   useNewMapGeneration: 0
   numContinents: 2
   continentSpacing: 20
   allowWrapEastWest: 1
   allowWrapNorthSouth: 0
   octaves: 7
-  seed: 10
+  seed: 1998
   offset: {x: 0, y: 0}
   persistance: 0.805
   lacunarity: 2
@@ -70,21 +71,21 @@ MonoBehaviour:
   - type: 4
     height: 0.6
   - type: 5
-    height: 0.8
+    height: 0.7
   - type: 6
-    height: 0.9
+    height: 0.85
   tileParent: {fileID: 0}
   hexBasePrefab: {fileID: 4283572920935952471, guid: 1ef965df57d649f468ccff87fb43604e,
     type: 3}
   hexVisualPrefabs:
-  - {fileID: 6777993680153919561, guid: 2a33bc3c6aacccd4b9ddea4c3d464f61, type: 3}
-  - {fileID: 9004857094778249697, guid: 7ace27dc036eb4bceb47daad8185c786, type: 3}
-  - {fileID: 9004857094778249697, guid: 32100aad2ce3b4665bab4a2dab79f0fe, type: 3}
-  - {fileID: 9216348200091701431, guid: 5780865a23cfcba489a45304a61ea666, type: 3}
-  - {fileID: 9004857094778249697, guid: c8d2d790f26fcd448b26e992249b9061, type: 3}
-  - {fileID: 7945852626180814377, guid: 72ff3f8e667d1d747a7c3e2773770553, type: 3}
-  - {fileID: 9004857094778249697, guid: 3cb13c65a808146188f848555cd1a78a, type: 3}
-  cityPrefab: {fileID: 2951862595500723659, guid: f79da0bebe4a44cde89729e843e547ee,
+  - {fileID: 4568251101785535392, guid: 8278288b609546a4c93d79f40b6e6724, type: 3}
+  - {fileID: 4568251101785535392, guid: bf132c8db0d6e5b4cb7482192d7f4576, type: 3}
+  - {fileID: 4568251101785535392, guid: 4209aa4581f808743970a82c81c7653a, type: 3}
+  - {fileID: 4568251101785535392, guid: 06f16bffb44a4d148bc4e0daf9176924, type: 3}
+  - {fileID: 4568251101785535392, guid: 3fd01ef59e3f5a940a7c2009f7b3166e, type: 3}
+  - {fileID: 4568251101785535392, guid: 912839591bccfb34291db9edfd3fbaa4, type: 3}
+  - {fileID: 4568251101785535392, guid: 17aa9164747d6c841beabfbd08f4c207, type: 3}
+  cityPrefab: {fileID: 2139847254330076987, guid: f19c564955d564e41b68050c2c5c262c,
     type: 3}
   mapTiles:
   - {fileID: 0}
@@ -9977,127 +9978,237 @@ MonoBehaviour:
   - {fileID: 0}
   useFalloff: 1
   hexesWhereCityCanSpawn: []
+  hexesWhereMonumentsCanSpawn: []
   worldCities: []
   hexResources:
   - resourceName: Fruit
+    description: 
     type: 0
-    canBeBuild: 0
-    cost: 2
+    transformToBuilding: 0
+    canMasterBeCreateOnTop: 1
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 2
+    creationCost: 0
+    destroyReward: 0
     output: 1
-    spawnChanceRate: 0.3
-    prefab: {fileID: 3004191609962716706, guid: 9773f3b6ecc6d4d17b27107f299b3f2f,
+    spawnChanceRates:
+    - 0
+    - 0.4
+    - 0.3
+    - 0.2
+    prefab: {fileID: 2397844798176554949, guid: e34b930cf8ffa1046a42e09468444730,
       type: 3}
   - resourceName: Forest
+    description: 
     type: 1
-    canBeBuild: 1
-    cost: 2
+    transformToBuilding: 1
+    canMasterBeCreateOnTop: 0
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 2
+    creationCost: 0
+    destroyReward: 1
     output: 1
-    spawnChanceRate: 0.3
-    prefab: {fileID: 1408089770241075203, guid: a0ba5a2c4ecb94188a4859c8afac6730,
+    spawnChanceRates:
+    - 0
+    - 0.1
+    - 0.5
+    - 0.6
+    - 0
+    prefab: {fileID: 6857895734843874092, guid: af896932151b85e4baf00c8abbefe856,
       type: 3}
   - resourceName: Animal
+    description: 
     type: 2
-    canBeBuild: 0
-    cost: 2
+    transformToBuilding: 0
+    canMasterBeCreateOnTop: 1
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 2
+    creationCost: 0
+    destroyReward: 0
     output: 1
-    spawnChanceRate: 0.5
-    prefab: {fileID: 7896384858549804202, guid: 2db29025501a29346a6ea5b7d0d99545,
+    spawnChanceRates:
+    - 0
+    - 0.2
+    - 0.3
+    - 0.5
+    - 0
+    prefab: {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33,
       type: 3}
   - resourceName: Farm
+    description: 
     type: 5
-    canBeBuild: 1
-    cost: 5
+    transformToBuilding: 1
+    canMasterBeCreateOnTop: 1
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 5
+    creationCost: 0
+    destroyReward: 0
     output: 2
-    spawnChanceRate: 0.5
+    spawnChanceRates:
+    - 0
+    - 0.6
+    - 0.3
+    - 0.2
+    - 0
     prefab: {fileID: 7204963003714441147, guid: 55417d6b9fe23422e8b542810557f684,
       type: 3}
   - resourceName: Ore
+    description: 
     type: 3
-    canBeBuild: 1
-    cost: 5
+    transformToBuilding: 1
+    canMasterBeCreateOnTop: 0
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 5
+    creationCost: 0
+    destroyReward: 0
     output: 2
-    spawnChanceRate: 0.5
+    spawnChanceRates:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0.5
     prefab: {fileID: 1104415093595829196, guid: 0b8b84c6a5a2f4652a996790b9248975,
       type: 3}
   - resourceName: Fish
+    description: 
     type: 4
-    canBeBuild: 0
-    cost: 2
+    transformToBuilding: 0
+    canMasterBeCreateOnTop: 0
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 2
+    creationCost: 0
+    destroyReward: 0
     output: 1
-    spawnChanceRate: 0.2
-    prefab: {fileID: 7896384858549804202, guid: f116450366c0b4ec4850254c45297839,
+    spawnChanceRates:
+    - 0.5
+    - 0
+    - 0
+    - 0
+    - 0
+    prefab: {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9,
       type: 3}
+  - resourceName: Monument
+    description: 
+    type: 6
+    transformToBuilding: 0
+    canMasterBeCreateOnTop: 0
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 0
+    creationCost: 0
+    destroyReward: 0
+    output: 1
+    spawnChanceRates:
+    - 0
+    - 0
+    - 0
+    - 0
+    - 0
+    prefab: {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
   hexBuildings:
   - buildingName: Cabin
+    description: 
     type: 0
-    slaveBuilding: 7
+    slaveBuilding: 9
     masterBuilding: 1
     matchingResource: 1
-    hasLevels: 0
+    isMaster: 0
+    scoreForPlayer: 0
     cost: 0
     output: 0
     levelPrefabs:
-    - {fileID: 1408089770241075203, guid: 79801e191cdf3074a98906b5ae0f592f, type: 3}
+    - {fileID: 6857895734843874092, guid: 7b8253497d7008d40996cc76f4459544, type: 3}
   - buildingName: Lumberjack
+    description: 
     type: 1
     slaveBuilding: 0
-    masterBuilding: 7
+    masterBuilding: 9
     matchingResource: 6
-    hasLevels: 1
+    isMaster: 1
+    scoreForPlayer: 0
     cost: 5
     output: 1
     levelPrefabs:
     - {fileID: 2002334878761239205, guid: 3ed0a2ddaa7f1f649aa7fd0be7b9270a, type: 3}
   - buildingName: Farm
+    description: 
     type: 2
-    slaveBuilding: 7
+    slaveBuilding: 9
     masterBuilding: 3
     matchingResource: 5
-    hasLevels: 0
+    isMaster: 0
+    scoreForPlayer: 0
     cost: 0
     output: 0
     levelPrefabs:
     - {fileID: 7204963003714441147, guid: f20853bd0c9a026428ceb7402e05cc4d, type: 3}
   - buildingName: Windmill
+    description: 
     type: 3
     slaveBuilding: 2
-    masterBuilding: 7
+    masterBuilding: 9
     matchingResource: 6
-    hasLevels: 1
+    isMaster: 0
+    scoreForPlayer: 0
     cost: 5
     output: 1
     levelPrefabs:
     - {fileID: 48758583767061231, guid: e056576c7ec8c3a429b0261db593b39f, type: 3}
   - buildingName: Mine
+    description: 
     type: 4
-    slaveBuilding: 7
+    slaveBuilding: 9
     masterBuilding: 5
     matchingResource: 3
-    hasLevels: 0
+    isMaster: 0
+    scoreForPlayer: 0
     cost: 0
     output: 0
     levelPrefabs:
     - {fileID: 1104415093595829196, guid: 0fbdca5e7b295af42a3e79c08bf6208c, type: 3}
   - buildingName: Ironsmith
+    description: 
     type: 5
     slaveBuilding: 4
-    masterBuilding: 7
+    masterBuilding: 9
     matchingResource: 6
-    hasLevels: 1
+    isMaster: 0
+    scoreForPlayer: 0
     cost: 5
     output: 1
     levelPrefabs:
     - {fileID: 6866786563185507143, guid: 2e7a8845a539f3142be37f302249325f, type: 3}
   - buildingName: Guild
+    description: 
     type: 6
-    slaveBuilding: 7
-    masterBuilding: 7
+    slaveBuilding: 9
+    masterBuilding: 9
     matchingResource: 6
-    hasLevels: 1
+    isMaster: 1
+    scoreForPlayer: 0
     cost: 5
     output: 2
     levelPrefabs:
     - {fileID: 1149622556129291929, guid: 2c429e315de546442b9eaaba72c10916, type: 3}
+  - buildingName: Port
+    description: 
+    type: 7
+    slaveBuilding: 9
+    masterBuilding: 9
+    matchingResource: 6
+    isMaster: 0
+    scoreForPlayer: 0
+    cost: 5
+    output: 2
+    levelPrefabs:
+    - {fileID: 1149622556129291929, guid: d5791d04db8e05a44b2846a561733aab, type: 3}
   cityNames:
   - Bamery
   - Ochepsa
@@ -10126,9 +10237,16 @@ MonoBehaviour:
   hillResources: []
   mountainResources:
   - resourceName: 
+    description: 
     type: 0
-    canBeBuild: 0
-    cost: 0
+    transformToBuilding: 0
+    canMasterBeCreateOnTop: 0
+    canBeDestroyedForReward: 0
+    scoreForPlayer: 0
+    harvestCost: 0
+    creationCost: 0
+    destroyReward: 0
     output: 0
-    spawnChanceRate: 0
+    spawnChanceRates: []
     prefab: {fileID: 0}
+  hexesUnderSiege: []

@@ -50,55 +50,139 @@ MonoBehaviour:
     type: 0
     civType: 0
     cost: 2
+    scoreForPlayer: 10
     level: 1
-    health: 1
-    attack: 1
-    defense: 1
-    walkRange: 1
+    health: 10
+    heal: 2
+    attack: 4
+    counterAttack: 2
+    defense: 2
+    walkRange: 2
     attackRange: 1
     attackCharges: 1
     moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
     canAttackAfterMove: 1
     canMoveAfterAttack: 0
-    prefabs:
-    - {fileID: 3971263034634728297, guid: 376a0480cf8c543fd96aa4a993e6d10c, type: 3}
+    visualPrefab:
+    - {fileID: 481217960671923722, guid: 65791b4400124ee48948908562d5d334, type: 3}
   - name: Archer
     defaultLockState: 1
     type: 1
     civType: 0
     cost: 2
+    scoreForPlayer: 10
     level: 1
-    health: 1
-    attack: 1
+    health: 10
+    heal: 2
+    attack: 4
+    counterAttack: 1
     defense: 1
-    walkRange: 1
+    walkRange: 2
     attackRange: 3
     attackCharges: 1
     moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
     canAttackAfterMove: 1
     canMoveAfterAttack: 0
-    prefabs:
-    - {fileID: 95653297576899810, guid: 9f9c2e0bdadcc460fb22a36a3819c1be, type: 3}
-  - name: Horseman
+    visualPrefab:
+    - {fileID: 481217960671923722, guid: b9dab44c033636a40949ea82c98db25c, type: 3}
+  - name: Cavarly
     defaultLockState: 1
     type: 2
     civType: 0
-    cost: 2
+    cost: 3
+    scoreForPlayer: 15
     level: 1
-    health: 1
-    attack: 1
-    defense: 1
-    walkRange: 2
+    health: 10
+    heal: 2
+    attack: 4
+    counterAttack: 1
+    defense: 0
+    walkRange: 3
     attackRange: 1
     attackCharges: 1
     moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
     canAttackAfterMove: 1
     canMoveAfterAttack: 1
-    prefabs:
-    - {fileID: 567042301805612045, guid: c50f9875b346a294ca12573883c630de, type: 3}
+    visualPrefab:
+    - {fileID: 481217960671923722, guid: a96ebdd3cfe25eb45b2ea58930e0df74, type: 3}
+  - name: Boat
+    defaultLockState: 0
+    type: 7
+    civType: 0
+    cost: 0
+    scoreForPlayer: 0
+    level: 1
+    health: 10
+    heal: 2
+    attack: 4
+    counterAttack: 2
+    defense: 0
+    walkRange: 2
+    attackRange: 2
+    attackCharges: 1
+    moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 0
+    visualPrefab:
+    - {fileID: 118603909006220285, guid: 09c5011e1f6ba6240a5cc4933f04dbc3, type: 3}
+  - name: Ship
+    defaultLockState: 0
+    type: 8
+    civType: 0
+    cost: 10
+    scoreForPlayer: 10
+    level: 1
+    health: 15
+    heal: 2
+    attack: 6
+    counterAttack: 3
+    defense: 3
+    walkRange: 3
+    attackRange: 3
+    attackCharges: 1
+    moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 1
+    visualPrefab:
+    - {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26, type: 3}
   hexSelectMode: 0
   selectedUnit: {fileID: 0}
   unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}
   unitUsed: {fileID: 2100000, guid: 4aaa803f705bf8049bf2a33a24e30260, type: 2}
   highlightHex: {fileID: 2100000, guid: 2bd3ab025c0d1b440a43e1dbae69c987, type: 2}
   startHex: {fileID: 0}
+  emptyUnitPrefab: {fileID: 5558689467654994386, guid: 5a1d13adbb370f54497ae8080c6dbef6,
+    type: 3}
+  unitSpawnParticle: {fileID: 1850191631587626576, guid: 0451680ba2d465c43af550f02674d4b8,
+    type: 3}
+  unitAttackParticle: {fileID: 8165704165687069746, guid: 542d6bfab3aace944b261a8f361f6862,
+    type: 3}
+  unitDeathParticle: {fileID: 0}
+  unitHealParticle: {fileID: 1685434093150730334, guid: 407b2e4c767635a41bc6226935fe75d7,
+    type: 3}
+  unitHitParticle: {fileID: 642933035471219486, guid: 529d84fb865e54da1b3128110f9df8fe,
+    type: 3}
+  unitWalkParticle: {fileID: 2626009328474645690, guid: 0c345ac69d0e3924b98cb6a39dda3bca,
+    type: 3}
+  unitSelectParticle: {fileID: 1850191631587626576, guid: 0451680ba2d465c43af550f02674d4b8,
+    type: 3}
