@@ -30,6 +30,8 @@ public class GamePanel : UIPanel
     ResearchViewHandler research;
     OverviewPanel overview;
 
+    [SerializeField] Image civAvatar;
+
     void Start()
     {
       
@@ -77,6 +79,7 @@ public class GamePanel : UIPanel
         playerAvatarBackground.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         scoreImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        civAvatar.sprite = GameManager.Instance.CivOfActivePlayer().civLogo;
     }
 
     public void UpdateResearchPanel()

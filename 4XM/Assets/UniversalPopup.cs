@@ -19,6 +19,7 @@ public class UniversalPopup : UIPopup
     public void SetDataForReward(string newTitle, string newDescription, string option1name, string option2name)
     {
         cancel.gameObject.SetActive(true);
+        confirm.gameObject.SetActive(true);
         title.text = newTitle;
         description.text = newDescription;
         confirm.onClick.RemoveAllListeners();
@@ -33,9 +34,10 @@ public class UniversalPopup : UIPopup
         cancel.onClick.AddListener(() => UIManager.Instance.additionalAction());
         cancel.onClick.AddListener(() => CloseWithDelay());
     }
-    public void SetData(string newTitle, string newDescription, bool available, string option1name, string option2name)
+    public void SetData(string newTitle, string newDescription, bool available, string option1name, string option2name, bool showButtons)
     {
         cancel.gameObject.SetActive(true);
+        confirm.gameObject.SetActive(true);
         title.text = newTitle;
         description.text = newDescription;
         confirm.onClick.RemoveAllListeners();
@@ -44,13 +46,23 @@ public class UniversalPopup : UIPopup
         confirmText.text = option1name;
         cancelText.text = option2name;
 
-        if (available)
+        if (showButtons)
         {
-            confirm.onClick.AddListener(() => UIManager.Instance.confirmAction());
+            if (available)
+            {
+                confirm.onClick.AddListener(() => UIManager.Instance.confirmAction());
+            }
+            confirm.onClick.AddListener(() => CloseWithDelay());
+          
         }
-        confirm.onClick.AddListener(()=> CloseWithDelay());
+        else
+        {
+            confirm.gameObject.SetActive(false);
+        }
+
         cancel.onClick.RemoveAllListeners();
-        cancel.onClick.AddListener(Close);
+        cancel.onClick.AddListener(() => CloseWithDelay());
+
     }
 
     public void SetDataForMonument(string newTitle, string newDescription, string option1name)
@@ -61,6 +73,7 @@ public class UniversalPopup : UIPopup
         cancel.onClick.RemoveAllListeners();
         confirm.interactable = true;
         cancel.gameObject.SetActive(false);
+        confirm.gameObject.SetActive(true);
         confirmText.text = option1name;
         confirm.onClick.AddListener(() => UIManager.Instance.confirmAction());
         confirm.onClick.AddListener(() => CloseWithDelay());

@@ -28,6 +28,7 @@ public class CityView : MonoBehaviour
     [SerializeField] GameObject cityCaptureIcon;
     [SerializeField] GameObject cityCaptureIconInactive;
     [SerializeField] GameObject capitalIcon;
+    [SerializeField] GameObject connectedIcon;
 
     CanvasGroup canvasGroup;
     public void SetData(WorldHex hex)
@@ -35,6 +36,8 @@ public class CityView : MonoBehaviour
         parentHex = hex;
         capitalIcon.SetActive(false);
         cityCaptureIcon.SetActive(false);
+        connectedIcon.SetActive(false);
+        cityCaptureIconInactive.SetActive(false);
         canvasGroup = GetComponent<CanvasGroup>();
     }
 
@@ -71,10 +74,10 @@ public class CityView : MonoBehaviour
         cityOutput.text = parentHex.cityData.output.ToString();
     }
 
-    public void UpdateSiegeState(bool showSiegeIcon, bool isIconActive)
+    public void UpdateSiegeState(bool activeIcon, bool inactiveIcon)
     {
-        cityCaptureIconInactive.SetActive(isIconActive);
-        cityCaptureIcon.SetActive(showSiegeIcon);
+        cityCaptureIconInactive.SetActive(inactiveIcon);
+        cityCaptureIcon.SetActive(activeIcon);
     }
     public void AddLevelUIPoint()
     {

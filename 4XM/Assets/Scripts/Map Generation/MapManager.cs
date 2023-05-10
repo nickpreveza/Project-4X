@@ -548,7 +548,7 @@ public class MapManager : MonoBehaviour
             {
                 if (hex.cityData.isUnderSiege)
                 {
-                    hex.cityView?.UpdateSiegeState(true, true);
+                    hex.cityView?.UpdateSiegeState(true, false);
                 }
                
             }

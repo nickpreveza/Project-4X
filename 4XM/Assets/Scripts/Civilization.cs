@@ -18,7 +18,7 @@ public class Civilization
     public GameObject shipPrefab;
 
     public Dictionary<UnitType, UnitData> unitDictionary = new Dictionary<UnitType, UnitData>();
-
+    public Sprite civLogo;
 
     public void SetupUnitDictionary()
     {

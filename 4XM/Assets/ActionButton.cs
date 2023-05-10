@@ -229,7 +229,7 @@ public class ActionButton : MonoBehaviour
             true,
             "Capture",
             "Cancel",
-            () => targetHex.associatedUnit.CityCaptureAction());
+            () => targetHex.associatedUnit.CityCaptureAction(), true);
     }
 
     public void CreateResourceButton(ResourceType type)
@@ -240,7 +240,7 @@ public class ActionButton : MonoBehaviour
             true,
             "Create",
             "Cancel",
-            () => CreateResource(type));
+            () => CreateResource(type), true);
     }
 
     public void CreateResource(ResourceType type)

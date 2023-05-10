@@ -10,6 +10,7 @@ public class ResearchButton: MonoBehaviour
     public Abilities abilityID;
     [SerializeField] Button button;
     [SerializeField] Image backgroundImage;
+    [SerializeField] GameObject costIcon;
     [SerializeField] Image icon;
     [SerializeField] TextMeshProUGUI buttonText;
     [SerializeField] TextMeshProUGUI buttonCost;
@@ -46,6 +47,7 @@ public class ResearchButton: MonoBehaviour
 
     public void SetAsPurchased()
     {
+        costIcon.SetActive(false);
         backgroundImage.color = UIManager.Instance.researchPurchased;
         buttonCost.text = "";
         buttonText.color = Color.black;
@@ -55,6 +57,7 @@ public class ResearchButton: MonoBehaviour
 
     public void SetAsAvailable()
     {
+        costIcon.SetActive(true);
         backgroundImage.color = UIManager.Instance.researchAvailable;
         buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
         buttonText.color = Color.black;
@@ -64,6 +67,7 @@ public class ResearchButton: MonoBehaviour
 
     public void SetAsUnavailble()
     {
+        costIcon.SetActive(true);
         backgroundImage.color = UIManager.Instance.researchUnavailable;
         buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
         buttonCost.color = Color.black;
@@ -82,7 +86,13 @@ public class ResearchButton: MonoBehaviour
 
     public void OpenPopupAlreadyPurchased()
     {
-
+        UIManager.Instance.OpenPopup(
+           GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
+           GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
+           false,
+           "Ok",
+           "Ok",
+            ()=> EmptyStatement(), false);
     }
     public void OpenPopup(bool available)
     {
@@ -92,15 +102,22 @@ public class ResearchButton: MonoBehaviour
             available,
             "Research",
             "Cancel",
-            ()=>GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, 
-            true, true
-        ));
+            () => GameManager.Instance.UnlockAbility(GameManager.Instance.activePlayerIndex, abilityID, true, true), true);
     }
 
-
-    public void OpenPopupLocked()
+    void EmptyStatement()
     {
 
+    }
+    public void OpenPopupLocked()
+    {
+        UIManager.Instance.OpenPopup(
+           GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
+           GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
+           false,
+           "Ok",
+           "Ok",
+            () => EmptyStatement(), false);
     }
 
 }
