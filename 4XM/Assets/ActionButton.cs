@@ -144,7 +144,7 @@ public class ActionButton : MonoBehaviour
         }
 
     }
-    public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable)
+    public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable, bool shouldOpenResearch)
     {
         backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
@@ -153,7 +153,7 @@ public class ActionButton : MonoBehaviour
 
         if (MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).transformToBuilding)
         {
-            buttonName.text = "Build " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+            buttonName.text = "Contruct " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         }
         else
         {
@@ -173,10 +173,19 @@ public class ActionButton : MonoBehaviour
          }
         else
         {
-            buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+            if (shouldOpenResearch)
+            {
+                buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+                buttonAction.interactable = true;
+            }
+            else
+            {
+                buttonAction.interactable = false;
+            }
+            
             costVisual.SetActive(false);
             backgroundImage.color = UIManager.Instance.unaffordableColor;
-            buttonAction.interactable = true;
+           
         }
        
     }
@@ -188,7 +197,7 @@ public class ActionButton : MonoBehaviour
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = MapManager.Instance.GetResourceByType(type).resourceName;
+        buttonName.text = "Create " + MapManager.Instance.GetResourceByType(type).resourceName;
         actionCost = MapManager.Instance.GetResourceByType(type).creationCost;
         actionCostText.text = actionCost.ToString();
         //image also here 

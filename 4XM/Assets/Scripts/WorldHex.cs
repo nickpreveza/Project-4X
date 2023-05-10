@@ -672,8 +672,8 @@ public int rangeReward = 2;
         if (resource.type == ResourceType.MONUMENT)
         {
             associatedUnit.MonumentCapture();
-            int randomReward = Random.Range(0, 3);
-            GameManager.Instance.MonumentReward(randomReward);
+            int randomReward = Random.Range(0, 7);
+            GameManager.Instance.MonumentReward(randomReward, associatedUnit);
            
         }
         else if (resource.transformToBuilding)

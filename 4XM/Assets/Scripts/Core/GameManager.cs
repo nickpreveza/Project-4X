@@ -321,7 +321,7 @@ namespace SignedInitiative
             UIManager.Instance.OpenGamePanel();
         }
 
-        public void MonumentReward(int rewardIndex)
+        public void MonumentReward(int rewardIndex, WorldUnit unit)
         {
             string popupTitle = "Monument Claimed";
             string popupDescr = "You've received a reward";
@@ -342,8 +342,8 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "+" + currencyReward.ToString() + " Stars",
-                     () => PopupCustomRewardCurrency()
+                     "Extra sight",
+                     () => PopupCustomRewardVisibility(unit)
                      );
                     break;
                 case 2:
@@ -351,11 +351,29 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "+" + currencyReward.ToString() + " Stars",
-                     () => PopupCustomRewardCurrency()
+                     "Free Warrior",
+                     () => PopupCustomRewardUnit(unit, UnitType.Melee)
                      );
                     break;
                 case 3:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                     "Free Archer",
+                     () => PopupCustomRewardUnit(unit, UnitType.Ranged)
+                     );
+                    break;
+                case 4:
+                    UIManager.Instance.waitingForPopupReply = true;
+                    UIManager.Instance.OpenPopUpMonument(
+                        popupTitle,
+                        popupDescr,
+                   "Free Cavalry",
+                     () => PopupCustomRewardUnit(unit, UnitType.Cavalry)
+                     );
+                    break;
+                case 5:
                     UIManager.Instance.waitingForPopupReply = true;
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
@@ -364,7 +382,7 @@ namespace SignedInitiative
                      () => PopupCustomRewardCurrency()
                      );
                     break;
-                case 4:
+                case 6:
                     UIManager.Instance.waitingForPopupReply = true;
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
@@ -382,8 +400,23 @@ namespace SignedInitiative
             UIManager.Instance.waitingForPopupReply = false;
         }
 
-        public void PopupCustomRewardVisibility()
+        public void PopupCustomRewardVisibility(WorldUnit unit)
         {
+            MapManager.Instance.UnhideHexes(activePlayerIndex, unit.parentHex, 2);
+        }
+
+        public void PopupCustomRewardUnit(WorldUnit unit, UnitType type)
+        {
+            WorldHex targetHex = unit.parentHex;
+            if (unit.TryToMoveRandomly())
+            {
+                UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false);
+            }
+            else
+            {
+                unit.Death(false);
+                UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false);
+            }
 
         }
 

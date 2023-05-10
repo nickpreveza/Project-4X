@@ -138,6 +138,8 @@ public class WorldUnit : MonoBehaviour
 
         ExhaustActions();
         VisualUpdate();
+        unitView.UpdateData();
+
     }
 
     //walking should not play 
@@ -178,6 +180,7 @@ public class WorldUnit : MonoBehaviour
        
         ExhaustActions();
         VisualUpdate();
+        unitView.UpdateData();
     }
 
     //how we apply player materials in visual update
@@ -767,7 +770,7 @@ public class WorldUnit : MonoBehaviour
             if (!attackIsRanged)
             {
                 yield return new WaitForSeconds(0.2f);
-                Move(enemyHex, true);
+                Move(enemyHex, true, true);
             }
 
         }
@@ -860,7 +863,7 @@ public class WorldUnit : MonoBehaviour
 
         //check if attack possibled
 
-       
+        UnitManager.Instance.hexSelectMode = false;
         UnitManager.Instance.SelectUnit(this);
     }
 

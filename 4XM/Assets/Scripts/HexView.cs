@@ -493,11 +493,11 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable);
     }
 
-    void GenerateResourceButton(bool shouldBeInteractable) 
+    void GenerateResourceButton(bool shouldBeInteractable, bool shouldOpenResearchPanel = true) 
     {
         //update this to support multiple resources on the same hex
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForResource(this, hex, shouldBeInteractable);
+        obj.GetComponent<ActionButton>().SetDataForResource(this, hex, shouldBeInteractable, shouldOpenResearchPanel);
     }
 
     public void GenerateCityCaptureButton(bool doesUnitHaveActions)

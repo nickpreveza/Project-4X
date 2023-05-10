@@ -8,15 +8,18 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: HatchingDemo3
-  m_Shader: {fileID: -6465566751694194690, guid: 6d9fcf49e3cf3f645ae129e43e580124,
-    type: 3}
-  m_ValidKeywords: []
+  m_Shader: {fileID: 4800000, guid: 933f24cde1e3f6a41818f56d729421ab, type: 3}
+  m_ValidKeywords:
+  - _HALFTONESHAPE_DOT
+  - _SPECULARHIGHLIGHTS_OFF
+  - _TOON_SHADING_ON
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
+  m_CustomRenderQueue: 2050
+  stringTagMap:
+    RenderType: Opaque
   disabledShaderPasses: []
   m_SavedProperties:
     serializedVersion: 3
@@ -113,6 +116,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _Texture2D:
+        m_Texture: {fileID: 2800000, guid: 8717fdb6173564f2999931e12864970e, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -139,7 +146,7 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DiffuseStep: -0.28
-    - _DitherTexelSize: 2.4
+    - _DitherTexelSize: 1
     - _DitherThreshold: 0.924
     - _DotSize: -0
     - _DotTilling: 30.89
@@ -180,6 +187,7 @@ Material:
     - _HatchingEnabled: 1
     - _HatchingRotation: 90
     - _HatchingSmoothness: 0.327
+    - _HuePercentage: 2.76
     - _LightContribution: 1
     - _LightFalloffSize: 1
     - _Metallic: 0.426
@@ -227,8 +235,9 @@ Material:
     - _brushScale: 45.98
     m_Colors:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _BottomColor: {r: 1, g: 1, b: 1, a: 0}
+    - _BottomColor: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _ColorShift: {r: 1, g: 0.8075826, b: 0.01415092, a: 0.7019608}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _FaceFrontDirection: {r: 0, g: 0, b: 1, a: 0}
     - _FaceRightDirection: {r: 1, g: 0, b: 0, a: 0}
@@ -244,7 +253,7 @@ Material:
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 0}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _SpherizeNormalOrigin: {r: 0, g: 0, b: 0, a: 1}
-    - _TopColor: {r: 0.5471698, g: 0.5471698, b: 0.5471698, a: 0}
+    - _TopColor: {r: 1, g: 1, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &2185023386265014497
 MonoBehaviour:

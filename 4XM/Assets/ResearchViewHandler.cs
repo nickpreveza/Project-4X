@@ -7,6 +7,7 @@ public class ResearchViewHandler : MonoBehaviour
     public List<ResearchButton> researchButtons = new List<ResearchButton>();
     public Dictionary<Abilities, ResearchButton> buttonsDictionary = new Dictionary<Abilities, ResearchButton>();
     bool hasAbilitiesDictionaryBeenCreated;
+
     void GenerateAbilitiesDictionary()
     {
         foreach (ResearchButton button in researchButtons)

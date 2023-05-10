@@ -215,13 +215,13 @@ public class UnitManager : MonoBehaviour
 
     public bool IsHexValidMove(WorldHex hex)
     {
-        if (hexesInWalkRange.Contains(hex)) { return true; }
+        if (hexesInWalkRange.Contains(hex) && selectedUnit.currentMovePoints > 0) { return true; }
         else { return false; }
     }
 
     public bool IsHexValidAttack(WorldHex hex)
     {
-        if (hexesInAttackRange.Contains(hex)) { return true; }
+        if (hexesInAttackRange.Contains(hex) && selectedUnit.currentAttackCharges > 0) { return true; }
         else { return false; }
     }
     public List<WorldHex> GetWalkableHexes(WorldUnit unit, int customRange) //also range check here. 

@@ -180,6 +180,7 @@ MonoBehaviour:
     isOwnedByCity: 0
     hasCity: 0
     cityHasBeenClaimed: 0
+    isConnectedToCapital: 0
     hasResource: 0
     hasBuilding: 0
     hasRoad: 0
