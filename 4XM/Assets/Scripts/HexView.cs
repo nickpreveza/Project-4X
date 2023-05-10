@@ -19,6 +19,12 @@ public class HexView : MonoBehaviour
     WorldUnit unit;
     bool isUnitView;
 
+    public Sprite resourceBackground;
+    public Sprite unitBackground;
+    public Sprite actionBackground;
+    public Sprite buildingBackground;
+    public Sprite claimCityBackground;
+    public Sprite destroyBackground;
     public void Refresh()
     {
         if (hex!=null)

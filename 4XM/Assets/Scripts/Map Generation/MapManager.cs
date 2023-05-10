@@ -88,7 +88,7 @@ public class MapManager : MonoBehaviour
     public List<Resource> hillResources = new List<Resource>();
     public List<Resource> mountainResources = new List<Resource>();
 
-    public List<WorldHex> hexesUnderSiege = new List<WorldHex>();
+    public List<WorldHex> toEnableSiegeIconOn = new List<WorldHex>();
 
     void Awake()
     {
@@ -103,6 +103,29 @@ public class MapManager : MonoBehaviour
 
         falloffMap = FalloffGenerator.GenerateFallofMap(mapRows, mapColumns);
         availableCityNames = new List<string>(cityNames);
+
+       
+    }
+
+    private void Start()
+    {
+        SI_EventManager.Instance.onTurnStarted += OnTurnStarted;
+    }
+
+    private void OnDestroy()
+    {
+        SI_EventManager.Instance.onTurnStarted -= OnTurnStarted;
+    }
+
+    void OnTurnStarted(int playerIndex)
+    {
+        if (toEnableSiegeIconOn.Count > 0)
+        {
+            foreach(WorldHex  hex in toEnableSiegeIconOn)
+            {
+                hex.cityView.SetSiegeState(true);
+            }
+        }
     }
 
     private void OnValidate()
@@ -525,33 +548,9 @@ public class MapManager : MonoBehaviour
 
     public void SetHexUnderSiege(WorldHex hex)
     {
-        if (!hexesUnderSiege.Contains(hex))
+        if (!toEnableSiegeIconOn.Contains(hex))
         {
-            hexesUnderSiege.Add(hex);
-        }
-    }
-
-    public void RemoveHexFromSiege(WorldHex hex)
-    {
-        if (hexesUnderSiege.Contains(hex))
-        {
-            hexesUnderSiege.Remove(hex);
-            hex.cityView?.UpdateSiegeState(false, false);
-        }
-    }
-
-    public void CheckForSiegedCities()
-    {
-        if (hexesUnderSiege.Count > 0)
-        {
-            foreach(WorldHex hex in hexesUnderSiege)
-            {
-                if (hex.cityData.isUnderSiege)
-                {
-                    hex.cityView?.UpdateSiegeState(true, false);
-                }
-               
-            }
+            toEnableSiegeIconOn.Add(hex);
         }
     }
 

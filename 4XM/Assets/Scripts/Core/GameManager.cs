@@ -84,6 +84,7 @@ namespace SignedInitiative
 
         [SerializeField] GameObject waterInteractionParticle;
         [SerializeField] GameObject landInternactionParticle;
+        public GameObject explosionParticle;
         public GameObject resourceHarvestParticle;
         public bool abilitiesDicitionariesCreated;
         void Awake()
@@ -511,7 +512,6 @@ namespace SignedInitiative
             }
 
             MapManager.Instance.UpdateCloudView();
-            MapManager.Instance.CheckForSiegedCities();
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResearchPanel(activePlayerIndex);
 

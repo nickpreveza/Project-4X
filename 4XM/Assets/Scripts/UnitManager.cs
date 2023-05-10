@@ -467,6 +467,7 @@ public class UnitManager : MonoBehaviour
 public class UnitData
 {
     public string name;
+    public Sprite icon;
     public bool defaultLockState;
     public UnitType type;
     public Civilizations civType;

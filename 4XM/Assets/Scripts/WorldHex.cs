@@ -244,8 +244,7 @@ public class WorldHex : MonoBehaviour
                         visualHelper.citySiegeEffect.SetActive(true);
                     }
                     cityView.gameObject.SetActive(true);
-                    cityView.UpdateSiegeState(false, true);
-                    MapManager.Instance.SetHexUnderSiege(this);
+                    cityView.SetSiegeState(false);
                 }
                 else
                 {
@@ -254,8 +253,7 @@ public class WorldHex : MonoBehaviour
                         visualHelper.citySiegeEffect.SetActive(true);
                     }
                     cityView.gameObject.SetActive(true);
-                    cityView.UpdateSiegeState(false, true);
-                    MapManager.Instance.SetHexUnderSiege(this);
+                    cityView.SetSiegeState(false);
                 }
               
             }
@@ -299,8 +297,8 @@ public class WorldHex : MonoBehaviour
             if (cityData.isUnderSiege)
             {
                 cityData.isUnderSiege = false;
-                MapManager.Instance.RemoveHexFromSiege(this);
-                cityView.UpdateSiegeState(false, false);
+
+                cityView.RemoveSiegeState();
 
                 if (hexData.playerOwnerIndex != -1)
                 {
@@ -802,10 +800,12 @@ public int rangeReward = 2;
     {
         if (isBuilding)
         {
+            SpawnParticle(GameManager.Instance.explosionParticle);
             RemoveBuilding();
         }
         else
         {
+            SpawnParticle(GameManager.Instance.explosionParticle);
             RemoveResource(true, true);
         }
     }
@@ -993,12 +993,11 @@ public int rangeReward = 2;
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
-        cityView.UpdateSiegeState(false, false);
+        
         if (cityData.isUnderSiege)
         {
             cityData.isUnderSiege = false;
-            MapManager.Instance.RemoveHexFromSiege(this);
-            cityView.UpdateSiegeState(false, false);
+            cityView.RemoveSiegeState();
 
             if (hexData.playerOwnerIndex != -1)
             {

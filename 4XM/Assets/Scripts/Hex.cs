@@ -24,6 +24,7 @@ public class Hex
     public bool isOwnedByCity;
     public bool hasCity;
     public bool cityHasBeenClaimed;
+    public bool isConnectedToCapital;
 
     public bool hasResource;
 

@@ -8,11 +8,15 @@ using SignedInitiative;
 public class ActionButton : MonoBehaviour
 {
     HexView parentHandler;
+
     [SerializeField] TextMeshProUGUI buttonName;
     [SerializeField] TextMeshProUGUI actionCostText;
+
     [SerializeField] Image buttonImage;
+
     [SerializeField] Button buttonAction;
     [SerializeField] GameObject costVisual;
+    Image backgroundImage;
     BuildingType masterBuildingType;
     WorldHex targetHex;
     int actionCost;
@@ -20,6 +24,7 @@ public class ActionButton : MonoBehaviour
 
     public void SetDataForDestory(HexView newHandler, WorldHex newHex, bool isBuilding)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -34,7 +39,7 @@ public class ActionButton : MonoBehaviour
             buttonName.text = "Clear Resource";
             actionCost = GameManager.Instance.destroyCost; 
         }
-
+        backgroundImage.sprite = parentHandler.destroyBackground;
         actionCostText.text = actionCost.ToString();
         buttonAction.onClick.AddListener(()=>DestroyAction(isBuilding));
         CheckIfAffordable();
@@ -42,6 +47,7 @@ public class ActionButton : MonoBehaviour
 
     public void SetDataForShipButton(HexView newHandler, WorldHex newHex)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -50,11 +56,13 @@ public class ActionButton : MonoBehaviour
         actionCost = newHex.associatedUnit.boatReference.cost; 
         actionCostText.text = actionCost.ToString();
         buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
+        backgroundImage.sprite = parentHandler.actionBackground;
         CheckIfAffordable();
     }
 
     public void SetDataForRoad(HexView newHandler, WorldHex newHex)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -64,11 +72,14 @@ public class ActionButton : MonoBehaviour
         actionCostText.text = actionCost.ToString();
 
         buttonAction.onClick.AddListener(BuildRoadAction);
+        backgroundImage.sprite = parentHandler.actionBackground;
         CheckIfAffordable();
     }
 
     public void SetDataForUnitSpawn(HexView newHandler, WorldHex newHex, UnitType unit)
     {
+        backgroundImage = GetComponent<Image>();
+       
         unitType = unit;
         UnitData unitData = UnitManager.Instance.GetUnitDataByType(unit, GameManager.Instance.activePlayer.civilization);
 
@@ -81,6 +92,7 @@ public class ActionButton : MonoBehaviour
         actionCostText.text = actionCost.ToString();
 
         buttonAction.onClick.AddListener(SpawnUnit);
+        backgroundImage.sprite = parentHandler.unitBackground;
         CheckIfSpawnPossible();
     }
 
@@ -88,18 +100,23 @@ public class ActionButton : MonoBehaviour
     {
         if (GameManager.Instance.CanActivePlayerAfford(actionCost) && !targetHex.hexData.occupied)
         {
+            actionCostText.color = UIManager.Instance.researchAvailable;
             costVisual.SetActive(true);
+  
             buttonAction.interactable = true;
         }
         else
         {
+            actionCostText.color = UIManager.Instance.researchUnavailable;
             costVisual.SetActive(true);
+
             buttonAction.interactable = false;
         }
     }
 
     public void SetDataForBuilding(HexView newHandler, WorldHex newHex, BuildingType type, bool shouldBeInteracable)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -110,6 +127,7 @@ public class ActionButton : MonoBehaviour
         actionCost = MapManager.Instance.GetBuildingByType(type).cost;
 
         actionCostText.text = actionCost.ToString();
+        
         //image also here 
 
         if (shouldBeInteracable)
@@ -120,13 +138,14 @@ public class ActionButton : MonoBehaviour
         else
         {
             buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
-            buttonImage.color = UIManager.Instance.unaffordableColor;
+            costVisual.SetActive(false);
             buttonAction.interactable = true;
         }
 
     }
     public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -143,9 +162,10 @@ public class ActionButton : MonoBehaviour
         actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).harvestCost;
 
         actionCostText.text = actionCost.ToString();
+        backgroundImage.sprite = parentHandler.resourceBackground;
         //image also here 
 
-         if (shouldBeInteracable)
+        if (shouldBeInteracable)
          {
             buttonAction.onClick.AddListener(HarvestResource);
             CheckIfAffordable();
@@ -153,7 +173,7 @@ public class ActionButton : MonoBehaviour
         else
         {
             buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
-            buttonImage.color = UIManager.Instance.unaffordableColor;
+            costVisual.SetActive(false);
             buttonAction.interactable = true;
         }
        
@@ -161,6 +181,7 @@ public class ActionButton : MonoBehaviour
 
     public void SetDataForResourceCreation(HexView newHandler, WorldHex newHex, ResourceType type)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
@@ -170,6 +191,7 @@ public class ActionButton : MonoBehaviour
         actionCostText.text = actionCost.ToString();
         //image also here 
         buttonAction.onClick.AddListener(()=>CreateResourceButton(type));
+        backgroundImage.sprite = parentHandler.actionBackground;
         CheckIfAffordable();
 
     }
@@ -189,30 +211,33 @@ public class ActionButton : MonoBehaviour
 
         buttonAction.interactable = isInteractable;
         costVisual.SetActive(false);
-        if (isInteractable)
-        {
-            buttonImage.color = UIManager.Instance.affordableColor;
-        }
-        else
-        {
-            buttonImage.color = UIManager.Instance.unaffordableColor;
-        }
+        backgroundImage.sprite = parentHandler.claimCityBackground;
         //CheckIfAffordable();
     }
 
     void CheckIfAffordable()
     {
-        if (GameManager.Instance.CanActivePlayerAfford(actionCost))
+        if (actionCost <= 0)
         {
-            buttonImage.color = UIManager.Instance.affordableColor;
-            costVisual.SetActive(true);
+            costVisual.SetActive(false);
             buttonAction.interactable = true;
         }
         else
         {
-            buttonImage.color = UIManager.Instance.unaffordableColor;
-            costVisual.SetActive(true);
-            buttonAction.interactable = false;
+            if (GameManager.Instance.CanActivePlayerAfford(actionCost))
+            {
+                actionCostText.color = UIManager.Instance.researchAvailable;
+                backgroundImage.color = UIManager.Instance.affordableColor;
+                costVisual.SetActive(true);
+                buttonAction.interactable = true;
+            }
+            else
+            {
+                actionCostText.color = UIManager.Instance.researchUnavailable;
+                backgroundImage.color = UIManager.Instance.unaffordableColor;
+                costVisual.SetActive(true);
+                buttonAction.interactable = false;
+            }
         }
     }
 

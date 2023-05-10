@@ -72,12 +72,36 @@ public class CityView : MonoBehaviour
         cityLevel.text = parentHex.cityData.level.ToString();
         cityName.text = parentHex.cityData.cityName;
         cityOutput.text = parentHex.cityData.output.ToString();
+
+        if (parentHex.hexData.isConnectedToCapital)
+        {
+            connectedIcon.SetActive(true);
+        }
+        else
+        {
+            connectedIcon.SetActive(false);
+        }
     }
 
-    public void UpdateSiegeState(bool activeIcon, bool inactiveIcon)
+    public void SetSiegeState(bool siegeCanHappen)
     {
-        cityCaptureIconInactive.SetActive(inactiveIcon);
-        cityCaptureIcon.SetActive(activeIcon);
+
+        RemoveSiegeState();
+
+        if (siegeCanHappen)
+        {
+            cityCaptureIcon.SetActive(true);
+        }
+        else
+        {
+            cityCaptureIconInactive.SetActive(true);
+        }
+    }
+
+    public void RemoveSiegeState()
+    {
+        cityCaptureIconInactive.SetActive(false);
+        cityCaptureIcon.SetActive(false);
     }
     public void AddLevelUIPoint()
     {
