@@ -125,15 +125,17 @@ namespace SignedInitiative
         {
             if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
             {
-                gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
+                UpdateResearchPanel(playerIndex);
             }
         }
+
 
         public void OnTransactionMadeCallback(int playerIndex)
         {
             if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
             {
                 UpdateHUD();
+                UpdateResearchPanel(playerIndex);
             }
         }
 
@@ -238,7 +240,7 @@ namespace SignedInitiative
             SetupOverview();
             GameManager.Instance.menuActive = true;
             UpdateHUD();
-            UpdateResourcePanel(GameManager.Instance.activePlayerIndex);
+            UpdateResearchPanel(GameManager.Instance.activePlayerIndex);
         }
 
         public void OpenMainMenu()
@@ -323,7 +325,7 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().HideHexView();
         }
 
-        public void UpdateResourcePanel(int playerIndex)
+        public void UpdateResearchPanel(int playerIndex)
         {
             if (playerIndex == GameManager.Instance.activePlayerIndex)
             {

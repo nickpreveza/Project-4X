@@ -7,6 +7,7 @@ public class AbilityData
 {
     public Abilities abilityID;
     public string abilityName;
+    [TextArea(15, 20)]
     public string abilityDescription;
     public Sprite abilityIcon;
     public int abilityCost;

@@ -142,9 +142,9 @@ Material:
     - _Cutoff: 0.5
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
-    - _DiffuseStep: -0.07
-    - _DitherTexelSize: 1
-    - _DitherThreshold: 1
+    - _DiffuseStep: -0.28
+    - _DitherTexelSize: 2.4
+    - _DitherThreshold: 0.924
     - _DotSize: -0
     - _DotTilling: 30.89
     - _DstBlend: 0
@@ -185,7 +185,7 @@ Material:
     - _HatchingSmoothness: 0.327
     - _LightContribution: 1
     - _LightFalloffSize: 1
-    - _Metallic: 0
+    - _Metallic: 0.426
     - _Nearest_Distance: 0.5
     - _NoiseScale: 1
     - _NoiseStrength: 0.1
@@ -201,13 +201,13 @@ Material:
     - _RimEnabled: 0
     - _RimLightAlign: 0
     - _RimLightSmoothness: 0
-    - _RimPower: 0.55
+    - _RimPower: 0.472
     - _SSOutlineDepthThredshold: 0.2
     - _SSOutlineNdotVThredshold: 0.2
     - _SSOutlineNormalThredshold: 0.3
     - _SSOutlineVertexColorThredshold: 0.3
     - _SizeFalloff: 0.925
-    - _Smoothness: 0.5
+    - _Smoothness: 0.443
     - _SmoothnessTextureChannel: 0
     - _SpecClipMaskScale: 1
     - _SpecShadowStrength: 1

@@ -112,7 +112,7 @@ public class Player
         }
     }
 
-    public void RemoveStars(int amount)
+    public void RemoveStars(int amount) //make this a tryremovestarts instead
     {
         if (amount > stars)
         {

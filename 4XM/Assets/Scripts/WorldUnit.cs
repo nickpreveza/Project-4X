@@ -69,6 +69,8 @@ public class WorldUnit : MonoBehaviour
     public bool isBoat;
     public bool isShip;
 
+    public bool shouldHealThisTurn;
+
     public bool BelongsToActivePlayer
     {
         get
@@ -361,6 +363,15 @@ public class WorldUnit : MonoBehaviour
 
     void ResetActions(bool isEndOfTurn)
     {
+        if (isEndOfTurn)
+        {
+            if (!hasMoved && !hasAttacked)
+            {
+                shouldHealThisTurn = true;
+            }
+        }
+     
+
         hasMoved = false;
         hasAttacked = false;
 
@@ -368,53 +379,41 @@ public class WorldUnit : MonoBehaviour
         noAttackHexInRange = false;
         buttonActionPossible = true;
 
+        if (!isEndOfTurn || isEndOfTurn && unitReference.healAtTurnEnd) //heal check
+        {
+            if (shouldHealThisTurn)
+            {
+                if (isBoat || isShip)
+                {
+                    Heal(boatReference.heal);
+                }
+                else
+                {
+                    Heal(unitReference.heal);
+                }
+
+                shouldHealThisTurn = false;
+            }
+        }
+
+
         if (isBoat || isShip)
         {
-
             currentAttackCharges = boatReference.attackCharges;
             currentMovePoints = boatReference.moveCharges;
-
-            if (isEndOfTurn)
-            {
-                if (boatReference.healAtTurnEnd)
-                {
-                    Heal(boatReference.heal);
-                }
-            }
-            else
-            {
-                if (boatReference.canHeal)
-                {
-                    Heal(boatReference.heal);
-                }
-            }
 
             ValidateRemainigActions(boatReference);
         }
         else
         {
-
             currentAttackCharges = unitReference.attackCharges;
             currentMovePoints = unitReference.moveCharges;
 
-            if (isEndOfTurn)
-            {
-                if (unitReference.healAtTurnEnd)
-                {
-                    Heal(unitReference.heal);
-                }
-            }
-            else
-            {
-                if (unitReference.canHeal)
-                {
-                    Heal(unitReference.heal);
-                }
-            }
-
             ValidateRemainigActions(unitReference);
         }
+
        
+
     }
 
     public void CityCaptureAction()
@@ -607,11 +606,12 @@ public class WorldUnit : MonoBehaviour
     public bool TryToMoveRandomly()
     {
         bool hasValidMove;
-        List<WorldHex> hexesInRadius = UnitManager.Instance.GetWalkableHexes(this);
+        List<WorldHex> hexesInRadius = UnitManager.Instance.GetWalkableHexes(this, 1);
+
         if (hexesInRadius.Count > 0)
         {
             WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
-            Move(selecedHex, true);
+            Move(selecedHex, true, false);
             return true;
         }
         else

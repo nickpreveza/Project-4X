@@ -32,6 +32,7 @@ namespace SignedInitiative
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;
         public bool noFog;
+        public bool allowShipUpgradeEverywhere;
         public bool createStuff;
         public bool infiniteCurrency;
         public bool noScenceChanges;
@@ -84,7 +85,7 @@ namespace SignedInitiative
         [SerializeField] GameObject waterInteractionParticle;
         [SerializeField] GameObject landInternactionParticle;
         public GameObject resourceHarvestParticle;
-
+        public bool abilitiesDicitionariesCreated;
         void Awake()
         {
             if (Instance == null)
@@ -478,6 +479,7 @@ namespace SignedInitiative
                 }
             }
 
+            abilitiesDicitionariesCreated = true;
         }
 
         void GenerateAbilitiesDictionary()
@@ -511,7 +513,7 @@ namespace SignedInitiative
             MapManager.Instance.UpdateCloudView();
             MapManager.Instance.CheckForSiegedCities();
             UIManager.Instance.UpdateHUD();
-            UIManager.Instance.UpdateResourcePanel(activePlayerIndex);
+            UIManager.Instance.UpdateResearchPanel(activePlayerIndex);
 
             SI_EventManager.Instance.OnTurnStarted(activePlayerIndex);
         }
@@ -667,7 +669,15 @@ namespace SignedInitiative
         }
         public bool IsAbilityUnlocked(Abilities ability)
         {
-            return activePlayer.abilityDictionary[ability].canBePurchased;
+            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            {
+                return activePlayer.abilityDictionary[ability].canBePurchased;
+            }
+            else
+            {
+                return false;
+            }
+           
         }
 
         public bool isAbilityPurchased(Abilities ability)
@@ -690,7 +700,12 @@ namespace SignedInitiative
 
         public int GetCurrentPlayerAbilityCost(Abilities ability)
         {
-            return activePlayer.abilityDictionary[ability].calculatedAbilityCost;
+            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            {
+                return activePlayer.abilityDictionary[ability].calculatedAbilityCost;
+            }
+            return 9999;
+           
         }
 
 
@@ -745,10 +760,6 @@ namespace SignedInitiative
                     player.abilities.travelMountain = true;
                     break;
                 case Abilities.Mining:
-                    if (GameManager.Instance.createStuff)
-                    {
-                        player.abilities.createMine = true;
-                    }
                     player.abilities.mineHarvest = true;
                     break;
                 case Abilities.Shields:
@@ -756,42 +767,42 @@ namespace SignedInitiative
                     break;
                 case Abilities.Smithery:
                     player.abilities.mineMasterBuilding = true;
-                    player.abilities.unitKnight = true;
+                    //player.abilities.unitKnight = true;
+
+                    if (GameManager.Instance.createStuff)
+                    {
+                        player.abilities.createMine = true;
+                    }
                     break;
 
-                case Abilities.Archer:
-                    player.abilities.unitArcher = true;
+                case Abilities.FruitHarvest:
+                    player.abilities.fruitHarvest = true;
                     break;
                 case Abilities.Roads:
                     player.abilities.roads = true;
-
-                    break;
-                case Abilities.Trader:
-                    player.abilities.unitTrader = true;
                     break;
                 case Abilities.Guild:
                     player.abilities.guildBuilding = true;
-                    player.abilities.unitDiplomat = true;
+                    break;
+                case Abilities.Creator:
+                    player.abilities.destroyAbility = true;
+                    //player.abilities.unitDiplomat = true;
+                    //player.abilities.Trader = true;
                     break;
 
                 case Abilities.Forestry:
                     player.abilities.forestHarvest = true;
-                    player.abilities.forestCut = true;
-
-                    if (GameManager.Instance.createStuff)
-                    {
-                        player.abilities.createForest = true;
-                    }
                     break;
-                case Abilities.Husbandry:
-                    player.abilities.animalHarvest = true;
+                case Abilities.Archery:
+                    player.abilities.unitArcher = true;
                     break;
                 case Abilities.Engineering:
                     player.abilities.unitTrebucet = true;
+                    player.abilities.forestCut = true;
                     break;
-                case Abilities.Papermill:
+                case Abilities.ForestMaster:
                     player.abilities.forestMasterBuilding = true;
-                    player.abilities.createFarm = true;
+                    player.abilities.createForest = true;
                     break;
 
                 case Abilities.Fishing:
@@ -806,19 +817,20 @@ namespace SignedInitiative
                     player.abilities.portBuilding = true;
                     player.abilities.travelSea = true;
                     break;
-                case Abilities.OpenSea:
+                case Abilities.Ocean:
                     player.abilities.travelOcean = true;
                     break;
-                case Abilities.Destruction:
-                    player.abilities.fishBuilding = true;
-                    player.abilities.destroyAbility = true;
+                case Abilities.Ship:
+                    player.abilities.shipUpgrade = true;
+                    //player.abilities.fishBuilding = true;
+                    //player.abilities.destroyAbility = true;
                     break;
 
-                case Abilities.Harvest:
-                    player.abilities.fruitHarvest = true;
+                case Abilities.Husbandry:
+                    player.abilities.animalHarvest = true;
                     if (GameManager.Instance.createStuff)
                     {
-                        player.abilities.createFruit = true;
+                        player.abilities.createAnimals = true;
                     }
                     break;
                 case Abilities.Horserider:
@@ -826,14 +838,10 @@ namespace SignedInitiative
                     break;
                 case Abilities.Farming:
                     player.abilities.farmHarvest = true;
-                    if (GameManager.Instance.createStuff)
-                    {
-                        player.abilities.createFarm = true;
-                    }
                     break;
                 case Abilities.Windmill:
                     player.abilities.farmMasterBuilding = true;
-                    player.abilities.createForest = true;
+                    player.abilities.createFarm = true;
                     break;
             }
 
@@ -842,7 +850,7 @@ namespace SignedInitiative
 
             if (updateUI)
             {
-                UIManager.Instance.UpdateResourcePanel(playerIndex);
+                UIManager.Instance.UpdateResearchPanel(playerIndex);
                 UIManager.Instance.RefreshHexView();
             }
            

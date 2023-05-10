@@ -90,18 +90,16 @@ public class UnitManager : MonoBehaviour
                 return gameUnits[1];
             case UnitType.Cavalry:
                 return gameUnits[2];
-            case UnitType.Siege:
-                return gameUnits[3];
-            case UnitType.Defensive:
-                return gameUnits[4];
-            case UnitType.Trader:
-                return gameUnits[5];
-            case UnitType.Diplomat:
-                return gameUnits[6];
             case UnitType.Boat:
-                return gameUnits[7];
+                return gameUnits[3];
             case UnitType.Ship:
-                return gameUnits[8];
+                return gameUnits[4];
+            case UnitType.Siege:
+            case UnitType.Defensive:
+            case UnitType.Trader:
+            case UnitType.Diplomat:
+                return gameUnits[0];
+ 
         }
 
         Debug.LogError("Unit type given was invalid. Returned default unit");
@@ -226,10 +224,10 @@ public class UnitManager : MonoBehaviour
         if (hexesInAttackRange.Contains(hex)) { return true; }
         else { return false; }
     }
-    public List<WorldHex> GetWalkableHexes(WorldUnit unit)
+    public List<WorldHex> GetWalkableHexes(WorldUnit unit, int customRange) //also range check here. 
     {
         WorldHex center = unit.parentHex;
-        int range = unit.unitReference.walkRange;
+        int range = customRange;
 
         List<WorldHex> hexesInRange  = MapManager.Instance.GetHexesListWithinRadius(center.hexData, range);
 

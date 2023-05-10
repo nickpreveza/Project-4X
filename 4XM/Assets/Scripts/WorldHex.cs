@@ -456,9 +456,15 @@ public class WorldHex : MonoBehaviour
                     yield return new WaitForSeconds(0.1f);
                 }
                
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.2f);
                 if (visualHelper != null)
                 {
+                    visualHelper.cityLevelEffect.SetActive(false);
+                }
+                else
+                {
+
+                    visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
                     visualHelper.cityLevelEffect.SetActive(false);
                 }
             }
@@ -521,6 +527,7 @@ public int rangeReward = 2;
         {
             UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
         }
+        UIManager.Instance.waitingForPopupReply = false;
     }
 
     void PopupCustomRewardStars()

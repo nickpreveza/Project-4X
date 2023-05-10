@@ -42,6 +42,8 @@ public class AbilityTree
     public bool createAnimals;
     public bool createMine;
 
+    public bool shipUpgrade;
+
     /*
     public bool createForest;
     public bool createFarm;
@@ -63,25 +65,30 @@ public class AbilityTree
 //All the game's abilities that can be unlocked
 public enum Abilities //more like ability grousps
 {
-    Climbing,
-    Mining,
-    Shields,
-    Smithery,
-    Roads,
-    Trader,
-    Archer,
-    Guild,
-    Forestry,
-    Husbandry,
-    Engineering,
-    Papermill,
-    Fishing,
-    Port,
-    OpenSea,
-    Destruction,
-    Harvest,
-    Horserider,
-    Farming,
-    Windmill,
+    Climbing, //allows mountain traversal
+    Mining, //allows mountain harvest
+    Shields, //allows shield unit
+    Smithery, //alows mountain master
+
+    FruitHarvest, //allows fruit harvest
+    Roads, //allows roads
+    Guild, //allows guild
+    Creator, //allows destroy
+
+    Forestry, //allows forest harvest
+    Archery, //allows archer
+    Engineering, //allows trebuchet
+    ForestMaster, //allows forest master, forest creation
+
+    Fishing, //allows fish harvest
+    Port, //allows port building and sea traversal
+    Ocean, //allows open sea travel
+    Ship, //allows ship
+
+    Husbandry, //allows animal harvest
+    Horserider, //allows cavalry
+    Farming, //allows farm harvest
+    Windmill, //allows windmill 
+
     NONE
 }
