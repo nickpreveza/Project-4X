@@ -139,6 +139,7 @@ public class ActionButton : MonoBehaviour
         {
             buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
             costVisual.SetActive(false);
+            backgroundImage.color = UIManager.Instance.unaffordableColor;
             buttonAction.interactable = true;
         }
 
@@ -174,6 +175,7 @@ public class ActionButton : MonoBehaviour
         {
             buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
             costVisual.SetActive(false);
+            backgroundImage.color = UIManager.Instance.unaffordableColor;
             buttonAction.interactable = true;
         }
        
@@ -198,6 +200,7 @@ public class ActionButton : MonoBehaviour
 
     public void SetDataForCityCapture(HexView newHandler, WorldHex newHex, bool isInteractable)
     {
+        backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
         targetHex = newHex;
 

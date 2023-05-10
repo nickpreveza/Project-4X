@@ -35,8 +35,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0.272, y: 0.757}
-  m_SizeDelta: {x: 0.60049987, y: 0.5792}
+  m_AnchoredPosition: {x: 1.6608, y: 0.757}
+  m_SizeDelta: {x: 3.3783, y: 0.5792}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7766348081914485496
 CanvasRenderer:
@@ -68,7 +68,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: cb873b07dc75243c1942d89018500c32, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -400,7 +400,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &1223574671371912173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,7 +451,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5099913411745414140}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.71
   m_Interactable: 1
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
