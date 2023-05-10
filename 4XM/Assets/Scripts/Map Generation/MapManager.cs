@@ -546,7 +546,11 @@ public class MapManager : MonoBehaviour
         {
             foreach(WorldHex hex in hexesUnderSiege)
             {
-                hex.cityView?.UpdateSiegeState(true, true);
+                if (hex.cityData.isUnderSiege)
+                {
+                    hex.cityView?.UpdateSiegeState(true, true);
+                }
+               
             }
         }
     }

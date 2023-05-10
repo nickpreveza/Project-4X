@@ -721,15 +721,29 @@ public class WorldUnit : MonoBehaviour
         currentAttackCharges--;
         hasAttacked = true;
 
-        if (unitReference.canMoveAfterAttack)
+        if (!isBoat && !isShip)
         {
-            currentMovePoints++;
+            if (unitReference.canMoveAfterAttack)
+            {
+                currentMovePoints++;
+            }
+            else
+            {
+                currentMovePoints = 0;
+            }
         }
         else
         {
-            currentMovePoints = 0;
+            if (boatReference.canMoveAfterAttack)
+            {
+                currentMovePoints++;
+            }
+            else
+            {
+                currentMovePoints = 0;
+            }
         }
-
+      
         StartCoroutine(FightSequence(enemyHex, enemyUnit));
         
     }
@@ -738,6 +752,7 @@ public class WorldUnit : MonoBehaviour
     {
         VisualAttack();
         yield return new WaitForSeconds(.7f);
+
         if (enemyUnit.ReceiveDamage(currentAttack))
         {
             enemyUnit.visualAnim.SetTrigger("Die");
@@ -834,14 +849,6 @@ public class WorldUnit : MonoBehaviour
         if (followCamera)
         {
             SI_CameraController.Instance.PanToHex(newHex);
-        }
-
-        if (parentHex.hexData.hasCity)
-        {
-            if (parentHex.hexData.playerOwnerIndex != playerOwnerIndex)
-            {
-                MapManager.Instance.SetHexUnderSiege(parentHex);
-            }
         }
 
         GameManager.Instance.activePlayer.lastMovedUnit = this;

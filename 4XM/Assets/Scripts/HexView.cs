@@ -52,62 +52,33 @@ public class HexView : MonoBehaviour
         }
         else
         {
-            if (hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayerIndex)
+            bool isOwner = (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex);
+
+            if (hex.hexData.hasCity)
             {
-                if (hex.hexData.hasCity)
+                ShowCity(isOwner);
+            }
+            else if (hex.hexData.hasBuilding)
+            {
+                ShowBuilding(isOwner);
+                RoadCheck();
+            }
+            else if (hex.hexData.hasResource)
+            {
+                if (hex.hexData.resourceType == ResourceType.MONUMENT)
                 {
-                    ShowCity(false);
-                }
-                else if (hex.hexData.hasBuilding)
-                {
-                    ShowBuilding(false);
-                }
-                else if (hex.hexData.hasResource)
-                {
-                    if (hex.hexData.resourceType == ResourceType.MONUMENT)
-                    {
-                        ShowMonument();
-                    }
-                    else
-                    {
-                        ShowResource(false);
-                    }
+                    ShowMonument();
                 }
                 else
                 {
-                    ShowHex(false);
+                    ShowResource(isOwner);
                 }
-
+                RoadCheck();
             }
             else
             {
-                if (hex.hexData.hasCity)
-                {
-                    ShowCity(true);
-                }
-                else if (hex.hexData.hasBuilding)
-                {
-                    ShowBuilding(true);
-                    RoadCheck();
-                }
-                else if (hex.hexData.hasResource)
-                {
-                    if (hex.hexData.resourceType == ResourceType.MONUMENT)
-                    {
-                        ShowMonument();
-                    }
-                    else
-                    {
-                        ShowResource(true);
-                    }
-
-                    RoadCheck();
-                }
-                else
-                {
-                    ShowHex(true);
-                    RoadCheck();
-                }
+                ShowHex(isOwner);
+                RoadCheck();
             }
         }
     }
@@ -265,20 +236,23 @@ public class HexView : MonoBehaviour
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             bool resourceButtonState = false;
 
-            if (hex.hexData.occupied && hex.hexData.occupiedByEnemyUnit)
+            if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != hex.hexData.playerOwnerIndex)
             {
                 hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
                 resourceButtonState = false;
             }
-            else if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
-            {
-                hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
-                resourceButtonState = true;
-            }
             else
             {
-                hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
-                resourceButtonState = false;
+                if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+                {
+                    hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
+                    resourceButtonState = true;
+                }
+                else
+                {
+                    hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
+                    resourceButtonState = false;
+                }
             }
 
             GenerateResourceButton(resourceButtonState);
@@ -374,12 +348,12 @@ public class HexView : MonoBehaviour
         {
             if (unit.isInteractable || unit.buttonActionPossible)
             {
-                hexDescription.text = "This unit has available actions";
+                hexDescription.text = "This " + unit.unitReference.name + " unit has available actions";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             }
             else
             {
-                hexDescription.text = "This unit does not have any actions left";
+                hexDescription.text = "This " + unit.unitReference.name + " unit does not have any actions left";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
             }
 
@@ -405,7 +379,7 @@ public class HexView : MonoBehaviour
         }
         else
         {
-            hexDescription.text = "This unit belongs to a different player";
+            hexDescription.text = "This " + unit.unitReference.name + " unit belongs to a different player";
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
         }
     }

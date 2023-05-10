@@ -23,7 +23,7 @@ public class WorldHex : MonoBehaviour
     public WorldHex parentCity;
     public CityView cityView;
     CityVisualHelper visualHelper;
-
+    RoadHelper roadHelper;
     public List<WorldHex> adjacentHexes = new List<WorldHex>();
     //0 - Visual Layer 
     //1 - Resource Layer 
@@ -44,11 +44,15 @@ public class WorldHex : MonoBehaviour
         resourceParent = transform.GetChild(1);
         unitParent = transform.GetChild(2);
         hexHighlight = transform.GetChild(3).gameObject;
+        roadHelper = transform.GetChild(4).GetChild(0).GetComponent<RoadHelper>();
         cloud = transform.GetChild(5).GetChild(0).gameObject;
         border = transform.GetChild(6).GetChild(0).gameObject;
         particleParent = transform.GetChild(7);
         SI_EventManager.Instance.onCameraMoved += UpdatePositionInMap;
+        roadHelper.DisableRoads();
         RandomizeVisualElevation();
+
+        roadHelper.SetParent(this);
     }
 
     private void OnDestroy()
@@ -228,18 +232,32 @@ public class WorldHex : MonoBehaviour
         hexData.occupied = true;
         if (newUnit.playerOwnerIndex != hexData.playerOwnerIndex)
         {
-            hexData.occupiedByEnemyUnit = true;
-
             if (hexData.hasCity)
             {
                 cityData.isUnderSiege = true;
-                if (visualHelper != null)
+
+                //does the same thing for now - debug 
+                if (hexData.playerOwnerIndex == -1)
                 {
-                    visualHelper.citySiegeEffect.SetActive(true);
+                    if (visualHelper != null)
+                    {
+                        visualHelper.citySiegeEffect.SetActive(true);
+                    }
+                    cityView.gameObject.SetActive(true);
+                    cityView.UpdateSiegeState(true, false);
+                    MapManager.Instance.SetHexUnderSiege(this);
                 }
-                cityView.gameObject.SetActive(true);
-                cityView.UpdateSiegeState(true, true);
-                MapManager.Instance.SetHexUnderSiege(this);
+                else
+                {
+                    if (visualHelper != null)
+                    {
+                        visualHelper.citySiegeEffect.SetActive(true);
+                    }
+                    cityView.gameObject.SetActive(true);
+                    cityView.UpdateSiegeState(true, false);
+                    MapManager.Instance.SetHexUnderSiege(this);
+                }
+              
             }
         }
 
@@ -275,7 +293,6 @@ public class WorldHex : MonoBehaviour
     public void UnitOut(WorldUnit newUnit, bool unitDied = false)
     {
         hexData.occupied = false;
-        hexData.occupiedByEnemyUnit = false;
 
         if (hexData.hasCity)
         {
@@ -834,13 +851,13 @@ public int rangeReward = 2;
         hexData.hasRoad = true;
         //UpdateVisuals();
         //CalculateRoadConnections
-        UpdateRoadVisuals();
+        roadHelper.SetRoads();
         UIManager.Instance.ShowHexView(this);
     }
 
-    void UpdateRoadVisuals()
+    public void AdjacentRoadChanged(WorldHex adjHex)
     {
-
+        roadHelper.UpdateByAdjacentHex(adjHex);
     }
 
     public void GenerateResource(ResourceType resourceType)
@@ -913,7 +930,7 @@ public int rangeReward = 2;
             GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).RemoveCity(this);
             isThisATakeOver = true;
         }
-       
+
         if (cityGameObject != null)
         {
             Destroy(cityGameObject);
@@ -968,7 +985,6 @@ public int rangeReward = 2;
                 newHex.SetAsOccupiedByCity(this);
             }
         }
-       
 
         cityView.gameObject.SetActive(true);
 
@@ -977,6 +993,24 @@ public int rangeReward = 2;
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
         cityView.UpdateSiegeState(false, false);
+        if (cityData.isUnderSiege)
+        {
+            cityData.isUnderSiege = false;
+            MapManager.Instance.RemoveHexFromSiege(this);
+            cityView.UpdateSiegeState(false, false);
+
+            if (hexData.playerOwnerIndex != -1)
+            {
+                GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+            }
+
+            if (visualHelper != null)
+            {
+                visualHelper.citySiegeEffect.SetActive(false);
+            }
+
+        }
+
         if (!isThisATakeOver)
         {
             cityView.InitialLevelSetup();
