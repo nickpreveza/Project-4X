@@ -195,8 +195,6 @@ public class HexView : MonoBehaviour
             if (hex.hexData.playerOwnerIndex == -1)
             {
                 hexName.text = "Unclaimed City";
-                hexDescription.text = "This city belongs to the " +
-                    GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
                 hexDescription.text = "Move a unit here to claim this city";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
 
@@ -218,6 +216,10 @@ public class HexView : MonoBehaviour
                     if (!hex.associatedUnit.buttonActionPossible)
                     {
                         hexDescription.text = "City capture will be available on the next turn";
+                    }
+                    else
+                    {
+                        hexDescription.text = "Capture this city to add it to your empire";
                     }
 
                     GenerateCityCaptureButton(hex.associatedUnit.buttonActionPossible);

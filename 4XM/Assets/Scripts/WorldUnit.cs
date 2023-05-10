@@ -137,6 +137,7 @@ public class WorldUnit : MonoBehaviour
 
 
         ExhaustActions();
+        VisualUpdate();
     }
 
     //walking should not play 
@@ -174,8 +175,9 @@ public class WorldUnit : MonoBehaviour
         currentDefense = boatReference.defense;
         currentWalkRange = boatReference.walkRange;
         currentAttackRange = boatReference.attackRange;
-
+       
         ExhaustActions();
+        VisualUpdate();
     }
 
     //how we apply player materials in visual update
@@ -207,6 +209,7 @@ public class WorldUnit : MonoBehaviour
         }
 
         ExhaustActions();
+        VisualUpdate();
     }
 
 
@@ -371,7 +374,7 @@ public class WorldUnit : MonoBehaviour
             }
         }
      
-
+        
         hasMoved = false;
         hasAttacked = false;
 
