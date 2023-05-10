@@ -51,6 +51,7 @@ QualitySettings:
     PSM: 5
     PSP2: 5
     Samsung TV: 2
+    Server: 0
     Standalone: 0
     Tizen: 2
     WP8: 0

@@ -220,18 +220,25 @@ public class HexView : MonoBehaviour
         }
         else
         {
-            hexName.text = hex.cityData.cityName;
-            hexDescription.text = "This city belongs to the " + 
-                GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
 
-            if (hex.hexData.playerOwnerIndex == -1) //city is unclaimed
+            if (hex.hexData.playerOwnerIndex == -1)
             {
+                hexName.text = "Unclaimed City";
+                hexDescription.text = "This city belongs to the " +
+                    GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
+                hexDescription.text = "Move a unit here to claim this city";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
+
             }
             else
             {
+                hexName.text = hex.cityData.cityName;
+                hexDescription.text = "This city belongs to the " +
+                    GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
+
                 hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
             }
+           
 
             if (hex.hexData.occupied)
             {
