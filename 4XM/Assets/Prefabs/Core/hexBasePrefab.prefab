@@ -641,6 +641,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aea6ff6ac0c8c4246af84f30664c52e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  center: {fileID: 5904040500992133691}
   rightUp: {fileID: 8525431453118056551}
   right: {fileID: 3041884837882271565}
   rightDown: {fileID: 7316929728065629547}
@@ -656,6 +657,12 @@ GameObject:
 --- !u!4 &3045093350136028792 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1111960813251798229, guid: 604bf73dee60cef48b48b714d28907db,
+    type: 3}
+  m_PrefabInstance: {fileID: 2678553482642078381}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &5904040500992133691 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8413708980427419798, guid: 604bf73dee60cef48b48b714d28907db,
     type: 3}
   m_PrefabInstance: {fileID: 2678553482642078381}
   m_PrefabAsset: {fileID: 0}

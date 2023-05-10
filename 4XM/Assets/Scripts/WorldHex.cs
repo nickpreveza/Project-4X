@@ -987,7 +987,8 @@ public int rangeReward = 2;
         }
 
         cityView.gameObject.SetActive(true);
-
+        hexData.hasRoad = true;
+        roadHelper.SetRoads();
         MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1);
 
         cityView.UpdateData();
