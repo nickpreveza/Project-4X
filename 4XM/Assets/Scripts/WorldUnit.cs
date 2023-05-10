@@ -295,6 +295,8 @@ public class WorldUnit : MonoBehaviour
         currentWalkRange = unitReference.walkRange;
         currentAttackRange = unitReference.attackRange;
 
+        type = unitReference.type;
+
         civColor = GameManager.Instance.GetCivilizationColor(playerIndex, CivColorType.unitColor);
         inactiveColor = GameManager.Instance.GetCivilizationColor(playerIndex, CivColorType.unitInactiveColor);
 
@@ -735,7 +737,7 @@ public class WorldUnit : MonoBehaviour
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
         VisualAttack();
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(.7f);
         if (enemyUnit.ReceiveDamage(currentAttack))
         {
             enemyUnit.visualAnim.SetTrigger("Die");
@@ -756,7 +758,7 @@ public class WorldUnit : MonoBehaviour
             yield return new WaitForSeconds( .5f);
             enemyUnit.VisualAttack();
             yield return new WaitForSeconds(0.5f);
-            if (ReceiveDamage(enemyUnit.currentAttack))
+            if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
             {
                 visualAnim.SetTrigger("Die");
                 SpawnParticle(UnitManager.Instance.unitDeathParticle);
@@ -764,10 +766,16 @@ public class WorldUnit : MonoBehaviour
                 Death(true);
                 yield break;
             }
+            else
+            {
+                SpawnParticle(UnitManager.Instance.unitHitParticle, true);
+                visualAnim.SetTrigger("Evade");
+            }
 
             UnitManager.Instance.SelectUnit(this);
         }
 
+        isAttacking = false;
         UnitManager.Instance.SelectUnit(this);
     }
 

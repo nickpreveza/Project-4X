@@ -68,8 +68,10 @@ MonoBehaviour:
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
-    boatPrefab: {fileID: 0}
-    shipPrefab: {fileID: 0}
+    boatPrefab: {fileID: 118603909006220285, guid: 09c5011e1f6ba6240a5cc4933f04dbc3,
+      type: 3}
+    shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
   - name: Romans
     unitOverrides: []
     unitColor: {r: 0.6715603, g: 0.1511659, b: 0.745283, a: 1}
@@ -79,8 +81,10 @@ MonoBehaviour:
     borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
-    boatPrefab: {fileID: 0}
-    shipPrefab: {fileID: 0}
+    boatPrefab: {fileID: 118603909006220285, guid: 09c5011e1f6ba6240a5cc4933f04dbc3,
+      type: 3}
+    shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
   data:
     day: 0
     hour: 0
@@ -454,8 +458,9 @@ MonoBehaviour:
   gameIsNetworked: 0
   activePlayerClientID: 0
   isHost: 0
-  waterInteractionParticle: {fileID: 2514477051162372762, guid: b0b23206aa6084f73b3bb1600feda1b6,
+  waterInteractionParticle: {fileID: 5531231052371847854, guid: 60c88e966a0f8324da766221921ee65f,
     type: 3}
-  landInternactionParticle: {fileID: 4906663640453830002, guid: a074e3cf37325d2468d363ba8c90f10d,
+  landInternactionParticle: {fileID: 8748687995501502678, guid: 62334a566bbfe3945bc7bd0c02ca1c9e,
     type: 3}
-  resourceHarvestParticle: {fileID: 0}
+  resourceHarvestParticle: {fileID: 1597686569084602476, guid: 78ee1fc7beb65da41ad23fc1c2e427b9,
+    type: 3}
