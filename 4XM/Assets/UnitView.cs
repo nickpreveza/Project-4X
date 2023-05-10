@@ -31,7 +31,7 @@ public class UnitView : MonoBehaviour
             SetData(transform.parent.GetComponent<WorldUnit>());
             return;
         }
-        unitHealth.text = parentUnit.currentHealth.ToString();
+        unitHealth.text = parentUnit.localHealth.ToString();
         if (parentUnit.isInteractable)
         {
             unitBackground.color = backgroundColor;

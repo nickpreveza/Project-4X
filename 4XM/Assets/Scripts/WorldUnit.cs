@@ -29,7 +29,7 @@ public class WorldUnit : MonoBehaviour
     public int playerOwnerIndex = -1;
 
     //not default, look at unitstruct
-    public int currentHealth;
+    public int localHealth;
     public int currentAttack;
     public int currentDefense;
     public int currentLevel;
@@ -243,7 +243,13 @@ public class WorldUnit : MonoBehaviour
 
         if (shouldRotate)
         {
+            
             visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
+
+            if (isBoat || isShip)
+            {
+                currentBoat.transform.eulerAngles = targetRotation;
+            }
 
             if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
             {
@@ -251,6 +257,8 @@ public class WorldUnit : MonoBehaviour
                 visualUnit.transform.eulerAngles = targetRotation;
                 currentRotationVelocity = Vector3.zero;
             }
+
+           
         }
     }
 
@@ -281,7 +289,7 @@ public class WorldUnit : MonoBehaviour
         parentHex = newHex;
         parentHex.UnitIn(this);
 
-        currentHealth = unitReference.health;
+        localHealth = unitReference.health;
         currentAttack = unitReference.attack;
         currentDefense = unitReference.defense;
         currentWalkRange = unitReference.walkRange;
@@ -586,6 +594,11 @@ public class WorldUnit : MonoBehaviour
         else
         {
             visualUnit.transform.eulerAngles = targetRotation;
+
+            if (isBoat || isShip)
+            {
+                currentBoat.transform.eulerAngles = targetRotation;
+            }
         }
     }
 
@@ -634,11 +647,15 @@ public class WorldUnit : MonoBehaviour
         return 0f;
     }
 
-    public bool AttemptToKill(int value)
+    public bool ReceiveDamage(int value)
     {
-        currentHealth -= value - currentDefense;
+        Debug.Log("Health was: " + localHealth);
+        Debug.Log("Damage received was: " + (value - currentDefense));
+
+        localHealth = localHealth - (value - currentDefense);
+
         unitView.UpdateData();
-        if (currentHealth <= 0)
+        if (localHealth <= 0)
         {
             return true;
         }
@@ -649,14 +666,13 @@ public class WorldUnit : MonoBehaviour
       
             return false;
         }
-
-      
     }
 
     public void Heal(int value)
     {
         SpawnParticle(UnitManager.Instance.unitHealParticle);
-        currentHealth = Mathf.Clamp(value, 0, unitReference.health);
+        localHealth += value;
+        localHealth = Mathf.Clamp(localHealth, 0, unitReference.health);
     }
 
     public void HealWithDefaultValue()
@@ -664,16 +680,15 @@ public class WorldUnit : MonoBehaviour
         Heal(unitReference.heal);
     }
 
-    public void Attack(WorldHex enemyHex)
+    public void VisualAttack()
     {
-        WorldUnit enemyUnit = enemyHex.associatedUnit;
-
         switch (type)
         {
             case UnitType.Defensive:
             case UnitType.Trader:
             case UnitType.Diplomat:
             case UnitType.Melee:
+            case UnitType.Boat:
                 visualAnim.SetTrigger("AttackSword");
                 break;
             case UnitType.Ranged:
@@ -683,9 +698,23 @@ public class WorldUnit : MonoBehaviour
                 visualAnim.SetTrigger("AttackHorse");
                 break;
             case UnitType.Siege:
+            case UnitType.Ship:
                 visualAnim.SetTrigger("AttackShield");
                 break;
         }
+    }
+
+    bool isAttacking = false;
+    public void Attack(WorldHex enemyHex)
+    {
+        if (isAttacking)
+        {
+            Debug.LogWarning("Unit is currently attacking already");
+            return;
+        }
+
+        isAttacking = true;
+        WorldUnit enemyUnit = enemyHex.associatedUnit;
 
         currentAttackCharges--;
         hasAttacked = true;
@@ -694,6 +723,10 @@ public class WorldUnit : MonoBehaviour
         {
             currentMovePoints++;
         }
+        else
+        {
+            currentMovePoints = 0;
+        }
 
         StartCoroutine(FightSequence(enemyHex, enemyUnit));
         
@@ -701,23 +734,33 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
-        yield return new WaitForSeconds(0.1f);
-        if (enemyUnit.AttemptToKill(unitReference.attack))
+        VisualAttack();
+        yield return new WaitForSeconds(0.5f);
+        if (enemyUnit.ReceiveDamage(currentAttack))
         {
+            enemyUnit.visualAnim.SetTrigger("Die");
+            enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
+
+            yield return new WaitForSeconds(1f);
             enemyUnit.Death(true);
 
             if (!attackIsRanged)
             {
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(0.2f);
                 Move(enemyHex, true);
             }
 
         }
         else
         {
-            yield return new WaitForSeconds(0.2f);
-            if (AttemptToKill(enemyUnit.unitReference.attack))
+            yield return new WaitForSeconds( .5f);
+            enemyUnit.VisualAttack();
+            yield return new WaitForSeconds(0.5f);
+            if (ReceiveDamage(enemyUnit.currentAttack))
             {
+                visualAnim.SetTrigger("Die");
+                SpawnParticle(UnitManager.Instance.unitDeathParticle);
+                yield return new WaitForSeconds(1f);
                 Death(true);
                 yield break;
             }
@@ -743,7 +786,7 @@ public class WorldUnit : MonoBehaviour
     public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
     {
         visualAnim.SetTrigger("Walk");
-        SpawnParticle(UnitManager.Instance.unitWalkParticle);
+        parentHex.SpawnParticle(UnitManager.Instance.unitWalkParticle);
         Deselect();
 
         c = newHex.hexData.C;

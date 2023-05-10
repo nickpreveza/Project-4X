@@ -302,7 +302,8 @@ public class WorldHex : MonoBehaviour
 
         if (unitDied)
         {
-            SpawnParticle(UnitManager.Instance.unitDeathParticle);
+            // SpawnParticle(UnitManager.Instance.unitDeathParticle);
+            SpawnParticle(GameManager.Instance.resourceHarvestParticle);
         }
     }
 

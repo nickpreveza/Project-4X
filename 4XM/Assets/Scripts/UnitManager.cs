@@ -98,6 +98,10 @@ public class UnitManager : MonoBehaviour
                 return gameUnits[5];
             case UnitType.Diplomat:
                 return gameUnits[6];
+            case UnitType.Boat:
+                return gameUnits[7];
+            case UnitType.Ship:
+                return gameUnits[8];
         }
 
         Debug.LogError("Unit type given was invalid. Returned default unit");
