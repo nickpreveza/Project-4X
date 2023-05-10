@@ -261,6 +261,12 @@ public class HexView : MonoBehaviour
                     hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
                     resourceButtonState = false;
                 }
+
+
+                if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+                {
+                    GenerateDestroyButton(true);
+                }
             }
 
             GenerateResourceButton(resourceButtonState);
@@ -303,13 +309,13 @@ public class HexView : MonoBehaviour
                 else
                 {
                     hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
-                    GenerateResourceButton(false);
+                    GenerateResourceButton(false, false);
                 }
             }
             else
             {
                 hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
-                GenerateResourceButton(false);
+                GenerateResourceButton(false, false);
             }
 
         }
