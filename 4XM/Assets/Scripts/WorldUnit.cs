@@ -508,7 +508,7 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                if (!isShip)
+                if (!isShip && type != UnitType.Siege)
                 {
                     SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
                     renderer.materials[0].SetColor("_ColorShift", civColor);
@@ -688,7 +688,7 @@ public class WorldUnit : MonoBehaviour
         Heal(unitReference.heal);
     }
 
-    public void VisualAttack()
+    public void VisualAttack(WorldHex targetHex)
     {
         switch (type)
         {
@@ -707,6 +707,7 @@ public class WorldUnit : MonoBehaviour
                 break;
             case UnitType.Siege:
             case UnitType.Ship:
+                targetHex.SpawnParticle(GameManager.Instance.explosionParticle);
                 visualAnim.SetTrigger("AttackShield");
                 break;
         }
@@ -756,7 +757,7 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
-        VisualAttack();
+        VisualAttack(enemyUnit.parentHex);
         yield return new WaitForSeconds(.7f);
 
         if (enemyUnit.ReceiveDamage(currentAttack))
@@ -777,7 +778,7 @@ public class WorldUnit : MonoBehaviour
         else
         {
             yield return new WaitForSeconds( .5f);
-            enemyUnit.VisualAttack();
+            enemyUnit.VisualAttack(parentHex);
             yield return new WaitForSeconds(0.5f);
             if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
             {

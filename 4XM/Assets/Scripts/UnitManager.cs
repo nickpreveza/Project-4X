@@ -94,8 +94,11 @@ public class UnitManager : MonoBehaviour
                 return gameUnits[3];
             case UnitType.Ship:
                 return gameUnits[4];
-            case UnitType.Siege:
             case UnitType.Defensive:
+                return gameUnits[5];
+            case UnitType.Siege:
+                return gameUnits[6];
+
             case UnitType.Trader:
             case UnitType.Diplomat:
                 return gameUnits[0];

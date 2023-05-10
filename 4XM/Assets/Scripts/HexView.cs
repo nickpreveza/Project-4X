@@ -460,7 +460,6 @@ public class HexView : MonoBehaviour
                 GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
                 obj.GetComponent<ActionButton>().SetDataForUnitSpawn(this, hex, unitType);
             }
-           
         }
     }
 
