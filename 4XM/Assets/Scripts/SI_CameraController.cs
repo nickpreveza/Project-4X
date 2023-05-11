@@ -82,6 +82,8 @@ public class SI_CameraController : MonoBehaviour
     Vector3 panTemp;
     Vector3 dir;
     Vector3 lastCameraPosition;
+
+    public bool animationsRunning;
     void Awake()
     {
         if (Instance == null)
@@ -132,7 +134,7 @@ public class SI_CameraController : MonoBehaviour
           // MoveBack();
            // return;
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Escape) || !Application.isFocused)
         {
             CancelUpdateFunction();
@@ -435,6 +437,10 @@ public class SI_CameraController : MonoBehaviour
         if (IsPointerOverUIObject())
         {
             Debug.Log("Mouse is over GUI");
+            return;
+        }
+
+        if(animationsRunning){
             return;
         }
 

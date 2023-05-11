@@ -889,6 +889,7 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
+        SI_CameraController.Instance.animationsRunning = true;
         VisualAttack(enemyUnit.parentHex);
         yield return new WaitForSeconds(.7f);
 
@@ -909,28 +910,34 @@ public class WorldUnit : MonoBehaviour
         }
         else
         {
-            yield return new WaitForSeconds( .5f);
-            enemyUnit.VisualAttack(parentHex);
-            yield return new WaitForSeconds(0.5f);
-            if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
+            if (UnitManager.Instance.isUnitInAttackRange(enemyUnit, this))
             {
-                visualAnim.SetTrigger("Die");
-                SpawnParticle(UnitManager.Instance.unitDeathParticle);
-                yield return new WaitForSeconds(1f);
-                Death(true);
-                yield break;
+                yield return new WaitForSeconds(.5f);
+                enemyUnit.VisualAttack(parentHex);
+                yield return new WaitForSeconds(0.5f);
+                if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
+                {
+                    visualAnim.SetTrigger("Die");
+                    SpawnParticle(UnitManager.Instance.unitDeathParticle);
+                    yield return new WaitForSeconds(1f);
+                    SI_CameraController.Instance.animationsRunning = false;
+                    Death(true);
+                    yield break;
+                }
+                else
+                {
+                    SpawnParticle(UnitManager.Instance.unitHitParticle, true);
+                    visualAnim.SetTrigger("Evade");
+                }
             }
-            else
-            {
-                SpawnParticle(UnitManager.Instance.unitHitParticle, true);
-                visualAnim.SetTrigger("Evade");
-            }
+       
 
             UnitManager.Instance.SelectUnit(this);
         }
 
         isAttacking = false;
         UnitManager.Instance.SelectUnit(this);
+        SI_CameraController.Instance.animationsRunning = false;
     }
 
     public void Death(bool affectStats)

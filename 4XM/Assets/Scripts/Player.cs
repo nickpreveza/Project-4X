@@ -186,6 +186,11 @@ public class Player
 
         UpdateLockStateForUnitType(UnitType.Siege, abilities.unitTrebucet);
         UpdateLockStateForUnitType(UnitType.Defensive, abilities.unitShield);
+
+        UpdateLockStateForUnitType(UnitType.Lance, abilities.unitLance);
+        UpdateLockStateForUnitType(UnitType.Knight, abilities.unitKnight);
+        UpdateLockStateForUnitType(UnitType.Leader, abilities.unitTrader);
+
         UpdateLockStateForUnitType(UnitType.Trader, abilities.unitTrader);
         UpdateLockStateForUnitType(UnitType.Diplomat, abilities.unitDiplomat);
     }

@@ -23,9 +23,6 @@ public class UnitView : MonoBehaviour
         unitIcon.sprite = unit.unitReference.icon;
         backgroundColor = GameManager.Instance.GetCivilizationColor(parentUnit.playerOwnerIndex, CivColorType.uiActiveColor);
         inactiveColor = GameManager.Instance.GetCivilizationColor(parentUnit.playerOwnerIndex, CivColorType.uiInactiveColor);
-        Color newColor = Color.white;
-        newColor.a = 180;
-        inactiveIconColor = newColor;
         UpdateData();
     }
 

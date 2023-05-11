@@ -351,6 +351,7 @@ public class WorldHex : MonoBehaviour
 
     public IEnumerator RemoveProgressPoint(int value)
     {
+        SI_CameraController.Instance.animationsRunning = true;
         for (int i = 0; i < value; i++)
         {
             if (cityData.levelPointsToNext > 0)
@@ -381,20 +382,25 @@ public class WorldHex : MonoBehaviour
             GameManager.Instance.activePlayer.CalculateExpectedStars();
             UIManager.Instance.UpdateHUD();
         }
+
+         SI_CameraController.Instance.animationsRunning = false;
     }
 
     bool progressPointsAddRunning = false;
 
     public IEnumerator AddProgressPoint(int value, bool showQuests)
     {
-        progressPointsAddRunning = true;
         if (value == 0)
         {
+             
             yield break;
         }
+
+        SI_CameraController.Instance.animationsRunning = true;
+        progressPointsAddRunning = true;
+
         for(int i = 0; i < value; i++)
-        {
-            yield return new WaitForSeconds(1f);
+        {          
             wiggler?.Wiggle();
             if (cityData.negativeLevelPoints > 0)
             {
@@ -421,7 +427,7 @@ public class WorldHex : MonoBehaviour
                         visualHelper.cityLevelEffect.SetActive(true);
                     }
 
-                    yield return new WaitForSeconds(0.7f);
+                    yield return new WaitForSeconds(1f);
                     if (showQuests)
                     {
                         string popupTitle = cityData.cityName + " Leved Up";
@@ -511,6 +517,8 @@ public class WorldHex : MonoBehaviour
                     cityView.ToggleOnProgressPoint(false);
                 }
             }
+            
+            yield return new WaitForSeconds(.5f);
            
         }
 
@@ -523,6 +531,7 @@ public class WorldHex : MonoBehaviour
             UIManager.Instance.UpdateHUD();
         }
 
+        SI_CameraController.Instance.animationsRunning = false;
         progressPointsAddRunning = false;
 
     }
@@ -623,6 +632,7 @@ public class WorldHex : MonoBehaviour
     void AddProductionPoints(int points)
     {
         cityData.output += points;
+        cityView.UpdateData();
     }
 
     void AddLevelPoint(int points)
@@ -652,6 +662,7 @@ public class WorldHex : MonoBehaviour
 
     IEnumerator HarvestResourceEnum()
     {
+        SI_CameraController.Instance.animationsRunning = true;
 
         Resource resource = MapManager.Instance.GetResourceByType(hexData.resourceType);
 
@@ -672,7 +683,6 @@ public class WorldHex : MonoBehaviour
 
             if (resource.output > 0)
             {
-                yield return new WaitForSeconds(0.5f);
                 parentCity.AddLevelPoint(resource.output);
             }
 
@@ -693,6 +703,7 @@ public class WorldHex : MonoBehaviour
         hexData.resourceType = ResourceType.EMPTY;
 
         Select(false);
+        SI_CameraController.Instance.animationsRunning = false;
 
     }
 
@@ -760,9 +771,11 @@ public class WorldHex : MonoBehaviour
 
     IEnumerator CreateMaster(BuildingType type)
     {
+        SI_CameraController.Instance.animationsRunning = true;
         if (hexData.hasBuilding)
         {
             Debug.LogWarning("Tried to place building on top of building");
+            SI_CameraController.Instance.animationsRunning = false;
             yield break;
         }
 
@@ -822,6 +835,7 @@ public class WorldHex : MonoBehaviour
             GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
         }
 
+        SI_CameraController.Instance.animationsRunning = false;
         UIManager.Instance.ShowHexView(this);
     }
 

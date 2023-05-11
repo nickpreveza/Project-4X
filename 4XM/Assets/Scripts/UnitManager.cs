@@ -227,6 +227,38 @@ public class UnitManager : MonoBehaviour
         if (hexesInAttackRange.Contains(hex) && selectedUnit.currentAttackCharges > 0) { return true; }
         else { return false; }
     }
+
+    public bool isUnitInAttackRange(WorldUnit attackingUnit, WorldUnit receivingUnit)
+    {
+        int attackingUnitRange = 0;
+
+        if (attackingUnit.isBoat || attackingUnit.isShip)
+        {
+            attackingUnitRange = attackingUnit.boatReference.attackRange;
+        }
+        else
+        {
+
+            attackingUnitRange = attackingUnit.unitReference.attackRange;
+        }
+
+        //
+
+        List<WorldHex> hexesInRange = MapManager.Instance.GetHexesListWithinRadius(attackingUnit.parentHex.hexData, attackingUnitRange);
+        List<WorldHex> hexesToRemove = new List<WorldHex>();
+
+        foreach (WorldHex hex in hexesInRange)
+        {
+            if (hex == receivingUnit.parentHex)
+            {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
     public List<WorldHex> GetWalkableHexes(WorldUnit unit, int customRange) //also range check here. 
     {
         WorldHex center = unit.parentHex;

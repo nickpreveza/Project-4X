@@ -21,6 +21,7 @@ public class ResearchButton: MonoBehaviour
     {
         buttonText.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityName;
         fetchedAbilityCost = GameManager.Instance.GetCurrentPlayerAbilityCost(abilityID);
+        buttonCost.text = fetchedAbilityCost.ToString();
 
         if (GameManager.Instance.IsAbilityUnlocked(abilityID))
         {
@@ -67,7 +68,7 @@ public class ResearchButton: MonoBehaviour
         backgroundImage.color = UIManager.Instance.researchAvailable;
         buttonCost.color = UIManager.Instance.researchAvailable;
         costIcon.GetComponent<Image>().color = UIManager.Instance.researchAvailable;
-        buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
+        buttonCost.text = fetchedAbilityCost.ToString();
         //buttonText.color = Color.white;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => OpenPopup(true));
@@ -80,7 +81,7 @@ public class ResearchButton: MonoBehaviour
         lockImage.SetActive(false);
         backgroundImage.color = UIManager.Instance.researchUnavailable;
         buttonCost.color = UIManager.Instance.researchUnavailable;
-        buttonCost.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityCost.ToString();
+        buttonCost.text = fetchedAbilityCost.ToString();
         //buttonCost.color = Color.black;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() =>OpenPopup(false));
