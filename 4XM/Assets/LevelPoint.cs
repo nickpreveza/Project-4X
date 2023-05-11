@@ -5,7 +5,7 @@ using UnityEngine;
 public class LevelPoint : MonoBehaviour
 {
     [SerializeField] Animator anim;
-    [SerializeField] GameObject levelActive;
+    public GameObject levelActive;
     [SerializeField] GameObject unitActive;
     public void InitState()
     {

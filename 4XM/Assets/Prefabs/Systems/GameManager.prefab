@@ -137,6 +137,7 @@ MonoBehaviour:
       unitTrebucet: 0
       unitShield: 0
       unitKnight: 0
+      unitLance: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -192,6 +193,7 @@ MonoBehaviour:
       unitTrebucet: 0
       unitShield: 0
       unitKnight: 0
+      unitLance: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -248,6 +250,7 @@ MonoBehaviour:
       unitTrebucet: 0
       unitShield: 0
       unitKnight: 0
+      unitLance: 0
       unitTrader: 0
       unitDiplomat: 0
       fishHarvest: 0
@@ -295,7 +298,7 @@ MonoBehaviour:
   abilities:
   - abilityID: 0
     abilityName: Climbing
-    abilityDescription: 'Learn how to traverse the Mountains '
+    abilityDescription: Allows you to traverse the Mountain hexes.
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -303,15 +306,15 @@ MonoBehaviour:
     abilityToUnlock: 1
   - abilityID: 1
     abilityName: Mining
-    abilityDescription: Learn how to harvest the Ore from the Mountains
+    abilityDescription: 'Allows you to create the Mine (+2) on Ore resources. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 2
   - abilityID: 2
-    abilityName: Shields
-    abilityDescription: Learn how to create the Shileds Unit
+    abilityName: Lance
+    abilityDescription: 'Allows you to create the Lance unit. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -319,8 +322,8 @@ MonoBehaviour:
     abilityToUnlock: 3
   - abilityID: 3
     abilityName: Smithery
-    abilityDescription: 'Learn how to create the Smithery Master Building, but also
-      how to create more Ore. '
+    abilityDescription: "Allows you to create the Ironworks Building. \nAllows you
+      to create Ore resources on Mountains."
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -328,7 +331,7 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 4
     abilityName: Fruit Harvest
-    abilityDescription: Learn how to harvest the fruits
+    abilityDescription: Allows you to harvest the Fruits resource.
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -336,31 +339,34 @@ MonoBehaviour:
     abilityToUnlock: 5
   - abilityID: 5
     abilityName: Roads
-    abilityDescription: Learn how to build Roads to connect your cities
+    abilityDescription: Allows you to build roads. Use roads to traverse faster and
+      connect cities to your Capital.
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 6
-  - abilityID: 6
-    abilityName: Guild
-    abilityDescription: Learn how to create the Guild Master Building
+  - abilityID: 7
+    abilityName: Destruction
+    abilityDescription: 'Allows you to destroy buildings and resources. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
-    abilityToUnlock: 7
-  - abilityID: 7
-    abilityName: Destruction
-    abilityDescription: Learn how to destroy any kind of building
+    abilityToUnlock: 20
+  - abilityID: 6
+    abilityName: Guild
+    abilityDescription: "Allows you to build the Guild building. \nAllows you to
+      create the Trader unit. \n\nMove a Trader to a guild of a different city to
+      claim a reward. "
     abilityIcon: {fileID: 0}
-    abilityCost: 8
+    abilityCost: 6
     scoreForPlayer: 40
     isUnlocked: 0
-    abilityToUnlock: 20
+    abilityToUnlock: 7
   - abilityID: 8
     abilityName: Forestry
-    abilityDescription: Allows you to harvest the Forest resource
+    abilityDescription: 'Allows you to build the Tent on Forest hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -376,8 +382,10 @@ MonoBehaviour:
     abilityToUnlock: 10
   - abilityID: 10
     abilityName: Engineering
-    abilityDescription: Learn how to create the Trebuchet unit and how to clear forests
-      for a reward
+    abilityDescription: 'Allows you to create the Trebuchet unit.
+
+      Allows you
+      to clear forests for a reward. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -385,7 +393,11 @@ MonoBehaviour:
     abilityToUnlock: 11
   - abilityID: 11
     abilityName: Lumberjack
-    abilityDescription: Learn how to build the Lumberjack Master building
+    abilityDescription: 'Allows you to build the Lumberjack.
+
+
+      You receive
+      +1 for every adjacent Tent building. '
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -393,7 +405,7 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 12
     abilityName: Fishing
-    abilityDescription: Learn how to catch Fishes
+    abilityDescription: 'Allows you  to catch  Fish. '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -401,7 +413,10 @@ MonoBehaviour:
     abilityToUnlock: 13
   - abilityID: 13
     abilityName: Port
-    abilityDescription: Learn how to build the Port and enter the shallow Sea
+    abilityDescription: 'Allows you to build the Port.
+
+      Allows you to traverse
+      the Sea hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
@@ -409,7 +424,7 @@ MonoBehaviour:
     abilityToUnlock: 14
   - abilityID: 14
     abilityName: Ocean
-    abilityDescription: Learn how to enter the Ocean waters
+    abilityDescription: 'Allows you to traverse the Ocean hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -417,7 +432,8 @@ MonoBehaviour:
     abilityToUnlock: 15
   - abilityID: 15
     abilityName: Ship
-    abilityDescription: Learn how to create Ships on the port building
+    abilityDescription: "Allows you to upgrade any unit when in a boat, into a Ship
+      unit. \n\nMove your unit to any Port building in order to upgrade it. "
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -425,15 +441,15 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 16
     abilityName: Husbandry
-    abilityDescription: 'Learn how to harvest the Animals '
+    abilityDescription: 'Allows you to harvest the Animals. '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 17
   - abilityID: 17
-    abilityName: Cavarly
-    abilityDescription: Learn how to build the Cavarly unit
+    abilityName: 'Cavalry '
+    abilityDescription: 'Allows you to build the Cavalry unit. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
@@ -441,7 +457,7 @@ MonoBehaviour:
     abilityToUnlock: 18
   - abilityID: 18
     abilityName: Farming
-    abilityDescription: Learn how to harvest the Farms
+    abilityDescription: 'Learn how  to build on Farm resources. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -449,8 +465,11 @@ MonoBehaviour:
     abilityToUnlock: 19
   - abilityID: 19
     abilityName: Windmill
-    abilityDescription: "Learn how to build the Windmill. \n\\nThe Windmill receives
-      production from each nearby farm"
+    abilityDescription: 'Allows you to build the Windmill.
+
+
+      \nThe Windmill
+      receives production from each nearby farm'
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -465,6 +484,7 @@ MonoBehaviour:
   populationReward: 4
   rangeReward: 2
   startCityOutput: 2
+  traderActionReward: 10
   gameIsNetworked: 0
   activePlayerClientID: 0
   isHost: 0
@@ -477,3 +497,5 @@ MonoBehaviour:
   resourceHarvestParticle: {fileID: 1597686569084602476, guid: 78ee1fc7beb65da41ad23fc1c2e427b9,
     type: 3}
   abilitiesDicitionariesCreated: 0
+  traderActionParticle: {fileID: 3031766928850544864, guid: a8cb176ac2d6504459d1fb8e59257cda,
+    type: 3}

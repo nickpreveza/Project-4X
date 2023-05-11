@@ -24,7 +24,6 @@ public class CityView : MonoBehaviour
     [SerializeField] GameObject levelPointPrefab;
     List<GameObject> currentLevelPoints = new List<GameObject>();
 
-    int lastEnabledProgressPointIndex = -1;
     [SerializeField] GameObject cityCaptureIcon;
     [SerializeField] GameObject cityCaptureIconInactive;
     [SerializeField] GameObject capitalIcon;
@@ -42,8 +41,8 @@ public class CityView : MonoBehaviour
         cityCaptureIconInactive.SetActive(false);
         canvasGroup = GetComponent<CanvasGroup>();
         cityDetailsCanvasGroup.alpha = 0;
-
-        RemoveAllProgressPoints();
+        OnCreateLevelPoints();
+        
     }
 
     public void SetCanvasGroupAlpha(bool isHidden)
@@ -58,7 +57,17 @@ public class CityView : MonoBehaviour
         }
     }
 
-    public void UpdateForCityCapture()
+    public void OccupyCity()
+    {
+        SetCanvasGroupAlpha(false);
+        SetDetailsAlpha(true);
+        UpdateData();
+        CityCaptured();
+        RemoveSiegeState();
+        OnCreateLevelPoints();
+    }   
+
+    void CityCaptured()
     {
         if (parentHex == GameManager.Instance.GetPlayerByIndex(parentHex.hexData.playerOwnerIndex).capitalCity)
         {
@@ -109,8 +118,6 @@ public class CityView : MonoBehaviour
 
         RemoveSiegeState();
     
-
-
         if (siegeCanHappen)
         {
             cityCaptureIcon.SetActive(true);
@@ -130,71 +137,82 @@ public class CityView : MonoBehaviour
         cityCaptureIcon.SetActive(false);
         cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
     }
-    public void AddLevelUIPoint()
-    {
-        int pointsThatShouldExist = parentHex.cityData.targetLevelPoints;
 
-        if (levelHolder.childCount > pointsThatShouldExist)
+
+    public void LevelUp()
+    {
+        OnCreateLevelPoints();
+        cityDetailsAnim.SetTrigger("levelUp");
+        SetDetailsAlpha(true);
+        UpdateData();
+    }
+
+    public void ToggleOnProgressPoint(bool isNegative)
+    {
+        int currentLevelPointIndex = parentHex.cityData.levelPointsToNext - 1;
+        int targetLevelPoints = parentHex.cityData.targetLevelPoints;
+
+        if (isNegative)
         {
-            Debug.LogError("You done fucked up");
+             currentLevelPointIndex = parentHex.cityData.negativeLevelPoints - 1;
+        }
+        
+
+        if (levelHolder.transform.childCount <= currentLevelPointIndex)
+        {
+            Debug.LogWarning("The level point you tried to access does not exist");
+            return;
         }
 
-        GameObject obj = Instantiate(levelPointPrefab, levelHolder);
-        obj.GetComponent<LevelPoint>().InitState();
-        currentLevelPoints.Add(obj);
-    }
+        levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointActive(true);
+        levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointUnitActive(false);
 
-    public void AddProgressUIPoint()
-    {
-        ToggleOnProgressPoint();
-    }
-
-    public void RemoveProgressUIPoint()
-    {
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).gameObject.SetActive(false);
-        lastEnabledProgressPointIndex--;
-    }
-
-    public void RemoveAllProgressPoints()
-    {
-        foreach(Transform child in levelHolder)
+        if (isNegative)
         {
-            child.GetChild(0).gameObject.SetActive(false);
+            levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().levelActive.GetComponent<Image>().color = negativeGainColor;
         }
-
-        lastEnabledProgressPointIndex = -1;
-    }
-    void ToggleOnProgressPoint()
-    {
-        lastEnabledProgressPointIndex++;
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetComponent<LevelPoint>().SetPointActive(true);
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetComponent<LevelPoint>().SetPointUnitActive(false);
+        else
+        {
+            levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().levelActive.GetComponent<Image>().color = Color.white;
+        }
         //levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).GetComponent<Image>().color = positiveGainColor;
+
+         UpdateData();
     }
 
-    void ToggleOffProgressPoint()
+    //call this before remove the level
+    public void ToggleOffProgressPoint(bool isNegative)
     {
-        levelHolder.transform.GetChild(levelHolder.transform.childCount - 1).GetComponent<LevelPoint>().SetPointActive(false);
-    }
+        //last enabled points starts at -
+        int currentLevelPointIndex = parentHex.cityData.levelPointsToNext - 1;
+        if (isNegative)
+        {
+             currentLevelPointIndex = parentHex.cityData.negativeLevelPoints - 1;
+        }
 
-    public void AddNegativeProgressUIPoint()
-    {
-        lastEnabledProgressPointIndex++;
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).gameObject.SetActive(true);
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).GetComponent<Image>().color = negativeGainColor;
+        levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointActive(false);
+        UpdateData();
     }
  
 
-    public void InitialLevelSetup()
+    void OnCreateLevelPoints()
     {
-        foreach(Transform child in levelHolder)
+        foreach (Transform child in levelHolder)
         {
             Destroy(child.gameObject);
         }
-
-        for(int i = 0; i < parentHex.cityData.targetLevelPoints; i++)
+        if (parentHex.hexData.playerOwnerIndex == -1)
         {
-            AddLevelUIPoint();
+            return;
+        }
+
+        currentLevelPoints.Clear();
+
+        for (int i = 0; i < parentHex.cityData.targetLevelPoints; i++)
+        {
+            GameObject obj = Instantiate(levelPointPrefab, levelHolder);
+            obj.GetComponent<LevelPoint>().InitState();
+            currentLevelPoints.Add(obj);
         }
     }
 }

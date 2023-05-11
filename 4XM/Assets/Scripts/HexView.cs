@@ -209,7 +209,9 @@ public class HexView : MonoBehaviour
 
             if (hex.hexData.occupied)
             {
-                hexDescription.text = "You cannot create a unit while the city is occupied";
+
+                 hexDescription.text = "You cannot create a unit while the city is occupied";
+                
             }
             else
             {
@@ -346,6 +348,21 @@ public class HexView : MonoBehaviour
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
 
+            if (hex.hexData.occupied && hex.hexData.buildingType == BuildingType.Guild)
+            {
+                if (hex.associatedUnit.type == UnitType.Trader && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                {
+                    //TODO check if ciy is traders origin city
+                    if (hex.parentCity != hex.associatedUnit.originCity)
+                    {
+                        GenerateTraderButton();
+                        hexDescription.text = "Trader with the city of " + hex.cityData.cityName + " for a reward";
+                    }
+                }
+            }
+
+            
+
             hexDescription.text = "This hex has a " + hexName.text + " building";
         }
         else
@@ -386,13 +403,27 @@ public class HexView : MonoBehaviour
                 GenerateResourceButton(unit.buttonActionPossible);
             }
 
-            if (hex.hexData.type == TileType.SEA || hex.hexData.type == TileType.DEEPSEA) //change this to port
+            if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
             {
                 if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
                 {
                     GenerateShipButton();
                 }
                
+            }
+
+            if (unit.unitReference.type == UnitType.Trader && hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Guild)
+            {
+                if (hex.hexData.playerOwnerIndex == unit.playerOwnerIndex && hex.parentCity != unit.originCity)
+                {
+                    GenerateTraderButton();
+                    hexDescription.text = "Trade with the Guild of " + hex.cityData.cityName + " for a reward";
+                }
+                else
+                {
+                   
+                    hexDescription.text = "Move " + unit.unitReference.name  +" to a Guild in a different city to claim a reward";
+                }
             }
 
         }
@@ -466,6 +497,12 @@ public class HexView : MonoBehaviour
                 obj.GetComponent<ActionButton>().SetDataForUnitSpawn(this, hex, unitType);
             }
         }
+    }
+
+    void GenerateTraderButton()
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForTrader(this, hex);
     }
 
     void GenerateDestroyButton(bool isBuilding)

@@ -120,7 +120,6 @@ public class WorldHex : MonoBehaviour
 
    
 
-
     public void ShowHighlight(bool combat)
     {
         if (hexHighlight != null)
@@ -356,8 +355,9 @@ public class WorldHex : MonoBehaviour
         {
             if (cityData.levelPointsToNext > 0)
             {
+                cityView.ToggleOffProgressPoint(false);
                 cityData.levelPointsToNext--;
-                cityView.RemoveProgressUIPoint();
+               
                 yield return new WaitForSeconds(0.3f);
             }
             else
@@ -370,12 +370,9 @@ public class WorldHex : MonoBehaviour
                 cityData.negativeLevelPoints++;
                 cityData.output--;
 
-                cityView.AddNegativeProgressUIPoint();
-                cityView.UpdateData();
+                cityView.ToggleOnProgressPoint(true);
                 yield return new WaitForSeconds(0.3f);
             }
-
-            cityView.UpdateData();
 
         }
 
@@ -387,6 +384,7 @@ public class WorldHex : MonoBehaviour
     }
 
     bool progressPointsAddRunning = false;
+
     public IEnumerator AddProgressPoint(int value, bool showQuests)
     {
         progressPointsAddRunning = true;
@@ -396,103 +394,122 @@ public class WorldHex : MonoBehaviour
         }
         for(int i = 0; i < value; i++)
         {
+            yield return new WaitForSeconds(1f);
             if (cityData.negativeLevelPoints > 0)
             {
+                cityView.ToggleOffProgressPoint(true);
                 cityData.negativeLevelPoints--;
-                cityView.RemoveProgressUIPoint();
-                cityData.output++;
-                cityView.UpdateData();
-                yield return new WaitForSeconds(0.3f);
-                
+                cityData.output++;        
                 continue;
-            }
-    
-            cityData.levelPointsToNext++;
-
-            if (cityData.levelPointsToNext == cityData.targetLevelPoints)
-            {
-                cityView.AddProgressUIPoint();
-                yield return new WaitForSeconds(0.3f);
-
-                cityData.level++;
-                cityData.targetLevelPoints = cityData.level + 1;
-                cityData.levelPointsToNext = 0;
-                cityData.output++;
-                cityView.AddLevelUIPoint();
-                cityView.RemoveAllProgressPoints();
-                cityView.UpdateData();
-                if (visualHelper != null)
-                {
-                    visualHelper.cityLevelEffect.SetActive(true);
-                }
-
-                if (showQuests)
-                {
-                    string popupTitle = cityData.cityName + " Leved Up";
-                    string popupDescr = cityData.cityName + " has grown to level " + cityData.level + "\n\n Choose your reward: ";
-
-   
-                    if (cityData.level == 2)
-                    {
-                        UIManager.Instance.waitingForPopupReply = true;
-                        UIManager.Instance.OpenPopupReward(
-                            popupTitle,
-                            popupDescr,
-                         "+" + GameManager.Instance.unitReward.ToString() + " Unit",
-                         () => PopUpCustomRewardUnit(),
-                         "+" + GameManager.Instance.visibilityReward + " Visibility",
-                         () => PopUpCustomRewardVisibility()
-                         );
-                    }
-                    if (cityData.level == 3)
-                    {
-                        UIManager.Instance.waitingForPopupReply = true;
-                        UIManager.Instance.OpenPopupReward(
-                            popupTitle,
-                            popupDescr,
-                          "Expand Borders",
-                         () => PopupCustomRewardBorders(),
-                         "+" + GameManager.Instance.currencyReward + " Stars",
-                         () => PopupCustomRewardStars()
-                         );
-                    }
-                    else if (cityData.level == 4)
-                    {
-                        UIManager.Instance.waitingForPopupReply = true;
-                        UIManager.Instance.OpenPopupReward(
-                            popupTitle,
-                            popupDescr,
-                         "+" + GameManager.Instance.populationReward + " Population",
-                         () => PopupCustomRewardPopulation(),
-                         "+" + GameManager.Instance.productionReward + " Production",
-                         () => PopupCustomRewardProduction()
-                         );
-                    }
-                }
-
-                while (UIManager.Instance.waitingForPopupReply)
-                {
-                    yield return new WaitForSeconds(0.1f);
-                }
-               
-                yield return new WaitForSeconds(0.2f);
-                if (visualHelper != null)
-                {
-                    visualHelper.cityLevelEffect.SetActive(false);
-                }
-                else
-                {
-
-                    visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
-                    visualHelper.cityLevelEffect.SetActive(false);
-                }
             }
             else
             {
-                cityView.AddProgressUIPoint();
-                yield return new WaitForSeconds(0.3f);
-            }
+                cityData.levelPointsToNext++;
 
+                if (cityData.levelPointsToNext == cityData.targetLevelPoints)
+                {
+                    cityData.level++;
+                    cityData.targetLevelPoints = cityData.level + 1;
+                    cityData.levelPointsToNext = 0;
+                    cityData.output++;
+
+                    cityView.LevelUp();
+
+                    if (visualHelper != null)
+                    {
+                        visualHelper.cityLevelEffect.SetActive(true);
+                    }
+
+                    yield return new WaitForSeconds(0.7f);
+                    if (showQuests)
+                    {
+                        string popupTitle = cityData.cityName + " Leved Up";
+                        string popupDescr = cityData.cityName + " has grown to level " + cityData.level + "\n\n Choose your reward: ";
+
+
+                        if (cityData.level == 2)
+                        {
+                            UIManager.Instance.waitingForPopupReply = true;
+                            UIManager.Instance.OpenPopupReward(
+                                popupTitle,
+                                popupDescr,
+                             "+" + GameManager.Instance.unitReward.ToString() + " Unit",
+                             () => PopUpCustomRewardUnit(),
+                             "+" + GameManager.Instance.visibilityReward + " Visibility",
+                             () => PopUpCustomRewardVisibility()
+                             );
+                        }
+                        else if (cityData.level == 3)
+                        {
+                            UIManager.Instance.waitingForPopupReply = true;
+                            UIManager.Instance.OpenPopupReward(
+                                popupTitle,
+                                popupDescr,
+                              "Expand Borders",
+                             () => PopupCustomRewardBorders(),
+                             "+" + GameManager.Instance.currencyReward + " Stars",
+                             () => PopupCustomRewardStars()
+                             );
+                        }
+                        else if (cityData.level == 4)
+                        {
+                            UIManager.Instance.waitingForPopupReply = true;
+                            UIManager.Instance.OpenPopupReward(
+                                popupTitle,
+                                popupDescr,
+                             "+" + GameManager.Instance.populationReward + " Population",
+                             () => PopupCustomRewardPopulation(),
+                             "+" + GameManager.Instance.productionReward + " Production",
+                             () => PopupCustomRewardProduction()
+                             );
+                        }
+                        else if (cityData.level > 4)
+                        {
+                            if (hexData.occupied)
+                            {
+                                WorldUnit unit = associatedUnit;
+                                if (associatedUnit.TryToMoveRandomly())
+                                {
+                                    UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
+                                }
+                                else
+                                {
+                                    associatedUnit.Death(false);
+                                    UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
+                                }
+                            }
+                            else
+                            {
+                                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
+                            }
+                        }
+                    }
+
+
+                    while (UIManager.Instance.waitingForPopupReply)
+                    {
+                        yield return new WaitForSeconds(0.1f);
+                    }
+
+                    yield return new WaitForSeconds(.5f);
+                    if (visualHelper != null)
+                    {
+                        visualHelper.cityLevelEffect.SetActive(false);
+                    }
+                    else
+                    {
+
+                        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
+                        visualHelper.cityLevelEffect.SetActive(false);
+                    }
+
+
+                }
+                else
+                {
+                    cityView.ToggleOnProgressPoint(false);
+                }
+            }
            
         }
 
@@ -509,24 +526,13 @@ public class WorldHex : MonoBehaviour
 
     }
 
-    /* 
-           public int visibilityReward = 2;
-public UnitType unitReward = UnitType.Melee;//shouldnotbe
-//level 3
-public int currencyReward = 5;
-public int productionReward = 1;
-//level 4
-public int populationReward = 3;
-public int rangeReward = 2;
-
-    */
 
     void PopUpCustomRewardVisibility()
     {
         MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward );
         UIManager.Instance.waitingForPopupReply = false;
     }
-
+    
     void PopUpCustomRewardUnit()
     {
         if (hexData.occupied)
@@ -599,7 +605,6 @@ public int rangeReward = 2;
 
 
         cityView.UpdateData();
-        cityView.UpdateForCityCapture();
     }
 
     void PopupCustomRewardPopulation()
@@ -999,16 +1004,16 @@ public int rangeReward = 2;
             }
         }
 
-        cityView.gameObject.SetActive(true);
+        
         hexData.hasRoad = true;
         roadHelper.SetRoads();
         MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1);
 
-        cityView.UpdateData();
-        cityView.SetDetailsAlpha(true);
-        cityView.UpdateForCityCapture();
         cityData.isUnderSiege = false;
-        cityView.RemoveSiegeState();
+
+
+        cityView.gameObject.SetActive(true);
+        cityView.OccupyCity();
 
         if (hexData.playerOwnerIndex != -1)
         {
@@ -1018,11 +1023,6 @@ public int rangeReward = 2;
         if (visualHelper != null)
         {
             visualHelper.citySiegeEffect.SetActive(false);
-        }
-
-        if (!isThisATakeOver)
-        {
-            cityView.InitialLevelSetup();
         }
        
     }

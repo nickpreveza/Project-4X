@@ -10,7 +10,7 @@ public class WorldUnit : MonoBehaviour
     Wiggler wiggler;
 
     public WorldHex parentHex;
-
+    public WorldHex originCity;
     Vector3 oldPosition;
     Vector3 newPosition;
     Vector3 currentVelocity;
@@ -215,6 +215,28 @@ public class WorldUnit : MonoBehaviour
         VisualUpdate();
     }
 
+    public void TraderAction()
+    {
+        //more checks here probably
+        GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, GameManager.Instance.traderActionReward);
+        Consume();
+        
+    }
+
+    IEnumerator DeathWithDelay()
+    {
+        yield return new WaitForSeconds(.1f);
+        Death(false); //switch this to consume or something, different animation probably. It still is death. 
+    }
+
+    void Consume()
+    {
+        ExhaustActions();
+        visualAnim.SetTrigger("traderAction");
+        SpawnParticle(GameManager.Instance.traderActionParticle);
+        StartCoroutine(DeathWithDelay());
+
+    }
 
     public void OnTurnEnded(int playerIndex)
     {
@@ -295,6 +317,7 @@ public class WorldUnit : MonoBehaviour
         r = newHex.hexData.R;
 
         parentHex = newHex;
+        originCity = newHex;
         parentHex.UnitIn(this);
 
         localHealth = unitReference.health;

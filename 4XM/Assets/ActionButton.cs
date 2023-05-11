@@ -45,6 +45,23 @@ public class ActionButton : MonoBehaviour
         CheckIfAffordable();
     }
 
+    public void SetDataForTrader(HexView newHandler, WorldHex newHex)
+    {
+        backgroundImage = GetComponent<Image>();
+
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        buttonName.text = "Trader";
+        actionCost = 0;
+        costVisual.SetActive(false);
+
+        buttonAction.onClick.AddListener(TraderAction);
+        backgroundImage.sprite = parentHandler.actionBackground;
+
+    }
+
     public void SetDataForShipButton(HexView newHandler, WorldHex newHex)
     {
         backgroundImage = GetComponent<Image>();
@@ -286,7 +303,10 @@ public class ActionButton : MonoBehaviour
         targetHex.CreateResource(type);
     }
 
-   
+    public void TraderAction()
+    {
+        targetHex.associatedUnit.TraderAction();
+    }
 
     public void HarvestResource()
     {

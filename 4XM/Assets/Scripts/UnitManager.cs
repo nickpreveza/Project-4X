@@ -94,18 +94,18 @@ public class UnitManager : MonoBehaviour
                 return gameUnits[3];
             case UnitType.Ship:
                 return gameUnits[4];
-            case UnitType.Defensive:
+            case UnitType.Defensive: //This is now a trader for VC
                 return gameUnits[5];
             case UnitType.Siege:
                 return gameUnits[6];
-
-            case UnitType.Trader:
-            case UnitType.Diplomat:
-                return gameUnits[0];
+            case UnitType.Lance:
+                return gameUnits[7];
+            case UnitType.Knight:
+                return gameUnits[8];
  
         }
 
-        Debug.LogError("Unit type given was invalid. Returned default unit");
+        Debug.LogError("Unit type given was not handled. Returned default unit");
         return gameUnits[0];
 
     }
@@ -524,5 +524,8 @@ public enum UnitType
     Trader,
     Diplomat,
     Boat,
-    Ship
+    Ship,
+    Lance,
+    Leader,
+    Knight
 }

@@ -74,6 +74,7 @@ namespace SignedInitiative
         public int populationReward = 3;
         public int rangeReward = 2;
         public int startCityOutput = 2;
+        public int traderActionReward = 10;
         //level 5
         //maybe special unit..uuuuugh
 
@@ -87,6 +88,9 @@ namespace SignedInitiative
         public GameObject explosionParticle;
         public GameObject resourceHarvestParticle;
         public bool abilitiesDicitionariesCreated;
+
+        public GameObject traderActionParticle;
+        
         void Awake()
         {
             if (Instance == null)
@@ -796,11 +800,12 @@ namespace SignedInitiative
                     player.abilities.mineHarvest = true;
                     break;
                 case Abilities.Shields:
-                    player.abilities.unitShield = true;
+                    //player.abilities.unitShield = true;
+                    player.abilities.unitLance = true;
                     break;
                 case Abilities.Smithery:
                     player.abilities.mineMasterBuilding = true;
-                    //player.abilities.unitKnight = true;
+                    player.abilities.unitLance = true;
 
                     if (GameManager.Instance.createStuff)
                     {
@@ -814,14 +819,16 @@ namespace SignedInitiative
                 case Abilities.Roads:
                     player.abilities.roads = true;
                     break;
-                case Abilities.Guild:
-                    player.abilities.guildBuilding = true;
-                    break;
                 case Abilities.Creator:
                     player.abilities.destroyAbility = true;
                     //player.abilities.unitDiplomat = true;
                     //player.abilities.Trader = true;
                     break;
+                case Abilities.Guild:
+                    player.abilities.guildBuilding = true;
+                    player.abilities.unitTrader = true;
+                    break;
+             
 
                 case Abilities.Forestry:
                     player.abilities.forestHarvest = true;

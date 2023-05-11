@@ -16,12 +16,13 @@ public class AbilityTree
     public bool unitArcher;
     public bool unitHorserider;
     public bool unitTrebucet;
-    public bool unitShield;
-    public bool unitKnight;
+    public bool unitShield; //skipped for vc
+    public bool unitKnight; //knight is now used for the city reward above level 4
+    public bool unitLance;
 
     //civlian unlockables
     public bool unitTrader;
-    public bool unitDiplomat;
+    public bool unitDiplomat; //skipped for vc
 
     //resource harvesting
     public bool fishHarvest;

@@ -15,6 +15,7 @@ public class UnitView : MonoBehaviour
     [SerializeField] Image unitIcon;
     [SerializeField] Color backgroundColor;
     [SerializeField] Color inactiveColor;
+    Color inactiveIconColor;
 
     public void SetData(WorldUnit unit)
     {
@@ -22,6 +23,9 @@ public class UnitView : MonoBehaviour
         unitIcon.sprite = unit.unitReference.icon;
         backgroundColor = GameManager.Instance.GetCivilizationColor(parentUnit.playerOwnerIndex, CivColorType.uiActiveColor);
         inactiveColor = GameManager.Instance.GetCivilizationColor(parentUnit.playerOwnerIndex, CivColorType.uiInactiveColor);
+        Color newColor = Color.white;
+        newColor.a = 180;
+        inactiveIconColor = newColor;
         UpdateData();
     }
 
@@ -35,11 +39,13 @@ public class UnitView : MonoBehaviour
         unitHealth.text = parentUnit.localHealth.ToString();
         if (parentUnit.isInteractable)
         {
+            unitIcon.color = Color.white;
             unitBackground.color = backgroundColor;
         }
         else
         {
-            unitBackground.color = inactiveColor;
+            
+            unitBackground.color = inactiveIconColor;
         }
        
     }
