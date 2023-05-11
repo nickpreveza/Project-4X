@@ -102,7 +102,9 @@ public class UnitManager : MonoBehaviour
                 return gameUnits[7];
             case UnitType.Knight:
                 return gameUnits[8];
- 
+            case UnitType.Trader:
+                return gameUnits[5];
+
         }
 
         Debug.LogError("Unit type given was not handled. Returned default unit");

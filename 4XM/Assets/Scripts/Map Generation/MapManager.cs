@@ -493,7 +493,7 @@ public class MapManager : MonoBehaviour
             {
                 for (int row = 0; row < mapRows; row++)
                 {
-                    hexes[column, row].SetHiddenState(!GameManager.Instance.activePlayer.clearedHexes.Contains(hexes[column, row]));
+                    hexes[column, row].SetHiddenState(!GameManager.Instance.activePlayer.clearedHexes.Contains(hexes[column, row]), false);
                 }
             }
         }
@@ -518,20 +518,31 @@ public class MapManager : MonoBehaviour
         UpdateCloudView();
     }
 
-    public void UnhideHexes(int playerIndex, WorldHex centerHex, int range)
+    public void UnhideHexes(int playerIndex, WorldHex centerHex, int range, bool isInstant)
     {
         List<WorldHex> hexesToUnhide = GetHexesListWithinRadius(centerHex.hexData, range);
+
         if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
         {
-            foreach (WorldHex hex in hexesToUnhide)
+            if (isInstant)
             {
-                hex.SetHiddenState(false);
-                if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                foreach (WorldHex hex in hexesToUnhide)
                 {
-                    GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
-                }
+                    
+                    if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                    {
+                        GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
+                    }
 
+                    hex.SetHiddenState(false, false);
+
+                }
             }
+            else
+            {
+                StartCoroutine(UnhideHexesCoroutine(hexesToUnhide));
+            }
+           
         }
         else
         {
@@ -544,6 +555,21 @@ public class MapManager : MonoBehaviour
             }
         }
         
+    }
+
+    IEnumerator UnhideHexesCoroutine(List<WorldHex> hexesToUnhide)
+    {
+        foreach (WorldHex hex in hexesToUnhide)
+        {
+            if (!GameManager.Instance.activePlayer.clearedHexes.Contains(hex))
+            {
+                GameManager.Instance.activePlayer.clearedHexes.Add(hex);
+            }
+            hex.SetHiddenState(false, true);
+            
+            yield return new WaitForSeconds(0.1f);
+
+        }
     }
 
     public void SetHexUnderSiege(WorldHex hex)

@@ -406,7 +406,7 @@ namespace SignedInitiative
 
         public void PopupCustomRewardVisibility(WorldUnit unit)
         {
-            MapManager.Instance.UnhideHexes(activePlayerIndex, unit.parentHex, 2);
+            MapManager.Instance.UnhideHexes(activePlayerIndex, unit.parentHex, 2, false);
         }
 
         public void PopupCustomRewardUnit(WorldUnit unit, UnitType type)

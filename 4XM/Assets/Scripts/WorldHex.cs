@@ -83,7 +83,40 @@ public class WorldHex : MonoBehaviour
         }
     }
 
-    public void SetHiddenState(bool hiddenState)
+    public void SetHiddenState(bool isHiddenState, bool fade)
+    {
+        if (fade)
+        {
+            StartCoroutine(HiddenStateEnum(isHiddenState));
+        }
+        else
+        {
+            ActualHide(isHiddenState);
+        }
+    }
+
+    IEnumerator HiddenStateEnum(bool hiddenState)
+    {
+       
+        if (cloud != null)
+        {
+
+            if (hiddenState)
+            {
+                ActualHide(hiddenState);
+            }
+            else
+            {
+                cloud.GetComponent<Animator>().SetTrigger("FadeOut");
+                yield return new WaitForSeconds(.5f);
+                ActualHide(hiddenState);
+            }
+
+        }
+    }
+
+
+    void ActualHide(bool hiddenState)
     {
         if (cloud != null)
         {
@@ -93,7 +126,7 @@ public class WorldHex : MonoBehaviour
             unitParent.gameObject.SetActive(!hiddenState);
             if (hexData.type == TileType.MOUNTAIN)
             {
-                if (hexGameObject.transform.childCount > 0) 
+                if (hexGameObject.transform.childCount > 0)
                 {
                     hexGameObject.transform.GetChild(0).gameObject.SetActive(!hiddenState);
                 }
@@ -111,6 +144,7 @@ public class WorldHex : MonoBehaviour
                 RandomizeVisualElevation();
             }
         }
+        
     }
 
     void HideBorder()
@@ -156,7 +190,7 @@ public class WorldHex : MonoBehaviour
         }
 
         HideBorder();
-        SetHiddenState(true);
+        SetHiddenState(true, false);
     }
     public void SetElevationFromType()
     {
@@ -264,11 +298,11 @@ public class WorldHex : MonoBehaviour
 
         if(hexData.type != TileType.MOUNTAIN)
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, false);
         }
         else
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, false);
         }
 
 
@@ -539,7 +573,7 @@ public class WorldHex : MonoBehaviour
 
     void PopUpCustomRewardVisibility()
     {
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward );
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward, false);
         UIManager.Instance.waitingForPopupReply = false;
     }
     
@@ -584,7 +618,7 @@ public class WorldHex : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
 
-        AddProductionPoints(amount);
+        AddLevelPoint(amount);
     }
 
     IEnumerator WaitForProgressPointsToAddBorders()
@@ -611,7 +645,7 @@ public class WorldHex : MonoBehaviour
             }
         }
 
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1);
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1, false);
 
 
         cityView.UpdateData();
@@ -619,7 +653,7 @@ public class WorldHex : MonoBehaviour
 
     void PopupCustomRewardPopulation()
     {
-        StartCoroutine(WaitForProgressPointsToAddProgressPoints(5));
+        StartCoroutine(WaitForProgressPointsToAddProgressPoints(GameManager.Instance.populationReward));
         UIManager.Instance.waitingForPopupReply = false;
     }
 
@@ -1057,7 +1091,7 @@ public class WorldHex : MonoBehaviour
         
         hexData.hasRoad = true;
         roadHelper.SetRoads();
-        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1);
+        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, false);
 
         cityData.isUnderSiege = false;
 
