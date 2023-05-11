@@ -800,24 +800,16 @@ public class WorldUnit : MonoBehaviour
 
         if (!isBoat && !isShip)
         {
-            if (unitReference.canMoveAfterAttack)
+            if (unitReference.canMoveAfterAttack && hasMoved)
             {
                 currentMovePoints++;
-            }
-            else
-            {
-                currentMovePoints = 0;
             }
         }
         else
         {
-            if (boatReference.canMoveAfterAttack)
+            if (boatReference.canMoveAfterAttack && hasMoved)
             {
                 currentMovePoints++;
-            }
-            else
-            {
-                currentMovePoints = 0;
             }
         }
       

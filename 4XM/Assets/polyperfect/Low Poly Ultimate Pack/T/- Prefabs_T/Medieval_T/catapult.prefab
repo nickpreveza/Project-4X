@@ -11,8 +11,7 @@ GameObject:
   - component: {fileID: 4000014098291606}
   - component: {fileID: 33000012952218848}
   - component: {fileID: 23000014131986902}
-  - component: {fileID: 64022689726185460}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: catapult-wheels_back
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -62,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 03ddc7e460b33402eb7640fab3881ac9, type: 2}
+  - {fileID: 2100000, guid: 1b9b64926913a804f95a88f7292960b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -84,20 +83,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64022689726185460
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000010136866332}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300006, guid: 9e0194bdbf65c421d954cd20d20867ee, type: 3}
 --- !u!1 &1000010139385872
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +92,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4000011474957796}
-  m_Layer: 0
+  - component: {fileID: 9209639310447965269}
+  m_Layer: 7
   m_Name: catapult
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -123,7 +109,7 @@ Transform:
   m_GameObject: {fileID: 1000010139385872}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4212874245805736}
@@ -133,6 +119,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+--- !u!95 &9209639310447965269
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010139385872}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1000011342670616
 GameObject:
   m_ObjectHideFlags: 0
@@ -144,8 +150,7 @@ GameObject:
   - component: {fileID: 4000012447225636}
   - component: {fileID: 33000011201409004}
   - component: {fileID: 23000012269156336}
-  - component: {fileID: 64293477880759974}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: catapult-projectile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -217,20 +222,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64293477880759974
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000011342670616}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300004, guid: 9e0194bdbf65c421d954cd20d20867ee, type: 3}
 --- !u!1 &1000011381001554
 GameObject:
   m_ObjectHideFlags: 0
@@ -242,8 +233,7 @@ GameObject:
   - component: {fileID: 4000012427144458}
   - component: {fileID: 33000010195618922}
   - component: {fileID: 23000012654001368}
-  - component: {fileID: 64189519262253626}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: catapult-wheels_front
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -293,7 +283,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 03ddc7e460b33402eb7640fab3881ac9, type: 2}
+  - {fileID: 2100000, guid: 1b9b64926913a804f95a88f7292960b1, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -315,20 +305,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64189519262253626
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000011381001554}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300002, guid: 9e0194bdbf65c421d954cd20d20867ee, type: 3}
 --- !u!1 &1480221433330756
 GameObject:
   m_ObjectHideFlags: 0
@@ -340,8 +316,7 @@ GameObject:
   - component: {fileID: 4212874245805736}
   - component: {fileID: 33008022199145934}
   - component: {fileID: 23327547070292844}
-  - component: {fileID: 64704246149666336}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: catapult-base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -413,17 +388,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &64704246149666336
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1480221433330756}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 0
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300008, guid: 9e0194bdbf65c421d954cd20d20867ee, type: 3}
