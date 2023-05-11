@@ -88,7 +88,7 @@ public class MapManager : MonoBehaviour
     public List<Resource> hillResources = new List<Resource>();
     public List<Resource> mountainResources = new List<Resource>();
 
-    public List<WorldHex> toEnableSiegeIconOn = new List<WorldHex>();
+    List<WorldHex> toEnableSiegeIconOn = new List<WorldHex>();
 
     void Awake()
     {

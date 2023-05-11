@@ -254,6 +254,7 @@ public class WorldHex : MonoBehaviour
                     }
                     cityView.gameObject.SetActive(true);
                     cityView.SetSiegeState(false);
+                    MapManager.Instance.SetHexUnderSiege(this);
                 }
               
             }
@@ -1002,22 +1003,18 @@ public int rangeReward = 2;
 
         cityView.UpdateData();
         cityView.UpdateForCityCapture();
-        
-        if (cityData.isUnderSiege)
+
+        cityData.isUnderSiege = false;
+        cityView.RemoveSiegeState();
+
+        if (hexData.playerOwnerIndex != -1)
         {
-            cityData.isUnderSiege = false;
-            cityView.RemoveSiegeState();
+            GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+        }
 
-            if (hexData.playerOwnerIndex != -1)
-            {
-                GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
-            }
-
-            if (visualHelper != null)
-            {
-                visualHelper.citySiegeEffect.SetActive(false);
-            }
-
+        if (visualHelper != null)
+        {
+            visualHelper.citySiegeEffect.SetActive(false);
         }
 
         if (!isThisATakeOver)
@@ -1038,6 +1035,8 @@ public int rangeReward = 2;
     {
         if (isHidden)
         {
+            UnitManager.Instance.ClearHexSelectionMode();
+            SI_CameraController.Instance.DeselectSelection();
             wiggler?.Wiggle();
             return;
         }

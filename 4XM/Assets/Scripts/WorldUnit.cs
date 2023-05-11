@@ -81,7 +81,7 @@ public class WorldUnit : MonoBehaviour
 
     void Start()
     {
-       
+
         // SI_EventManager.Instance.onUni
     }
 
@@ -177,7 +177,7 @@ public class WorldUnit : MonoBehaviour
         currentDefense = boatReference.defense;
         currentWalkRange = boatReference.walkRange;
         currentAttackRange = boatReference.attackRange;
-       
+
         ExhaustActions();
         VisualUpdate();
         unitView.UpdateData();
@@ -251,7 +251,7 @@ public class WorldUnit : MonoBehaviour
 
         if (shouldRotate)
         {
-            
+
             visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
 
             if (isBoat || isShip)
@@ -266,7 +266,7 @@ public class WorldUnit : MonoBehaviour
                 currentRotationVelocity = Vector3.zero;
             }
 
-           
+
         }
     }
 
@@ -393,25 +393,16 @@ public class WorldUnit : MonoBehaviour
         {
             ValidateRemainigActions(unitReference);
         }
-       
+
     }
 
     void ResetActions(bool isEndOfTurn, bool skipHeal = false)
     {
-    
-        hasMoved = false;
-        hasAttacked = false;
-
-        noWalkHexInRange = false;
-        noAttackHexInRange = false;
-        buttonActionPossible = true;
-
-
         if (!skipHeal)
         {
             if (isEndOfTurn)
             {
-                
+
                 if (!hasMoved && !hasAttacked)
                 {
                     if (isBoat || isShip)
@@ -438,7 +429,11 @@ public class WorldUnit : MonoBehaviour
                             shouldHealThisTurn = true;
                         }
                     }
-               
+
+                }
+                else
+                {
+                    shouldHealThisTurn = false;
                 }
             }
             else
@@ -458,9 +453,15 @@ public class WorldUnit : MonoBehaviour
                 }
             }
         }
-     
 
+        hasMoved = false;
+        hasAttacked = false;
 
+        noWalkHexInRange = false;
+        noAttackHexInRange = false;
+        buttonActionPossible = true;
+
+        //optimize here by skipping this check at end of turn
         if (isBoat || isShip)
         {
             currentAttackCharges = boatReference.attackCharges;
@@ -475,9 +476,6 @@ public class WorldUnit : MonoBehaviour
 
             ValidateRemainigActions(unitReference);
         }
-
-       
-
     }
 
     public void CityCaptureAction()
@@ -507,7 +505,7 @@ public class WorldUnit : MonoBehaviour
         UnitManager.Instance.SelectUnit(this);
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
-    
+
     public void ValidateRemainigActions(UnitData unitDataToVerify)
     {
         if (hasMoved)
@@ -595,11 +593,11 @@ public class WorldUnit : MonoBehaviour
                             }
                         }
                     }
-                  
+
                 }
-                
+
             }
-          
+
         }
         else
         {
@@ -645,11 +643,11 @@ public class WorldUnit : MonoBehaviour
                             }
                         }
                     }
-                   
+
                 }
-               
+
             }
-           
+
         }
 
         unitView?.UpdateData();
@@ -770,17 +768,36 @@ public class WorldUnit : MonoBehaviour
         {
             SpawnParticle(UnitManager.Instance.unitHitParticle, true);
             visualAnim.SetTrigger("Evade");
-      
+
             return false;
         }
     }
 
     public void Heal(int value)
     {
-        SpawnParticle(UnitManager.Instance.unitHealParticle);
-        localHealth += value;
-        localHealth = Mathf.Clamp(localHealth, 0, unitReference.health);
-        unitView.UpdateData();
+        if (isBoat || isShip)
+        {
+            if (localHealth < boatReference.health)
+            {
+                localHealth += value;
+                localHealth = Mathf.Clamp(localHealth, 0, unitReference.health);
+                unitView.UpdateData();
+                SpawnParticle(UnitManager.Instance.unitHealParticle);
+            }
+        }
+        else
+        {
+            if (localHealth < unitReference.health)
+            {
+                localHealth += value;
+                localHealth = Mathf.Clamp(localHealth, 0, unitReference.health);
+                unitView.UpdateData();
+                SpawnParticle(UnitManager.Instance.unitHealParticle);
+            }
+        }
+
+      
+       
     }
 
     public void HealWithDefaultValue()
