@@ -9986,7 +9986,7 @@ MonoBehaviour:
     type: 0
     transformToBuilding: 0
     canMasterBeCreateOnTop: 1
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 2
     creationCost: 0
@@ -10004,7 +10004,7 @@ MonoBehaviour:
     type: 1
     transformToBuilding: 1
     canMasterBeCreateOnTop: 0
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 2
     creationCost: 0
@@ -10042,7 +10042,7 @@ MonoBehaviour:
     type: 5
     transformToBuilding: 1
     canMasterBeCreateOnTop: 1
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 5
     creationCost: 0
@@ -10061,7 +10061,7 @@ MonoBehaviour:
     type: 3
     transformToBuilding: 1
     canMasterBeCreateOnTop: 0
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 5
     creationCost: 0
@@ -10080,7 +10080,7 @@ MonoBehaviour:
     type: 4
     transformToBuilding: 0
     canMasterBeCreateOnTop: 0
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 2
     creationCost: 0
@@ -10096,10 +10096,10 @@ MonoBehaviour:
       type: 3}
   - resourceName: Monument
     description: 
-    type: 6
+    type: 7
     transformToBuilding: 0
     canMasterBeCreateOnTop: 0
-    canBeDestroyedForReward: 0
+    canBeDestroyedForReward: 1
     scoreForPlayer: 0
     harvestCost: 0
     creationCost: 0
@@ -10155,7 +10155,7 @@ MonoBehaviour:
     slaveBuilding: 2
     masterBuilding: 9
     matchingResource: 6
-    isMaster: 0
+    isMaster: 1
     scoreForPlayer: 0
     cost: 5
     output: 1
@@ -10179,7 +10179,7 @@ MonoBehaviour:
     slaveBuilding: 4
     masterBuilding: 9
     matchingResource: 6
-    isMaster: 0
+    isMaster: 1
     scoreForPlayer: 0
     cost: 5
     output: 1
@@ -10249,4 +10249,4 @@ MonoBehaviour:
     output: 0
     spawnChanceRates: []
     prefab: {fileID: 0}
-  hexesUnderSiege: []
+  toEnableSiegeIconOn: []

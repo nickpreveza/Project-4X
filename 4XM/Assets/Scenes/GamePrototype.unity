@@ -9826,7 +9826,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1142379690
 Transform:
   m_ObjectHideFlags: 0
@@ -9983,7 +9983,7 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -9993,17 +9993,17 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -10043,12 +10043,12 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 190
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -58
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -12947,7 +12947,7 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -12957,17 +12957,17 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -13007,12 +13007,12 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 265
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -58
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -15520,7 +15520,7 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -15530,17 +15530,17 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -15580,12 +15580,12 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -58
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -19144,41 +19144,6 @@ PrefabInstance:
       propertyPath: tileParent
       value: 
       objectReference: {fileID: 615703986}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[6].type
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[0].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[1].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[3].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[4].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[5].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1554916793438866701, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
-        type: 3}
-      propertyPath: hexResources.Array.data[6].canBeDestroyedForReward
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1554916793438866702, guid: f62c11e2767b0ae4ea6d9ec7a896225e,
         type: 3}
       propertyPath: m_RootOrder
@@ -19320,249 +19285,14 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
-      propertyPath: gameUnits.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[0].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: 169d45648e00348038299fc345aa6b4f,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[1].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: cba6fba15682e49cdab63583abb7be7c,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[2].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: ea194f6e0abb84f93887d90e9d53273c,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[3].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: 4fa022f68ab454db491cecb86166356a,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[4].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: e999f11042cd241a38ff7e27c7803480,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].cost
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].heal
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: b3d8dbe835c404179842f9f9595f2bf0,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].name
-      value: Shields
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].type
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].cost
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].heal
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].icon
-      value: 
-      objectReference: {fileID: 21300000, guid: 3c6f5b7a54bd84489ba7d655c5b7b812,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].name
-      value: Catapult
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].level
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].level
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].attack
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].health
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].attack
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].health
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].canHeal
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].defense
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].canHeal
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].defense
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].walkRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].walkRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].attackRange
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].moveCharges
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].attackRange
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].moveCharges
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].attackCharges
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].counterAttack
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].attackCharges
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].counterAttack
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].scoreForPlayer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].scoreForPlayer
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].canAttackAfterMove
+      propertyPath: gameUnits.Array.data[6].canAttackAfterMove
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
-      propertyPath: gameUnits.Array.data[5].canMoveAfterAttack
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].canAttackAfterMove
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
       propertyPath: gameUnits.Array.data[6].canMoveAfterAttack
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].visualPrefab.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].visualPrefab.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[3].visualPrefab.Array.data[0]
-      value: 
-      objectReference: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[5].visualPrefab.Array.data[0]
-      value: 
-      objectReference: {fileID: 481217960671923722, guid: 65791b4400124ee48948908562d5d334,
-        type: 3}
-    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
-        type: 3}
-      propertyPath: gameUnits.Array.data[6].visualPrefab.Array.data[0]
-      value: 
-      objectReference: {fileID: 2375571047086091372, guid: d301fc0f40dcc75478f4aefd4e6abf7c,
-        type: 3}
     - target: {fileID: 2117972109247701252, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
       propertyPath: m_RootOrder
@@ -19770,7 +19500,7 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -19780,17 +19510,17 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 70
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -19830,12 +19560,12 @@ PrefabInstance:
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 40
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -58
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9056598548823813420, guid: 92ab59598cfb549f9857caa6dbf3de40,
         type: 3}
@@ -20234,7 +19964,7 @@ PrefabInstance:
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
@@ -20244,12 +19974,12 @@ PrefabInstance:
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
       propertyPath: m_AnchorMin.y
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 347.7589
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
@@ -20294,12 +20024,12 @@ PrefabInstance:
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 173.87946
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -51.6613
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4104563513166324880, guid: 9088f3ea7c6835542befbd6b0e869e40,
         type: 3}
@@ -21153,289 +20883,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: noFog
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: explosionParticle
-      value: 
-      objectReference: {fileID: 5410931681460609965, guid: c991286e10b6b4cb9a9f020e809118ac,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: startWithALotOfMoney
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[0].abilityCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[1].abilityCost
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[2].abilityCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[3].abilityCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[4].abilityCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[4].abilityName
-      value: Fruit Harvest
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[5].abilityCost
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[5].abilityName
-      value: Roads
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[6].abilityCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[6].abilityName
-      value: Guild
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[7].abilityCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[7].abilityName
-      value: Destruction
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[8].abilityCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[9].abilityCost
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[9].abilityName
-      value: Archery
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[10].abilityCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[11].abilityCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[12].abilityCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[13].abilityCost
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[14].abilityCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[14].abilityName
-      value: Ocean
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[15].abilityCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[15].abilityName
-      value: Ship
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[16].abilityCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[16].abilityName
-      value: Husbandry
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[17].abilityCost
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[17].abilityName
-      value: Cavarly
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[18].abilityCost
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[19].abilityCost
-      value: 8
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].civLogo
-      value: 
-      objectReference: {fileID: -312768529563260625, guid: 3da05e9f66c9f254c8875335e7e9179e,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[1].civLogo
-      value: 
-      objectReference: {fileID: -8918885832014658072, guid: 3da05e9f66c9f254c8875335e7e9179e,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[0].abilityDescription
-      value: 'Learn how to traverse the Mountains '
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[1].abilityDescription
-      value: Learn how to harvest the Ore from the Mountains
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[2].abilityDescription
-      value: Learn how to create the Shileds Unit
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[3].abilityDescription
-      value: 'Learn how to create the Smithery Master Building, but also how to create
-        more Ore. '
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[4].abilityDescription
-      value: Learn how to harvest the fruits
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[5].abilityDescription
-      value: Learn how to build Roads to connect your cities
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[6].abilityDescription
-      value: Learn how to create the Guild Master Building
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[7].abilityDescription
-      value: Learn how to destroy any kind of building
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[9].abilityDescription
-      value: Learn how to create the Archer unit
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].boatPrefab
-      value: 
-      objectReference: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[1].boatPrefab
-      value: 
-      objectReference: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[10].abilityDescription
-      value: Learn how to create the Trebuchet unit and how to clear forests for
-        a reward
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[11].abilityDescription
-      value: Learn how to build the Lumberjack Master building
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[12].abilityDescription
-      value: Learn how to catch Fishes
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[13].abilityDescription
-      value: Learn how to build the Port and enter the shallow Sea
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[14].abilityDescription
-      value: Learn how to enter the Ocean waters
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[15].abilityDescription
-      value: Learn how to create Ships on the port building
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[16].abilityDescription
-      value: 'Learn how to harvest the Animals '
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[17].abilityDescription
-      value: Learn how to build the Cavarly unit
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[18].abilityDescription
-      value: Learn how to harvest the Farms
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: abilities.Array.data[19].abilityDescription
-      value: "Learn how to build the Windmill. \n\\nThe Windmill receives production
-        from each nearby farm"
-      objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293650, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: m_RootOrder

@@ -68,9 +68,11 @@ MonoBehaviour:
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
-    boatPrefab: {fileID: 118603909006220285, guid: 09c5011e1f6ba6240a5cc4933f04dbc3,
+    boatPrefab: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
       type: 3}
     shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
+    civLogo: {fileID: -312768529563260625, guid: 3da05e9f66c9f254c8875335e7e9179e,
       type: 3}
   - name: Romans
     unitOverrides: []
@@ -81,9 +83,11 @@ MonoBehaviour:
     borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
-    boatPrefab: {fileID: 118603909006220285, guid: 09c5011e1f6ba6240a5cc4933f04dbc3,
+    boatPrefab: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
       type: 3}
     shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
+    civLogo: {fileID: -8918885832014658072, guid: 3da05e9f66c9f254c8875335e7e9179e,
       type: 3}
   data:
     day: 0
@@ -109,8 +113,9 @@ MonoBehaviour:
   menuActive: 0
   devMode: 0
   allAbilitiesUnlocked: 0
-  startWithALotOfMoney: 0
-  noFog: 1
+  startWithALotOfMoney: 1
+  noFog: 0
+  allowShipUpgradeEverywhere: 0
   createStuff: 0
   infiniteCurrency: 0
   noScenceChanges: 0
@@ -149,6 +154,7 @@ MonoBehaviour:
       createFarm: 0
       createAnimals: 0
       createMine: 0
+      shipUpgrade: 0
       forestMasterBuilding: 0
       mineMasterBuilding: 0
       farmMasterBuilding: 0
@@ -203,6 +209,7 @@ MonoBehaviour:
       createFarm: 0
       createAnimals: 0
       createMine: 0
+      shipUpgrade: 0
       forestMasterBuilding: 0
       mineMasterBuilding: 0
       farmMasterBuilding: 0
@@ -258,6 +265,7 @@ MonoBehaviour:
       createFarm: 0
       createAnimals: 0
       createMine: 0
+      shipUpgrade: 0
       forestMasterBuilding: 0
       mineMasterBuilding: 0
       farmMasterBuilding: 0
@@ -287,65 +295,66 @@ MonoBehaviour:
   abilities:
   - abilityID: 0
     abilityName: Climbing
-    abilityDescription: Allows units to traverse mountains
+    abilityDescription: 'Learn how to traverse the Mountains '
     abilityIcon: {fileID: 0}
-    abilityCost: 1
+    abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 1
   - abilityID: 1
     abilityName: Mining
-    abilityDescription: Allows you to harvest the ore resource
+    abilityDescription: Learn how to harvest the Ore from the Mountains
     abilityIcon: {fileID: 0}
-    abilityCost: 2
+    abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 2
   - abilityID: 2
     abilityName: Shields
-    abilityDescription: Allows you to create  the Shield unit
+    abilityDescription: Learn how to create the Shileds Unit
     abilityIcon: {fileID: 0}
-    abilityCost: 3
+    abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 3
   - abilityID: 3
     abilityName: Smithery
-    abilityDescription: Allows you to create the Ironworks building
+    abilityDescription: 'Learn how to create the Smithery Master Building, but also
+      how to create more Ore. '
     abilityIcon: {fileID: 0}
-    abilityCost: 4
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 4
-    abilityName: Roads
-    abilityDescription: Allows you to build  roads
+    abilityName: Fruit Harvest
+    abilityDescription: Learn how to harvest the fruits
     abilityIcon: {fileID: 0}
-    abilityCost: 1
+    abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 5
   - abilityID: 5
-    abilityName: Trader
-    abilityDescription: Allows you to create the Trader unit
+    abilityName: Roads
+    abilityDescription: Learn how to build Roads to connect your cities
     abilityIcon: {fileID: 0}
-    abilityCost: 2
+    abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 6
   - abilityID: 6
-    abilityName: Diplomat
-    abilityDescription: Allows you to create the Diplomat unit
+    abilityName: Guild
+    abilityDescription: Learn how to create the Guild Master Building
     abilityIcon: {fileID: 0}
-    abilityCost: 3
+    abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 7
   - abilityID: 7
-    abilityName: Guild
-    abilityDescription: Allows you to build the Guild
+    abilityName: Destruction
+    abilityDescription: Learn how to destroy any kind of building
     abilityIcon: {fileID: 0}
-    abilityCost: 4
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
@@ -353,96 +362,97 @@ MonoBehaviour:
     abilityName: Forestry
     abilityDescription: Allows you to harvest the Forest resource
     abilityIcon: {fileID: 0}
-    abilityCost: 1
+    abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 9
   - abilityID: 9
-    abilityName: Husbandry
-    abilityDescription: Allows you to harvest the animal resource and create the
-      Horseman unit
+    abilityName: Archery
+    abilityDescription: Learn how to create the Archer unit
     abilityIcon: {fileID: 0}
-    abilityCost: 2
+    abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 10
   - abilityID: 10
     abilityName: Engineering
-    abilityDescription: Allows you to create the Siege unit
+    abilityDescription: Learn how to create the Trebuchet unit and how to clear forests
+      for a reward
     abilityIcon: {fileID: 0}
-    abilityCost: 3
+    abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 11
   - abilityID: 11
     abilityName: Lumberjack
-    abilityDescription: Allows you to build the Lumberjack
+    abilityDescription: Learn how to build the Lumberjack Master building
     abilityIcon: {fileID: 0}
-    abilityCost: 4
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 12
     abilityName: Fishing
-    abilityDescription: Allows you to harvest the Fish resource
+    abilityDescription: Learn how to catch Fishes
     abilityIcon: {fileID: 0}
-    abilityCost: 1
+    abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 13
   - abilityID: 13
     abilityName: Port
-    abilityDescription: Allows your units to enter the sea
+    abilityDescription: Learn how to build the Port and enter the shallow Sea
     abilityIcon: {fileID: 0}
-    abilityCost: 2
+    abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 14
   - abilityID: 14
-    abilityName: Open Sea
-    abilityDescription: Allows your units to enter the Ocean
+    abilityName: Ocean
+    abilityDescription: Learn how to enter the Ocean waters
     abilityIcon: {fileID: 0}
-    abilityCost: 3
+    abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 15
   - abilityID: 15
-    abilityName: Fish Farm
-    abilityDescription: 
+    abilityName: Ship
+    abilityDescription: Learn how to create Ships on the port building
     abilityIcon: {fileID: 0}
-    abilityCost: 4
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
   - abilityID: 16
-    abilityName: Harvest
-    abilityDescription: Allows you to harvest the Fruit resource
+    abilityName: Husbandry
+    abilityDescription: 'Learn how to harvest the Animals '
     abilityIcon: {fileID: 0}
-    abilityCost: 1
+    abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
     abilityToUnlock: 17
   - abilityID: 17
-    abilityName: Horserider
-    abilityDescription: Allows you to build the Cavarly unit
+    abilityName: Cavarly
+    abilityDescription: Learn how to build the Cavarly unit
     abilityIcon: {fileID: 0}
-    abilityCost: 2
+    abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 18
   - abilityID: 18
     abilityName: Farming
-    abilityDescription: Allows you to build the Farm building
+    abilityDescription: Learn how to harvest the Farms
     abilityIcon: {fileID: 0}
-    abilityCost: 3
+    abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 19
   - abilityID: 19
     abilityName: Windmill
-    abilityDescription: Allows you to build the Windmill building
+    abilityDescription: "Learn how to build the Windmill. \n\\nThe Windmill receives
+      production from each nearby farm"
     abilityIcon: {fileID: 0}
-    abilityCost: 4
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
@@ -462,5 +472,8 @@ MonoBehaviour:
     type: 3}
   landInternactionParticle: {fileID: 8748687995501502678, guid: 62334a566bbfe3945bc7bd0c02ca1c9e,
     type: 3}
+  explosionParticle: {fileID: 5410931681460609965, guid: c991286e10b6b4cb9a9f020e809118ac,
+    type: 3}
   resourceHarvestParticle: {fileID: 1597686569084602476, guid: 78ee1fc7beb65da41ad23fc1c2e427b9,
     type: 3}
+  abilitiesDicitionariesCreated: 0

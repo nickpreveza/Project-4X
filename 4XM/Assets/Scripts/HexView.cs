@@ -265,7 +265,7 @@ public class HexView : MonoBehaviour
 
                 if (GameManager.Instance.activePlayer.abilities.destroyAbility)
                 {
-                    GenerateDestroyButton(true);
+                    GenerateDestroyButton(false);
                 }
             }
 

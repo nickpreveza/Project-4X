@@ -820,7 +820,16 @@ public int rangeReward = 2;
         if (building.isMaster)
         {
             parentCity.cityData.masterBuildings.Remove(building.type);
-            parentCity.RemoveLevelPoint(hexData.buildingLevel);
+
+            if (building.type == BuildingType.Guild)
+            {
+                parentCity.RemoveLevelPoint(building.output);
+            }
+            else
+            {
+                parentCity.RemoveLevelPoint(hexData.buildingLevel);
+            }
+           
         }
         else
         {

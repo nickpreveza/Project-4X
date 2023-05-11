@@ -331,8 +331,23 @@ public class WorldUnit : MonoBehaviour
             visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
             visualAnim.SetTrigger("Idle");
 
-            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-            renderer.materials[0].SetColor("_ColorShift", civColor);
+            if (type != UnitType.Siege)
+            {
+                SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+                renderer.materials[0].SetColor("_ColorShift", civColor);
+            }
+            else if (type == UnitType.Siege)
+            {
+                BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
+                if (helper != null)
+                {
+                    foreach (GameObject obj in helper.objectsToChangeMaterials)
+                    {
+                        obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                    }
+                }
+            }
+
         }
         else
         {
@@ -341,8 +356,22 @@ public class WorldUnit : MonoBehaviour
             visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
             visualAnim.SetTrigger("Idle");
 
-            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-            renderer.materials[0].SetColor("_ColorShift", civColor);
+            if (type != UnitType.Siege)
+            {
+                SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+                renderer.materials[0].SetColor("_ColorShift", civColor);
+            }
+            else if (type == UnitType.Siege)
+            {
+                BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
+                if (helper != null)
+                {
+                    foreach (GameObject obj in helper.objectsToChangeMaterials)
+                    {
+                        obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                    }
+                }
+            }
         }
 
         SpawnParticle(UnitManager.Instance.unitSpawnParticle);
@@ -515,14 +544,29 @@ public class WorldUnit : MonoBehaviour
                 }
                 else
                 {
-                    BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
-                    if (helper != null)
+                    if (isShip)
                     {
-                        foreach(GameObject obj in helper.objectsToChangeMaterials)
+                        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+                        if (helper != null)
                         {
-                            obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                            foreach (GameObject obj in helper.objectsToChangeMaterials)
+                            {
+                                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                            }
                         }
                     }
+                    else if (type == UnitType.Siege)
+                    {
+                        BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
+                        if (helper != null)
+                        {
+                            foreach (GameObject obj in helper.objectsToChangeMaterials)
+                            {
+                                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
+                            }
+                        }
+                    }
+                  
                 }
                 
             }
@@ -532,14 +576,9 @@ public class WorldUnit : MonoBehaviour
         {
             if (visualUnit != null)
             {
-                if (!isShip)
+                if (type == UnitType.Siege)
                 {
-                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-                    renderer.materials[0].SetColor("_ColorShift", inactiveColor);
-                }
-                else
-                {
-                    BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+                    BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
                     if (helper != null)
                     {
                         foreach (GameObject obj in helper.objectsToChangeMaterials)
@@ -547,6 +586,37 @@ public class WorldUnit : MonoBehaviour
                             obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
                         }
                     }
+                }
+                else if (!isShip)
+                {
+                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+                    renderer.materials[0].SetColor("_ColorShift", inactiveColor);
+                }
+                else
+                {
+                    if (isShip)
+                    {
+                        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+                        if (helper != null)
+                        {
+                            foreach (GameObject obj in helper.objectsToChangeMaterials)
+                            {
+                                obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
+                            }
+                        }
+                    }
+                    else if (type == UnitType.Siege)
+                    {
+                        BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
+                        if (helper != null)
+                        {
+                            foreach (GameObject obj in helper.objectsToChangeMaterials)
+                            {
+                                obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
+                            }
+                        }
+                    }
+                   
                 }
                
             }
@@ -835,6 +905,11 @@ public class WorldUnit : MonoBehaviour
         {
             hasMoved = true;
             currentMovePoints--;
+        }
+
+        if (!unitReference.canAttackAfterMove)
+        {
+            currentAttackCharges--;
         }
 
         newPosition = parentHex.hexData.PositionFromCamera();
