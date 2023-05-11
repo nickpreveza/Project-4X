@@ -68,6 +68,8 @@ public class HexView : MonoBehaviour
             {
                 ShowBuilding(isOwner);
                 RoadCheck();
+                DestroyCheck();
+
             }
             else if (hex.hexData.hasResource)
             {
@@ -80,6 +82,7 @@ public class HexView : MonoBehaviour
                     ShowResource(isOwner);
                 }
                 RoadCheck();
+                DestroyCheck();
             }
             else
             {
@@ -89,6 +92,24 @@ public class HexView : MonoBehaviour
         }
     }
 
+
+    void DestroyCheck()
+    {
+        if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+        {
+            if (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+            {
+                if (hex.hexData.hasBuilding)
+                {
+                    GenerateDestroyButton(true);
+                }
+                else if (hex.hexData.hasResource)
+                {
+                    GenerateDestroyButton(false);
+                }
+            }
+        }
+    }
     void RoadCheck()
     {
 
@@ -261,20 +282,9 @@ public class HexView : MonoBehaviour
                     hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
                     resourceButtonState = false;
                 }
-
-
-                if (GameManager.Instance.activePlayer.abilities.destroyAbility)
-                {
-                    GenerateDestroyButton(false);
-                }
             }
 
             GenerateResourceButton(resourceButtonState);
-
-            if (GameManager.Instance.CanPlayerDestoryResourceForReward(hex.hexData.resourceType))
-            {
-                GenerateDestroyButton(false);
-            }
 
             if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
             {
@@ -337,11 +347,6 @@ public class HexView : MonoBehaviour
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
 
             hexDescription.text = "This hex has a " + hexName.text + " building";
-
-            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
-            {
-                GenerateDestroyButton(true);
-            }
         }
         else
         {

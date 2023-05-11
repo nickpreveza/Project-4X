@@ -319,7 +319,7 @@ public class WorldUnit : MonoBehaviour
         }
         else
         {
-            ResetActions(false);
+            ResetActions(true, true);
         }
 
         unitView.SetData(this);
@@ -396,17 +396,9 @@ public class WorldUnit : MonoBehaviour
        
     }
 
-    void ResetActions(bool isEndOfTurn)
+    void ResetActions(bool isEndOfTurn, bool skipHeal = false)
     {
-        if (isEndOfTurn)
-        {
-            if (!hasMoved && !hasAttacked)
-            {
-                shouldHealThisTurn = true;
-            }
-        }
-     
-        
+    
         hasMoved = false;
         hasAttacked = false;
 
@@ -414,22 +406,59 @@ public class WorldUnit : MonoBehaviour
         noAttackHexInRange = false;
         buttonActionPossible = true;
 
-        if (!isEndOfTurn || isEndOfTurn && unitReference.healAtTurnEnd) //heal check
-        {
-            if (shouldHealThisTurn)
-            {
-                if (isBoat || isShip)
-                {
-                    Heal(boatReference.heal);
-                }
-                else
-                {
-                    Heal(unitReference.heal);
-                }
 
-                shouldHealThisTurn = false;
+        if (!skipHeal)
+        {
+            if (isEndOfTurn)
+            {
+                
+                if (!hasMoved && !hasAttacked)
+                {
+                    if (isBoat || isShip)
+                    {
+                        if (boatReference.healAtTurnEnd)
+                        {
+                            HealWithDefaultValue();
+
+                        }
+                        else
+                        {
+                            shouldHealThisTurn = true;
+                        }
+                    }
+                    else
+                    {
+                        if (unitReference.healAtTurnEnd)
+                        {
+                            HealWithDefaultValue();
+
+                        }
+                        else
+                        {
+                            shouldHealThisTurn = true;
+                        }
+                    }
+               
+                }
+            }
+            else
+            {
+                if (shouldHealThisTurn)
+                {
+                    if (isBoat || isShip)
+                    {
+                        Heal(boatReference.heal);
+                    }
+                    else
+                    {
+                        Heal(unitReference.heal);
+                    }
+
+                    shouldHealThisTurn = false;
+                }
             }
         }
+     
 
 
         if (isBoat || isShip)
@@ -751,6 +780,7 @@ public class WorldUnit : MonoBehaviour
         SpawnParticle(UnitManager.Instance.unitHealParticle);
         localHealth += value;
         localHealth = Mathf.Clamp(localHealth, 0, unitReference.health);
+        unitView.UpdateData();
     }
 
     public void HealWithDefaultValue()
