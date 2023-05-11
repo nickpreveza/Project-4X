@@ -31,6 +31,8 @@ public class CityView : MonoBehaviour
     [SerializeField] GameObject connectedIcon;
 
     CanvasGroup canvasGroup;
+    [SerializeField] CanvasGroup cityDetailsCanvasGroup;
+    [SerializeField] Animator cityDetailsAnim;
     public void SetData(WorldHex hex)
     {
         parentHex = hex;
@@ -39,6 +41,9 @@ public class CityView : MonoBehaviour
         connectedIcon.SetActive(false);
         cityCaptureIconInactive.SetActive(false);
         canvasGroup = GetComponent<CanvasGroup>();
+        cityDetailsCanvasGroup.alpha = 0;
+
+        RemoveAllProgressPoints();
     }
 
     public void SetCanvasGroupAlpha(bool isHidden)
@@ -65,6 +70,10 @@ public class CityView : MonoBehaviour
         }
 
         cityNameBackground.color = GameManager.Instance.GetCivilizationColor(parentHex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
+
+        SetDetailsAlpha(true);
+        cityDetailsAnim.SetTrigger("cityCaptured");
+       
     }
 
     public void UpdateData()
@@ -83,18 +92,35 @@ public class CityView : MonoBehaviour
         }
     }
 
+    public void SetDetailsAlpha(bool showDetails)
+    {
+        if (showDetails)
+        {
+            cityDetailsCanvasGroup.alpha = 1;
+        }
+        else
+        {
+            cityDetailsCanvasGroup.alpha = 0;
+        }
+    }
+
     public void SetSiegeState(bool siegeCanHappen)
     {
 
         RemoveSiegeState();
+    
+
 
         if (siegeCanHappen)
         {
             cityCaptureIcon.SetActive(true);
+            cityCaptureIcon.GetComponent<Button>().onClick.AddListener(() => SI_CameraController.Instance.SelectTile(parentHex));
         }
         else
         {
+            cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
             cityCaptureIconInactive.SetActive(true);
+          
         }
     }
 
@@ -102,6 +128,7 @@ public class CityView : MonoBehaviour
     {
         cityCaptureIconInactive.SetActive(false);
         cityCaptureIcon.SetActive(false);
+        cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
     }
     public void AddLevelUIPoint()
     {
@@ -113,7 +140,7 @@ public class CityView : MonoBehaviour
         }
 
         GameObject obj = Instantiate(levelPointPrefab, levelHolder);
-        obj.transform.GetChild(0).gameObject.SetActive(false);
+        obj.GetComponent<LevelPoint>().InitState();
         currentLevelPoints.Add(obj);
     }
 
@@ -140,13 +167,14 @@ public class CityView : MonoBehaviour
     void ToggleOnProgressPoint()
     {
         lastEnabledProgressPointIndex++;
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).gameObject.SetActive(true);
-        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).GetComponent<Image>().color = positiveGainColor;
+        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetComponent<LevelPoint>().SetPointActive(true);
+        levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetComponent<LevelPoint>().SetPointUnitActive(false);
+        //levelHolder.transform.GetChild(lastEnabledProgressPointIndex).GetChild(0).GetComponent<Image>().color = positiveGainColor;
     }
 
     void ToggleOffProgressPoint()
     {
-        levelHolder.transform.GetChild(levelHolder.transform.childCount - 1).GetChild(0).gameObject.SetActive(false);
+        levelHolder.transform.GetChild(levelHolder.transform.childCount - 1).GetComponent<LevelPoint>().SetPointActive(false);
     }
 
     public void AddNegativeProgressUIPoint()

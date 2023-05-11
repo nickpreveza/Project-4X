@@ -593,7 +593,7 @@ public class SI_CameraController : MonoBehaviour
         selectedTile = null;
     }
 
-    void SelectTile(WorldHex newTile)
+    public void SelectTile(WorldHex newTile) //this shouldnt be public. Used for cityView workaround
     {
         if (selectedTile != null)
         {

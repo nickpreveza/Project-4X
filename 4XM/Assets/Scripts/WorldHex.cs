@@ -243,8 +243,10 @@ public class WorldHex : MonoBehaviour
                     {
                         visualHelper.citySiegeEffect.SetActive(true);
                     }
-                    cityView.gameObject.SetActive(false);
-                   // cityView.SetSiegeState(false);
+                    cityView.gameObject.SetActive(true);
+                    cityView.SetSiegeState(false);
+                    cityView.SetDetailsAlpha(false);
+                    MapManager.Instance.SetHexUnderSiege(this);
                 }
                 else
                 {
@@ -254,6 +256,7 @@ public class WorldHex : MonoBehaviour
                     }
                     cityView.gameObject.SetActive(true);
                     cityView.SetSiegeState(false);
+                    cityView.SetDetailsAlpha(true);
                     MapManager.Instance.SetHexUnderSiege(this);
                 }
               
