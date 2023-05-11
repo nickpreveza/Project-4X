@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2325352}
   - component: {fileID: 64975491907118904}
   m_Layer: 0
-  m_Name: SM_Env_Cliff_01
+  m_Name: mountainmaybe
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

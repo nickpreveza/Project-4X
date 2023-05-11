@@ -61,9 +61,9 @@ MonoBehaviour:
   gameCivilizations:
   - name: Greeks
     unitOverrides: []
-    unitColor: {r: 0.0032484946, g: 0.5198052, b: 0.6886792, a: 1}
+    unitColor: {r: 0.29966182, g: 0.60020804, b: 0.6981132, a: 1}
     unitInactive: {r: 0, g: 0.31309974, b: 0.41509432, a: 1}
-    uiColorActive: {r: 0, g: 0.6117647, b: 0.8117647, a: 1}
+    uiColorActive: {r: 0.12322002, g: 0.53514403, b: 0.6698113, a: 1}
     uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.64705884}
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
@@ -76,8 +76,8 @@ MonoBehaviour:
       type: 3}
   - name: Romans
     unitOverrides: []
-    unitColor: {r: 0.6715603, g: 0.1511659, b: 0.745283, a: 1}
-    unitInactive: {r: 0, g: 0, b: 0, a: 0}
+    unitColor: {r: 0.7364821, g: 0.3476326, b: 0.7924528, a: 1}
+    unitInactive: {r: 0.5720125, g: 0.22027412, b: 0.6226415, a: 0.8235294}
     uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
     uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.64705884}
     borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
@@ -345,7 +345,7 @@ MonoBehaviour:
     abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
-    abilityToUnlock: 6
+    abilityToUnlock: 7
   - abilityID: 7
     abilityName: Destruction
     abilityDescription: 'Allows you to destroy buildings and resources. '
@@ -353,7 +353,7 @@ MonoBehaviour:
     abilityCost: 6
     scoreForPlayer: 30
     isUnlocked: 0
-    abilityToUnlock: 20
+    abilityToUnlock: 6
   - abilityID: 6
     abilityName: Guild
     abilityDescription: "Allows you to build the Guild building. \nAllows you to
@@ -363,7 +363,7 @@ MonoBehaviour:
     abilityCost: 6
     scoreForPlayer: 40
     isUnlocked: 0
-    abilityToUnlock: 7
+    abilityToUnlock: 20
   - abilityID: 8
     abilityName: Forestry
     abilityDescription: 'Allows you to build the Tent on Forest hexes. '

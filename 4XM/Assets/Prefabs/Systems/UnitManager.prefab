@@ -95,7 +95,7 @@ MonoBehaviour:
     canMoveAfterAttack: 0
     visualPrefab:
     - {fileID: 481217960671923722, guid: b9dab44c033636a40949ea82c98db25c, type: 3}
-  - name: Cavarly
+  - name: 'Cavalry '
     icon: {fileID: 21300000, guid: ea194f6e0abb84f93887d90e9d53273c, type: 3}
     defaultLockState: 1
     type: 2
@@ -170,17 +170,17 @@ MonoBehaviour:
     canMoveAfterAttack: 1
     visualPrefab:
     - {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26, type: 3}
-  - name: Shields
-    icon: {fileID: 21300000, guid: b3d8dbe835c404179842f9f9595f2bf0, type: 3}
+  - name: Trader
+    icon: {fileID: 21300000, guid: d756a7bcbb54b496aa528f21c3ddc7af, type: 3}
     defaultLockState: 0
-    type: 4
+    type: 5
     civType: 0
     cost: 5
     scoreForPlayer: 10
     level: 1
-    health: 15
-    heal: 3
-    attack: 2
+    health: 5
+    heal: 1
+    attack: 0
     counterAttack: 10
     defense: 5
     walkRange: 1
@@ -194,7 +194,7 @@ MonoBehaviour:
     canAttackAfterMove: 0
     canMoveAfterAttack: 1
     visualPrefab:
-    - {fileID: 481217960671923722, guid: 65791b4400124ee48948908562d5d334, type: 3}
+    - {fileID: 481217960671923722, guid: cd4c9f67977c04205ae8b89bf75956af, type: 3}
   - name: Catapult
     icon: {fileID: 21300000, guid: 3c6f5b7a54bd84489ba7d655c5b7b812, type: 3}
     defaultLockState: 0
@@ -216,10 +216,60 @@ MonoBehaviour:
     attackContinuisly: 0
     canHeal: 1
     healAtTurnEnd: 0
-    canAttackAfterMove: 1
-    canMoveAfterAttack: 1
+    canAttackAfterMove: 0
+    canMoveAfterAttack: 0
     visualPrefab:
     - {fileID: 2375571047086091372, guid: d301fc0f40dcc75478f4aefd4e6abf7c, type: 3}
+  - name: Lance
+    icon: {fileID: 21300000, guid: c3189121f7e3342a3b2fcc2f495c9e31, type: 3}
+    defaultLockState: 0
+    type: 9
+    civType: 0
+    cost: 5
+    scoreForPlayer: 10
+    level: 1
+    health: 15
+    heal: 2
+    attack: 15
+    counterAttack: 5
+    defense: 5
+    walkRange: 4
+    attackRange: 1
+    attackCharges: 1
+    moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 1
+    canHeal: 1
+    healAtTurnEnd: 0
+    canAttackAfterMove: 1
+    canMoveAfterAttack: 0
+    visualPrefab:
+    - {fileID: 481217960671923722, guid: fdb069932779e48aba24088e959b3d82, type: 3}
+  - name: Knight
+    icon: {fileID: 21300000, guid: d8ec7bed8b86f4a3d905859476e40a84, type: 3}
+    defaultLockState: 0
+    type: 11
+    civType: 0
+    cost: 5
+    scoreForPlayer: 10
+    level: 1
+    health: 25
+    heal: 5
+    attack: 15
+    counterAttack: 5
+    defense: 5
+    walkRange: 1
+    attackRange: 1
+    attackCharges: 1
+    moveCharges: 1
+    flyAbility: 0
+    attackContinuisly: 0
+    canHeal: 1
+    healAtTurnEnd: 0
+    canAttackAfterMove: 0
+    canMoveAfterAttack: 0
+    visualPrefab:
+    - {fileID: 481217960671923722, guid: 09b21b479c07143e58745e65b04e4de9, type: 3}
   hexSelectMode: 0
   selectedUnit: {fileID: 0}
   unitActive: {fileID: 2100000, guid: 14d73d1c40188e54989d4ccfdc96058b, type: 2}

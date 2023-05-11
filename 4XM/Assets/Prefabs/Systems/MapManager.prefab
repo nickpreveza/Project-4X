@@ -10113,7 +10113,7 @@ MonoBehaviour:
     - 0
     prefab: {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
   hexBuildings:
-  - buildingName: Cabin
+  - buildingName: Tent
     description: 
     type: 0
     slaveBuilding: 9
