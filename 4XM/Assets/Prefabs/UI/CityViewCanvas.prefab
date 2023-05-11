@@ -237,7 +237,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4650582497806201615
 RectTransform:
   m_ObjectHideFlags: 0
@@ -539,7 +539,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &1223574671371912173
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1424,7 +1424,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 4c574975a63c349baad6bc2f90cf22d7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 01388e084f08a42709215c4650bd004b, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

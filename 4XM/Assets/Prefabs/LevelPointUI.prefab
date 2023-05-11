@@ -277,7 +277,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b777f7ad575ff334faacd3cbc540cb62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  anim: {fileID: 0}
+  anim: {fileID: 7534435038800889466}
   levelActive: {fileID: 3015359523645765267}
   unitActive: {fileID: 2890638331560181605}
 --- !u!1 &4821951596285811747

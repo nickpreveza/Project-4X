@@ -1005,8 +1005,8 @@ public int rangeReward = 2;
         MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1);
 
         cityView.UpdateData();
+        cityView.SetDetailsAlpha(true);
         cityView.UpdateForCityCapture();
-
         cityData.isUnderSiege = false;
         cityView.RemoveSiegeState();
 
