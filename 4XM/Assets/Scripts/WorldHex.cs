@@ -395,6 +395,7 @@ public class WorldHex : MonoBehaviour
         for(int i = 0; i < value; i++)
         {
             yield return new WaitForSeconds(1f);
+            wiggler?.Wiggle();
             if (cityData.negativeLevelPoints > 0)
             {
                 cityView.ToggleOffProgressPoint(true);
@@ -634,37 +635,6 @@ public class WorldHex : MonoBehaviour
         StartCoroutine(RemoveProgressPoint(points));
     }
 
-  
-
-    void CalculatePointsForMasterBuilding()
-    {
-        for(int i = 0; i < hexData.buildingLevel; i++)
-        {
-            parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
-        }
-    }
-
-    void CalculateBuildingLevel()
-    {
-        hexData.buildingLevel++;
-
-        foreach (WorldHex hex in adjacentHexes)
-        {
-            if (hex.hexData.hasBuilding)
-            {
-                if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).slaveBuilding)
-                {
-                    hexData.buildingLevel++;
-                }
-
-            }
-            else
-            {
-                continue;
-            }
-        }
-    }
-
     public void CreateResource(ResourceType type)
     {
         GenerateResource(type);
@@ -673,37 +643,45 @@ public class WorldHex : MonoBehaviour
 
     public void HarvestResource()
     {
+        //for some reason this didnt work inside the enum
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+        StartCoroutine(HarvestResourceEnum());
+    }
+
+    IEnumerator HarvestResourceEnum()
+    {
 
         Resource resource = MapManager.Instance.GetResourceByType(hexData.resourceType);
 
-        if (resource.type == ResourceType.MONUMENT)
+        if(resource.type == ResourceType.MONUMENT)
         {
             associatedUnit.MonumentCapture();
             int randomReward = Random.Range(0, 7);
             GameManager.Instance.MonumentReward(randomReward, associatedUnit);
-           
+
         }
         else if (resource.transformToBuilding)
         {
-            SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+           
             hexData.hasBuilding = true;
             hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
 
             GameObject obj = Instantiate(MapManager.Instance.GetBuildingByType(hexData.buildingType).levelPrefabs[0], resourceParent);
 
-            CheckForMasterBuilding();
-
             if (resource.output > 0)
             {
+                yield return new WaitForSeconds(0.5f);
                 parentCity.AddLevelPoint(resource.output);
             }
+
+            yield return new WaitForSeconds(.5f);
+            FindMaster();
 
         }
         else
         {
-            SpawnParticle(GameManager.Instance.resourceHarvestParticle);
             if (resource.output > 0)
             {
                 parentCity.AddLevelPoint(resource.output);
@@ -715,23 +693,37 @@ public class WorldHex : MonoBehaviour
         hexData.resourceType = ResourceType.EMPTY;
 
         Select(false);
+
     }
 
-    void CheckForMasterBuilding()
-    {
-        bool masterExists = false;
+    
 
-        foreach(WorldHex hex in adjacentHexes)
+    void FindMaster()
+    {
+        foreach(WorldHex adjHex in adjacentHexes)
         {
-            if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
+            if (adjHex.hexData.hasCity)
             {
-                hex.AddLevelForMaster();
-                break;
+                continue;
             }
+            if(adjHex.parentCity != this.parentCity)
+            {
+                continue;
+            }
+            if (adjHex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
+            {
+                if (adjHex.parentCity == this.parentCity)
+                {
+                    adjHex.AddLevelToMaster();
+                    break;
+                }
+            }
+            
+            
         }
     }
 
-    void AddLevelForMaster()
+    void AddLevelToMaster()
     {
         hexData.buildingLevel++;
         parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
@@ -761,12 +753,17 @@ public class WorldHex : MonoBehaviour
         return cityData.masterBuildings.Contains(type);
     }
 
-    public void GenerateMasterBuilding(BuildingType type)
+    public void CreateBuilding(BuildingType type)
+    {
+        StartCoroutine(CreateMaster(type));
+    }
+
+    IEnumerator CreateMaster(BuildingType type)
     {
         if (hexData.hasBuilding)
         {
             Debug.LogWarning("Tried to place building on top of building");
-            return;
+            yield break;
         }
 
         if (hexData.hasResource)
@@ -782,16 +779,39 @@ public class WorldHex : MonoBehaviour
         hexData.buildingType = type;
         hexData.buildingLevel = 0;
         int buildingLevelPrefab = 0;
+
         if (type != BuildingType.Guild)
         {
-            CalculateBuildingLevel();
-           
+            hexData.buildingLevel++;
+            List<WorldHex> hexesToGainLevelFrom = new List<WorldHex>();
+            GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
+
+            foreach (WorldHex hex in adjacentHexes)
+            {
+                if (hex.hexData.hasBuilding && hex.parentCity == this.parentCity)
+                {
+                    if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).slaveBuilding)
+                    {
+                        hexesToGainLevelFrom.Add(hex);
+                        
+                    }
+                }
+    
+            }
+
+            foreach(WorldHex hex in hexesToGainLevelFrom)
+            {
+                yield return new WaitForSeconds(0.5f);
+                hexData.buildingLevel++;
+                hex.wiggler.Wiggle();
+                parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+            }
+            /*
             if (building.levelPrefabs.Length > hexData.buildingLevel)
             {
                 buildingLevelPrefab = hexData.buildingLevel-1;
-            }
+            }*/
 
-            CalculatePointsForMasterBuilding();
         }
         else
         {
@@ -799,9 +819,9 @@ public class WorldHex : MonoBehaviour
             buildingLevelPrefab = 0;
 
             parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+            GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
         }
 
-        GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
         UIManager.Instance.ShowHexView(this);
     }
 
@@ -842,7 +862,9 @@ public class WorldHex : MonoBehaviour
         }
         else
         {
-            parentCity.RemoveLevelPoint(MapManager.Instance.GetResourceByType(building.matchingResource).output);
+            int pointsToRemove = MapManager.Instance.GetResourceByType(building.matchingResource).output;
+            pointsToRemove += FindPointsToRemoveFromMasters(building);
+            parentCity.RemoveLevelPoint(pointsToRemove);
         }
       
 
@@ -856,6 +878,20 @@ public class WorldHex : MonoBehaviour
         }
        
         UIManager.Instance.ShowHexView(this);
+    }
+
+    int FindPointsToRemoveFromMasters(Building building)
+    {
+        foreach (WorldHex hex in parentCity.cityData.cityHexes)
+        {
+            if (hex.hexData.buildingType == building.masterBuilding)
+            {
+                hex.hexData.buildingLevel--;
+                return MapManager.Instance.GetBuildingByType(building.masterBuilding).output;
+            }
+        }
+
+        return 0;
     }
 
     public void CreateRoad()

@@ -318,7 +318,7 @@ public class ActionButton : MonoBehaviour
 
     public void CreateMasterBuilding()
     {
-        targetHex.GenerateMasterBuilding(masterBuildingType);
+        targetHex.CreateBuilding(masterBuildingType);
     }
 
     public void SpawnUnit()
