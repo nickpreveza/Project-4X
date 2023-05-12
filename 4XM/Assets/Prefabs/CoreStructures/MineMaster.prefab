@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8283006243932518565}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: MineMaster
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -117,6 +117,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: cage-hanging
       objectReference: {fileID: 0}
+    - target: {fileID: 6593188622494473129, guid: 0a42cd445e538a44e81081cc2be817fb,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0a42cd445e538a44e81081cc2be817fb, type: 3}
 --- !u!4 &4372435398446250671 stripped
@@ -197,6 +202,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: fireplace 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1180990414951225164, guid: 5279dfc5d326a464e8ed5830bab7fb5a,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5279dfc5d326a464e8ed5830bab7fb5a, type: 3}
 --- !u!4 &7102351217641170691 stripped
@@ -216,6 +226,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: rocks-small (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2956407691204253593, guid: 94afed5345486654386df82cdd46dd1f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2957454682034915095, guid: 94afed5345486654386df82cdd46dd1f,
         type: 3}
@@ -306,6 +321,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: egypt-oven (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 6883888211828574376, guid: b3fcad85eaf64224db7baca5ff64190f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6883888211828741256, guid: b3fcad85eaf64224db7baca5ff64190f,
         type: 3}

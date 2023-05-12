@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8082150666685698214}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: AnimalResource
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,6 +47,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: stump
+      objectReference: {fileID: 0}
+    - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7764927871825758345, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
@@ -193,6 +198,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush_1
       objectReference: {fileID: 0}
+    - target: {fileID: 5093701034185827484, guid: 657b4e9ce4f5a9849ae83a2f3e939855,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 657b4e9ce4f5a9849ae83a2f3e939855, type: 3}
 --- !u!4 &6059867835583640295 stripped
@@ -268,6 +278,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: stone-flat_brown
       objectReference: {fileID: 0}
+    - target: {fileID: 2281604235665436110, guid: 53415213315afb04187775abb993db80,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 53415213315afb04187775abb993db80, type: 3}
 --- !u!4 &940360755758311029 stripped
@@ -287,6 +302,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: horse (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5154423116249197109, guid: 361e97a9f452ad34ca7faa4592b9159d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5154423116249446531, guid: 361e97a9f452ad34ca7faa4592b9159d,
         type: 3}
@@ -377,6 +397,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: horse (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5154423116249197109, guid: 361e97a9f452ad34ca7faa4592b9159d,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5154423116249446531, guid: 361e97a9f452ad34ca7faa4592b9159d,
         type: 3}

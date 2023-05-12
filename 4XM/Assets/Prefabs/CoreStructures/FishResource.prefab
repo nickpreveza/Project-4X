@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8896001895563352489}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: FishParent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -42,9 +42,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8896001896266731584}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: FishResource
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -76,6 +76,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Koi_Tri
+      objectReference: {fileID: 0}
+    - target: {fileID: 5012519128514100086, guid: b0c5780ee942bb74c94c69f6d5aee234,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5682376403964568012, guid: b0c5780ee942bb74c94c69f6d5aee234,
         type: 3}
@@ -166,6 +171,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Koi_Tri (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5012519128514100086, guid: b0c5780ee942bb74c94c69f6d5aee234,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5682376403964568012, guid: b0c5780ee942bb74c94c69f6d5aee234,
         type: 3}

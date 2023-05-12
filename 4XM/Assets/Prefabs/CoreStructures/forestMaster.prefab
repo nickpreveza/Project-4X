@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4845381341361641890}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: forestMaster
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -52,7 +52,7 @@ PrefabInstance:
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
@@ -152,7 +152,7 @@ PrefabInstance:
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
@@ -252,7 +252,7 @@ PrefabInstance:
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
@@ -419,6 +419,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: House_1_RED
       objectReference: {fileID: 0}
+    - target: {fileID: 1594899793403758805, guid: 322fc8da88dd40e408a3a0ee227ffbaa,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 322fc8da88dd40e408a3a0ee227ffbaa, type: 3}
 --- !u!4 &6132909014130894852 stripped
@@ -512,7 +517,7 @@ PrefabInstance:
     - target: {fileID: 6227737156431326449, guid: eef230bcc527c0545922510b030d4697,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6227737156431326449, guid: eef230bcc527c0545922510b030d4697,
         type: 3}
@@ -542,7 +547,7 @@ PrefabInstance:
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}
       propertyPath: m_Layer
-      value: 0
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 7764927871825531193, guid: 97b94b7b3253af84790151de9721df95,
         type: 3}

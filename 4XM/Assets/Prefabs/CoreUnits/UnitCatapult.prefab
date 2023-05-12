@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4063510903550020985}
   - component: {fileID: 3723296997960031604}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: UnitCatapult
   m_TagString: Unit
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4876144803584794643}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: AnimFix
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,9 +87,29 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 4876144803584794643}
     m_Modifications:
+    - target: {fileID: 1000010136866332, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1000010139385872, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
       propertyPath: m_Name
       value: catapult
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000010139385872, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000011342670616, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1000011381001554, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1480221433330756, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 4000011474957796, guid: 284774c8a70dd3d4bb3dd96b18d0a4a3, type: 3}
       propertyPath: m_RootOrder

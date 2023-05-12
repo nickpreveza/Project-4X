@@ -403,15 +403,18 @@ public class HexView : MonoBehaviour
                 GenerateResourceButton(unit.buttonActionPossible, ResourceType.EMPTY, false);
             }
 
-            if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
+            if (GameManager.Instance.activePlayer.abilities.shipUpgrade)
             {
-                if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
+                if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
                 {
-                    GenerateShipButton();
-                }
-               
-            }
+                    if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
+                    {
+                        GenerateShipButton();
+                    }
 
+                }
+            }
+           
             if (unit.unitReference.type == UnitType.Trader && hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Guild)
             {
                 if (hex.hexData.playerOwnerIndex == unit.playerOwnerIndex && hex.parentCity != unit.originCity)

@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5383725951236156395}
-  m_Layer: 7
+  m_Layer: 10
   m_Name: Mine
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,6 +47,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GoldAlt (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483601706584138751, guid: 0d0a2d11778966342b10446f43dc3b6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2483601706584637407, guid: 0d0a2d11778966342b10446f43dc3b6b,
         type: 3}
@@ -127,6 +132,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GoldAlt (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483601706584138751, guid: 0d0a2d11778966342b10446f43dc3b6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2483601706584637407, guid: 0d0a2d11778966342b10446f43dc3b6b,
         type: 3}
@@ -223,6 +233,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldAlt (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 2483601706584138751, guid: 0d0a2d11778966342b10446f43dc3b6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2483601706584637407, guid: 0d0a2d11778966342b10446f43dc3b6b,
         type: 3}
       propertyPath: m_RootOrder
@@ -303,6 +318,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GoldAlt
       objectReference: {fileID: 0}
+    - target: {fileID: 2483601706584138751, guid: 0d0a2d11778966342b10446f43dc3b6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2483601706584637407, guid: 0d0a2d11778966342b10446f43dc3b6b,
         type: 3}
       propertyPath: m_RootOrder
@@ -382,6 +402,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GoldAlt (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2483601706584138751, guid: 0d0a2d11778966342b10446f43dc3b6b,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2483601706584637407, guid: 0d0a2d11778966342b10446f43dc3b6b,
         type: 3}

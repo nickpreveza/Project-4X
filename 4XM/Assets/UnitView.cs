@@ -15,7 +15,6 @@ public class UnitView : MonoBehaviour
     [SerializeField] Image unitIcon;
     [SerializeField] Color backgroundColor;
     [SerializeField] Color inactiveColor;
-    Color inactiveIconColor;
 
     public void SetData(WorldUnit unit)
     {
@@ -42,7 +41,7 @@ public class UnitView : MonoBehaviour
         else
         {
             
-            unitBackground.color = inactiveIconColor;
+            unitBackground.color = inactiveColor;
         }
        
     }

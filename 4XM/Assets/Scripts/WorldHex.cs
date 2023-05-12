@@ -325,11 +325,11 @@ public class WorldHex : MonoBehaviour
 
         if(hexData.type != TileType.MOUNTAIN)
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, true);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, false);
         }
         else
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, true);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, false);
         }
 
 

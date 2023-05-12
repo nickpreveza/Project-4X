@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8761342658117544157}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: UnclaimedCity 2
-  m_TagString: Untagged
+  m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -104,6 +104,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bush_1
       objectReference: {fileID: 0}
+    - target: {fileID: 5093701034185827484, guid: 657b4e9ce4f5a9849ae83a2f3e939855,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 657b4e9ce4f5a9849ae83a2f3e939855, type: 3}
 --- !u!4 &6795793305102204422 stripped
@@ -123,6 +128,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bush_10
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662280676332587975, guid: 163e946b9c4826341bfcf73e5fded2ec,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8662280676333017063, guid: 163e946b9c4826341bfcf73e5fded2ec,
         type: 3}
@@ -270,6 +280,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Obelisk
       objectReference: {fileID: 0}
+    - target: {fileID: 6036493811955605066, guid: de6653109961f1246a96a9adedab8208,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de6653109961f1246a96a9adedab8208, type: 3}
 --- !u!4 &5420675031720858702 stripped
@@ -289,6 +304,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Bush_10 (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8662280676332587975, guid: 163e946b9c4826341bfcf73e5fded2ec,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 8662280676333017063, guid: 163e946b9c4826341bfcf73e5fded2ec,
         type: 3}

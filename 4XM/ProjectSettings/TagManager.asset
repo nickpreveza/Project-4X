@@ -7,6 +7,7 @@ TagManager:
   - FxTemporaire
   - Unit
   - Tile
+  - Structure
   layers:
   - Default
   - TransparentFX
@@ -17,8 +18,8 @@ TagManager:
   - WorldUI
   - Interactables
   - Cloud
-  - 
-  - 
+  - Unit
+  - Structure
   - 
   - 
   - 

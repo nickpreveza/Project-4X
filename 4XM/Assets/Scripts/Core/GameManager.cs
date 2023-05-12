@@ -75,6 +75,8 @@ namespace SignedInitiative
         public int rangeReward = 2;
         public int startCityOutput = 2;
         public int traderActionReward = 10;
+        public int startCurrencyAmount;
+
         //level 5
         //maybe special unit..uuuuugh
 
@@ -345,6 +347,13 @@ namespace SignedInitiative
                 foreach(Player player in sessionPlayers)
                 {
                     player.AddStars(1000);
+                }
+            }
+            else
+            {
+                foreach (Player player in sessionPlayers)
+                {
+                    player.AddStars(startCurrencyAmount);
                 }
             }
             if (noFog)
