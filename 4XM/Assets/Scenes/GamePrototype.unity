@@ -20034,13 +20034,53 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
+      propertyPath: gameUnits.Array.data[6].attack
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[7].attack
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
       propertyPath: gameUnits.Array.data[0].defense
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
+      propertyPath: gameUnits.Array.data[8].defense
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
       propertyPath: gameUnits.Array.data[0].walkRange
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[1].walkRange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[2].walkRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[5].walkRange
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[7].walkRange
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[1].attackRange
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
@@ -20061,6 +20101,21 @@ PrefabInstance:
         type: 3}
       propertyPath: gameUnits.Array.data[4].counterAttack
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[5].attackCharges
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[6].counterAttack
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2117972109247701251, guid: ab44f9d429aa16449ae2e165df405d5f,
+        type: 3}
+      propertyPath: gameUnits.Array.data[8].counterAttack
+      value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 2117972109247701252, guid: ab44f9d429aa16449ae2e165df405d5f,
         type: 3}
@@ -22367,6 +22422,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
+      propertyPath: allAbilitiesUnlocked
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
       propertyPath: startWithALotOfMoney
       value: 0
       objectReference: {fileID: 0}
@@ -22379,6 +22439,16 @@ PrefabInstance:
         type: 3}
       propertyPath: sessionPlayers.Array.data[1].stars
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: gameCivilizations.Array.data[0].uiColorInactive.a
+      value: 0.7294118
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: gameCivilizations.Array.data[1].uiColorInactive.a
+      value: 0.74509805
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293650, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}

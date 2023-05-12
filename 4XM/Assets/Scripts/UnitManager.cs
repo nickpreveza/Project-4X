@@ -413,6 +413,11 @@ public class UnitManager : MonoBehaviour
                 hexesToRemove.Add(hex);
                 continue;
             }
+            if (hex.Hidden())
+            {
+                hexesToRemove.Add(hex);
+                continue;
+            }
 
             if (hex.hexData.occupied && hex.associatedUnit.BelongsToActivePlayer)
             {

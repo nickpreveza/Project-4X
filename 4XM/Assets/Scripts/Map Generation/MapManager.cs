@@ -524,24 +524,18 @@ public class MapManager : MonoBehaviour
 
         if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
         {
-            if (isInstant)
+            foreach (WorldHex hex in hexesToUnhide)
             {
-                foreach (WorldHex hex in hexesToUnhide)
+
+                if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
                 {
-                    
-                    if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
-                    {
-                        GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
-                    }
-
-                    hex.SetHiddenState(false, false);
-
+                    GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
                 }
+
+                hex.SetHiddenState(false, !isInstant);
+
             }
-            else
-            {
-                StartCoroutine(UnhideHexesCoroutine(hexesToUnhide));
-            }
+           
            
         }
         else
@@ -565,6 +559,7 @@ public class MapManager : MonoBehaviour
             {
                 GameManager.Instance.activePlayer.clearedHexes.Add(hex);
             }
+
             hex.SetHiddenState(false, true);
             
             yield return new WaitForSeconds(0.1f);

@@ -40,7 +40,7 @@ public class UnitView : MonoBehaviour
         }
         else
         {
-            
+            unitIcon.color = inactiveColor;
             unitBackground.color = inactiveColor;
         }
        

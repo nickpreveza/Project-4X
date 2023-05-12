@@ -38,6 +38,11 @@ public class WorldHex : MonoBehaviour
     bool isHidden = true;
     GameObject activeParticle;
 
+    public bool Hidden()
+    {
+        return isHidden;
+    }
+
     private void Awake()
     {
         hexGameObject = transform.GetChild(0).GetChild(0).gameObject;
@@ -87,15 +92,38 @@ public class WorldHex : MonoBehaviour
     {
         ActualHide(isHiddenState);
         return;
+
+        //fade needs rework
         if (fade)
         {
-            StartCoroutine(HiddenStateEnum(isHiddenState));
+            cloud.GetComponent<Animator>().SetTrigger("FadeOut");
+
+            if (isHiddenState)
+            {
+                Invoke("HideTrue", 1f);
+            }
+            else
+            {
+                Invoke("HideFalse", 1f);
+            }
+            
         }
         else
         {
             ActualHide(isHiddenState);
         }
     }
+
+    void HideTrue()
+    {
+        ActualHide(true);
+    }
+
+    void HideFalse()
+    {
+        ActualHide(false);
+    }
+
 
     IEnumerator HiddenStateEnum(bool hiddenState)
     {
