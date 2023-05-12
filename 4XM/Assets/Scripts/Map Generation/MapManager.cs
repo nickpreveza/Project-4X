@@ -119,13 +119,36 @@ public class MapManager : MonoBehaviour
 
     void OnTurnStarted(int playerIndex)
     {
-        if (toEnableSiegeIconOn.Count > 0)
+        if (playerIndex == GameManager.Instance.activePlayerIndex)
         {
-            foreach(WorldHex  hex in toEnableSiegeIconOn)
+            if (toEnableSiegeIconOn.Count > 0)
             {
-                hex.cityView.SetSiegeState(true);
+                List<WorldHex> removeThese = new List<WorldHex>();
+
+                foreach (WorldHex hex in toEnableSiegeIconOn)
+                {
+                    if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != hex.hexData.playerOwnerIndex)
+                    {
+                        hex.cityView.EnableSiege(true);
+                    }
+                    else
+                    {
+                        hex.cityView.RemoveSiegeState();
+                        removeThese.Add(hex);
+                    }
+
+                }
+
+                foreach (WorldHex hex in removeThese)
+                {
+                    if (toEnableSiegeIconOn.Contains(hex))
+                    {
+                        toEnableSiegeIconOn.Remove(hex);
+                    }
+                }
             }
         }
+      
     }
 
     private void OnValidate()

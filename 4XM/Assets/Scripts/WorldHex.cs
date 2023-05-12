@@ -106,6 +106,8 @@ public class WorldHex : MonoBehaviour
             {
                 Invoke("HideFalse", 1f);
             }
+
+            
             
         }
         else
@@ -124,7 +126,7 @@ public class WorldHex : MonoBehaviour
         ActualHide(false);
     }
 
-
+    /*
     IEnumerator HiddenStateEnum(bool hiddenState)
     {
        
@@ -167,7 +169,7 @@ public class WorldHex : MonoBehaviour
             }
 
         }
-    }
+    }*/
 
 
     void ActualHide(bool hiddenState)
@@ -186,11 +188,20 @@ public class WorldHex : MonoBehaviour
                     hexGameObject.transform.GetChild(0).gameObject.SetActive(!hiddenState);
                 }
             }
+
             if (hexData.hasCity)
             {
                 if (cityView != null)
                 {
-                    cityView.SetCanvasGroupAlpha(hiddenState);
+                    if (hiddenState)
+                    {
+                        cityView.SetCanvasGroupAlpha(0);
+                    }
+                    else
+                    {
+                        cityView.SetCanvasGroupAlpha(1);
+                    }
+                   
                 }
             }
 
@@ -324,30 +335,16 @@ public class WorldHex : MonoBehaviour
             {
                 cityData.isUnderSiege = true;
 
-                //does the same thing for now - debug 
+                cityView.gameObject.SetActive(true);
+                cityView.EnableSiege(false);
+
                 if (hexData.playerOwnerIndex == -1)
                 {
-                    if (visualHelper != null)
-                    {
-                        visualHelper.citySiegeEffect.SetActive(true);
-                    }
-                    cityView.gameObject.SetActive(true);
-                    cityView.SetSiegeState(false);
-                    cityView.SetDetailsAlpha(false);
-                    MapManager.Instance.SetHexUnderSiege(this);
+                    cityView.SetDetailsAlpha(0);
                 }
-                else
-                {
-                    if (visualHelper != null)
-                    {
-                        visualHelper.citySiegeEffect.SetActive(true);
-                    }
-                    cityView.gameObject.SetActive(true);
-                    cityView.SetSiegeState(false);
-                    cityView.SetDetailsAlpha(true);
-                    MapManager.Instance.SetHexUnderSiege(this);
-                }
-              
+
+                MapManager.Instance.SetHexUnderSiege(this);
+
             }
         }
 
@@ -1076,6 +1073,7 @@ public class WorldHex : MonoBehaviour
         if (updateUI)
         UIManager.Instance.ShowHexView(this);
     }
+
     public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
     {
         if (!hexData.hasCity)
@@ -1157,7 +1155,7 @@ public class WorldHex : MonoBehaviour
 
 
         cityView.gameObject.SetActive(true);
-        cityView.OccupyCity();
+        cityView.OccupyCity(!isThisATakeOver);
 
         if (hexData.playerOwnerIndex != -1)
         {

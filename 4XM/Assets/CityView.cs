@@ -25,49 +25,38 @@ public class CityView : MonoBehaviour
     List<GameObject> currentLevelPoints = new List<GameObject>();
 
     [SerializeField] GameObject cityCaptureIcon;
-    [SerializeField] GameObject cityCaptureIconInactive;
+    [SerializeField] GameObject captureUnavailable;
     [SerializeField] GameObject capitalIcon;
     [SerializeField] GameObject connectedIcon;
 
     CanvasGroup canvasGroup;
     [SerializeField] CanvasGroup cityDetailsCanvasGroup;
     [SerializeField] Animator cityDetailsAnim;
+
     public void SetData(WorldHex hex)
     {
         parentHex = hex;
         capitalIcon.SetActive(false);
         cityCaptureIcon.SetActive(false);
         connectedIcon.SetActive(false);
-        cityCaptureIconInactive.SetActive(false);
+        captureUnavailable.SetActive(false);
         canvasGroup = GetComponent<CanvasGroup>();
         cityDetailsCanvasGroup.alpha = 0;
         OnCreateLevelPoints();
         
     }
 
-    public void SetCanvasGroupAlpha(bool isHidden)
+    public void SetCanvasGroupAlpha(int alpha)
     {
-        if (isHidden)
-        {
-            canvasGroup.alpha = 0;
-        }
-        else
-        {
-            canvasGroup.alpha = 1;
-        }
+        canvasGroup.alpha = alpha;
     }
 
-    public void OccupyCity()
+    public void OccupyCity(bool recalculatePoints)
     {
-        SetCanvasGroupAlpha(false);
-        SetDetailsAlpha(true);
-        UpdateData();
-        CityCaptured();
-        RemoveSiegeState();
-        OnCreateLevelPoints();
+        CityCaptured(recalculatePoints);
     }   
 
-    void CityCaptured()
+    void CityCaptured(bool recalculatePoints)
     {
         if (parentHex == GameManager.Instance.GetPlayerByIndex(parentHex.hexData.playerOwnerIndex).capitalCity)
         {
@@ -79,10 +68,20 @@ public class CityView : MonoBehaviour
         }
 
         cityNameBackground.color = GameManager.Instance.GetCivilizationColor(parentHex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
+        SetCanvasGroupAlpha(1);
+        
+        RemoveSiegeState();
 
-        SetDetailsAlpha(true);
+        UpdateData();
+        SetDetailsAlpha(1);
+
+        if (recalculatePoints)
+        {
+            OnCreateLevelPoints();
+        }
+        
         cityDetailsAnim.SetTrigger("cityCaptured");
-       
+
     }
 
     public void UpdateData()
@@ -101,39 +100,34 @@ public class CityView : MonoBehaviour
         }
     }
 
-    public void SetDetailsAlpha(bool showDetails)
+    public void SetDetailsAlpha(int alpha)
     {
-        if (showDetails)
-        {
-            cityDetailsCanvasGroup.alpha = 1;
-        }
-        else
-        {
-            cityDetailsCanvasGroup.alpha = 0;
-        }
+        cityDetailsCanvasGroup.alpha = alpha;
     }
 
-    public void SetSiegeState(bool siegeCanHappen)
+    public void EnableSiege(bool siegeCanHappenThisTurn)
     {
 
         RemoveSiegeState();
     
-        if (siegeCanHappen)
+        if (siegeCanHappenThisTurn)
         {
             cityCaptureIcon.SetActive(true);
+            captureUnavailable.SetActive(false);
             cityCaptureIcon.GetComponent<Button>().onClick.AddListener(() => SI_CameraController.Instance.SelectTile(parentHex));
         }
         else
         {
             cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
-            cityCaptureIconInactive.SetActive(true);
+            captureUnavailable.SetActive(true);
+            cityCaptureIcon.SetActive(false);
           
         }
     }
 
     public void RemoveSiegeState()
     {
-        cityCaptureIconInactive.SetActive(false);
+        captureUnavailable.SetActive(false);
         cityCaptureIcon.SetActive(false);
         cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
     }
@@ -143,7 +137,7 @@ public class CityView : MonoBehaviour
     {
         OnCreateLevelPoints();
         cityDetailsAnim.SetTrigger("levelUp");
-        SetDetailsAlpha(true);
+        SetDetailsAlpha(1);
         UpdateData();
     }
 
