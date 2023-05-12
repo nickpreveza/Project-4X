@@ -15,8 +15,14 @@ public class ResearchButton: MonoBehaviour
     [SerializeField] TextMeshProUGUI buttonText;
     [SerializeField] TextMeshProUGUI buttonCost;
     [SerializeField] GameObject lockImage;
+    [SerializeField] GameObject highlightImage;
 
     int fetchedAbilityCost;
+
+    private void Start()
+    {
+        highlightImage.SetActive(false);
+    }
     public void FetchData()
     {
         buttonText.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityName;
@@ -46,6 +52,17 @@ public class ResearchButton: MonoBehaviour
         {
             SetAsLocked();
         }
+    }
+
+    public void OpenHighlight()
+    {
+        highlightImage.SetActive(true);
+        Invoke("CloseHighlight", 1f);
+    }
+
+    void CloseHighlight()
+    {
+        highlightImage.SetActive(false);
     }
 
     public void SetAsPurchased()

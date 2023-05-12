@@ -149,6 +149,17 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().OpenResearchPanel();
         }
 
+        public void OpenResearchPanelWithHighlight(ResourceType type)
+        {
+            
+            gamePanel.GetComponent<GamePanel>().OpenResearchPanel(GameManager.Instance.GetAbilityAssociation(type));
+        }
+
+        public void OpenResearchPanelWithHighlight(BuildingType type)
+        {
+            gamePanel.GetComponent<GamePanel>().OpenResearchPanel(GameManager.Instance.GetAbilityAssociation(type));
+        }
+
         IEnumerator ToggleUIPanelEnum(UIPanel targetPanel, bool state, bool fadeGamePanel = true, float delayAmount = 0.0f)
         {
             yield return new WaitForSeconds(delayAmount);
@@ -333,6 +344,7 @@ namespace SignedInitiative
             }
             
         }
+
 
         public void ShowOverlay(GameObject target, float offset, bool placementOverlay)
         {

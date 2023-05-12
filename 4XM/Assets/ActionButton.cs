@@ -154,14 +154,14 @@ public class ActionButton : MonoBehaviour
         }
         else
         {
-            buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+            buttonAction.onClick.AddListener(()=>OpenResearchButton(type));
             costVisual.SetActive(false);
             backgroundImage.color = UIManager.Instance.unaffordableColor;
             buttonAction.interactable = true;
         }
 
     }
-    public void SetDataForResource(HexView newHandler, WorldHex newHex, bool shouldBeInteracable, bool shouldOpenResearch)
+    public void SetDataForResource(HexView newHandler, WorldHex newHex, ResourceType type, bool shouldBeInteracable, bool shouldOpenResearch)
     {
         backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
@@ -192,7 +192,7 @@ public class ActionButton : MonoBehaviour
         {
             if (shouldOpenResearch)
             {
-                buttonAction.onClick.AddListener(UIManager.Instance.OpenResearchPanel);
+                buttonAction.onClick.AddListener(() =>OpenResearchButton(type));
                 buttonAction.interactable = true;
             }
             else
@@ -268,6 +268,16 @@ public class ActionButton : MonoBehaviour
                 buttonAction.interactable = false;
             }
         }
+    }
+
+    public void OpenResearchButton(ResourceType type)
+    {
+        UIManager.Instance.OpenResearchPanelWithHighlight(type);
+    }
+
+    public void OpenResearchButton(BuildingType type)
+    {
+        UIManager.Instance.OpenResearchPanelWithHighlight(type);
     }
 
     public void ShipCreationButton(WorldUnit unit)

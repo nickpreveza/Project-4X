@@ -89,7 +89,7 @@ public class MapManager : MonoBehaviour
     public List<Resource> mountainResources = new List<Resource>();
 
     List<WorldHex> toEnableSiegeIconOn = new List<WorldHex>();
-
+    public float mountainTileUnitOffsetY = 0.4f;
     void Awake()
     {
         if (Instance == null)
@@ -493,7 +493,7 @@ public class MapManager : MonoBehaviour
             {
                 for (int row = 0; row < mapRows; row++)
                 {
-                    hexes[column, row].SetHiddenState(!GameManager.Instance.activePlayer.clearedHexes.Contains(hexes[column, row]), false);
+                    hexes[column, row].SetHiddenState(!GameManager.Instance.activePlayer.clearedHexes.Contains(hexes[column, row]), true);
                 }
             }
         }

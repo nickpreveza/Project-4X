@@ -127,6 +127,20 @@ public class GamePanel : UIPanel
     {
         researchPanel.SetActive(true);
     }
+
+    public void OpenResearchPanel(Abilities type)
+    {
+        researchPanel.SetActive(true);
+        ResearchButton button = research.GetButtonByAbility(type);
+        StartCoroutine(HighlightButton(button));
+    }
+
+    IEnumerator HighlightButton(ResearchButton button)
+    {
+        yield return new WaitForSeconds(0.5f);
+        button.OpenHighlight();
+    }
+
     public void UpdateCurrencies()
     {
         playerName.text = GameManager.Instance.activePlayer.name;

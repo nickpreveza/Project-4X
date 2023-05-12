@@ -286,7 +286,7 @@ public class HexView : MonoBehaviour
                 }
             }
 
-            GenerateResourceButton(resourceButtonState);
+            GenerateResourceButton(resourceButtonState, hex.hexData.resourceType, true);
 
             if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
             {
@@ -299,7 +299,7 @@ public class HexView : MonoBehaviour
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
-            GenerateResourceButton(false);
+            GenerateResourceButton(false, ResourceType.EMPTY, false);
         }
     }
 
@@ -316,25 +316,25 @@ public class HexView : MonoBehaviour
                 if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
                 {
                     hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
-                    GenerateResourceButton(true);
+                    GenerateResourceButton(true, ResourceType.EMPTY, false);
                 }
                 else
                 {
                     hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
-                    GenerateResourceButton(false, false);
+                    GenerateResourceButton(false, ResourceType.EMPTY, false);
                 }
             }
             else
             {
                 hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
-                GenerateResourceButton(false, false);
+                GenerateResourceButton(false, ResourceType.EMPTY, false);
             }
 
         }
         else
         {
             hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
-            GenerateResourceButton(false);
+            GenerateResourceButton(false, ResourceType.EMPTY, false);
         }
     }
 
@@ -400,7 +400,7 @@ public class HexView : MonoBehaviour
 
             if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
             {
-                GenerateResourceButton(unit.buttonActionPossible);
+                GenerateResourceButton(unit.buttonActionPossible, ResourceType.EMPTY, false);
             }
 
             if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
@@ -540,11 +540,11 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable);
     }
 
-    void GenerateResourceButton(bool shouldBeInteractable, bool shouldOpenResearchPanel = true) 
+    void GenerateResourceButton(bool shouldBeInteractable, ResourceType type, bool shouldOpenResearchPanel) 
     {
         //update this to support multiple resources on the same hex
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForResource(this, hex, shouldBeInteractable, shouldOpenResearchPanel);
+        obj.GetComponent<ActionButton>().SetDataForResource(this, hex, type, shouldBeInteractable, shouldOpenResearchPanel);
     }
 
     public void GenerateCityCaptureButton(bool doesUnitHaveActions)

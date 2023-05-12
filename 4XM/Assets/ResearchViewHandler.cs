@@ -17,6 +17,18 @@ public class ResearchViewHandler : MonoBehaviour
         }
     }
 
+    public ResearchButton GetButtonByAbility(Abilities ability)
+    {
+        if (buttonsDictionary.ContainsKey(ability))
+        {
+            return buttonsDictionary[ability];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
     public void UpdateResearchButtons()
     {
         if (!GameManager.Instance.abilitiesDicitionariesCreated)

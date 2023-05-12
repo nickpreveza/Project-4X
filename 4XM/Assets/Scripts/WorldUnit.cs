@@ -265,7 +265,16 @@ public class WorldUnit : MonoBehaviour
             if (Vector3.Distance(this.transform.position, newPosition) < 0.1)
             {
                 shouldMove = false;
-                this.transform.position = newPosition;
+                if (parentHex.hexData.type == TileType.MOUNTAIN)
+                {
+                    Vector3 modifiedTransform = this.transform.localPosition;
+                    modifiedTransform.y = MapManager.Instance.mountainTileUnitOffsetY;
+                    this.transform.localPosition = modifiedTransform;
+                }
+                else
+                {
+                    this.transform.localPosition = Vector3.zero;
+                }
                 currentVelocity = Vector3.zero;
                 visualAnim.SetTrigger("Idle");
             }
@@ -969,6 +978,7 @@ public class WorldUnit : MonoBehaviour
         parentHex.UnitIn(this);
        
         transform.SetParent(parentHex.unitParent);
+       
 
         if (!afterAttack)
         {

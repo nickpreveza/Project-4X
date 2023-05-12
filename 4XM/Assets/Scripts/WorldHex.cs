@@ -85,6 +85,8 @@ public class WorldHex : MonoBehaviour
 
     public void SetHiddenState(bool isHiddenState, bool fade)
     {
+        ActualHide(isHiddenState);
+        return;
         if (fade)
         {
             StartCoroutine(HiddenStateEnum(isHiddenState));
@@ -107,9 +109,33 @@ public class WorldHex : MonoBehaviour
             }
             else
             {
+                isHidden = hiddenState;
                 cloud.GetComponent<Animator>().SetTrigger("FadeOut");
-                yield return new WaitForSeconds(.5f);
-                ActualHide(hiddenState);
+                yield return new WaitForSeconds(.3f);
+                resourceParent.gameObject.SetActive(!hiddenState);
+                unitParent.gameObject.SetActive(!hiddenState);
+                yield return new WaitForSeconds(.2f);
+                cloud.SetActive(hiddenState);
+
+                if (hexData.type == TileType.MOUNTAIN)
+                {
+                    if (hexGameObject.transform.childCount > 0)
+                    {
+                        hexGameObject.transform.GetChild(0).gameObject.SetActive(!hiddenState);
+                    }
+                }
+                if (hexData.hasCity)
+                {
+                    if (cityView != null)
+                    {
+                        cityView.SetCanvasGroupAlpha(hiddenState);
+                    }
+                }
+
+                if (!hiddenState)
+                {
+                    RandomizeVisualElevation();
+                }
             }
 
         }
@@ -120,8 +146,9 @@ public class WorldHex : MonoBehaviour
     {
         if (cloud != null)
         {
-            cloud.SetActive(hiddenState);
+
             isHidden = hiddenState;
+            cloud.SetActive(hiddenState);
             resourceParent.gameObject.SetActive(!hiddenState);
             unitParent.gameObject.SetActive(!hiddenState);
             if (hexData.type == TileType.MOUNTAIN)
@@ -298,11 +325,11 @@ public class WorldHex : MonoBehaviour
 
         if(hexData.type != TileType.MOUNTAIN)
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, false);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, true);
         }
         else
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, false);
+            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, true);
         }
 
 
@@ -573,7 +600,7 @@ public class WorldHex : MonoBehaviour
 
     void PopUpCustomRewardVisibility()
     {
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward, false);
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward, true);
         UIManager.Instance.waitingForPopupReply = false;
     }
     
@@ -645,7 +672,7 @@ public class WorldHex : MonoBehaviour
             }
         }
 
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1, false);
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1, true);
 
 
         cityView.UpdateData();
@@ -981,6 +1008,11 @@ public class WorldHex : MonoBehaviour
         GameObject obj = Instantiate(selectedResource.prefab, resourceParent);
         hexData.resourceType = resourceType;
         hexData.hasResource = true;
+
+        if (hexData.type == TileType.MOUNTAIN)
+        {
+            //obj.transform.localPosition = MapManager.Instance.
+        }
         //allocate a resource base on mapmanager chances and surrounded resources
         //spawn resource
         //set correct data
@@ -1021,7 +1053,7 @@ public class WorldHex : MonoBehaviour
         if (!hexData.hasCity)
         {
 
-            Debug.LogError("Hed does not have a city");
+            Debug.LogError("Hex does not have a city");
             return;
         }
 
@@ -1091,7 +1123,7 @@ public class WorldHex : MonoBehaviour
         
         hexData.hasRoad = true;
         roadHelper.SetRoads();
-        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, false);
+        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, true);
 
         cityData.isUnderSiege = false;
 

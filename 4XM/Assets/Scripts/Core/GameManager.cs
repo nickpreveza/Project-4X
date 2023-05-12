@@ -90,7 +90,7 @@ namespace SignedInitiative
         public bool abilitiesDicitionariesCreated;
 
         public GameObject traderActionParticle;
-        
+
         void Awake()
         {
             if (Instance == null)
@@ -268,6 +268,41 @@ namespace SignedInitiative
             
         }
 
+        public Abilities GetAbilityAssociation(BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.FarmMaster:
+                    return Abilities.Windmill;
+                case BuildingType.ForestMaster:
+                    return Abilities.ForestMaster;
+                case BuildingType.MineMaster:
+                    return Abilities.Smithery;
+            }
+
+            return Abilities.NONE;
+        }
+        public Abilities GetAbilityAssociation(ResourceType resource)
+        {
+            switch (resource)
+            {
+                case ResourceType.FRUIT:
+                    return Abilities.FruitHarvest;
+                case ResourceType.FOREST:
+                    return Abilities.Forestry;
+                case ResourceType.ANIMAL:
+                    return Abilities.Husbandry;
+                case ResourceType.FARM:
+                    return Abilities.Farming;
+                case ResourceType.MINE:
+                    return Abilities.Mining;
+                case ResourceType.FISH:
+                    return Abilities.Fishing;
+            }
+
+            return Abilities.NONE;
+        }
+
         public bool CanPlayerHarvestResource(ResourceType type)
         {
             switch (type)
@@ -406,7 +441,7 @@ namespace SignedInitiative
 
         public void PopupCustomRewardVisibility(WorldUnit unit)
         {
-            MapManager.Instance.UnhideHexes(activePlayerIndex, unit.parentHex, 2, false);
+            MapManager.Instance.UnhideHexes(activePlayerIndex, unit.parentHex, 2, true);
         }
 
         public void PopupCustomRewardUnit(WorldUnit unit, UnitType type)
