@@ -51,6 +51,7 @@ namespace SignedInitiative
 
         bool canLoad;
 
+
         [SerializeField] Button loadGame;
         [SerializeField] UIPanel currentSubpanel;
 
@@ -60,6 +61,10 @@ namespace SignedInitiative
         public popupFunction additionalAction;
 
         public bool waitingForPopupReply;
+
+        public Sprite rankedTopImage;
+        public Sprite rankedSecondImage;
+
         void Awake()
         {
             if (Instance == null)
@@ -144,6 +149,10 @@ namespace SignedInitiative
             StartCoroutine(ToggleUIPanelEnum(targetPanel, state, fadeGamePanel, delayAmount));
         }
 
+        public void HideResearchPanel()
+        {
+            gamePanel.GetComponent<GamePanel>().HideResearchPanel();
+        }
         public void OpenResearchPanel()
         {
             gamePanel.GetComponent<GamePanel>().OpenResearchPanel();
@@ -185,6 +194,12 @@ namespace SignedInitiative
                 GameManager.Instance.menuActive = false;
                 HideTooltip();
             }
+        }
+
+        public void StartTurnAnim()
+        {
+            //gamePanel.GetComponent<GamePanel>().StartTurnAnim();
+            gamePanel.GetComponent<GamePanel>().PlayPlayerAvatarAnim();
         }
         public void CloseCurrentSubpanel()
         {
@@ -239,6 +254,7 @@ namespace SignedInitiative
             mainMenuPanel?.Disable();
             pausePanel?.Disable();
             gamePanel?.Disable();
+            gameOverPanel?.Disable();
         }
 
         public void OpenGamePanel()
@@ -278,22 +294,30 @@ namespace SignedInitiative
             //GameManager.Instance.Load();
         }
 
-        public void GameOver()
+        public void GameOver(Player player)
         {
             gamePanel.Disable();
-            pausePanel.Disable();
+            //pausePanel.Disable();
 
             gameOverPanel.Setup();
             gameOverPanel.Activate();
+            gameOverPanel.GetComponent<EndGamePanel>().ShowWinnerScore(player);
         }
 
         public void UpdateHUD()
         {
-            gamePanel.GetComponent<GamePanel>().UpdateCurrencies();
-            gamePanel.GetComponent<GamePanel>().UpdateOverview();
-           //TODO: optimize this to only update when turn changes
-           gamePanel.GetComponent<GamePanel>().SetPlayerAvatar();
+            GamePanel panel = gamePanel.GetComponent<GamePanel>();
+            panel.UpdateCurrencies();
+            panel.UpdateOverview();
+            //TODO: optimize this to only update when turn changes
+            panel.SetPlayerAvatar();
         }
+
+        public void UpdateGUIButtons()
+        {
+            gamePanel.GetComponent<GamePanel>().UpdateGUIButtons();
+        }
+
 
         public void SetupOverview()
         {

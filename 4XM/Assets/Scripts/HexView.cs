@@ -274,7 +274,7 @@ public class HexView : MonoBehaviour
             }
             else
             {
-                if (GameManager.Instance.CanPlayerHarvestResource(hex.hexData.resourceType))
+                if (GameManager.Instance.CanPlayerHarvestResource(GameManager.Instance.activePlayerIndex, hex.hexData.resourceType))
                 {
                     hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
                     resourceButtonState = true;

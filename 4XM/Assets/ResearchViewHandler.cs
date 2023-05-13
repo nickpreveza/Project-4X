@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SignedInitiative;
+
 public class ResearchViewHandler : MonoBehaviour
 {
     public List<ResearchButton> researchButtons = new List<ResearchButton>();

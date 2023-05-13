@@ -13,11 +13,12 @@ public class PlayerOverviewEntry : MonoBehaviour
     [SerializeField] TextMeshProUGUI developmentScore;
     [SerializeField] TextMeshProUGUI researchScore;
     [SerializeField] TextMeshProUGUI militaryScore;
-
+    [SerializeField] TextMeshProUGUI rank;
+    [SerializeField] Image rankImage;
     public void SetPlayer(Player player)
     {
         associatedPlayer = player;
-        playerName.text = associatedPlayer.name;
+        playerName.text = GameManager.Instance.GetCivilizationByType(associatedPlayer.civilization).name;
         playerAvatar.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.uiActiveColor);
         UpdateData();
     }
@@ -27,6 +28,17 @@ public class PlayerOverviewEntry : MonoBehaviour
         {
             Debug.Log("Player entry does not have a player yet");
             return;
+        }
+        int rankNum = GameManager.Instance.rankedPlayers.IndexOf(associatedPlayer)  + 1;
+        rank.text = rankNum.ToString();
+
+        if (rankNum == 1)
+        {
+            rankImage.sprite = UIManager.Instance.rankedTopImage;
+        }
+        else
+        {
+            rankImage.sprite = UIManager.Instance.rankedSecondImage;
         }
 
         developmentScore.text = associatedPlayer.developmentScore.ToString(); 

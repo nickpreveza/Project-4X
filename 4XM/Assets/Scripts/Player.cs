@@ -2,18 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SignedInitiative;
+using System.Linq;
 
 [System.Serializable]
-public class Player
+public class Player 
 {
     //Setup
+    public bool isAlive = true;
     public PlayerType type;
     public Civilizations civilization;
 
     public AbilityTree abilities;
     public int index;
-    public string name;
-
     //Score Related
     public int totalScore;
     public int developmentScore;
@@ -23,7 +23,7 @@ public class Player
     public int stars;
     public int expectedStars;
     public int unlockedAbiltiesCount;
-
+    public int currentRank;
     //Game Editable Data
     public WorldHex capitalCity;
 
@@ -32,6 +32,8 @@ public class Player
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
     public List<WorldHex> playerBorders = new List<WorldHex>();
+    public List<WorldUnit> unitsWithActions = new List<WorldUnit>();
+    
 
     List<TurnAction> activeTurnActions = new List<TurnAction>();
 
@@ -46,6 +48,13 @@ public class Player
     NetworkedPlayer networkedPlayer;
 
     public ulong clientID;
+
+    public bool playerCanBuyAbility;
+    public bool playerCanMoveUnit;
+    public bool playerCanPlaceResource;
+
+    public bool playerHasActions;
+
     public void SetupForNetworkPlay(NetworkedPlayer newNetworkPlayer)
     {
         networkedPlayer = newNetworkPlayer;
@@ -57,13 +66,18 @@ public class Player
         List<TurnAction> activeTurnActions = new List<TurnAction>();
         turnCount++;
 
-        //TODO: Calculate Stars
-        //TODO: Recalculate Score
+        unitsWithActions = new List<WorldUnit>(playerUnits);
 
+        CheckForAvailableUnitMoves();
+        CheckForAvailableResearch();
+        CheckForAvailableHexActions(false);
 
         if (type == PlayerType.AI)
         {
             UnitManager.Instance.PlayRandomTurnForAIUnits(this);
+            //evaluate resoure purchases 
+            //evalute ability purchases 
+            //end  turn
         }
     }
 
@@ -82,8 +96,101 @@ public class Player
             militaryScore += amount;
         }
 
-        totalScore = researchScore + developmentScore + militaryScore;
+        totalScore = researchScore + developmentScore + militaryScore; 
+    }
 
+    public void ActionCheck(bool updateHUD)
+    {
+        if (!playerCanBuyAbility && !playerCanMoveUnit && !playerCanPlaceResource)
+        {
+            playerHasActions = false;
+        }
+        else
+        {
+            playerHasActions = true;
+        }
+
+        if (updateHUD)
+        {
+            UIManager.Instance.UpdateGUIButtons();
+        }
+    }
+
+    public void CheckForAvailableResearch()
+    {
+        //possible optimziation to sort this in a list of unpurchased abilities
+        foreach(PlayerAbilityData ability in abilityDatabase)
+        {
+            if (stars >= ability.calculatedAbilityCost)
+            {
+                playerCanBuyAbility = true;
+                ActionCheck(false);
+                return;
+            }
+        }
+
+        playerCanBuyAbility = false;
+        ActionCheck(false);
+    }
+
+    public void CheckForAvailableUnitMoves()
+    {
+        if (unitsWithActions.Count == 0)
+        {
+            playerCanMoveUnit = false;
+            ActionCheck(false);
+        }
+        else
+        {
+            playerCanMoveUnit = true;
+            ActionCheck(false);
+        }
+    }
+
+    public void UpdateAvailbleResourceActionState(WorldHex cityHex)
+    {
+        if (!playerCities.Contains(cityHex))
+        {
+            return;
+        }
+
+        if (cityHex.cityData.cityHexesThatCanBeWorked.Count > 0)
+        {
+            playerCanPlaceResource = true;
+            ActionCheck(false);
+            return;
+        }
+    }
+    public void CheckForAvailableHexActions(bool forceManualCheck)
+    {
+        foreach (WorldHex city in playerCities)
+        {
+            if (forceManualCheck)
+            {
+
+                foreach (WorldHex cityHex in city.cityData.cityHexes)
+                {
+                    if (city.EvaluateIfHexHasPossibleActions(cityHex))
+                    {
+                        playerCanPlaceResource = true;
+                        ActionCheck(false);
+                        return;
+                    }
+                }
+
+            }
+            else
+            {
+                if (city.cityData.cityHexesThatCanBeWorked.Count > 0)
+                {
+                    playerCanPlaceResource = true;
+                    ActionCheck(false);
+                    return;
+                }
+            }
+        }
+
+        ActionCheck(false);
 
     }
 
@@ -255,16 +362,19 @@ public class Player
             playerCities.Remove(cityHex);
         }
 
-        RecalculateAbilityCosts();
+        if (playerCities.Count > 0)
+        {
+            RecalculateAbilityCosts();
+        }
+       
     }
 
 }
 
 
-
 public enum PlayerType
 {
-    LOCAL,
-    ONLINE,
-    AI
+    LOCAL = 1,
+    ONLINE = 2,
+    AI  = 3
 }

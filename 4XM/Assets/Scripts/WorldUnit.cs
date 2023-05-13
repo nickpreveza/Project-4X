@@ -48,6 +48,7 @@ public class WorldUnit : MonoBehaviour
     public bool noAttackHexInRange;
 
     public bool isInteractable;
+    public bool interactableButIgnored;
 
     public Color civColor;
     Color inactiveColor;
@@ -135,6 +136,14 @@ public class WorldUnit : MonoBehaviour
         currentWalkRange = boatReference.walkRange;
         currentAttackRange = boatReference.attackRange;
 
+        if (currentAttackRange > 1)
+        {
+            attackIsRanged = true;
+        }
+        else
+        {
+            attackIsRanged = false;
+        }
 
         ExhaustActions();
         VisualUpdate();
@@ -178,6 +187,15 @@ public class WorldUnit : MonoBehaviour
         currentWalkRange = boatReference.walkRange;
         currentAttackRange = boatReference.attackRange;
 
+        if (currentAttackRange > 1)
+        {
+            attackIsRanged = true;
+        }
+        else
+        {
+            attackIsRanged = false;
+        }
+
         ExhaustActions();
         VisualUpdate();
         unitView.UpdateData();
@@ -209,6 +227,10 @@ public class WorldUnit : MonoBehaviour
         if (currentAttackRange > 1)
         {
             attackIsRanged = true;
+        }
+        else
+        {
+            attackIsRanged = false;
         }
 
         ExhaustActions();
@@ -587,6 +609,10 @@ public class WorldUnit : MonoBehaviour
             buttonActionPossible = false;
         }
 
+        if (!isInteractable && !buttonActionPossible)
+        {
+            GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithActions.Remove(this);
+        }
         VisualUpdate();
     }
 
@@ -940,8 +966,6 @@ public class WorldUnit : MonoBehaviour
                 }
             }
        
-
-            UnitManager.Instance.SelectUnit(this);
         }
 
         isAttacking = false;

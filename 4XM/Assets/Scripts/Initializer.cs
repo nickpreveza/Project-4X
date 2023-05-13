@@ -18,6 +18,8 @@ namespace SignedInitiative
 
         public int networkedPlayersCount = 0;
 
+      
+
         bool mapGenerated;
         bool dataLoaded;
         bool unitsPlaced;
@@ -31,6 +33,15 @@ namespace SignedInitiative
         bool waitingForPlayers;
 
         public int userSeed;
+        public bool isSinglePlayer;
+
+        public int playerCount;
+
+        //only god can judge me ok?
+        public bool player1local;
+        public bool player2local;
+        public bool player3local;
+        public bool plpayer4loca;
         private void Awake()
         {
             Instance = this;
@@ -77,6 +88,8 @@ namespace SignedInitiative
         void InitializeGame()
         {
             GameManager.Instance.useRandomSeed = true;
+            GameManager.Instance.isSinglePlayer = isSinglePlayer;
+
             ResetChecks();
             UIManager.Instance.ClosePanels();
             //we will use that to do a main menu, ok?

@@ -1,11 +1,8 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using Cinemachine;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 namespace SignedInitiative
 {
@@ -29,6 +26,11 @@ namespace SignedInitiative
         public bool isPaused;
         public bool menuActive;
 
+
+        public bool isSinglePlayer;
+
+        public bool oneMoreTurn;
+
         [Header("Debug Settings")]
         public bool useRandomSeed;
         public bool allAbilitiesUnlocked;
@@ -50,9 +52,12 @@ namespace SignedInitiative
         public bool canLoad;
         bool shouldLoad;
         bool setUpInProgress;*/
+        public List<Player> setupPlayers = new List<Player>();
+        public List<Player> sessionPlayers = new List<Player>();
+        [HideInInspector] public List<Player> rankedPlayers = new List<Player>();
 
-        public Player[] sessionPlayers;
         public Player activePlayer;
+        public Player singlePlayer;
         public int activePlayerIndex;
 
         public List<AbilityData> abilities = new List<AbilityData>();
@@ -75,6 +80,9 @@ namespace SignedInitiative
 
         [SerializeField] GameObject assetTest;
         [SerializeField] GameObject menuObjects;
+
+
+
         void Awake()
         {
             if (Instance == null)
@@ -133,37 +141,48 @@ namespace SignedInitiative
         public void StartGame()
         {
             menuObjects.SetActive(false);
+           
+            rankedPlayers = new List<Player>(sessionPlayers);
 
             GenerateAbilitiesDictionary();
             CivilizationsSetup();
+
             SI_CameraController.Instance.GameStarted();
 
-            if (startWithALotOfMoney)
-            {
-                foreach(Player player in sessionPlayers)
-                {
-                    player.AddStars(1000);
-                }
-            }
-            else
-            {
-                foreach (Player player in sessionPlayers)
-                {
-                    player.AddStars(data.startCurrencyAmount);
-                }
-            }
+            //reorder the players so humans go first
+            List<Player> playersToSort = new List<Player>(sessionPlayers);
+            sessionPlayers = playersToSort.OrderByDescending(x => x.type).ToList();
+
             if (noFog)
             {
                 MapManager.Instance.DebugUnhideHexesForAllPlayers();
             }
+
+            foreach (Player player in sessionPlayers)
+            {
+                if (startWithALotOfMoney)
+                {
+                    player.AddStars(1000);
+                }
+
+                player.AddStars(data.startCurrencyAmount);
+                player.CalculateDevelopmentScore(false);
+            }
+
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
             gameReady = true;
             activePlayerIndex = 0;
             
             StartTurn(sessionPlayers[activePlayerIndex]);
+
             UIManager.Instance.OpenGamePanel();
         }
 
+        public void CalculateRanks()
+        {
+            List<Player> playersToSort = new List<Player>(rankedPlayers);
+            rankedPlayers = playersToSort.OrderByDescending(x => x.totalScore).ToList();
+        }
         public void MonumentReward(int rewardIndex, WorldUnit unit)
         {
             string popupTitle = "Monument Claimed";
@@ -369,8 +388,27 @@ namespace SignedInitiative
             GenerateAbilitiesDatabaseForPlayers();
         }
 
+        private void Update()
+        {
+            if (Input.GetKeyDown(KeyCode.F))
+            {
+                sessionPlayers[1].capitalCity.OccupyCityByPlayer(sessionPlayers[0]);
+            }
+        }
+
         public void StartTurn(Player player)
         {
+            SI_CameraController.Instance.GameStarted();
+
+            if (player.playerCities.Count == 0)
+            {
+                RemovePlayerFromGame(player);
+                if (sessionPlayers.Count <= 1)
+                {
+                    GameOver(activePlayer);
+                }
+                return;
+            }
             activePlayer = player;
             activePlayerIndex = player.index;
             activePlayerClientID = player.clientID;
@@ -390,14 +428,21 @@ namespace SignedInitiative
             MapManager.Instance.UpdateCloudView();
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResearchPanel(activePlayerIndex);
-
+            UIManager.Instance.StartTurnAnim();
             SI_EventManager.Instance.OnTurnStarted(activePlayerIndex);
         }
 
+      
         public void LocalEndTurn()
         {
+            if (oneMoreTurn)
+            {
+                GameOver(activePlayer);
+                return;
+            }
             UIManager.Instance.EndTurn();
             activePlayer.EndTurn();
+
             foreach(WorldHex city in activePlayer.playerCities)
             {
                 if (!city.cityData.isUnderSiege)
@@ -410,23 +455,31 @@ namespace SignedInitiative
 
             SI_CameraController.Instance.DeselectSelection();
             UnitManager.Instance.ClearHexSelectionMode();
+            int previousPlayerIndex = activePlayerIndex;
+
             activePlayerIndex++;
-            if (activePlayerIndex >= sessionPlayers.Length)
+
+            if (activePlayerIndex >= sessionPlayers.Count)
             {
                 activePlayerIndex = 0;
             }
+   
+   
+            if (previousPlayerIndex == activePlayerIndex)
+            {
+                GameOver(activePlayer);
+                return;
+            }
 
+            SI_CameraController.Instance.animationsRunning = false;
             StartTurn(sessionPlayers[activePlayerIndex]);
-         
+
         }
 
         public void EndTurn(Player player)
         {
-            //TODO: Stuff about ending turn and checkign movement;
-
-
             activePlayerIndex++;
-            if (activePlayerIndex >= sessionPlayers.Length)
+            if (activePlayerIndex >= sessionPlayers.Count)
             {
                 activePlayerIndex = 0;
             }
@@ -434,9 +487,22 @@ namespace SignedInitiative
             StartTurn(sessionPlayers[activePlayerIndex]);
         }
 
-        public void UndoMove()
+        public void GameOver(Player player)
         {
+            SI_CameraController.Instance.animationsRunning = true;
+            UIManager.Instance.GameOver(player);
+        }
 
+        public void RemovePlayerFromGame(Player player)
+        {
+            List<WorldUnit> playerUnits = new List<WorldUnit>(player.playerUnits);
+            foreach(WorldUnit unit in playerUnits)
+            {
+                unit.Death(false);
+            }
+
+            player.isAlive = false;
+            sessionPlayers.Remove(player);
         }
 
         public void OnDataReady()
@@ -477,10 +543,7 @@ namespace SignedInitiative
             SI_AudioManager.Instance.PlayTheme("theme");
         }
        
-        public void GameOver()
-        {
-            UIManager.Instance.GameOver();
-        }
+      
 
         public void ReloadScene()
         {
@@ -613,7 +676,7 @@ namespace SignedInitiative
 
             SI_EventManager.Instance.OnAbilityUnlocked(playerIndex);
             player.UpdateAvailableUnitsFromAbilities();
-
+            player.CheckForAvailableResearch();
             if (updateUI)
             {
                 UIManager.Instance.UpdateResearchPanel(playerIndex);
@@ -627,6 +690,18 @@ namespace SignedInitiative
         public int GetCurrentPlayerStars()
         {
             return activePlayer.stars;
+        }
+
+        public bool CanPlayerAfford(int playerIndex, int value)
+        {
+            if (value <= sessionPlayers[playerIndex].stars)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public bool CanActivePlayerAfford(int value)
@@ -728,7 +803,7 @@ namespace SignedInitiative
             //shouldn't really use this honestly.
             return false;
 
-            if (CanPlayerHarvestResource(type))
+            if (CanPlayerHarvestResource(activePlayerIndex, type))
             {
                 return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
             }
@@ -774,22 +849,22 @@ namespace SignedInitiative
             return Abilities.NONE;
         }
 
-        public bool CanPlayerHarvestResource(ResourceType type)
+        public bool CanPlayerHarvestResource(int playerIndex, ResourceType type)
         {
             switch (type)
             {
                 case ResourceType.FRUIT:
-                    return activePlayer.abilities.fruitHarvest;
+                    return sessionPlayers[playerIndex].abilities.fruitHarvest;
                 case ResourceType.FOREST:
-                    return activePlayer.abilities.forestHarvest;
+                    return sessionPlayers[playerIndex].abilities.forestHarvest;
                 case ResourceType.ANIMAL:
-                    return activePlayer.abilities.animalHarvest;
+                    return sessionPlayers[playerIndex].abilities.animalHarvest;
                 case ResourceType.FARM:
-                    return activePlayer.abilities.farmHarvest;
+                    return sessionPlayers[playerIndex].abilities.farmHarvest;
                 case ResourceType.MINE:
-                    return activePlayer.abilities.mineHarvest;
+                    return sessionPlayers[playerIndex].abilities.mineHarvest;
                 case ResourceType.FISH:
-                    return activePlayer.abilities.fishHarvest;
+                    return sessionPlayers[playerIndex].abilities.fishHarvest;
 
             }
 
@@ -804,7 +879,7 @@ namespace SignedInitiative
 
         public int GetPlayerIndex(Player player)
         {
-            return Array.IndexOf(sessionPlayers, player);
+            return sessionPlayers.IndexOf(player);
         }
         #endregion //helper functions 
 

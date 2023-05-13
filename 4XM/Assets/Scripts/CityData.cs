@@ -24,4 +24,5 @@ public class CityData
     public List<WorldHex> cityHexes = new List<WorldHex>();
     public List<BuildingType> masterBuildings = new List<BuildingType>();
 
+    public List<WorldHex> cityHexesThatCanBeWorked = new List<WorldHex>();
 }

@@ -4,7 +4,6 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using SignedInitiative;
-
 public class GamePanel : UIPanel
 {
     [SerializeField] TextMeshProUGUI scoreValue;
@@ -27,10 +26,26 @@ public class GamePanel : UIPanel
     [SerializeField] Image scoreImage;
     [SerializeField] Image turnImage;
 
+
+
     ResearchViewHandler research;
     OverviewPanel overview;
 
     [SerializeField] Image civAvatar;
+
+    [SerializeField] Color hasActionsColor;
+    [SerializeField] Color noActionsColor;
+
+    [SerializeField] Image endTurnButtonImage;
+    [SerializeField] Image researchButtonIamge;
+
+    [SerializeField] GameObject turnChange;
+    [SerializeField] TextMeshProUGUI turnName;
+    [SerializeField] Image turnIcon;
+    [SerializeField] Image turnChangeImage;
+
+    [SerializeField] GameObject playerAvatarParent;
+    [SerializeField] ScrollRect scrollRect;
 
     void Start()
     {
@@ -76,9 +91,37 @@ public class GamePanel : UIPanel
        
     }
 
+    public void UpdateGUIButtons()
+    {
+        if (GameManager.Instance.activePlayer.playerHasActions)
+        {
+            endTurnButtonImage.color = hasActionsColor;
+
+            if (GameManager.Instance.activePlayer.playerCanBuyAbility)
+            {
+                researchButtonIamge.color = noActionsColor;
+            }
+            else
+            {
+                researchButtonIamge.color = hasActionsColor;
+            }
+        }
+        else
+        {
+            endTurnButtonImage.color = noActionsColor;
+            researchButtonIamge.color = hasActionsColor;
+        }
+    }
+
     public void ExitAction()
     {
-        GameManager.Instance.ApplicationQuit();
+        UIManager.Instance.OpenPopup(
+             "QUIT GAME",
+             "Are you sure you want to exit?",
+             true,
+             "exit",
+             "cancel",
+             () => GameManager.Instance.ApplicationQuit(), true);
     }
 
     public void SetPlayerAvatar()
@@ -111,7 +154,9 @@ public class GamePanel : UIPanel
         }
         else
         {
+            GameManager.Instance.CalculateRanks();
             overviewPanel.SetActive(true);
+            UpdateOverview();
             researchPanel.SetActive(false);
         }
     }
@@ -135,6 +180,11 @@ public class GamePanel : UIPanel
         researchPanel.SetActive(true);
     }
 
+    public void CloseResearchPanel()
+    {
+        researchPanel.SetActive(false);
+    }
+
     public void OpenResearchPanel(Abilities type)
     {
         researchPanel.SetActive(true);
@@ -145,12 +195,17 @@ public class GamePanel : UIPanel
     IEnumerator HighlightButton(ResearchButton button)
     {
         yield return new WaitForSeconds(0.5f);
+        if (researchPanel.GetComponent<ResearchViewHandler>().researchButtons.IndexOf(button) > 11)
+        {
+            scrollRect.verticalNormalizedPosition = 0;
+
+        }
         button.OpenHighlight();
     }
 
     public void UpdateCurrencies()
     {
-        playerName.text = GameManager.Instance.activePlayer.name;
+        playerName.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).name;
         scoreValue.text = GameManager.Instance.activePlayer.totalScore.ToString();
         starValue.text = GameManager.Instance.activePlayer.stars.ToString();
         turnValue.text = GameManager.Instance.activePlayer.turnCount.ToString();
@@ -166,6 +221,38 @@ public class GamePanel : UIPanel
     public void RefreshHexView()
     {
         hexView.Refresh();
+    }
+
+    public void EndTurn()
+    {
+        if (SI_CameraController.Instance.animationsRunning)
+        {
+            return;
+        }
+
+       
+        GameManager.Instance.LocalEndTurn();
+    }
+
+
+    public void StartTurnAnim()
+    {
+        StartCoroutine(TurnChange());
+    }
+
+    public void PlayPlayerAvatarAnim()
+    {
+        playerAvatarParent.GetComponent<Animator>().SetTrigger("TurnChange");
+    }
+
+    IEnumerator TurnChange()
+    {
+        turnChangeImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        turnName.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).name;
+        turnIcon.sprite = GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).civLogo;
+        turnChange.SetActive(true);
+        yield return new WaitForSeconds(1f);
+        turnChange.SetActive(false);
     }
 
     public void HideHexView()

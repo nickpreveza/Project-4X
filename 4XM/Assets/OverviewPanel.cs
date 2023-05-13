@@ -10,19 +10,34 @@ public class OverviewPanel : MonoBehaviour
     [SerializeField] GameObject prefab;
     [SerializeField] Transform entriesParent;
     List<PlayerOverviewEntry> playerEntries = new List<PlayerOverviewEntry>();
-    public void OverviewSetup()
+    Dictionary<Player, int> rankedPlayers = new Dictionary<Player, int>();
+
+    public void OverviewSetup(bool rankInScoreOrder = false)
     {
         foreach(Transform child in entriesParent)
         {
             Destroy(child.gameObject);
         }
 
-        foreach(Player player in GameManager.Instance.sessionPlayers)
+        if (rankInScoreOrder)
         {
-            GameObject obj = Instantiate(prefab, entriesParent);
-            PlayerOverviewEntry entry = obj.GetComponent<PlayerOverviewEntry>();
-            entry.SetPlayer(player);
-            playerEntries.Add(entry);
+            foreach (Player player in GameManager.Instance.rankedPlayers)
+            {
+                GameObject obj = Instantiate(prefab, entriesParent);
+                PlayerOverviewEntry entry = obj.GetComponent<PlayerOverviewEntry>();
+                entry.SetPlayer(player);
+                playerEntries.Add(entry);
+            }
+        }
+        else
+        {
+            foreach (Player player in GameManager.Instance.sessionPlayers)
+            {
+                GameObject obj = Instantiate(prefab, entriesParent);
+                PlayerOverviewEntry entry = obj.GetComponent<PlayerOverviewEntry>();
+                entry.SetPlayer(player);
+                playerEntries.Add(entry);
+            }
         }
     }
 

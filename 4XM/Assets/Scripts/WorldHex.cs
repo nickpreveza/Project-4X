@@ -37,7 +37,6 @@ public class WorldHex : MonoBehaviour
 
     bool isHidden = true;
     GameObject activeParticle;
-
     public bool Hidden()
     {
         return isHidden;
@@ -181,6 +180,7 @@ public class WorldHex : MonoBehaviour
             cloud.SetActive(hiddenState);
             resourceParent.gameObject.SetActive(!hiddenState);
             unitParent.gameObject.SetActive(!hiddenState);
+
             if (hexData.type == TileType.MOUNTAIN)
             {
                 if (hexGameObject.transform.childCount > 0)
@@ -701,6 +701,7 @@ public class WorldHex : MonoBehaviour
 
 
         cityView.UpdateData();
+        FindCityResourcesThatCanBeWorked();
     }
 
     void PopupCustomRewardPopulation()
@@ -788,10 +789,21 @@ public class WorldHex : MonoBehaviour
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
 
+        if (parentCity != null)
+        {
+            if (parentCity.cityData.cityHexesThatCanBeWorked.Contains(this))
+            {
+                parentCity.cityData.cityHexesThatCanBeWorked.Remove(this);
+            }
+
+        }
+
         Select(false);
         SI_CameraController.Instance.animationsRunning = false;
 
     }
+
+
 
     
 
@@ -803,17 +815,10 @@ public class WorldHex : MonoBehaviour
             {
                 continue;
             }
-            if(adjHex.parentCity != this.parentCity)
-            {
-                continue;
-            }
             if (adjHex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
             {
-                if (adjHex.parentCity == this.parentCity)
-                {
-                    adjHex.AddLevelToMaster();
-                    break;
-                }
+                adjHex.AddLevelToMaster();
+                break;
             }
             
             
@@ -919,6 +924,11 @@ public class WorldHex : MonoBehaviour
 
             parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
             GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
+        }
+
+        if (parentCity.cityData.cityHexesThatCanBeWorked.Contains(this))
+        {
+            parentCity.cityData.cityHexesThatCanBeWorked.Remove(this);
         }
 
         SI_CameraController.Instance.animationsRunning = false;
@@ -1166,7 +1176,140 @@ public class WorldHex : MonoBehaviour
         {
             visualHelper.citySiegeEffect.SetActive(false);
         }
-       
+
+        FindCityResourcesThatCanBeWorked();
+    }
+
+    public void CityHexChanged(WorldHex hex)
+    {
+        if (EvaluateIfHexHasPossibleActions(hex)) // hex some resource or building can be created on top of it 
+        {
+            if (!cityData.cityHexesThatCanBeWorked.Contains(hex))
+            {
+                cityData.cityHexesThatCanBeWorked.Add(hex);
+            }
+        }
+        else
+        {
+            if (cityData.cityHexesThatCanBeWorked.Contains(hex))
+            {
+                cityData.cityHexesThatCanBeWorked.Remove(hex);
+            }
+        }
+
+        GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).CheckForAvailableHexActions(false);
+    }
+
+    public void FindCityResourcesThatCanBeWorked()
+    {
+        foreach(WorldHex hex in cityData.cityHexes)
+        {
+            if (EvaluateIfHexHasPossibleActions(hex)) // hex some resource or building can be created on top of it 
+            {
+                if (!cityData.cityHexesThatCanBeWorked.Contains(hex))
+                {
+                    cityData.cityHexesThatCanBeWorked.Add(hex);
+                }
+            }
+            else
+            {
+                if (cityData.cityHexesThatCanBeWorked.Contains(hex))
+                {
+                    cityData.cityHexesThatCanBeWorked.Remove(hex);
+                }
+            }
+        }
+    }
+
+    public bool EvaluateIfHexHasPossibleActions(WorldHex hex)
+    {
+        if (hexData.occupied && associatedUnit.playerOwnerIndex != hexData.playerOwnerIndex)
+        {
+            return false;
+        }
+
+        if (hexData.hasBuilding)
+        {
+            return false;
+        }
+
+        if (hexData.hasResource && GameManager.Instance.CanPlayerHarvestResource(hexData.playerOwnerIndex, hexData.resourceType) && 
+            GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex, MapManager.Instance.GetResourceByType(hexData.resourceType).harvestCost))
+        {
+            return true;
+        }
+        
+        switch (hex.hexData.type)
+        {
+            case TileType.SEA:
+                if (GameManager.Instance.activePlayer.abilities.portBuilding && 
+                    GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex, MapManager.Instance.GetBuildingByType(BuildingType.Port).cost))
+                {
+                    return true;
+                }
+                break;
+            case TileType.GRASS:
+            case TileType.SAND:
+            case TileType.HILL:
+
+                List<ResourceType> adjacentResources = new List<ResourceType>();
+
+                bool forestMaster = false;
+                bool farmMaster = false;
+                bool mineMaster = false;
+
+                foreach (WorldHex adjacentHex in hex.adjacentHexes)
+                {
+                    if (adjacentHex.hexData.hasBuilding && adjacentHex.hexData.playerOwnerIndex == hexData.playerOwnerIndex)
+                    {
+                        if (adjacentHex.hexData.buildingType == BuildingType.ForestWorked)
+                        {
+                            if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                            {
+                                if (GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex,
+                                    MapManager.Instance.GetBuildingByType(BuildingType.ForestMaster).cost))
+                                {
+                                    return true;
+                                }
+                             
+                            }
+                        }
+                        else if (adjacentHex.hexData.buildingType == BuildingType.FarmWorked)
+                        {
+                            if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
+                            {
+                                if (GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex,
+                                    MapManager.Instance.GetBuildingByType(BuildingType.FarmMaster).cost))
+                                {
+                                    return true;
+                                }
+                              
+                            }
+                        }
+                        else if (adjacentHex.hexData.buildingType == BuildingType.MineWorked)
+                        {
+                            if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.MineMaster))
+                            {
+                                if (GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex, 
+                                    MapManager.Instance.GetBuildingByType(BuildingType.MineMaster).cost))
+                                {
+                                    return true;
+                                }
+                                    
+                            }
+                        }
+                    }
+                }
+
+                if (GameManager.Instance.activePlayer.abilities.guildBuilding &&
+                    GameManager.Instance.CanPlayerAfford(hexData.playerOwnerIndex, MapManager.Instance.GetBuildingByType(BuildingType.Guild).cost))
+                {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
     }
 
     public void Deselect()

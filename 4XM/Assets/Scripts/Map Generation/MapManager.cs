@@ -73,7 +73,16 @@ public class MapManager : MonoBehaviour
     "Grose",
     "Sheley",
     "Odonsea",
-    "Ingate"};
+    "Ingate",
+     "Crevale",
+     "Zremont",
+     "Floshire",
+     "Stigow",
+     "Lapus",
+     "Clurgh",
+     "Cront",
+     "Outinsburgh",
+     "Adenagow"};
 
     List<string> availableCityNames = new List<string>();
     public GameObject worldUIprefab;
@@ -513,7 +522,7 @@ public class MapManager : MonoBehaviour
         GenerateCities();
 
         SI_EventManager.Instance?.OnCameraMoved();
-        SI_EventManager.Instance?.OnMapGenerated();
+      
        // SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
@@ -831,6 +840,8 @@ public class MapManager : MonoBehaviour
                 }
             }
         }
+
+        SI_EventManager.Instance?.OnMapGenerated();
     }
 
 

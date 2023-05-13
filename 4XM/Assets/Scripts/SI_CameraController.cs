@@ -118,6 +118,14 @@ public class SI_CameraController : MonoBehaviour
         mainCamera.cullingMask = gameLayerMask;
         playerCamera.gameObject.SetActive(true);
         Update_CurrentFunction = Update_DetectModeStart;
+        animationsRunning = false;
+    }
+
+    public void GameEnded()
+    {
+        mainCamera.cullingMask = menuLayerMask;
+        playerCamera.gameObject.SetActive(false);
+        animationsRunning = true;
     }
   
     private void Update()
@@ -459,7 +467,7 @@ public class SI_CameraController : MonoBehaviour
             {
                 Debug.Log("Mouse is over Tile");
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
-               
+                UIManager.Instance.HideResearchPanel();
                 SelectTile(newTile);
                 //PanToHex(newTile);
             }
