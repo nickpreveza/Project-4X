@@ -526,9 +526,9 @@ public class WorldHex : MonoBehaviour
                             UIManager.Instance.OpenPopupReward(
                                 popupTitle,
                                 popupDescr,
-                             "+" + GameManager.Instance.unitReward.ToString() + " Unit",
+                             "+" + GameManager.Instance.data.unitReward.ToString() + " Unit",
                              () => PopUpCustomRewardUnit(),
-                             "+" + GameManager.Instance.visibilityReward + " Visibility",
+                             "+" + GameManager.Instance.data.visibilityReward + " Visibility",
                              () => PopUpCustomRewardVisibility()
                              );
                         }
@@ -540,7 +540,7 @@ public class WorldHex : MonoBehaviour
                                 popupDescr,
                               "Expand Borders",
                              () => PopupCustomRewardBorders(),
-                             "+" + GameManager.Instance.currencyReward + " Stars",
+                             "+" + GameManager.Instance.data.currencyReward + " Stars",
                              () => PopupCustomRewardStars()
                              );
                         }
@@ -550,9 +550,9 @@ public class WorldHex : MonoBehaviour
                             UIManager.Instance.OpenPopupReward(
                                 popupTitle,
                                 popupDescr,
-                             "+" + GameManager.Instance.populationReward + " Population",
+                             "+" + GameManager.Instance.data.populationReward + " Population",
                              () => PopupCustomRewardPopulation(),
-                             "+" + GameManager.Instance.productionReward + " Production",
+                             "+" + GameManager.Instance.data.productionReward + " Output",
                              () => PopupCustomRewardProduction()
                              );
                         }
@@ -625,7 +625,7 @@ public class WorldHex : MonoBehaviour
 
     void PopUpCustomRewardVisibility()
     {
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.visibilityReward, true);
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.data.visibilityReward, true);
         UIManager.Instance.waitingForPopupReply = false;
     }
     
@@ -636,24 +636,24 @@ public class WorldHex : MonoBehaviour
             WorldUnit unit = associatedUnit;
             if (associatedUnit.TryToMoveRandomly())
             {
-                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
             }
             else
             {
                 associatedUnit.Death(false);
-                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
             }
         }
         else
         {
-            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.unitReward, this, true, false);
+            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
         }
         UIManager.Instance.waitingForPopupReply = false;
     }
 
     void PopupCustomRewardStars()
     {
-        GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, GameManager.Instance.currencyReward);
+        GameManager.Instance.AddStartsToActivePlayer(GameManager.Instance.data.currencyReward);
         UIManager.Instance.waitingForPopupReply = false;
     }
 
@@ -685,8 +685,8 @@ public class WorldHex : MonoBehaviour
 
     void ExpandBorders()
     {
-        cityData.range = GameManager.Instance.rangeReward;
-        List<WorldHex> hexesToAdd = MapManager.Instance.GetHexesListWithinRadius(this.hexData, GameManager.Instance.rangeReward);
+        cityData.range = GameManager.Instance.data.rangeReward;
+        List<WorldHex> hexesToAdd = MapManager.Instance.GetHexesListWithinRadius(this.hexData, cityData.range);
 
         foreach (WorldHex hex in hexesToAdd)
         {
@@ -697,7 +697,7 @@ public class WorldHex : MonoBehaviour
             }
         }
 
-        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, GameManager.Instance.rangeReward + 1, true);
+        MapManager.Instance.UnhideHexes(hexData.playerOwnerIndex, this, cityData.range + 1, true);
 
 
         cityView.UpdateData();
@@ -705,7 +705,7 @@ public class WorldHex : MonoBehaviour
 
     void PopupCustomRewardPopulation()
     {
-        StartCoroutine(WaitForProgressPointsToAddProgressPoints(GameManager.Instance.populationReward));
+        StartCoroutine(WaitForProgressPointsToAddProgressPoints(GameManager.Instance.data.populationReward));
         UIManager.Instance.waitingForPopupReply = false;
     }
 
@@ -1129,7 +1129,7 @@ public class WorldHex : MonoBehaviour
             }
 
             cityData.cityHexes = newCityHexes;
-            cityData.output = GameManager.Instance.startCityOutput;
+            cityData.output = GameManager.Instance.data.startCityOutput;
 
             foreach (WorldHex newHex in cityData.cityHexes)
             {

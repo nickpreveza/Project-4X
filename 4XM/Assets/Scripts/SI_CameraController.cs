@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using SignedInitiative;
 
 public class SI_CameraController : MonoBehaviour
 {
@@ -84,6 +85,10 @@ public class SI_CameraController : MonoBehaviour
     Vector3 lastCameraPosition;
 
     public bool animationsRunning;
+
+    public LayerMask menuLayerMask;
+    public LayerMask gameLayerMask;
+
     void Awake()
     {
         if (Instance == null)
@@ -99,28 +104,28 @@ public class SI_CameraController : MonoBehaviour
         oldPosition = this.transform.position;
         mainCamera = transform.GetChild(0).GetComponent<Camera>();
         playerCamera = transform.GetChild(0).GetChild(0).GetComponent<Camera>();
+        
+
+
+        mainCamera.cullingMask = menuLayerMask;
+        mainCamera.gameObject.SetActive(true);
+        playerCamera.gameObject.SetActive(false);
+
+    }
+
+    public void GameStarted()
+    {
+        mainCamera.cullingMask = gameLayerMask;
+        playerCamera.gameObject.SetActive(true);
         Update_CurrentFunction = Update_DetectModeStart;
     }
-
-    public void UpdateBounds(int numRows, int numColumns)
-    {
-        /*
-        float radius = 1;
-        float HexHeight = radius * 2;
-        float HexWidth = (Mathf.Sqrt(3) / 2) * HexHeight;
-        float HexVerticalSpacing = HexHeight * 0.75f;
-        float HexHorizontalSpacing = HexWidth;
-
-        float mapHeight = numRows * HexVerticalSpacing;
-        float mapWidth = numColumns * HexHorizontalSpacing;
-
-        internalMapHeight = mapHeight;
-        internalMapWidth = mapWidth;*/
-    }
-
+  
     private void Update()
     {
-        
+        if (!GameManager.Instance.gameReady)
+        {
+            return;
+        }
 
         if (autoMove)
         {

@@ -218,7 +218,7 @@ public class WorldUnit : MonoBehaviour
     public void TraderAction()
     {
         //more checks here probably
-        GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, GameManager.Instance.traderActionReward);
+        GameManager.Instance.AddStars(GameManager.Instance.activePlayerIndex, GameManager.Instance.data.traderActionReward);
         Consume();
         
     }

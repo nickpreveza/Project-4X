@@ -4,32 +4,26 @@ using UnityEngine;
 [System.Serializable]
 public class GameData 
 {
-    public int day;
-    public int hour;
-    public int minute;
-    public int second;
+    //ability related, maybe move
+    public int roadCost = 2;
+    public int destroyCost = 0;
 
-    public int highscore;
-    public int hbscore;
-    public int hempSeeds;
-    public int hempFibers;
+    //quest rewards
+    //level 2
+    public int visibilityReward = 2;
+    public UnitType unitReward = UnitType.Melee;//shouldnotbe
+                                                //level 3
+    public int currencyReward = 5;
+    public int productionReward = 1;
+    //level 4
+    public int populationReward = 3;
+    public int rangeReward = 2;
+    public int startCityOutput = 2;
+    public int traderActionReward = 10;
+    public int startCurrencyAmount = 10;
 
-    public int quadrantsUnlocked;
-    public int factoryCost;
-
-    public int wavesCompleted;
-    public float nextWaveTime;
-
-    public string discordURL;
-    public string websiteURL;
     public string itchURL;
-
-    public int player_weapon = 1;
-    public int player_maxHealth = 100;
-
-    //values for player speed
-    //bullets
-    //whatever 
-    //we will hook this up to remote config
-    //and playfab
+    public string websiteURL;
+    public string discordURL;
+    public string linktrURL;
 }

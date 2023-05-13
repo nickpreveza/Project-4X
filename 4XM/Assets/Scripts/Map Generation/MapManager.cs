@@ -332,6 +332,15 @@ public class MapManager : MonoBehaviour
     }
     public void GenerateMap()
     {
+        if (GameManager.Instance.useRandomSeed)
+        {
+            seed = Random.Range(100000, 999999);
+        }
+        else
+        {
+            seed = Initializer.Instance.userSeed;
+        }
+
         ClearMap();
 
         mapTiles.Clear();
@@ -505,7 +514,7 @@ public class MapManager : MonoBehaviour
 
         SI_EventManager.Instance?.OnCameraMoved();
         SI_EventManager.Instance?.OnMapGenerated();
-        SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
+       // SI_CameraController.Instance?.UpdateBounds(mapRows, mapColumns);
     }
 
     public void UpdateCloudView()

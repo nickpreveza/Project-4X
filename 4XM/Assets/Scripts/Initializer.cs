@@ -30,7 +30,7 @@ namespace SignedInitiative
         bool openForConnections;
         bool waitingForPlayers;
 
-        [SerializeField] int tempSeed;
+        public int userSeed;
         private void Awake()
         {
             Instance = this;
@@ -76,9 +76,11 @@ namespace SignedInitiative
 
         void InitializeGame()
         {
+            GameManager.Instance.useRandomSeed = true;
             ResetChecks();
             UIManager.Instance.ClosePanels();
-            UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, true, false);
+            //we will use that to do a main menu, ok?
+            UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, true, false); 
 
             if (skipMenuForNetworking)
             {
@@ -89,8 +91,23 @@ namespace SignedInitiative
             else
             {
                 networkMenu.SetActive(true);
-                networkLoading.SetActive(true);
+                //networkLoading.SetActive(true);
             }
+        }
+
+        public void StartLocalgame()
+        {
+            networkMenu.SetActive(false);
+            networkLoading.SetActive(false);
+            LocalStart();
+        }
+
+        public void OnSeedChanged(string value)
+        {
+            int number; 
+            int.TryParse(value, out int result); number = result;
+            userSeed = number;
+            GameManager.Instance.useRandomSeed = false;
         }
 
         public void StartClient()
@@ -116,20 +133,25 @@ namespace SignedInitiative
             processing = true;
         }
 
+        public void OpenLinkTree()
+        {
+            Application.OpenURL(GameManager.Instance.data.linktrURL);
+        }
+
         public void NetworkStart()
         {
             if (GameManager.Instance.isHost)
             {
                 SetSeedServerRpc();
-                BroadcastSeedAndStartRpc(tempSeed);
+               // BroadcastSeedAndStartRpc(tempSeed);
             }
         }
 
         [ServerRpc]
         void SetSeedServerRpc()
         {
-            Random.InitState(Random.Range(1000, 9999));
-            tempSeed = Random.Range(1000, 9999);
+            //Random.InitState(Random.Range(1000, 9999));
+           // tempSeed = Random.Range(1000, 9999);
         }
 
         [ClientRpc]

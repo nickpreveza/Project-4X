@@ -66,7 +66,14 @@ public class GamePanel : UIPanel
     }
     public void RestartAction()
     {
-        GameManager.Instance.ReloadScene();
+        UIManager.Instance.OpenPopup(
+                 "Return to title",
+                 "Are you sure you want to exit?",
+                 true,
+                 "exit",
+                 "cancel",
+                 () => GameManager.Instance.ReloadScene(), true);
+       
     }
 
     public void ExitAction()

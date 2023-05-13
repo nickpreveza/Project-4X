@@ -32,12 +32,12 @@ public class ActionButton : MonoBehaviour
         if (isBuilding)
         {
             buttonName.text = "Destroy";
-            actionCost = GameManager.Instance.destroyCost;
+            actionCost = GameManager.Instance.data.destroyCost;
         }
         else
         {
             buttonName.text = "Clear Resource";
-            actionCost = GameManager.Instance.destroyCost; 
+            actionCost = GameManager.Instance.data.destroyCost; 
         }
         backgroundImage.sprite = parentHandler.destroyBackground;
         actionCostText.text = actionCost.ToString();
@@ -85,7 +85,7 @@ public class ActionButton : MonoBehaviour
         buttonAction.onClick.RemoveAllListeners();
 
         buttonName.text = "Road";
-        actionCost = GameManager.Instance.roadCost;
+        actionCost = GameManager.Instance.data.roadCost;
         actionCostText.text = actionCost.ToString();
 
         buttonAction.onClick.AddListener(BuildRoadAction);

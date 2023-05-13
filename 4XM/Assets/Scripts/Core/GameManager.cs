@@ -14,41 +14,42 @@ namespace SignedInitiative
     {
         public static GameManager Instance;
 
+        //the civilization that exist in the game 
         public Civilization[] gameCivilizations;
 
+        //unused really 
         [Header("Game Data")]
         public GameData data;
 
         [Header("Systems Status")]
         public bool gameReady;
 
+        //unused, overcomplication for game structure
         [Header("Game Status")]
         public bool isPaused;
-        public bool playerDead = false;
         public bool menuActive;
 
         [Header("Debug Settings")]
-        public bool devMode;
+        public bool useRandomSeed;
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;
         public bool noFog;
         public bool allowShipUpgradeEverywhere;
         public bool createStuff;
         public bool infiniteCurrency;
-        public bool noScenceChanges;
-        public bool noSave;
-        public bool noLoad;
+        //public bool noScenceChanges;
+       // public bool noSave;
+       // public bool noLoad;
 
         [Header("PostProcess")]
         public Volume globalVolume;
 
+        /*
         [Header("Saving")]
         bool menuPassed;
         public bool canLoad;
         bool shouldLoad;
-        bool setUpInProgress;
-
-        [HideInInspector] public CSVReader csvReader;
+        bool setUpInProgress;*/
 
         public Player[] sessionPlayers;
         public Player activePlayer;
@@ -59,30 +60,9 @@ namespace SignedInitiative
         //[HideInInspector]
         List<PlayerAbilityData> defaultAbilityDatabase = new List<PlayerAbilityData>();
 
-        //ability related, maybe move
-        public int roadCost = 2;
-        public int destroyCost = 0;
-
-        //quest rewards
-        //level 2
-        public int visibilityReward = 2;
-        public UnitType unitReward = UnitType.Melee;//shouldnotbe
-        //level 3
-        public int currencyReward = 5;
-        public int productionReward = 1;
-        //level 4
-        public int populationReward = 3;
-        public int rangeReward = 2;
-        public int startCityOutput = 2;
-        public int traderActionReward = 10;
-        public int startCurrencyAmount;
-
-        //level 5
-        //maybe special unit..uuuuugh
-
+        [Header("Networking")]
         public bool gameIsNetworked;
         public ulong activePlayerClientID;
-
         public bool isHost;
 
         [SerializeField] GameObject waterInteractionParticle;
@@ -93,6 +73,8 @@ namespace SignedInitiative
 
         public GameObject traderActionParticle;
 
+        [SerializeField] GameObject assetTest;
+        [SerializeField] GameObject menuObjects;
         void Awake()
         {
             if (Instance == null)
@@ -104,7 +86,7 @@ namespace SignedInitiative
                 Destroy(this.gameObject);
             }
 
-            csvReader = GetComponent<CSVReader>();
+            assetTest.SetActive(false);
         }
 
         public bool SetPause
@@ -133,6 +115,7 @@ namespace SignedInitiative
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {
+            /*
             if (!menuPassed)
             {
                 SetUpPersistentData(false);
@@ -140,208 +123,21 @@ namespace SignedInitiative
             else
             {
                 SetUpPersistentData(true);
-            }
+            }*/
 
             Time.timeScale = 1;
         }
 
-        void SetUpPersistentData(bool instantLoad)
-        {
-            if (PlayerPrefs.HasKey("day"))
-            {
-                if (instantLoad)
-                {
-                    Load();
-                }
-                else
-                {
-                    if (PlayerPrefs.GetInt("day") >= 1 && PlayerPrefs.GetInt("day") <= 9)
-                    {
-                        canLoad = true;
-                    }
-                    else
-                    {
-                        PlayerPrefs.SetInt("day", 9);
-                        canLoad = true;
-                    }
-                }
-
-            }
-            else
-            {
-                CreatePrefs();
-            }
-        }
-
-        public GameObject GetParticleInteractionByType(TileType type)
-        {
-            switch (type)
-            {
-                case TileType.DEEPSEA:
-                case TileType.SEA:
-                    return waterInteractionParticle;
-                case TileType.SAND:
-                case TileType.GRASS:
-                case TileType.HILL:
-                case TileType.MOUNTAIN:
-                case TileType.ICE:
-                    return landInternactionParticle;
-            }
-
-            return null;
-        }
-        void CreatePrefs()
-        {
-            data.day = 1;
-            data.hour = 6;
-            data.minute = 0;
-            data.second = 0;
-
-            data.highscore = 0;
-            data.hbscore = 0;
-            data.hempSeeds = 10;
-            data.hempFibers = 1;
-
-            data.quadrantsUnlocked = 1;
-            data.wavesCompleted = 0;
-
-            data.player_weapon = 1;
-
-            data.discordURL = "lmao.com";
-            Save();
-        }
-
-        public void Save()
-        {
-            PlayerPrefs.SetInt("day", data.day);
-            PlayerPrefs.SetInt("hour", data.hour);
-            PlayerPrefs.SetInt("minute", data.minute);
-            PlayerPrefs.SetInt("second", data.second);
-
-            PlayerPrefs.SetInt("highscore", data.highscore);
-            PlayerPrefs.SetInt("hbscore", data.hbscore);
-            PlayerPrefs.SetInt("hempSeeds", data.hempSeeds);
-            PlayerPrefs.SetInt("hempFibers", data.hempFibers);
-
-            PlayerPrefs.SetInt("quadrantsUnlocked", data.quadrantsUnlocked);
-            PlayerPrefs.SetInt("wavesCompleted", data.wavesCompleted);
-
-            PlayerPrefs.Save();
-        }
-
-        public void Load()
-        {
-            data.day = PlayerPrefs.GetInt("day", 1);
-            data.hour = PlayerPrefs.GetInt("hour");
-            data.minute = PlayerPrefs.GetInt("minute");
-            data.second = PlayerPrefs.GetInt("second");
-
-            data.highscore = PlayerPrefs.GetInt("highscore");
-            data.hbscore = PlayerPrefs.GetInt("hbscore");
-            data.hempSeeds = PlayerPrefs.GetInt("hempSeeds");
-            data.hempFibers = PlayerPrefs.GetInt("hempFibers");
-
-            data.quadrantsUnlocked = PlayerPrefs.GetInt("quadrantsUnlocked");
-            data.wavesCompleted = PlayerPrefs.GetInt("wavesCompleted");
-
-            PlayerData playerData = new PlayerData();
-            LoadGame();
-        }
-
-        public bool CanPlayerDestoryResourceForReward(ResourceType type)
-        {
-            switch (type)
-            {
-                case ResourceType.FOREST:
-                    return GameManager.Instance.activePlayer.abilities.forestCut;
-            }
-
-            //shouldn't really use this honestly.
-            return false;
-
-            if (CanPlayerHarvestResource(type))
-            {
-                return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
-            }
-            else
-            {
-                return false;
-            }
-            
-        }
-
-        public Abilities GetAbilityAssociation(BuildingType type)
-        {
-            switch (type)
-            {
-                case BuildingType.FarmMaster:
-                    return Abilities.Windmill;
-                case BuildingType.ForestMaster:
-                    return Abilities.ForestMaster;
-                case BuildingType.MineMaster:
-                    return Abilities.Smithery;
-            }
-
-            return Abilities.NONE;
-        }
-        public Abilities GetAbilityAssociation(ResourceType resource)
-        {
-            switch (resource)
-            {
-                case ResourceType.FRUIT:
-                    return Abilities.FruitHarvest;
-                case ResourceType.FOREST:
-                    return Abilities.Forestry;
-                case ResourceType.ANIMAL:
-                    return Abilities.Husbandry;
-                case ResourceType.FARM:
-                    return Abilities.Farming;
-                case ResourceType.MINE:
-                    return Abilities.Mining;
-                case ResourceType.FISH:
-                    return Abilities.Fishing;
-            }
-
-            return Abilities.NONE;
-        }
-
-        public bool CanPlayerHarvestResource(ResourceType type)
-        {
-            switch (type)
-            {
-                case ResourceType.FRUIT:
-                    return activePlayer.abilities.fruitHarvest;
-                case ResourceType.FOREST:
-                    return activePlayer.abilities.forestHarvest;
-                case ResourceType.ANIMAL:
-                    return activePlayer.abilities.animalHarvest;
-                case ResourceType.FARM:
-                    return activePlayer.abilities.farmHarvest;
-                case ResourceType.MINE:
-                    return activePlayer.abilities.mineHarvest;
-                case ResourceType.FISH:
-                    return activePlayer.abilities.fishHarvest;
-
-            }
-
-            Debug.LogWarning("Resource type was not found");
-            return false;
-        }
-
-        public Player GetPlayerByIndex(int index)
-        {
-            return sessionPlayers[index];
-        }
-
-        public int GetPlayerIndex(Player player)
-        {
-            return Array.IndexOf(sessionPlayers, player);
-        }
+        
 
         public void StartGame()
         {
+            menuObjects.SetActive(false);
+
             GenerateAbilitiesDictionary();
             CivilizationsSetup();
+            SI_CameraController.Instance.GameStarted();
+
             if (startWithALotOfMoney)
             {
                 foreach(Player player in sessionPlayers)
@@ -353,7 +149,7 @@ namespace SignedInitiative
             {
                 foreach (Player player in sessionPlayers)
                 {
-                    player.AddStars(startCurrencyAmount);
+                    player.AddStars(data.startCurrencyAmount);
                 }
             }
             if (noFog)
@@ -365,14 +161,13 @@ namespace SignedInitiative
             activePlayerIndex = 0;
             
             StartTurn(sessionPlayers[activePlayerIndex]);
-
             UIManager.Instance.OpenGamePanel();
         }
 
         public void MonumentReward(int rewardIndex, WorldUnit unit)
         {
             string popupTitle = "Monument Claimed";
-            string popupDescr = "You've received a reward";
+            string popupDescr = "You received a reward";
 
             switch (rewardIndex)
             {
@@ -381,7 +176,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "+" + currencyReward.ToString() + " Stars",
+                     "+" + data.currencyReward.ToString() + " Stars",
                      () => PopupCustomRewardCurrency()
                      );
                     break;
@@ -390,7 +185,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "Extra sight",
+                     "Extra Sight",
                      () => PopupCustomRewardVisibility(unit)
                      );
                     break;
@@ -399,7 +194,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "Free Warrior",
+                     "Warrior Recruited",
                      () => PopupCustomRewardUnit(unit, UnitType.Melee)
                      );
                     break;
@@ -408,7 +203,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "Free Archer",
+                     "Archer Recruited",
                      () => PopupCustomRewardUnit(unit, UnitType.Ranged)
                      );
                     break;
@@ -417,7 +212,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                   "Free Cavalry",
+                   "Cavalry Recruited",
                      () => PopupCustomRewardUnit(unit, UnitType.Cavalry)
                      );
                     break;
@@ -426,7 +221,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "+" + currencyReward.ToString() + " Stars",
+                     "+" + data.currencyReward.ToString() + " Stars",
                      () => PopupCustomRewardCurrency()
                      );
                     break;
@@ -435,7 +230,7 @@ namespace SignedInitiative
                     UIManager.Instance.OpenPopUpMonument(
                         popupTitle,
                         popupDescr,
-                     "+" + currencyReward.ToString() + " Stars",
+                     "+" + data.currencyReward.ToString() + " Stars",
                      () => PopupCustomRewardCurrency()
                      );
                     break;
@@ -444,7 +239,7 @@ namespace SignedInitiative
 
         public void PopupCustomRewardCurrency()
         {
-            AddStars(activePlayerIndex, currencyReward);
+            AddStars(activePlayerIndex, data.currencyReward);
             UIManager.Instance.waitingForPopupReply = false;
         }
 
@@ -649,6 +444,10 @@ namespace SignedInitiative
 
         }
 
+        public void AddStartsToActivePlayer(int amount)
+        {
+            activePlayer.AddStars(amount);
+        }
         public void AddStars(int playerIndex, int amount)
         {
             GetPlayerByIndex(playerIndex).AddStars(amount);
@@ -667,137 +466,19 @@ namespace SignedInitiative
 
         public void LoadGame()
         {
-            ItemManager.Instance.InitializeItems();
+            //ItemManager.Instance.InitializeItems();
             UIManager.Instance.OpenGamePanel();
             SI_AudioManager.Instance.PlayTheme("theme");
         }
 
         public void NewGame()
         {
-            ItemManager.Instance.InitializeItems();
+            //ItemManager.Instance.InitializeItems();
             SI_AudioManager.Instance.PlayTheme("theme");
         }
-
-        void Update()
-        {
-            /*
-            if (Input.GetKeyDown(KeyCode.P) || Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (UIManager.Instance.popupActive)
-                {
-                    UIManager.Instance.latestPopup.Close();
-                    return;
-                }
-
-                if (!UIManager.Instance.menuActive && !UIManager.Instance.popupActive) // && !LevelLoader.Instance.sceneLoadingInProgress
-                {
-                    if (!playerDead)
-                    {
-                        isPaused = !isPaused;
-                        if (isPaused)
-                        {
-                            Time.timeScale = 0;
-                        }
-                        else
-                        {
-                            Time.timeScale = 1;
-                        }
-                        UIManager.Instance.PauseChanged();
-                    }
-
-                }
-            }
-
-            if (Input.GetKeyDown(KeyCode.BackQuote) && Debug.isDebugBuild)
-            {
-                devMode = !devMode;
-            }
-
-            if (devMode && Debug.isDebugBuild)
-            {
-                //DevUpdate();
-            }*/
-        }
-
-
-
-        public int GetCurrentPlayerStars()
-        {
-            return activePlayer.stars;
-        }
-
-        public bool CanActivePlayerAfford(int value)
-        {
-            if (value <= activePlayer.stars)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        public bool IsIndexOfActivePlayer(int index)
-        {
-            if (activePlayer.index == index)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        public bool IsAbilityUnlocked(Abilities ability)
-        {
-            if (activePlayer.abilityDictionary.ContainsKey(ability))
-            {
-                return activePlayer.abilityDictionary[ability].canBePurchased;
-            }
-            else
-            {
-                return false;
-            }
-           
-        }
-
-        public bool isAbilityPurchased(Abilities ability)
-        {
-            return activePlayer.abilityDictionary[ability].hasBeenPurchased;
-        }
-
-        public bool CanActivePlayerAffordAbility(Abilities ability)
-        {
-            if (GetCurrentPlayerAbilityCost(ability) <= activePlayer.stars)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-
-        }
-
-        public int GetCurrentPlayerAbilityCost(Abilities ability)
-        {
-            if (activePlayer.abilityDictionary.ContainsKey(ability))
-            {
-                return activePlayer.abilityDictionary[ability].calculatedAbilityCost;
-            }
-            return 9999;
-           
-        }
-
-
-        public int GetBaseAbilityCost(Abilities ability)
-        {
-            return abilitiesDictionary[ability].abilityCost;
-        }
+       
         public void GameOver()
         {
-            playerDead = true;
             UIManager.Instance.GameOver();
         }
 
@@ -940,6 +621,193 @@ namespace SignedInitiative
             }
            
         }
+
+        #region Helpers 
+
+        public int GetCurrentPlayerStars()
+        {
+            return activePlayer.stars;
+        }
+
+        public bool CanActivePlayerAfford(int value)
+        {
+            if (value <= activePlayer.stars)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        public bool IsIndexOfActivePlayer(int index)
+        {
+            if (activePlayer.index == index)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public bool IsAbilityUnlocked(Abilities ability)
+        {
+            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            {
+                return activePlayer.abilityDictionary[ability].canBePurchased;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public bool isAbilityPurchased(Abilities ability)
+        {
+            return activePlayer.abilityDictionary[ability].hasBeenPurchased;
+        }
+
+        public bool CanActivePlayerAffordAbility(Abilities ability)
+        {
+            if (GetCurrentPlayerAbilityCost(ability) <= activePlayer.stars)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public int GetCurrentPlayerAbilityCost(Abilities ability)
+        {
+            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            {
+                return activePlayer.abilityDictionary[ability].calculatedAbilityCost;
+            }
+            return 9999;
+
+        }
+
+
+        public int GetBaseAbilityCost(Abilities ability)
+        {
+            return abilitiesDictionary[ability].abilityCost;
+        }
+
+        public GameObject GetParticleInteractionByType(TileType type)
+        {
+            switch (type)
+            {
+                case TileType.DEEPSEA:
+                case TileType.SEA:
+                    return waterInteractionParticle;
+                case TileType.SAND:
+                case TileType.GRASS:
+                case TileType.HILL:
+                case TileType.MOUNTAIN:
+                case TileType.ICE:
+                    return landInternactionParticle;
+            }
+
+            return null;
+        }
+
+        public bool CanPlayerDestoryResourceForReward(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.FOREST:
+                    return GameManager.Instance.activePlayer.abilities.forestCut;
+            }
+
+            //shouldn't really use this honestly.
+            return false;
+
+            if (CanPlayerHarvestResource(type))
+            {
+                return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
+            }
+            else
+            {
+                return false;
+            }
+
+        }
+
+        public Abilities GetAbilityAssociation(BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.FarmMaster:
+                    return Abilities.Windmill;
+                case BuildingType.ForestMaster:
+                    return Abilities.ForestMaster;
+                case BuildingType.MineMaster:
+                    return Abilities.Smithery;
+            }
+
+            return Abilities.NONE;
+        }
+        public Abilities GetAbilityAssociation(ResourceType resource)
+        {
+            switch (resource)
+            {
+                case ResourceType.FRUIT:
+                    return Abilities.FruitHarvest;
+                case ResourceType.FOREST:
+                    return Abilities.Forestry;
+                case ResourceType.ANIMAL:
+                    return Abilities.Husbandry;
+                case ResourceType.FARM:
+                    return Abilities.Farming;
+                case ResourceType.MINE:
+                    return Abilities.Mining;
+                case ResourceType.FISH:
+                    return Abilities.Fishing;
+            }
+
+            return Abilities.NONE;
+        }
+
+        public bool CanPlayerHarvestResource(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.FRUIT:
+                    return activePlayer.abilities.fruitHarvest;
+                case ResourceType.FOREST:
+                    return activePlayer.abilities.forestHarvest;
+                case ResourceType.ANIMAL:
+                    return activePlayer.abilities.animalHarvest;
+                case ResourceType.FARM:
+                    return activePlayer.abilities.farmHarvest;
+                case ResourceType.MINE:
+                    return activePlayer.abilities.mineHarvest;
+                case ResourceType.FISH:
+                    return activePlayer.abilities.fishHarvest;
+
+            }
+
+            Debug.LogWarning("Resource type was not found");
+            return false;
+        }
+
+        public Player GetPlayerByIndex(int index)
+        {
+            return sessionPlayers[index];
+        }
+
+        public int GetPlayerIndex(Player player)
+        {
+            return Array.IndexOf(sessionPlayers, player);
+        }
+        #endregion //helper functions 
+
     }
 }
 

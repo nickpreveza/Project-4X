@@ -275,7 +275,7 @@ namespace SignedInitiative
 
         public void ActionLoadGame()
         {
-            GameManager.Instance.Load();
+            //GameManager.Instance.Load();
         }
 
         public void GameOver()
