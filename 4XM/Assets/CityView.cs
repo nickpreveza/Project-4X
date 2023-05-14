@@ -46,6 +46,11 @@ public class CityView : MonoBehaviour
         
     }
 
+    public void CapitalConnectionStatus(bool connected)
+    {
+        connectedIcon.SetActive(connected);
+    }
+
     public void SetCanvasGroupAlpha(int alpha)
     {
         canvasGroup.alpha = alpha;

@@ -71,6 +71,15 @@ public class WorldUnit : MonoBehaviour
     public bool isShip;
 
     public bool shouldHealThisTurn;
+    WorldHex tempPathParent;
+
+    public int PathfindingActionPoints //a normal move actions will cost 2.
+    {
+        get
+        {
+            return currentWalkRange * 2;
+        }
+    }
 
     public bool BelongsToActivePlayer
     {
@@ -148,7 +157,6 @@ public class WorldUnit : MonoBehaviour
         ExhaustActions();
         VisualUpdate();
         unitView.UpdateData();
-
     }
 
     //walking should not play 
@@ -171,13 +179,10 @@ public class WorldUnit : MonoBehaviour
             GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).civilization).shipPrefab,
             boatsLayer);
 
-        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
+        VisualMaterialHelper helper = currentBoat.GetComponent<VisualMaterialHelper>();
         if (helper != null)
         {
-            foreach (GameObject obj in helper.objectsToChangeMaterials)
-            {
-                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
-            }
+            UpdateMaterialColor(civColor);
         }
 
         boatReference = UnitManager.Instance.GetUnitDataByType(UnitType.Ship, unitReference.civType);
@@ -277,57 +282,6 @@ public class WorldUnit : MonoBehaviour
         }
     }
 
-
-    private void Update()
-    {
-        if (shouldMove)
-        {
-            this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
-
-            if (Vector3.Distance(this.transform.position, newPosition) < 0.1)
-            {
-                shouldMove = false;
-                if (parentHex.hexData.type == TileType.MOUNTAIN)
-                {
-                    Vector3 modifiedTransform = this.transform.localPosition;
-                    modifiedTransform.y = MapManager.Instance.mountainTileUnitOffsetY;
-                    this.transform.localPosition = modifiedTransform;
-                }
-                else
-                {
-                    this.transform.localPosition = Vector3.zero;
-                }
-                currentVelocity = Vector3.zero;
-                visualAnim.SetTrigger("Idle");
-            }
-        }
-
-        if (shouldRotate)
-        {
-
-            visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
-
-            if (isBoat || isShip)
-            {
-                currentBoat.transform.eulerAngles = targetRotation;
-            }
-
-            if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
-            {
-                shouldRotate = false;
-                visualUnit.transform.eulerAngles = targetRotation;
-                currentRotationVelocity = Vector3.zero;
-            }
-
-
-        }
-    }
-
-    public void SetHexPath(WorldHex[] newHexPath)
-    {
-        hexPath = new Queue<WorldHex>(newHexPath);
-    }
-
     public void SpawnSetup(WorldHex newHex, int playerIndex, UnitData referenceData, bool exhaustOnSpawn)
     {
         wiggler = GetComponent<Wiggler>();
@@ -379,60 +333,60 @@ public class WorldUnit : MonoBehaviour
         unitView.SetData(this);
         visualUnit = unitVisualLayer.GetChild(0).gameObject;
 
-        if (visualUnit == null)
-        {
-            visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
-            visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
-            visualAnim.SetTrigger("Idle");
-
-            if (type != UnitType.Siege)
-            {
-                SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-                renderer.materials[0].SetColor("_ColorShift", civColor);
-            }
-            else if (type == UnitType.Siege)
-            {
-                BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
-                if (helper != null)
-                {
-                    foreach (GameObject obj in helper.objectsToChangeMaterials)
-                    {
-                        obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
-                    }
-                }
-            }
-
-        }
-        else
+        if (visualUnit != null)
         {
             Destroy(visualUnit);
-            visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
-            visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
-            visualAnim.SetTrigger("Idle");
-
-            if (type != UnitType.Siege)
-            {
-                SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-                renderer.materials[0].SetColor("_ColorShift", civColor);
-            }
-            else if (type == UnitType.Siege)
-            {
-                BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
-                if (helper != null)
-                {
-                    foreach (GameObject obj in helper.objectsToChangeMaterials)
-                    {
-                        obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
-                    }
-                }
-            }
         }
 
+        visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
+
+        visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
+        visualAnim.SetTrigger("Idle");
+        UpdateMaterialColor(civColor);
         SpawnParticle(UnitManager.Instance.unitSpawnParticle);
         UpdateVisualsDirection(false);
     }
 
-    void ExhaustActions()
+    void UpdateMaterialColor(Color newColor)
+    {
+        if (type == UnitType.Boat || isBoat)
+        {
+            
+            VisualMaterialHelper helper = currentBoat.GetComponent<VisualMaterialHelper>();
+            if (helper != null)
+            {
+                foreach (GameObject obj in helper.objectsToChangeMaterials)
+                {
+                    obj.GetComponent<MeshRenderer>().materials[0].color = newColor;
+                }
+            }
+        }
+        else if (type == UnitType.Siege)
+        {
+            VisualMaterialHelper helper = visualUnit.GetComponent<VisualMaterialHelper>();
+            if (helper != null)
+            {
+                foreach (GameObject obj in helper.objectsToChangeMaterials)
+                {
+                    obj.GetComponent<MeshRenderer>().materials[0].color = newColor;
+                }
+            }
+        }
+        else if (type == UnitType.Cavalry)
+        {
+            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            renderer.materials[0].SetColor("_ColorShift", newColor);
+            renderer = visualAnim.transform.GetChild(1).GetComponent<SkinnedMeshRenderer>();
+            renderer.materials[0].SetColor("_ColorShift", newColor);
+        }
+        else
+        {
+            SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
+            renderer.materials[0].SetColor("_ColorShift", newColor);
+        }
+    }
+
+    public void ExhaustActions()
     {
         currentAttackCharges = 0;
         currentMovePoints = 0;
@@ -618,94 +572,20 @@ public class WorldUnit : MonoBehaviour
 
     public void VisualUpdate()
     {
+        //you can further optimize this ez
         if (isInteractable)
         {
             if (visualUnit != null)
             {
-                if (!isShip && type != UnitType.Siege)
-                {
-                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-                    renderer.materials[0].SetColor("_ColorShift", civColor);
-                }
-                else
-                {
-                    if (isShip)
-                    {
-                        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
-                        if (helper != null)
-                        {
-                            foreach (GameObject obj in helper.objectsToChangeMaterials)
-                            {
-                                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
-                            }
-                        }
-                    }
-                    else if (type == UnitType.Siege)
-                    {
-                        BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
-                        if (helper != null)
-                        {
-                            foreach (GameObject obj in helper.objectsToChangeMaterials)
-                            {
-                                obj.GetComponent<MeshRenderer>().materials[0].color = civColor;
-                            }
-                        }
-                    }
-
-                }
-
+                UpdateMaterialColor(civColor);
             }
-
         }
         else
         {
             if (visualUnit != null)
             {
-                if (type == UnitType.Siege)
-                {
-                    BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
-                    if (helper != null)
-                    {
-                        foreach (GameObject obj in helper.objectsToChangeMaterials)
-                        {
-                            obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
-                        }
-                    }
-                }
-                else if (!isShip)
-                {
-                    SkinnedMeshRenderer renderer = visualAnim.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
-                    renderer.materials[0].SetColor("_ColorShift", inactiveColor);
-                }
-                else
-                {
-                    if (isShip)
-                    {
-                        BoatMaterialHelper helper = currentBoat.GetComponent<BoatMaterialHelper>();
-                        if (helper != null)
-                        {
-                            foreach (GameObject obj in helper.objectsToChangeMaterials)
-                            {
-                                obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
-                            }
-                        }
-                    }
-                    else if (type == UnitType.Siege)
-                    {
-                        BoatMaterialHelper helper = visualUnit.GetComponent<BoatMaterialHelper>();
-                        if (helper != null)
-                        {
-                            foreach (GameObject obj in helper.objectsToChangeMaterials)
-                            {
-                                obj.GetComponent<MeshRenderer>().materials[0].color = inactiveColor;
-                            }
-                        }
-                    }
-
-                }
-
+                UpdateMaterialColor(inactiveColor);
             }
-
         }
 
         unitView?.UpdateData();
@@ -772,42 +652,13 @@ public class WorldUnit : MonoBehaviour
         if (hexesInRadius.Count > 0)
         {
             WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
-            Move(selecedHex, true, false);
+            SetMoveTarget(selecedHex, true, true, false);
             return true;
         }
         else
         {
             return false;
         }
-
-    }
-
-
-    public void DoQueuedTurn()
-    {
-        if (hexPath == null || hexPath.Count == 0)
-        {
-            return;
-        }
-
-        WorldHex newHex = hexPath.Dequeue();
-
-        //Move(newHex);
-    }
-
-    public int MovementCostOfHex(WorldHex hex)
-    {
-        //TODO: Override movement cost based on unit abilities or stats 
-        return hex.hexData.moveCost;
-    }
-
-    public float AggregateTurnsToEnterHex(WorldHex hex, float turnsToData)
-    {
-        //return the number of turn required to reach that hex. 
-        //if a cost is greater, autocomplete turns off and user has to manually decide. 
-        float baseTurnsToEnterHex = MovementCostOfHex(hex) / unitReference.moveCharges;
-        float turnsRemaining = currentMovePoints / unitReference.moveCharges;
-        return 0f;
     }
 
     public bool ReceiveDamage(int value)
@@ -851,9 +702,6 @@ public class WorldUnit : MonoBehaviour
                 SpawnParticle(UnitManager.Instance.unitHealParticle);
             }
         }
-
-      
-       
     }
 
     public void HealWithDefaultValue()
@@ -937,7 +785,7 @@ public class WorldUnit : MonoBehaviour
             if (!attackIsRanged)
             {
                 yield return new WaitForSeconds(0.2f);
-                Move(enemyHex, true, true);
+                SetMoveTarget(enemyHex, true, true, true);
             }
 
         }
@@ -982,25 +830,125 @@ public class WorldUnit : MonoBehaviour
         Destroy(this.gameObject);
     }
 
+    bool walkingAnimation = false;
 
-    public void Move(WorldHex newHex, bool followCamera = false, bool afterAttack = false)
+    IEnumerator WalkSteps(WorldHex end)
     {
-        visualAnim.SetTrigger("Walk");
+        List<WorldHex> path = UnitManager.Instance.FindPath(this, parentHex, end);
+        tempPathParent = parentHex;
+        float moveAnimationLenght = 1f;
+
+        if (path!= null)
+        {
+            foreach (WorldHex pathStep in path)
+            {
+                if (pathStep == parentHex)
+                {
+                    continue;
+                }
+                UpdateDirection(tempPathParent, pathStep, false);
+                oldPosition = tempPathParent.hexData.PositionFromCamera();
+                newPosition = pathStep.hexData.PositionFromCamera();
+
+                if (pathStep.hexData.type == TileType.MOUNTAIN)
+                {
+                    newPosition.y = MapManager.Instance.mountainTileUnitOffsetY;
+                }
+
+                float elapsedTime = 0;
+                visualAnim.SetTrigger("Walk");
+
+                while (elapsedTime < moveAnimationLenght)
+                {
+                    transform.position = Vector3.Lerp(oldPosition, newPosition, (elapsedTime / moveAnimationLenght));
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                pathStep.Wiggle();
+                tempPathParent = pathStep;
+
+                if (pathStep == end)
+                {
+                    parentHex = pathStep;
+                    parentHex.UnitIn(this);
+                    transform.SetParent(parentHex.unitParent);
+                    transform.localPosition = Vector3.zero;
+                    UnitManager.Instance.SelectUnit(this);
+                    SI_CameraController.Instance.animationsRunning = false;
+                    visualAnim.SetTrigger("Idle");
+                    yield break;
+
+                }
+            }
+        }
+        else
+        {
+            Debug.LogError("Path could not be found for selected tile");
+        }
+
+        //visualAnim.SetTrigger("Walk");
+    }
+
+    /*
+     *     private void Update()
+    {
+        if (shouldMove)
+        {
+            this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
+
+            if (Vector3.Distance(this.transform.position, newPosition) < 0.1)
+            {
+                shouldMove = false;
+                if (parentHex.hexData.type == TileType.MOUNTAIN)
+                {
+                    Vector3 modifiedTransform = this.transform.localPosition;
+                    modifiedTransform.y = MapManager.Instance.mountainTileUnitOffsetY;
+                    this.transform.localPosition = modifiedTransform;
+                }
+                else
+                {
+                    this.transform.localPosition = Vector3.zero;
+                }
+                currentVelocity = Vector3.zero;
+                visualAnim.SetTrigger("Idle");
+            }
+        }
+
+        if (shouldRotate)
+        {
+
+            visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
+
+            if (isBoat || isShip)
+            {
+                currentBoat.transform.eulerAngles = targetRotation;
+            }
+
+            if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
+            {
+                shouldRotate = false;
+                visualUnit.transform.eulerAngles = targetRotation;
+                currentRotationVelocity = Vector3.zero;
+            }
+
+
+        }
+    }
+     */
+
+
+
+    public void SetMoveTarget(WorldHex newHex, bool shouldStepAnimate, bool followCamera, bool afterAttack)
+    {
         parentHex.SpawnParticle(UnitManager.Instance.unitWalkParticle);
+
         Deselect();
 
         c = newHex.hexData.C;
         r = newHex.hexData.R;
 
-        oldPosition = parentHex.hexData.PositionFromCamera();
-        UpdateDirection(parentHex, newHex, true);
         parentHex.UnitOut(this);
-
-        parentHex = newHex;
-        parentHex.UnitIn(this);
-       
-        transform.SetParent(parentHex.unitParent);
-       
 
         if (!afterAttack)
         {
@@ -1008,44 +956,38 @@ public class WorldUnit : MonoBehaviour
             currentMovePoints--;
         }
 
+        UnitManager.Instance.hexSelectMode = false;
+
         if (!unitReference.canAttackAfterMove)
         {
             currentAttackCharges--;
         }
 
-        newPosition = parentHex.hexData.PositionFromCamera();
-        shouldMove = true;
-        /*
-        //this is visual only
-        if (Vector3.Distance(oldPosition, newPosition) > 2)
+        GameManager.Instance.activePlayer.lastMovedUnit = this;
+
+        if (shouldStepAnimate)
         {
-            //Skip animation
-            this.transform.position = newPosition;
-            Debug.Log("Animation skipped");
+            SI_CameraController.Instance.animationsRunning = true;
+            StartCoroutine(WalkSteps(newHex));
         }
         else
         {
-            //Do animated move
-            shouldMove = true;
-        }*/
-       
-        if (followCamera)
-        {
-            SI_CameraController.Instance.PanToHex(newHex);
-        }
+            visualAnim.SetTrigger("Walk");
+            parentHex = newHex;
+            parentHex.UnitIn(this);
+            transform.SetParent(parentHex.unitParent);
+            transform.localPosition = Vector3.zero;
 
-        GameManager.Instance.activePlayer.lastMovedUnit = this;
-        //ValidateRemainigActions();
-        //wiggler?.AnimatedMove(newPosition);
+            if (followCamera)
+            {
+                SI_CameraController.Instance.PanToHex(newHex);
+            }
 
-        //check if attack possibled
+            UnitManager.Instance.SelectUnit(this);
+            SI_CameraController.Instance.animationsRunning = false;
 
-        UnitManager.Instance.hexSelectMode = false;
-        UnitManager.Instance.SelectUnit(this);
+        }      
     }
-
-    
-
 
     public void Select()
     {

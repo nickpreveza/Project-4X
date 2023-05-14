@@ -318,6 +318,10 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().UpdateGUIButtons();
         }
 
+        public void AnimateMoney()
+        {
+            gamePanel.GetComponent<GamePanel>().MoneyChanged();
+        }
 
         public void SetupOverview()
         {

@@ -638,14 +638,6 @@ public class MapManager : MonoBehaviour
     }
 
 
-    void CalculateDistanceFromOtherCities(WorldHex city)
-    {
-        for(int i = 0; i < worldCities.Count; i++)
-        {
-            //city.cityData.
-        }
-    }
-
     public void GenerateCities()
     {
         //define the number of cities to spawn based on map size: made this a public var
@@ -914,6 +906,94 @@ public class MapManager : MonoBehaviour
 
     }
 
+    public List<WorldHex> FindRoadPath(WorldHex start, WorldHex end, int playerOwnerIndex)
+    {
+        List<WorldHex> openSet = new List<WorldHex>();
+        List<WorldHex> closedSet = new List<WorldHex>();
+        openSet.Add(start);
+
+        while (openSet.Count > 0)
+        {
+            WorldHex current = openSet[0];
+
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].hexData.fCost < current.hexData.fCost ||
+                    openSet[i].hexData.fCost == current.hexData.fCost && openSet[i].hexData.hCost < openSet[i].hexData.hCost)
+                {
+                    current = openSet[i];
+                }
+            }
+
+            openSet.Remove(current);
+            closedSet.Add(current);
+
+            if (current == end)
+            {
+                List<WorldHex> path = new List<WorldHex>();
+                WorldHex retractCurrent = end;
+
+                while (retractCurrent != start)
+                {
+                    path.Add(retractCurrent);
+                    retractCurrent = retractCurrent.pathParent;
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            foreach (WorldHex adj in current.adjacentHexes)
+            {
+                if (closedSet.Contains(adj) || !adj.hexData.hasRoad) //can't afford to enter
+                {
+                    continue;
+                }
+
+                if (adj.hexData.playerOwnerIndex != playerOwnerIndex && adj.hexData.playerOwnerIndex != -1)
+                {
+                    continue;
+                }
+
+                int movementCostToAdj = current.hexData.gCost + MapManager.Instance.GetDistance(current, adj);
+                if (movementCostToAdj < adj.hexData.gCost || !openSet.Contains(adj))
+                {
+                    adj.hexData.gCost = movementCostToAdj;
+                    adj.hexData.hCost = MapManager.Instance.GetDistance(adj, end);
+                    adj.pathParent = current;
+
+                    if (!openSet.Contains(adj))
+                    {
+                        openSet.Add(adj);
+                    }
+                }
+            }
+
+        }
+
+        return null;
+    }
+
+    public int GetDistance(WorldHex start, WorldHex end)
+    {
+        Hex a = start.hexData;
+        Hex b = end.hexData;
+
+        int dC = Mathf.Abs(a.C- b.C);
+        if (dC > mapColumns / 2)
+        {
+            dC = mapColumns - dC;
+        }
+
+        int dR = Mathf.Abs(a.R - b.R);
+        if (dR > mapRows / 2)
+        {
+            dR = mapRows - dR;
+        }
+
+        return Mathf.Max(dC, dR, Mathf.Abs(a.S - b.S));
+    }
+
     public float GetElevationFromType(TileType type)
     {
         switch (type)
@@ -983,7 +1063,12 @@ public class MapManager : MonoBehaviour
         {
             for (int dy = Mathf.Max(-range, -dx - range); dy <= Mathf.Min(range, -dx + range); dy++)
             {
-                results.Add(GetHexAt(centerHex.C + dx, centerHex.R + dy));
+                WorldHex hexToAdd = GetHexAt(centerHex.C + dx, centerHex.R + dy);
+                if (hexToAdd != null)
+                {
+                    results.Add(hexToAdd);
+                }
+              
             }
         }
 

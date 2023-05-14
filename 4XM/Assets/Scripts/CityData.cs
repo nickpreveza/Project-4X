@@ -23,6 +23,6 @@ public class CityData
     public int output;
     public List<WorldHex> cityHexes = new List<WorldHex>();
     public List<BuildingType> masterBuildings = new List<BuildingType>();
-
+    public List<WorldUnit> cityCreatedUnits = new List<WorldUnit>();
     public List<WorldHex> cityHexesThatCanBeWorked = new List<WorldHex>();
 }

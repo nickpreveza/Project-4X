@@ -21,6 +21,7 @@ public class GameData
     public int startCityOutput = 2;
     public int traderActionReward = 10;
     public int startCurrencyAmount = 10;
+    public int pillageCost = 3;
 
     public string itchURL;
     public string websiteURL;

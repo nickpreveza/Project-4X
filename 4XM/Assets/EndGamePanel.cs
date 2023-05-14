@@ -44,21 +44,11 @@ public class EndGamePanel : UIPanel
         winnerText.text = GameManager.Instance.GetCivilizationByType(player.civilization).name + " WIN";
         if (isWinner)
         {
-            if (GameManager.Instance.oneMoreTurn)
-            {
-                oneMoreTurn.gameObject.SetActive(true);
-                oneMoreTurn.onClick.RemoveAllListeners();
-                oneMoreTurn.onClick.AddListener(OneMoreTurnButton);
-                oneMoreTurnText.text = "ONE MORE TURN...";
-            }
-            else
-            {
-                oneMoreTurn.gameObject.SetActive(true);
-                oneMoreTurn.onClick.RemoveAllListeners();
-                oneMoreTurn.onClick.AddListener(MainMenuButton);
-                oneMoreTurnText.text = "...meant it";
-            }
-          
+            oneMoreTurn.gameObject.SetActive(true);
+            oneMoreTurn.onClick.RemoveAllListeners();
+            oneMoreTurn.onClick.AddListener(OneMoreTurnButton);
+            oneMoreTurnText.text = "ONE MORE TURN...";
+
         }
         else
         {
@@ -70,9 +60,7 @@ public class EndGamePanel : UIPanel
 
     public void OneMoreTurnButton()
     {
-        GameManager.Instance.oneMoreTurn = true;
-        UIManager.Instance.OpenGamePanel();
-        GameManager.Instance.StartTurn(GameManager.Instance.activePlayer);
+        GameManager.Instance.ReloadScene();
     }
 
     public void MainMenuButton()

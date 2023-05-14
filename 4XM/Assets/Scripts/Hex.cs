@@ -16,7 +16,18 @@ public class Hex
     public int R; //Row
     public int S;
 
-    public int moveCost = 1;
+    public int gCost;
+    public int hCost;
+    public int penalty;
+
+    public int fCost
+    {
+        get
+        {
+            return gCost + hCost;
+        }
+    }
+
     public TileType type;
     public TraverseRequirment requirment;
     public bool occupied;

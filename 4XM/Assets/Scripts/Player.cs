@@ -311,19 +311,18 @@ public class Player
         {
             int baseAbilityCost = GameManager.Instance.GetBaseAbilityCost(ability.abilityID);
 
-            switch (baseAbilityCost)
+            if (baseAbilityCost <= 2)
             {
-                case 1:
-                    baseAbilityCost += playerCities.Count;
-                    break;
-                case 2:
-                    baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 1.5f);
-                    break;
-                case 3:
-                    baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 2f);
-                    break;
+                baseAbilityCost += playerCities.Count;
             }
-
+            else if (baseAbilityCost > 2 && baseAbilityCost <= 5)
+            {
+                baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 1.5f);
+            }
+            else if (baseAbilityCost > 5)
+            {
+                baseAbilityCost += Mathf.RoundToInt((float)playerCities.Count * 2f);
+            }
 
             ability.calculatedAbilityCost = baseAbilityCost;
         }
@@ -359,6 +358,7 @@ public class Player
 
     public void RemoveCity(WorldHex cityHex)
     {
+        //probably master resources will not update
         if (playerCities.Contains(cityHex))
         {
             playerCities.Remove(cityHex);
@@ -368,7 +368,14 @@ public class Player
         {
             RecalculateAbilityCosts();
         }
+
+        if (playerCities.Count == 0)
+        {
+            GameManager.Instance.RemovePlayerFromGame(this);
+        }
+
        
+
     }
 
 }

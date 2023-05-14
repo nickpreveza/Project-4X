@@ -111,6 +111,20 @@ public class SI_CameraController : MonoBehaviour
         mainCamera.gameObject.SetActive(true);
         playerCamera.gameObject.SetActive(false);
 
+        zoomTemp = this.transform.position;
+        if (zoomTemp.y < minHeight)
+        {
+            zoomTemp.y = minHeight;
+        }
+        if (zoomTemp.y > maxHeight)
+        {
+            zoomTemp.y = maxHeight;
+        }
+
+        int m = (19 - 33) / (20 - 10); // Calculate the slope (change in y / change in x)
+        int c = 33 - m * 10; // Calculate the y-intercept
+        calculatedBounds.y = m * zoomTemp.y + c;
+
     }
 
     public void GameStarted()
@@ -237,6 +251,8 @@ public class SI_CameraController : MonoBehaviour
 
     void AutoHexPan()
     {
+        OutOfBoundsCheck();
+
         if (targetCameraPosition.z < calculatedBounds.x)
         {
             targetCameraPosition.z = calculatedBounds.x;
@@ -254,6 +270,8 @@ public class SI_CameraController : MonoBehaviour
             currentVelocity = Vector3.zero;
             SI_EventManager.Instance.OnAutoPanCompleted(autoPanHexIdentifier);
         }
+
+       
     }
 
 

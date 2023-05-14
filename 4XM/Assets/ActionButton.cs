@@ -22,6 +22,30 @@ public class ActionButton : MonoBehaviour
     int actionCost;
     UnitType unitType;
 
+    public void SetDataForPillage(HexView newHandler, WorldHex newHex, bool isBuilding, bool isEnabled)
+    {
+        backgroundImage = GetComponent<Image>();
+        parentHandler = newHandler;
+        targetHex = newHex;
+        buttonAction.onClick.RemoveAllListeners();
+
+        buttonName.text = "Pillage";
+        actionCost = 0;
+        actionCostText.text = actionCost.ToString();
+
+        backgroundImage.sprite = parentHandler.destroyBackground;
+
+        if (isEnabled)
+        {
+            buttonAction.interactable = true;
+            buttonAction.onClick.AddListener(() => DestroyAction(isBuilding, true));
+        }
+        else
+        {
+            buttonAction.interactable = false;
+        }
+       
+    }
     public void SetDataForDestory(HexView newHandler, WorldHex newHex, bool isBuilding)
     {
         backgroundImage = GetComponent<Image>();
@@ -39,9 +63,10 @@ public class ActionButton : MonoBehaviour
             buttonName.text = "Clear Resource";
             actionCost = GameManager.Instance.data.destroyCost; 
         }
+
         backgroundImage.sprite = parentHandler.destroyBackground;
         actionCostText.text = actionCost.ToString();
-        buttonAction.onClick.AddListener(()=>DestroyAction(isBuilding));
+        buttonAction.onClick.AddListener(()=>DestroyAction(isBuilding, false));
         CheckIfAffordable();
     }
 
@@ -53,7 +78,7 @@ public class ActionButton : MonoBehaviour
         targetHex = newHex;
         buttonAction.onClick.RemoveAllListeners();
 
-        buttonName.text = "Trader";
+        buttonName.text = "Trade Action";
         actionCost = 0;
         costVisual.SetActive(false);
 
@@ -170,11 +195,21 @@ public class ActionButton : MonoBehaviour
 
         if (MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).transformToBuilding)
         {
-            buttonName.text = "Contruct " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+            buttonName.text = "Build " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         }
         else
         {
             buttonName.text = "Harvest " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+            switch (targetHex.hexData.resourceType)
+            {
+                case ResourceType.ANIMAL:
+                    buttonName.text = "Tame " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+                    break;
+                case ResourceType.FISH:
+                    buttonName.text = "Catch " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+                    break;
+            }
+           
         }
         //MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
         actionCost = MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).harvestCost;
@@ -339,8 +374,12 @@ public class ActionButton : MonoBehaviour
         UIManager.Instance.UpdateHUD();
     }
 
-    public void DestroyAction(bool isBuilding)
+    public void DestroyAction(bool isBuilding, bool fromUnit)
     {
+        if (fromUnit)
+        {
+            targetHex.associatedUnit.ExhaustActions();
+        }
         targetHex.DestroyAction(isBuilding);
     }
     

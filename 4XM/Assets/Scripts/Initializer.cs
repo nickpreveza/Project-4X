@@ -19,8 +19,6 @@ namespace SignedInitiative
 
         public int networkedPlayersCount = 0;
 
-      
-
         bool mapGenerated;
         bool dataLoaded;
         bool unitsPlaced;
@@ -58,6 +56,13 @@ namespace SignedInitiative
             SI_EventManager.Instance.onUnitsPlaced += OnUnitsPlaced;
 
             InitializeGame();
+        }
+
+        private void OnDestroy()
+        {
+            SI_EventManager.Instance.onDataLoaded -= OnDataLoaded;
+            SI_EventManager.Instance.onMapGenerated -= OnMapGenerated;
+            SI_EventManager.Instance.onUnitsPlaced -= OnUnitsPlaced;
         }
 
         private void Update()
@@ -140,6 +145,13 @@ namespace SignedInitiative
 
         public void LocalStart(bool pushInitializerPlayers)
         {
+            if (!pushInitializerPlayers)
+            {
+                dataHandler.FetchData();
+                processing = true;
+                return;
+            }
+
             List<Player> playersPassSetup = new List<Player>();
 
             foreach(Player player in setupPlayers)
@@ -161,6 +173,7 @@ namespace SignedInitiative
                     player.type = PlayerType.LOCAL;
                 }
 
+                player.isAlive = true;
                 player.abilities.unitSwordsman = true;
             }
 

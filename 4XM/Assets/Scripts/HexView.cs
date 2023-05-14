@@ -300,6 +300,15 @@ public class HexView : MonoBehaviour
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
             GenerateResourceButton(false, ResourceType.EMPTY, false);
+
+            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+            {
+                if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                {
+                    GeneratePillageButton(hex.associatedUnit.buttonActionPossible, false);
+                }
+            }
+               
         }
     }
 
@@ -372,6 +381,14 @@ public class HexView : MonoBehaviour
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
 
             hexDescription.text = "This hex has a " + hexName.text + " building";
+
+            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+            {
+                if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                {
+                    GeneratePillageButton(hex.associatedUnit.buttonActionPossible, true);
+                }
+            }
         }
     }
 
@@ -393,6 +410,22 @@ public class HexView : MonoBehaviour
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionUnavailable;
             }
 
+            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+            {
+                if (unit.parentHex.hexData.playerOwnerIndex != -1 && unit.playerOwnerIndex != unit.parentHex.hexData.playerOwnerIndex)
+                {
+                    if (unit.parentHex.hexData.hasResource)
+                    {
+                        GeneratePillageButton(unit.buttonActionPossible, false);
+                    }
+
+                    if (unit.parentHex.hexData.hasBuilding)
+                    {
+                        GeneratePillageButton(unit.buttonActionPossible, true);
+                    }
+                }
+            }
+           
             if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != GameManager.Instance.activePlayer.index)
             {
                 GenerateCityCaptureButton(unit.buttonActionPossible);
@@ -502,6 +535,11 @@ public class HexView : MonoBehaviour
         }
     }
 
+    void GeneratePillageButton(bool isEnabled, bool isBuilding)
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForPillage(this, hex, isBuilding, isEnabled);
+    }
     void GenerateTraderButton()
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);

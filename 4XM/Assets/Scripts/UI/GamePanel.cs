@@ -46,7 +46,7 @@ public class GamePanel : UIPanel
 
     [SerializeField] GameObject playerAvatarParent;
     [SerializeField] ScrollRect scrollRect;
-
+    [SerializeField] Animator getMoneyAnim;
     void Start()
     {
       
@@ -70,6 +70,10 @@ public class GamePanel : UIPanel
 
     }
 
+    public void MoneyChanged()
+    {
+        getMoneyAnim.SetTrigger("GetMoney");
+    }
     public void SetupOverview()
     {
         overview.OverviewSetup();
@@ -134,6 +138,10 @@ public class GamePanel : UIPanel
 
     public void UpdateResearchPanel()
     {
+        if (research == null)
+        {
+            research = researchPanel.GetComponent<ResearchViewHandler>();
+        }
         research.UpdateResearchButtons();
     }
 
@@ -199,6 +207,10 @@ public class GamePanel : UIPanel
         {
             scrollRect.verticalNormalizedPosition = 0;
 
+        }
+        else
+        {
+            scrollRect.verticalNormalizedPosition = 1;
         }
         button.OpenHighlight();
     }

@@ -30,10 +30,15 @@ public class RoadHelper : MonoBehaviour
             {
                 if (parentHex.adjacentHexes[i].hexData.hasRoad)
                 {
-                    Direction dir = MapManager.Instance.GetHexDirection(parentHex, parentHex.adjacentHexes[i]);
-                    EnableRoadObjectByDir(dir);
-                    parentHex.adjacentHexes[i].AdjacentRoadChanged(parentHex);
-                    roadsEnabled++;
+                    int adjIndex = parentHex.adjacentHexes[i].hexData.playerOwnerIndex;
+
+                    if (adjIndex == parentHex.hexData.playerOwnerIndex || adjIndex != -1)
+                    {
+                        Direction dir = MapManager.Instance.GetHexDirection(parentHex, parentHex.adjacentHexes[i]);
+                        EnableRoadObjectByDir(dir);
+                        parentHex.adjacentHexes[i].AdjacentRoadChanged(parentHex);
+                        roadsEnabled++;
+                    }
                 }
             }
 

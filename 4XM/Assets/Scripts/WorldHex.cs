@@ -25,6 +25,7 @@ public class WorldHex : MonoBehaviour
     CityVisualHelper visualHelper;
     RoadHelper roadHelper;
     public List<WorldHex> adjacentHexes = new List<WorldHex>();
+    public WorldHex pathParent;
     //0 - Visual Layer 
     //1 - Resource Layer 
     //2 - Unit Layer 
@@ -37,9 +38,58 @@ public class WorldHex : MonoBehaviour
 
     bool isHidden = true;
     GameObject activeParticle;
+
+    public int InteractivePenalty(WorldHex previousPos)
+    {
+        if (hexData.type == TileType.SEA || hexData.type == TileType.DEEPSEA)
+        {
+            if (previousPos.hexData.type != TileType.SEA && previousPos.hexData.type != TileType.DEEPSEA)
+            {
+                return 10;
+            }
+        }
+
+        return hexData.penalty;
+    }
+
+    public int moveEnterCost
+    {
+        get
+        {
+            return hexData.penalty;
+        }
+
+    }
+
     public bool Hidden()
     {
         return isHidden;
+    }
+
+    public bool CanBeWalked(WorldUnit unit)
+    {
+        if (hexData.occupied)
+        {
+            return false;
+        }
+
+        switch (hexData.type)
+        {
+            case TileType.MOUNTAIN:
+                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelMountain;
+            case TileType.SEA:
+                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelSea;
+            case TileType.DEEPSEA:
+                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelOcean;
+            case TileType.SAND:
+            case TileType.GRASS:
+            case TileType.HILL:
+                return true;
+            case TileType.ICE:
+                return false;
+        }
+
+        return false;
     }
 
     private void Awake()
@@ -249,7 +299,16 @@ public class WorldHex : MonoBehaviour
         hexData.SetData(column, row);
         hexIdentifier = column * MapManager.Instance.mapRows + row;
         hexData.type = newType;
-        hexData.moveCost = MapManager.Instance.GetMoveCostForType(newType);
+
+
+        if (hexData.type == TileType.MOUNTAIN)
+        {
+            hexData.penalty = 2;
+        }
+        else
+        {
+            hexData.penalty = 1;
+        }
         if (setElevationFromType)
         {
             SetElevationFromType();
@@ -345,6 +404,10 @@ public class WorldHex : MonoBehaviour
 
                 MapManager.Instance.SetHexUnderSiege(this);
 
+                if (visualHelper != null)
+                {
+                    visualHelper.citySiegeEffect.SetActive(false);
+                }
             }
         }
 
@@ -949,7 +1012,10 @@ public class WorldHex : MonoBehaviour
             RemoveResource(true, true);
         }
     }
-
+    public void Wiggle()
+    {
+        wiggler?.Wiggle();
+    }
     void RemoveBuilding()
     {
         Building building = MapManager.Instance.GetBuildingByType(hexData.buildingType);
@@ -1017,7 +1083,55 @@ public class WorldHex : MonoBehaviour
         //UpdateVisuals();
         //CalculateRoadConnections
         roadHelper.SetRoads();
+
+        if (hexData.playerOwnerIndex != -1)
+        {
+            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
+        }
+     
         UIManager.Instance.ShowHexView(this);
+    }
+
+    //to be used by capital to find connected cities;
+    public void SearchForConnections()
+    {
+        if (!hexData.hasRoad)
+        {
+            return;
+        }
+
+        foreach(WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
+        {
+            if (city == GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity)
+            {
+                continue;
+            }
+
+            if (!city.hexData.isConnectedToCapital)
+            {
+               List<WorldHex> attemptForRoad = MapManager.Instance.FindRoadPath(this, city, hexData.playerOwnerIndex);
+               if (attemptForRoad != null)
+               {
+                    city.ConnectToCapital();
+                    this.AddLevelPoint(1);
+               }
+            }
+        }
+    }
+
+    public void ConnectToCapital()
+    {
+        hexData.isConnectedToCapital = true;
+        cityView.CapitalConnectionStatus(true);
+        AddLevelPoint(1);
+    }
+
+    public void SevereFromCapital()
+    {
+        hexData.isConnectedToCapital = false;
+        cityView.CapitalConnectionStatus(false);
+        RemoveLevelPoint(1);
+        GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.RemoveLevelPoint(1);
     }
 
     public void AdjacentRoadChanged(WorldHex adjHex)
@@ -1069,7 +1183,7 @@ public class WorldHex : MonoBehaviour
             
             hexData.resourceType = ResourceType.EMPTY;
             hexData.hasResource = false;
-            hexData.moveCost = MapManager.Instance.GetMoveCostForType(hexData.type);
+            //hexData.moveCost = MapManager.Instance.GetMoveCostForType(hexData.type);
             GameObject resourceObj = resourceParent.GetChild(0).gameObject;
 
             if (resourceObj != null)
@@ -1089,7 +1203,6 @@ public class WorldHex : MonoBehaviour
     {
         if (!hexData.hasCity)
         {
-
             Debug.LogError("Hex does not have a city");
             return;
         }
@@ -1102,34 +1215,27 @@ public class WorldHex : MonoBehaviour
             isThisATakeOver = true;
         }
 
-        if (cityGameObject != null)
+        if (hexData.isConnectedToCapital)
         {
-            Destroy(cityGameObject);
+            SevereFromCapital();
         }
-
-        cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, resourceParent);
-        //cityGameObject.GetComponent<MeshRenderer>().material.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.borderColor);
-
-        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
-
+      
+        //set player
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
+        cityData.isUnderSiege = false;
 
-        List<WorldHex> newCityHexes = new List<WorldHex>(adjacentHexes);
-
-        Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
-
-
-
-        //TODO: Set outline material color only perimiter; 
-        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor); 
-        border.SetActive(true);
-        border.GetComponent<MeshRenderer>().materials[0].color = newColor;
-
-
-        if (!isThisATakeOver)
+        if (isThisATakeOver)
         {
+            foreach (WorldHex newHex in cityData.cityHexes)
+            {
+                newHex.SetAsOccupiedByCity(this);
+            }
+        }
+        else
+        {
+            List<WorldHex> newCityHexes = new List<WorldHex>(adjacentHexes);
             foreach (WorldHex hex in adjacentHexes)
             {
                 if (hex.hexData.isOwnedByCity)
@@ -1146,38 +1252,39 @@ public class WorldHex : MonoBehaviour
             {
                 newHex.SetAsOccupiedByCity(this);
             }
-
-
         }
-        else
+
+
+        if (cityGameObject != null)
         {
-            foreach (WorldHex newHex in cityData.cityHexes)
-            {
-                newHex.SetAsOccupiedByCity(this);
-            }
+            Destroy(cityGameObject);
         }
 
-        
         hexData.hasRoad = true;
         roadHelper.SetRoads();
-        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, true);
 
-        cityData.isUnderSiege = false;
-
+        //visual
+        cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, resourceParent);
+        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
+        Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
+        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
+        visualHelper.citySiegeEffect.SetActive(false);
+        border.SetActive(true);
+        border.GetComponent<MeshRenderer>().materials[0].color = newColor;
+       
 
         cityView.gameObject.SetActive(true);
         cityView.OccupyCity(!isThisATakeOver);
-
-        if (hexData.playerOwnerIndex != -1)
-        {
-            GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
-        }
+        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, true);
+        GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
+        //UIManager.Instance.UpdateResearchPanel(player.index); causes null error because too early when called from map manager
 
         if (visualHelper != null)
         {
             visualHelper.citySiegeEffect.SetActive(false);
         }
 
+        GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
         FindCityResourcesThatCanBeWorked();
     }
 
@@ -1346,7 +1453,7 @@ public class WorldHex : MonoBehaviour
             else if (UnitManager.Instance.IsHexValidMove(this))
             {
                 UnitManager.Instance.MoveToTargetHex(this);
-
+               
                 wiggler?.Wiggle();
                 return;
             }

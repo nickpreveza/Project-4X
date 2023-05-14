@@ -29,8 +29,6 @@ namespace SignedInitiative
 
         public bool isSinglePlayer;
 
-        public bool oneMoreTurn;
-
         [Header("Debug Settings")]
         public bool AIEnabled;
         public bool useRandomSeed;
@@ -398,15 +396,6 @@ namespace SignedInitiative
         {
             SI_CameraController.Instance.GameStarted();
 
-            if (player.playerCities.Count == 0)
-            {
-                RemovePlayerFromGame(player);
-                if (sessionPlayers.Count <= 1)
-                {
-                    GameOver(activePlayer);
-                }
-                return;
-            }
             activePlayer = player;
             activePlayerIndex = player.index;
             activePlayerClientID = player.clientID;
@@ -433,11 +422,6 @@ namespace SignedInitiative
       
         public void LocalEndTurn()
         {
-            if (oneMoreTurn)
-            {
-                GameOver(activePlayer);
-                return;
-            }
             UIManager.Instance.EndTurn();
             activePlayer.EndTurn();
 
@@ -453,16 +437,26 @@ namespace SignedInitiative
 
             SI_CameraController.Instance.DeselectSelection();
             UnitManager.Instance.ClearHexSelectionMode();
+
             int previousPlayerIndex = activePlayerIndex;
+           
+            bool foundPlayer = false;
 
-            activePlayerIndex++;
-
-            if (activePlayerIndex >= sessionPlayers.Count)
+            while (!foundPlayer)
             {
-                activePlayerIndex = 0;
+                activePlayerIndex++;
+                if (activePlayerIndex >= sessionPlayers.Count)
+                {
+                    activePlayerIndex = 0;
+                }
+
+                if (GetPlayerByIndex(activePlayerIndex).isAlive)
+                {
+                    foundPlayer = true;
+                    break;
+                }
             }
-   
-   
+
             if (previousPlayerIndex == activePlayerIndex)
             {
                 GameOver(activePlayer);
@@ -500,7 +494,6 @@ namespace SignedInitiative
             }
 
             player.isAlive = false;
-            sessionPlayers.Remove(player);
         }
 
         public void OnDataReady()
@@ -511,15 +504,24 @@ namespace SignedInitiative
         public void AddStartsToActivePlayer(int amount)
         {
             activePlayer.AddStars(amount);
+            UIManager.Instance.AnimateMoney();
         }
         public void AddStars(int playerIndex, int amount)
         {
             GetPlayerByIndex(playerIndex).AddStars(amount);
+            if (playerIndex == activePlayerIndex)
+            {
+                UIManager.Instance.AnimateMoney();
+            }
         }
 
         public void RemoveStars(int playerIndex, int amount)
         {
             GetPlayerByIndex(playerIndex).RemoveStars(amount);
+            if (playerIndex == activePlayerIndex)
+            {
+                UIManager.Instance.AnimateMoney();
+            }
         }
 
         public void AddScore(int playerIndex, int scoreType, int amount)
@@ -667,6 +669,7 @@ namespace SignedInitiative
             SI_EventManager.Instance.OnAbilityUnlocked(playerIndex);
             player.UpdateAvailableUnitsFromAbilities();
             player.CheckForAvailableResearch();
+
             if (updateUI)
             {
                 UIManager.Instance.UpdateResearchPanel(playerIndex);
