@@ -665,10 +665,15 @@ public class MapManager : MonoBehaviour
 
             int randomTileIndex = Random.Range(0, hexesWhereCityCanSpawn.Count);
             WorldHex newCity = hexesWhereCityCanSpawn[randomTileIndex];
-            // GenerateResources(newCity);
-            int cityNameIndex = (Random.Range(0, availableCityNames.Count));
-            string cityName = availableCityNames[cityNameIndex];
-            availableCityNames.RemoveAt(cityNameIndex);
+            string cityName = "defaultCity";
+
+            if (availableCityNames.Count > 0)
+            {
+                int randomIndex = Random.Range(0, availableCityNames.Count);
+                cityName = availableCityNames[randomIndex];
+                availableCityNames.RemoveAt(randomIndex);
+            }
+           
             newCity.SpawnCity(cityName);
             worldCities.Add(newCity);
             citiesSpawned++;

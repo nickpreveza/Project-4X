@@ -8,6 +8,8 @@ using System.Linq;
 public class Player 
 {
     //Setup
+    public bool isFirstPlayer;
+    public bool activatedOnSetup;
     public bool isAlive = true;
     public PlayerType type;
     public Civilizations civilization;

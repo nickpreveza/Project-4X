@@ -74,7 +74,7 @@ public enum Abilities //more like ability grousps
     FruitHarvest, //allows fruit harvest
     Roads, //allows roads
     Guild, //allows guild
-    Creator, //allows destroy
+    Scout, //allows destroy
 
     Forestry, //allows forest harvest
     Archery, //allows archer

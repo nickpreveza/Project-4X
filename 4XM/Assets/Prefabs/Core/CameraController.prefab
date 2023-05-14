@@ -175,6 +175,12 @@ MonoBehaviour:
   maxHeight: 20
   repeatSelection: 0
   animationsRunning: 0
+  menuLayerMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  gameLayerMask:
+    serializedVersion: 2
+    m_Bits: 1463
 --- !u!1 &5448783927269960831
 GameObject:
   m_ObjectHideFlags: 0

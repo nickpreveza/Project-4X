@@ -32,6 +32,7 @@ namespace SignedInitiative
         public bool oneMoreTurn;
 
         [Header("Debug Settings")]
+        public bool AIEnabled;
         public bool useRandomSeed;
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;
@@ -150,8 +151,7 @@ namespace SignedInitiative
             SI_CameraController.Instance.GameStarted();
 
             //reorder the players so humans go first
-            List<Player> playersToSort = new List<Player>(sessionPlayers);
-            sessionPlayers = playersToSort.OrderByDescending(x => x.type).ToList();
+            
 
             if (noFog)
             {
@@ -167,6 +167,8 @@ namespace SignedInitiative
 
                 player.AddStars(data.startCurrencyAmount);
                 player.CalculateDevelopmentScore(false);
+
+                UnlockAbility(player.index, GetCivilizationByType(player.civilization).startingAbility, false, false);
             }
 
             UIManager.Instance.ToggleUIPanel(UIManager.Instance.initializerPanel, false, true, 0f);
@@ -331,8 +333,12 @@ namespace SignedInitiative
             {
                 case Civilizations.Greeks:
                     return gameCivilizations[0];
-                case Civilizations.Romans:
+                case Civilizations.Egyptians:
                     return gameCivilizations[1];
+                case Civilizations.Romans:
+                    return gameCivilizations[2];
+                case Civilizations.Celts:
+                    return gameCivilizations[3];
             }
 
             return null;
@@ -386,14 +392,6 @@ namespace SignedInitiative
             }
 
             GenerateAbilitiesDatabaseForPlayers();
-        }
-
-        private void Update()
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                sessionPlayers[1].capitalCity.OccupyCityByPlayer(sessionPlayers[0]);
-            }
         }
 
         public void StartTurn(Player player)
@@ -594,31 +592,23 @@ namespace SignedInitiative
                     break;
                 case Abilities.Smithery:
                     player.abilities.mineMasterBuilding = true;
-                    player.abilities.unitLance = true;
-
-                    if (GameManager.Instance.createStuff)
-                    {
-                        player.abilities.createMine = true;
-                    }
+                    player.abilities.createMine = true;
                     break;
 
                 case Abilities.FruitHarvest:
                     player.abilities.fruitHarvest = true;
                     break;
+                case Abilities.Scout:
+                    player.abilities.unitTrader = true;
+                    break;
                 case Abilities.Roads:
                     player.abilities.roads = true;
                     break;
-                case Abilities.Creator:
-                    player.abilities.destroyAbility = true;
-                    //player.abilities.unitDiplomat = true;
-                    //player.abilities.Trader = true;
-                    break;
                 case Abilities.Guild:
                     player.abilities.guildBuilding = true;
-                    player.abilities.unitTrader = true;
+                    player.abilities.destroyAbility = true;
                     break;
-             
-
+      
                 case Abilities.Forestry:
                     player.abilities.forestHarvest = true;
                     break;

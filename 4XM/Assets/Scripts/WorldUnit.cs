@@ -812,10 +812,8 @@ public class WorldUnit : MonoBehaviour
 
     public bool ReceiveDamage(int value)
     {
-        Debug.Log("Health was: " + localHealth);
-        Debug.Log("Damage received was: " + (value - currentDefense));
-
-        localHealth = localHealth - (value - currentDefense);
+        int adjustedDamage = Mathf.Clamp(value - currentDefense, 0, 100);
+        localHealth = localHealth - adjustedDamage;
 
         unitView.UpdateData();
         if (localHealth <= 0)

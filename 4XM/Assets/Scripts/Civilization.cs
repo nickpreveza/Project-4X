@@ -6,6 +6,9 @@ using UnityEngine;
 public class Civilization
 {
     public string name;
+    [TextArea(2,10)]
+    public string civilizationIntro;
+    public Civilizations civType;
     public UnitData[] unitOverrides;
     public Color unitColor;
     public Color unitInactive;
@@ -19,6 +22,7 @@ public class Civilization
 
     public Dictionary<UnitType, UnitData> unitDictionary = new Dictionary<UnitType, UnitData>();
     public Sprite civLogo;
+    public Abilities startingAbility;
 
     public void SetupUnitDictionary()
     {

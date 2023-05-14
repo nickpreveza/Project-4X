@@ -59,12 +59,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameCivilizations:
-  - name: Greeks
+  - name: Ikaria
+    civilizationIntro: By the Bay of Lions rises Ikaria Empire. A great and prideful
+      nation, Kalimarda arose from the strife between multiple small city states.
+    civType: 0
     unitOverrides: []
     unitColor: {r: 0.29966182, g: 0.60020804, b: 0.6981132, a: 1}
     unitInactive: {r: 0, g: 0.31309974, b: 0.41509432, a: 1}
     uiColorActive: {r: 0.12322002, g: 0.53514403, b: 0.6698113, a: 1}
-    uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.64705884}
+    uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.7294118}
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
@@ -74,13 +77,17 @@ MonoBehaviour:
       type: 3}
     civLogo: {fileID: -312768529563260625, guid: 3da05e9f66c9f254c8875335e7e9179e,
       type: 3}
-  - name: Romans
+    startingAbility: 12
+  - name: Abydos
+    civilizationIntro: 'In the west stands the Abydos empire, a bastion amongst warring
+      states. Urbanists who often look outwards, wishing to extend the hands of trade. '
+    civType: 2
     unitOverrides: []
-    unitColor: {r: 0.7364821, g: 0.3476326, b: 0.7924528, a: 1}
-    unitInactive: {r: 0.5720125, g: 0.22027412, b: 0.6226415, a: 0.8235294}
-    uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
-    uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.64705884}
-    borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
+    unitColor: {r: 0.7921569, g: 0.7000085, b: 0.34901962, a: 1}
+    unitInactive: {r: 0.509434, g: 0.43305507, b: 0.16100036, a: 0.8235294}
+    uiColorActive: {r: 0.6509434, g: 0.5778223, b: 0.29169634, a: 1}
+    uiColorInactive: {r: 0.3962264, g: 0.34874994, b: 0.16634032, a: 0.74509805}
+    borderColor: {r: 0.79215693, g: 0.7019608, b: 0.34901962, a: 0.6392157}
     cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
       type: 3}
     boatPrefab: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
@@ -89,43 +96,211 @@ MonoBehaviour:
       type: 3}
     civLogo: {fileID: -8918885832014658072, guid: 3da05e9f66c9f254c8875335e7e9179e,
       type: 3}
+    startingAbility: 4
+  - name: Artium
+    civilizationIntro: "Artium originally wasn\u2019t a nation as per how a nation-state
+      is defined. Rather, it was more of a polity that roughly had sovereignty over
+      an area in the far southwest of the Cradle."
+    civType: 1
+    unitOverrides: []
+    unitColor: {r: 0.7364821, g: 0.3476326, b: 0.7924528, a: 1}
+    unitInactive: {r: 0.5720125, g: 0.22027412, b: 0.6226415, a: 0.8235294}
+    uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
+    uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.74509805}
+    borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
+    cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
+      type: 3}
+    boatPrefab: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
+      type: 3}
+    shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
+    civLogo: {fileID: -3820048696943746370, guid: 3da05e9f66c9f254c8875335e7e9179e,
+      type: 3}
+    startingAbility: 8
+  - name: Siderios
+    civilizationIntro: "Starting from the north, Siderios\u2019 history is painted
+      as that of nomadic pastoralists among the frigid northern fringes of the known
+      world. "
+    civType: 3
+    unitOverrides: []
+    unitColor: {r: 0.8490566, g: 0.21472621, b: 0.16420433, a: 1}
+    unitInactive: {r: 0.509434, g: 0.24012178, b: 0.21867214, a: 0.8235294}
+    uiColorActive: {r: 0.6603774, g: 0.2593355, b: 0.22739409, a: 1}
+    uiColorInactive: {r: 0.4811321, g: 0.20996511, b: 0.18836774, a: 0.74509805}
+    borderColor: {r: 0.745283, g: 0.22784366, b: 0.18632075, a: 0.6392157}
+    cityObject: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
+      type: 3}
+    boatPrefab: {fileID: 2605098182420927756, guid: f414d5cbe94067f45a912289c53b2bb9,
+      type: 3}
+    shipPrefab: {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26,
+      type: 3}
+    civLogo: {fileID: -6415259062133742075, guid: 3da05e9f66c9f254c8875335e7e9179e,
+      type: 3}
+    startingAbility: 0
   data:
-    day: 0
-    hour: 0
-    minute: 0
-    second: 0
-    highscore: 0
-    hbscore: 0
-    hempSeeds: 0
-    hempFibers: 0
-    quadrantsUnlocked: 0
-    factoryCost: 0
-    wavesCompleted: 0
-    nextWaveTime: 0
-    discordURL: 
+    roadCost: 2
+    destroyCost: 0
+    visibilityReward: 3
+    unitReward: 0
+    currencyReward: 5
+    productionReward: 1
+    populationReward: 3
+    rangeReward: 2
+    startCityOutput: 2
+    traderActionReward: 10
+    startCurrencyAmount: 10
+    itchURL: https://nickpreveza.itch.io/project-4x
     websiteURL: 
-    itchURL: 
-    player_weapon: 1
-    player_maxHealth: 100
+    discordURL: 
+    linktrURL: https://linktr.ee/nickpreveza
   gameReady: 0
   isPaused: 0
-  playerDead: 0
   menuActive: 0
-  devMode: 0
+  isSinglePlayer: 0
+  oneMoreTurn: 0
+  AIEnabled: 0
+  useRandomSeed: 0
   allAbilitiesUnlocked: 0
-  startWithALotOfMoney: 1
+  startWithALotOfMoney: 0
   noFog: 0
   allowShipUpgradeEverywhere: 0
   createStuff: 0
   infiniteCurrency: 0
-  noScenceChanges: 0
-  noSave: 0
-  noLoad: 0
   globalVolume: {fileID: 0}
-  canLoad: 0
-  csvReader: {fileID: 0}
+  setupPlayers:
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 1
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 1
+    civilization: 1
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
   sessionPlayers:
-  - type: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
+    type: 1
     civilization: 0
     abilities:
       travelMountain: 0
@@ -164,24 +339,32 @@ MonoBehaviour:
       portBuilding: 0
       guildBuilding: 0
     index: 0
-    name: Greeks
     totalScore: 0
     developmentScore: 0
     researchScore: 0
     militaryScore: 0
     turnCount: 0
-    stars: 5
+    stars: 0
     expectedStars: 0
     unlockedAbiltiesCount: 0
+    currentRank: 0
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
+    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
     clientID: 0
-  - type: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
+    type: 1
     civilization: 1
     abilities:
       travelMountain: 0
@@ -220,24 +403,33 @@ MonoBehaviour:
       portBuilding: 0
       guildBuilding: 0
     index: 1
-    name: Romans
     totalScore: 0
     developmentScore: 0
     researchScore: 0
     militaryScore: 0
     turnCount: 0
-    stars: 5
+    stars: 0
     expectedStars: 0
     unlockedAbiltiesCount: 0
+    currentRank: 0
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
+    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
     clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  rankedPlayers: []
   activePlayer:
+    isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
     type: 0
     civilization: 0
     abilities:
@@ -277,7 +469,6 @@ MonoBehaviour:
       portBuilding: 0
       guildBuilding: 0
     index: 0
-    name: 
     totalScore: 0
     developmentScore: 0
     researchScore: 0
@@ -286,14 +477,85 @@ MonoBehaviour:
     stars: 0
     expectedStars: 0
     unlockedAbiltiesCount: 0
+    currentRank: 0
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
     playerBorders: []
+    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
     clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  singlePlayer:
+    isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
   activePlayerIndex: 0
   abilities:
   - abilityID: 0
@@ -306,7 +568,7 @@ MonoBehaviour:
     abilityToUnlock: 1
   - abilityID: 1
     abilityName: Mining
-    abilityDescription: 'Allows you to create the Mine (+2) on Ore resources. '
+    abilityDescription: 'Allows you to create the Mine (+2) on Gold resources. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
@@ -322,8 +584,9 @@ MonoBehaviour:
     abilityToUnlock: 3
   - abilityID: 3
     abilityName: Smithery
-    abilityDescription: "Allows you to create the Ironworks Building. \nAllows you
-      to create Ore resources on Mountains."
+    abilityDescription: "Allows you to create the Ironworks Building. \nYou receive
+      +1 for every adjacent Mine building. \n\nAllows you to create Gold resources
+      on Mountains.\n"
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -331,11 +594,20 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 4
     abilityName: Fruit Harvest
-    abilityDescription: Allows you to harvest the Fruits resource.
+    abilityDescription: Allows you to harvest the Fruits (+1) resource.
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
     isUnlocked: 1
+    abilityToUnlock: 7
+  - abilityID: 7
+    abilityName: Scout
+    abilityDescription: "Allows you to create Scouts. \n\nMove a Scout to a guild
+      of a different city to claim a reward. "
+    abilityIcon: {fileID: 0}
+    abilityCost: 6
+    scoreForPlayer: 30
+    isUnlocked: 0
     abilityToUnlock: 5
   - abilityID: 5
     abilityName: Roads
@@ -345,20 +617,12 @@ MonoBehaviour:
     abilityCost: 4
     scoreForPlayer: 20
     isUnlocked: 0
-    abilityToUnlock: 7
-  - abilityID: 7
-    abilityName: Destruction
-    abilityDescription: 'Allows you to destroy buildings and resources. '
-    abilityIcon: {fileID: 0}
-    abilityCost: 6
-    scoreForPlayer: 30
-    isUnlocked: 0
     abilityToUnlock: 6
   - abilityID: 6
     abilityName: Guild
-    abilityDescription: "Allows you to build the Guild building. \nAllows you to
-      create the Trader unit. \n\nMove a Trader to a guild of a different city to
-      claim a reward. "
+    abilityDescription: "Allows you to build the Guild (+2) building. \nAllows you
+      to destroy buildings and resources. \n\nMove a Scout to a guild of a different
+      city to claim a reward. "
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 40
@@ -366,7 +630,7 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 8
     abilityName: Forestry
-    abilityDescription: 'Allows you to build the Tent on Forest hexes. '
+    abilityDescription: 'Allows you to build the Cabin (+1) on Forest hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -374,7 +638,7 @@ MonoBehaviour:
     abilityToUnlock: 9
   - abilityID: 9
     abilityName: Archery
-    abilityDescription: Learn how to create the Archer unit
+    abilityDescription: 'Allows you to create the Archer unit. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
@@ -382,10 +646,10 @@ MonoBehaviour:
     abilityToUnlock: 10
   - abilityID: 10
     abilityName: Engineering
-    abilityDescription: 'Allows you to create the Trebuchet unit.
+    abilityDescription: 'Allows you to create the Catapult unit.
 
       Allows you
-      to clear forests for a reward. '
+      to clear Forests for a reward. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -393,11 +657,9 @@ MonoBehaviour:
     abilityToUnlock: 11
   - abilityID: 11
     abilityName: Lumberjack
-    abilityDescription: 'Allows you to build the Lumberjack.
-
-
-      You receive
-      +1 for every adjacent Tent building. '
+    abilityDescription: "Allows you to build the Lumberjack.\nYou receive +1 for
+      every adjacent Cabin building. \n\nAllows you to create Forest resources on
+      Grass, Hill and Sand Hexes."
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
@@ -405,7 +667,7 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 12
     abilityName: Fishing
-    abilityDescription: 'Allows you  to catch  Fish. '
+    abilityDescription: 'Allows you  to catch  Fish (+1). '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -413,10 +675,10 @@ MonoBehaviour:
     abilityToUnlock: 13
   - abilityID: 13
     abilityName: Port
-    abilityDescription: 'Allows you to build the Port.
+    abilityDescription: 'Allows you to build the Port (+2).
 
-      Allows you to traverse
-      the Sea hexes. '
+      Allows you to
+      traverse the Sea hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 4
     scoreForPlayer: 20
@@ -441,7 +703,7 @@ MonoBehaviour:
     abilityToUnlock: 20
   - abilityID: 16
     abilityName: Husbandry
-    abilityDescription: 'Allows you to harvest the Animals. '
+    abilityDescription: 'Allows you to tame  the Animals (+1) resource. '
     abilityIcon: {fileID: 0}
     abilityCost: 2
     scoreForPlayer: 10
@@ -457,7 +719,7 @@ MonoBehaviour:
     abilityToUnlock: 18
   - abilityID: 18
     abilityName: Farming
-    abilityDescription: 'Learn how  to build on Farm resources. '
+    abilityDescription: 'Allows you to work the Farm (+2) hexes. '
     abilityIcon: {fileID: 0}
     abilityCost: 6
     scoreForPlayer: 30
@@ -465,26 +727,14 @@ MonoBehaviour:
     abilityToUnlock: 19
   - abilityID: 19
     abilityName: Windmill
-    abilityDescription: 'Allows you to build the Windmill.
-
-
-      \nThe Windmill
-      receives production from each nearby farm'
+    abilityDescription: "Allows you to build the Windmill \nYou receive +1 for every
+      adjacent Farm building. \n\nAllows you  to create new Farms on Grass, Hill
+      and Sand hexes."
     abilityIcon: {fileID: 0}
     abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
-  roadCost: 2
-  destroyCost: 0
-  visibilityReward: 3
-  unitReward: 0
-  currencyReward: 7
-  productionReward: 2
-  populationReward: 4
-  rangeReward: 2
-  startCityOutput: 2
-  traderActionReward: 10
   gameIsNetworked: 0
   activePlayerClientID: 0
   isHost: 0
@@ -499,3 +749,5 @@ MonoBehaviour:
   abilitiesDicitionariesCreated: 0
   traderActionParticle: {fileID: 3031766928850544864, guid: a8cb176ac2d6504459d1fb8e59257cda,
     type: 3}
+  assetTest: {fileID: 0}
+  menuObjects: {fileID: 0}

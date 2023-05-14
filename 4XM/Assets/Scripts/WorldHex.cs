@@ -862,6 +862,7 @@ public class WorldHex : MonoBehaviour
 
     IEnumerator CreateMaster(BuildingType type)
     {
+       
         SI_CameraController.Instance.animationsRunning = true;
         if (hexData.hasBuilding)
         {
@@ -884,7 +885,7 @@ public class WorldHex : MonoBehaviour
         hexData.buildingLevel = 0;
         int buildingLevelPrefab = 0;
 
-        if (type != BuildingType.Guild)
+        if (type != BuildingType.Guild && type != BuildingType.Port)
         {
             hexData.buildingLevel++;
             List<WorldHex> hexesToGainLevelFrom = new List<WorldHex>();

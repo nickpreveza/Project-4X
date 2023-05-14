@@ -84,7 +84,7 @@ MonoBehaviour:
   - {fileID: 4568251101785535392, guid: 06f16bffb44a4d148bc4e0daf9176924, type: 3}
   - {fileID: 4568251101785535392, guid: 3fd01ef59e3f5a940a7c2009f7b3166e, type: 3}
   - {fileID: 4568251101785535392, guid: 912839591bccfb34291db9edfd3fbaa4, type: 3}
-  - {fileID: 4568251101785535392, guid: 17aa9164747d6c841beabfbd08f4c207, type: 3}
+  - {fileID: 368566061742258048, guid: 17aa9164747d6c841beabfbd08f4c207, type: 3}
   cityPrefab: {fileID: 2139847254330076987, guid: f19c564955d564e41b68050c2c5c262c,
     type: 3}
   mapTiles:
@@ -9997,6 +9997,7 @@ MonoBehaviour:
     - 0.4
     - 0.3
     - 0.2
+    - 0
     prefab: {fileID: 2397844798176554949, guid: e34b930cf8ffa1046a42e09468444730,
       type: 3}
   - resourceName: Forest
@@ -10054,9 +10055,8 @@ MonoBehaviour:
     - 0.3
     - 0.2
     - 0
-    prefab: {fileID: 7204963003714441147, guid: 55417d6b9fe23422e8b542810557f684,
-      type: 3}
-  - resourceName: Ore
+    prefab: {fileID: 648155343175570109, guid: 75b3f1647544a4932aad793d9659b1a6, type: 3}
+  - resourceName: Gold
     description: 
     type: 3
     transformToBuilding: 1
@@ -10073,7 +10073,7 @@ MonoBehaviour:
     - 0
     - 0
     - 0.5
-    prefab: {fileID: 1104415093595829196, guid: 0b8b84c6a5a2f4652a996790b9248975,
+    prefab: {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0,
       type: 3}
   - resourceName: Fish
     description: 
@@ -10113,7 +10113,7 @@ MonoBehaviour:
     - 0
     prefab: {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
   hexBuildings:
-  - buildingName: Tent
+  - buildingName: Cabin
     description: 
     type: 0
     slaveBuilding: 9
@@ -10148,7 +10148,7 @@ MonoBehaviour:
     cost: 0
     output: 0
     levelPrefabs:
-    - {fileID: 7204963003714441147, guid: f20853bd0c9a026428ceb7402e05cc4d, type: 3}
+    - {fileID: 4325831974187675691, guid: 3b5556d647712da48987430602eba95a, type: 3}
   - buildingName: Windmill
     description: 
     type: 3
@@ -10172,7 +10172,7 @@ MonoBehaviour:
     cost: 0
     output: 0
     levelPrefabs:
-    - {fileID: 1104415093595829196, guid: 0fbdca5e7b295af42a3e79c08bf6208c, type: 3}
+    - {fileID: 5807424976860761840, guid: 2613ab6c6963b9b469eca7b8ca74d61d, type: 3}
   - buildingName: Ironsmith
     description: 
     type: 5
@@ -10184,7 +10184,7 @@ MonoBehaviour:
     cost: 5
     output: 1
     levelPrefabs:
-    - {fileID: 6866786563185507143, guid: 2e7a8845a539f3142be37f302249325f, type: 3}
+    - {fileID: 8283006243932518564, guid: 6d2aa7e0cba5fe240b437e3b0b17d9c3, type: 3}
   - buildingName: Guild
     description: 
     type: 6
@@ -10196,7 +10196,7 @@ MonoBehaviour:
     cost: 5
     output: 2
     levelPrefabs:
-    - {fileID: 1149622556129291929, guid: 2c429e315de546442b9eaaba72c10916, type: 3}
+    - {fileID: 5500443943348759301, guid: a98aca1be264a4af2a0afd193da01917, type: 3}
   - buildingName: Port
     description: 
     type: 7
@@ -10249,3 +10249,4 @@ MonoBehaviour:
     output: 0
     spawnChanceRates: []
     prefab: {fileID: 0}
+  mountainTileUnitOffsetY: 0.4

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Netcode;
+using System.Linq;
 
 namespace SignedInitiative
 {
@@ -37,11 +38,8 @@ namespace SignedInitiative
 
         public int playerCount;
 
-        //only god can judge me ok?
-        public bool player1local;
-        public bool player2local;
-        public bool player3local;
-        public bool plpayer4loca;
+        public List<Player> setupPlayers = new List<Player>();
+        public List<Civilizations> selectedCivs = new List<Civilizations>();
         private void Awake()
         {
             Instance = this;
@@ -99,7 +97,7 @@ namespace SignedInitiative
             {
                 networkMenu.SetActive(false);
                 networkLoading.SetActive(false);
-                LocalStart();
+                LocalStart(false) ;
             }
             else
             {
@@ -112,7 +110,7 @@ namespace SignedInitiative
         {
             networkMenu.SetActive(false);
             networkLoading.SetActive(false);
-            LocalStart();
+            LocalStart(false);
         }
 
         public void OnSeedChanged(string value)
@@ -140,8 +138,34 @@ namespace SignedInitiative
             networkMenu.SetActive(false);
         }
 
-        public void LocalStart()
+        public void LocalStart(bool pushInitializerPlayers)
         {
+            List<Player> playersPassSetup = new List<Player>();
+
+            foreach(Player player in setupPlayers)
+            {
+                if (player.activatedOnSetup)
+                {
+                    playersPassSetup.Add(player);
+                }
+            }
+            GameManager.Instance.sessionPlayers = new List<Player>(playersPassSetup);
+            List<Player> playersToSort = new List<Player>(GameManager.Instance.sessionPlayers);
+
+            foreach (Player player in GameManager.Instance.sessionPlayers)
+            {
+                player.index = GameManager.Instance.sessionPlayers.IndexOf(player);
+
+                if (!GameManager.Instance.AIEnabled)
+                {
+                    player.type = PlayerType.LOCAL;
+                }
+
+                player.abilities.unitSwordsman = true;
+            }
+
+            GameManager.Instance.sessionPlayers = playersToSort.OrderByDescending(x => x.type).ToList();
+
             dataHandler.FetchData();
             processing = true;
         }
