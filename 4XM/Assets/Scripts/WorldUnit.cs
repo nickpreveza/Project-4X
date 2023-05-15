@@ -832,7 +832,11 @@ public class WorldUnit : MonoBehaviour
     public void Death(bool affectStats)
     {
         Deselect();
-        originCity.RemovePopulation();
+        if (originCity.cityData.population > 0)
+        {
+            originCity.RemovePopulation();
+        }
+      
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
         //Do some cool UI stuff
         //Maybe particles

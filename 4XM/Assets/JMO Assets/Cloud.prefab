@@ -40,7 +40,7 @@ GameObject:
   - component: {fileID: 199571935856721530}
   - component: {fileID: 114623932731685188}
   m_Layer: 0
-  m_Name: CFXM_SmokePuffs_Big
+  m_Name: Cloud
   m_TagString: FxTemporaire
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

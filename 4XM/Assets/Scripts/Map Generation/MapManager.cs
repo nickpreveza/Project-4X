@@ -980,19 +980,23 @@ public class MapManager : MonoBehaviour
         Hex a = start.hexData;
         Hex b = end.hexData;
 
+        int dR = Mathf.Abs(a.R - b.R);
         int dC = Mathf.Abs(a.C- b.C);
+
         if (dC > mapColumns / 2)
         {
             dC = mapColumns - dC;
         }
 
-        int dR = Mathf.Abs(a.R - b.R);
         if (dR > mapRows / 2)
         {
             dR = mapRows - dR;
         }
 
+        //int dZ = (-dC - dR);
+
         return Mathf.Max(dC, dR, Mathf.Abs(a.S - b.S));
+        //return Mathf.Max(Mathf.Max(Mathf.Abs(dR), Mathf.Abs(dC)), Mathf.Abs(dZ));
     }
 
     public float GetElevationFromType(TileType type)
@@ -1076,6 +1080,7 @@ public class MapManager : MonoBehaviour
         return results;
     }
 
+    //this probably won't return the correct values for edge hexes 
     public Direction GetHexDirection(WorldHex hexOrigin, WorldHex hexTarget)
     {
         Debug.Log("Hex Origin: " + hexOrigin.hexData.C + "," + hexOrigin.hexData.R + " to " + "Hex Target: " + hexTarget.hexData.C + "," + hexTarget.hexData.R);

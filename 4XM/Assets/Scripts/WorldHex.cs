@@ -338,7 +338,11 @@ public class WorldHex : MonoBehaviour
 
     public void RemovePopulation()
     {
-        cityView.RemovePopulation();
+        if (cityView != null)
+        {
+            cityView.RemovePopulation();
+        }
+      
         cityData.population--;
     }
     public void SetElevationFromType()
@@ -1446,6 +1450,7 @@ public class WorldHex : MonoBehaviour
     {
         if (isHidden)
         {
+            GameManager.Instance.
             UnitManager.Instance.ClearHexSelectionMode();
             SI_CameraController.Instance.DeselectSelection();
             wiggler?.Wiggle();

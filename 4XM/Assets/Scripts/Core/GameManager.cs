@@ -71,6 +71,8 @@ namespace SignedInitiative
 
         [SerializeField] GameObject waterInteractionParticle;
         [SerializeField] GameObject landInternactionParticle;
+        [SerializeField] GameObject cloudInteractionParticle;
+
         public GameObject explosionParticle;
         public GameObject resourceHarvestParticle;
         public bool abilitiesDicitionariesCreated;
@@ -753,8 +755,9 @@ namespace SignedInitiative
                 case TileType.GRASS:
                 case TileType.HILL:
                 case TileType.MOUNTAIN:
-                case TileType.ICE:
                     return landInternactionParticle;
+                case TileType.ICE:
+                    return cloudInteractionParticle;
             }
 
             return null;
