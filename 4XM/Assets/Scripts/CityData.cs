@@ -10,9 +10,9 @@ public class CityData
     public bool isConnectedToCapital;
 
     public int level = 1;
-    public int targetLevelPoints = 2;
+    public int targetLevelPoints = 2; //also population cap
     public int levelPointsToNext = 0;
-
+    public int population = 0;
     public int negativeLevelPoints = 0;
 
     public int playerIndex;
@@ -25,4 +25,13 @@ public class CityData
     public List<BuildingType> masterBuildings = new List<BuildingType>();
     public List<WorldUnit> cityCreatedUnits = new List<WorldUnit>();
     public List<WorldHex> cityHexesThatCanBeWorked = new List<WorldHex>();
+
+    public bool HasReachedMaxPopulation
+    {
+        get
+        {
+            return population >= targetLevelPoints;
+        }
+        
+    }
 }

@@ -110,6 +110,28 @@ public class CityView : MonoBehaviour
         cityDetailsCanvasGroup.alpha = alpha;
     }
 
+    public void AddPopulation()
+    {
+        levelHolder.transform.GetChild(parentHex.cityData.population-1).GetComponent<LevelPoint>().SetPointUnitActive(true);
+    }
+
+    public void RemovePopulation()
+    {
+        levelHolder.transform.GetChild(parentHex.cityData.population - 1).GetComponent<LevelPoint>().SetPointUnitActive(false);
+    }
+
+    public void ResetPopulation()
+    {
+        for (int i = 0; i < parentHex.cityData.targetLevelPoints; i++)
+        {
+            levelHolder.transform.GetChild(i).GetComponent<LevelPoint>().SetPointUnitActive(false);
+        }
+
+        for (int i = 0; i < parentHex.cityData.population; i++)
+        {
+            levelHolder.transform.GetChild(i).GetComponent<LevelPoint>().SetPointUnitActive(true);
+        }
+    }
     public void EnableSiege(bool siegeCanHappenThisTurn)
     {
 
@@ -142,6 +164,7 @@ public class CityView : MonoBehaviour
     {
         OnCreateLevelPoints();
         cityDetailsAnim.SetTrigger("levelUp");
+        ResetPopulation();
         SetDetailsAlpha(1);
         UpdateData();
     }
@@ -164,7 +187,7 @@ public class CityView : MonoBehaviour
         }
 
         levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointActive(true);
-        levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointUnitActive(false);
+        //levelHolder.transform.GetChild(currentLevelPointIndex).GetComponent<LevelPoint>().SetPointUnitActive(false);
 
         if (isNegative)
         {
@@ -200,6 +223,7 @@ public class CityView : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+
         if (parentHex.hexData.playerOwnerIndex == -1)
         {
             return;
@@ -212,6 +236,11 @@ public class CityView : MonoBehaviour
             GameObject obj = Instantiate(levelPointPrefab, levelHolder);
             obj.GetComponent<LevelPoint>().InitState();
             currentLevelPoints.Add(obj);
+        }
+
+        for(int i = 0; i < parentHex.cityData.population; i++)
+        {
+            levelHolder.transform.GetChild(i).GetComponent<LevelPoint>().SetPointUnitActive(true);
         }
     }
 }

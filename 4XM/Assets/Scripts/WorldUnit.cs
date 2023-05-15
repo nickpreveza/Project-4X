@@ -237,7 +237,7 @@ public class WorldUnit : MonoBehaviour
         {
             attackIsRanged = false;
         }
-
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
         ExhaustActions();
         VisualUpdate();
     }
@@ -282,7 +282,7 @@ public class WorldUnit : MonoBehaviour
         }
     }
 
-    public void SpawnSetup(WorldHex newHex, int playerIndex, UnitData referenceData, bool exhaustOnSpawn)
+    public void SpawnSetup(WorldHex newHex, int playerIndex, UnitData referenceData, bool exhaustOnSpawn, bool addToCityPopulation)
     {
         wiggler = GetComponent<Wiggler>();
 
@@ -302,8 +302,17 @@ public class WorldUnit : MonoBehaviour
         r = newHex.hexData.R;
 
         parentHex = newHex;
-        originCity = newHex;
+        if (newHex.hexData.hasCity)
+        {
+            originCity = newHex;
+            if (addToCityPopulation)
+            {
+                originCity.AddPopulation();
+            }
+        }
+       
         parentHex.UnitIn(this);
+
 
         localHealth = unitReference.health;
         currentAttack = unitReference.attack;
@@ -495,7 +504,8 @@ public class WorldUnit : MonoBehaviour
         }
 
         //more checks here to be double sure;
-
+        originCity.RemovePopulation();
+        originCity = parentHex;
         GameManager.Instance.activePlayer.AddCity(parentHex);
         visualAnim.SetTrigger("Capture");
         ExhaustActions();
@@ -822,6 +832,7 @@ public class WorldUnit : MonoBehaviour
     public void Death(bool affectStats)
     {
         Deselect();
+        originCity.RemovePopulation();
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
         //Do some cool UI stuff
         //Maybe particles
@@ -835,6 +846,15 @@ public class WorldUnit : MonoBehaviour
     IEnumerator WalkSteps(WorldHex end)
     {
         List<WorldHex> path = UnitManager.Instance.FindPath(this, parentHex, end);
+        if (path == null)
+        {
+            path = UnitManager.Instance.FindPath(this, parentHex, end, true);
+        }
+
+        if (path == null)
+        {
+            Debug.LogError("Invalid tile - no path could be found");
+        }
         tempPathParent = parentHex;
         float moveAnimationLenght = 1f;
 
@@ -856,7 +876,12 @@ public class WorldUnit : MonoBehaviour
                 }
 
                 float elapsedTime = 0;
-                visualAnim.SetTrigger("Walk");
+
+                if (!isBoat && !isShip) 
+                { 
+                    visualAnim.SetTrigger("Walk");
+                }
+               
 
                 while (elapsedTime < moveAnimationLenght)
                 {

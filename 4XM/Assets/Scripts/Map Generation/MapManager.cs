@@ -138,6 +138,7 @@ public class MapManager : MonoBehaviour
                 {
                     if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != hex.hexData.playerOwnerIndex)
                     {
+                        if (hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
                         hex.cityView.EnableSiege(true);
                     }
                     else

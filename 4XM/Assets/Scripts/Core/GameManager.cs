@@ -270,15 +270,12 @@ namespace SignedInitiative
         public void PopupCustomRewardUnit(WorldUnit unit, UnitType type)
         {
             WorldHex targetHex = unit.parentHex;
-            if (unit.TryToMoveRandomly())
-            {
-                UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false);
-            }
-            else
+            if (!unit.TryToMoveRandomly())
             {
                 unit.Death(false);
-                UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false);
             }
+
+            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, true);
 
         }
 
@@ -619,7 +616,7 @@ namespace SignedInitiative
                     break;
                 case Abilities.Engineering:
                     player.abilities.unitTrebucet = true;
-                    player.abilities.forestCut = true;
+                    //player.abilities.forestCut = true;
                     break;
                 case Abilities.ForestMaster:
                     player.abilities.forestMasterBuilding = true;

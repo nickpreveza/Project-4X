@@ -127,14 +127,14 @@ public class UnitManager : MonoBehaviour
             else
             {
                 //spanw a unit at the first city of each player
-                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false);
+                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false, false);
             }
         }
        
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 
-    public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost)
+    public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost, bool addTocityPopulation)
     {
         UnitData unitData = GetUnitDataByType(newUnit, player.civilization);
 
@@ -147,81 +147,11 @@ public class UnitManager : MonoBehaviour
         GameObject obj = Instantiate(emptyUnitPrefab, targetHex.unitParent.position, Quaternion.identity, targetHex.unitParent);
 
         obj.transform.localPosition = Vector3.zero;
-
+        targetHex.SpawnParticle(unitHealParticle);
         WorldUnit unit = obj.GetComponent<WorldUnit>();
         player.AddUnit(unit);
-        unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves);
+        unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves, addTocityPopulation);
     }
-
-   public List<WorldHex> FindPath(WorldUnit unit, WorldHex start, WorldHex end)
-    {
-        Player player = GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex);
-        List<WorldHex> openSet = new List<WorldHex>();
-        List<WorldHex> closedSet = new List<WorldHex>();
-        int pointsToPath = unit.PathfindingActionPoints;
-        openSet.Add(start);
-        int totalCost = 0;
-        while (openSet.Count > 0)
-        {
-            WorldHex current = openSet[0];
-
-            for (int i = 1; i < openSet.Count; i++)
-            {
-                if (openSet[i].hexData.fCost < current.hexData.fCost ||
-                    openSet[i].hexData.fCost == current.hexData.fCost && openSet[i].hexData.hCost < openSet[i].hexData.hCost)
-                {
-                    current = openSet[i];
-                }
-            }
-
-            openSet.Remove(current);
-            closedSet.Add(current);
-
-            if (current == end)
-            {
-                List<WorldHex> path = new List<WorldHex>();
-                WorldHex retractCurrent = end;
-
-                while (retractCurrent != start)
-                {
-                    path.Add(retractCurrent);
-                    retractCurrent = retractCurrent.pathParent;
-                }
-
-                path.Reverse();
-                Debug.Log("Path Total Cost: " + totalCost);
-                return path;
-            }
-
-            foreach (WorldHex adj in current.adjacentHexes)
-            {
-                if (closedSet.Contains(adj) || !adj.CanBeWalked(unit)) //can't afford to enter
-                {
-                    continue;
-                }
-
-                int movementCostToAdj = current.hexData.gCost + MapManager.Instance.GetDistance(current, adj) + adj.InteractivePenalty(current);
-                if (movementCostToAdj < adj.hexData.gCost || !openSet.Contains(adj))
-                {
-                    adj.hexData.gCost = movementCostToAdj;
-                    adj.hexData.hCost = MapManager.Instance.GetDistance(adj, end);
-                    adj.pathParent = current;
-
-                    if (!openSet.Contains(adj))
-                    {
-                        totalCost += movementCostToAdj;
-                        openSet.Add(adj);
-                    }
-                }
-            }
-
-            //fcost = MapManager.Instance.GetDistance;
-        }
-
-        return null;
-    }
-
-
 
     public void SelectUnit(WorldUnit newUnit)
     {
@@ -237,7 +167,6 @@ public class UnitManager : MonoBehaviour
 
         if (GameManager.Instance.activePlayer.index == selectedUnit.playerOwnerIndex)
         {
-            
             if (selectedUnit.currentMovePoints > 0)
             {
                 if (selectedUnit.hasAttacked && !selectedUnit.unitReference.canAttackAfterMove)
@@ -363,12 +292,140 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    public List<WorldHex> FindPath(WorldUnit unit, WorldHex start, WorldHex end, bool roadCheck = false)
+    {
+        Player player = GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex);
+        List<WorldHex> openSet = new List<WorldHex>();
+        List<WorldHex> closedSet = new List<WorldHex>();
+
+        openSet.Add(start);
+        bool startedFromSea = false;
+
+        int maxDistance = unit.currentWalkRange;
+        if (roadCheck)
+        {
+            maxDistance += unit.unitReference.roadModifier;
+        }
+
+        //if parent hex has road also check for taht 
+        if (start.hexData.type == TileType.DEEPSEA || start.hexData.type == TileType.SEA)
+        {
+            startedFromSea = true;
+            if (roadCheck)
+            {
+                return null;
+            }
+        }
+
+        start.hexData.gCost = 0;
+        start.hexData.hCost = 0;
+
+        while (openSet.Count > 0)
+        {
+            WorldHex current = openSet[0];
+
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].hexData.fCost < current.hexData.fCost ||
+                    openSet[i].hexData.fCost == current.hexData.fCost && openSet[i].hexData.hCost < openSet[i].hexData.hCost)
+                {
+                    current = openSet[i];
+                }
+            }
+
+            openSet.Remove(current);
+
+            closedSet.Add(current);
+
+            if (current == end)
+            {
+                List<WorldHex> path = new List<WorldHex>();
+                WorldHex retractCurrent = end;
+
+                while (retractCurrent != start)
+                {
+                    path.Add(retractCurrent);
+                    retractCurrent = retractCurrent.pathParent;
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            bool shouldSkipAdj = false;
+
+            if (!startedFromSea)
+            {
+                if (current.hexData.type == TileType.DEEPSEA || current.hexData.type == TileType.SEA)
+                {
+                    shouldSkipAdj = true;
+                }
+            }
+            else
+            {
+                if (current.hexData.type != TileType.DEEPSEA && current.hexData.type != TileType.SEA)
+                {
+                    shouldSkipAdj = true;
+                }
+            }
+
+            if (roadCheck)
+            {
+                if (!current.hexData.hasRoad)
+                {
+                    shouldSkipAdj = true;
+                }
+            }
+
+
+            if (!shouldSkipAdj)
+            {
+                foreach (WorldHex adj in current.adjacentHexes)
+                {
+                    
+                    if (closedSet.Contains(adj) || !adj.CanBeWalked(unit.playerOwnerIndex, unit.unitReference.flyAbility)) //can't afford to enter
+                    {
+                        continue;
+                    }
+
+                    //distance from the starting tile
+                    int distanceFromSource = MapManager.Instance.GetDistance(start, adj);
+                    if (distanceFromSource > maxDistance)
+                    {
+                        continue;
+                    }
+
+                    //distance from this tile to the next 
+                    int distanceCost = MapManager.Instance.GetDistance(current, adj);
+                    int movementCostToAdj = current.hexData.gCost + distanceCost;
+                    if (movementCostToAdj <= maxDistance)
+                    {
+                        if (movementCostToAdj < adj.hexData.gCost || !openSet.Contains(adj))
+                        {
+                            adj.hexData.gCost = movementCostToAdj;
+                            int distancCostforH = MapManager.Instance.GetDistance(adj, end);
+                            adj.hexData.hCost = distancCostforH;
+                            adj.pathParent = current;
+
+                            if (!openSet.Contains(adj))
+                            {
+                                openSet.Add(adj);
+                            }
+                        }
+                    }
+                   
+                }
+            }
+        }
+
+        return null;
+    }
 
     public List<WorldHex> GetWalkableHexes(WorldUnit targetUnit, int customRange = -1)
     {
-      
         int range = targetUnit.currentWalkRange;
         startHex = targetUnit.parentHex;
+        int roadModifier = targetUnit.unitReference.roadModifier; // this should probably be in the unit reference, but alas, don't think we're gonna change it. 
 
         if (customRange != -1)
         {
@@ -384,47 +441,19 @@ public class UnitManager : MonoBehaviour
 
         List<WorldHex> hexesToRemove = new List<WorldHex>();
 
-       
+        bool flyRelatedAbility = false;
+
+        if (targetUnit.unitReference != null)
+        {
+            flyRelatedAbility = targetUnit.unitReference.flyAbility;
+        }
+
         foreach (WorldHex hex in hexesInGeneralRange)
         {
-            if (hex.hexData.occupied)
+            if (!hex.CanBeWalked(targetUnit.playerOwnerIndex, flyRelatedAbility))
             {
                 hexesToRemove.Add(hex);
                 continue;
-            }
-
-            bool flyRelatedAbility = false;
-            if (targetUnit.unitReference != null)
-            {
-                flyRelatedAbility = targetUnit.unitReference.flyAbility;
-            }
-            if (!flyRelatedAbility)
-            {
-                switch (hex.hexData.type)
-                {
-                    case TileType.DEEPSEA:
-                        if (!GameManager.Instance.activePlayer.abilities.travelOcean)
-                        {
-                            hexesToRemove.Add(hex);
-
-                        }
-                        break;
-                    case TileType.SEA:
-                        if (!GameManager.Instance.activePlayer.abilities.travelSea)
-                        {
-                            hexesToRemove.Add(hex);
-                        }
-                        break;
-                    case TileType.MOUNTAIN:
-                        if (!GameManager.Instance.activePlayer.abilities.travelMountain)
-                        {
-                            hexesToRemove.Add(hex);
-                        }
-                        break;
-                    case TileType.ICE:
-                        hexesToRemove.Add(hex);
-                        break;
-                }
             }
         }
 
@@ -437,6 +466,7 @@ public class UnitManager : MonoBehaviour
         }
 
         List<WorldHex> checkedHexes = new List<WorldHex>();
+
         foreach(WorldHex hex in hexesInGeneralRange)
         {
             List<WorldHex> pathToHex = FindPath(targetUnit, targetUnit.parentHex, hex);
@@ -446,8 +476,68 @@ public class UnitManager : MonoBehaviour
             }
         }
 
+        if (targetUnit.parentHex.hexData.hasRoad)
+        {
+            List<WorldHex> roadConnectedHexes = GetRoadPaths(targetUnit, checkedHexes);
+
+            if (roadConnectedHexes != null)
+            {
+                foreach (WorldHex hex in roadConnectedHexes)
+                {
+                    checkedHexes.Add(hex);
+                }
+            }
+        }
+    
         return checkedHexes;
     }
+
+    public List<WorldHex> GetRoadPaths(WorldUnit targetUnit, List<WorldHex> checkHexes)
+    {
+        //call this after the normal GetWalkHexes to cross Reference;
+        int range = targetUnit.currentWalkRange + targetUnit.unitReference.roadModifier;
+        startHex = targetUnit.parentHex;
+
+        if (!startHex.hexData.hasRoad)
+        {
+            return null;
+        }
+
+        //get the range we'd have if everything was connected with a raod
+        //possible optimization here to have a function to return us only the hexes at the specific range. So if road adds +1, we check for unit.range + roadrange only
+        List<WorldHex> hexesInGeneralRange = MapManager.Instance.GetHexesListWithinRadius(startHex.hexData, range);
+        //remove the start hex
+        if (hexesInGeneralRange.Contains(startHex))
+        {
+            hexesInGeneralRange.Remove(startHex);
+        }
+
+        //remove the hexes we can already reach and have validated in previous step
+        List<WorldHex> crossReferenceHexes = new List<WorldHex>();
+
+        foreach(WorldHex hex in hexesInGeneralRange)
+        {
+            if (!checkHexes.Contains(hex))
+            {
+                crossReferenceHexes.Add(hex);
+            }
+        }
+
+        //Try to find paths for each new hex;
+        List<WorldHex> hexesWithPath = new List<WorldHex>();
+        foreach (WorldHex hex in crossReferenceHexes)
+        {
+            List<WorldHex> pathToHex = FindPath(targetUnit, targetUnit.parentHex, hex, true);
+            if (pathToHex != null)
+            {
+                hexesWithPath.Add(hex);
+            }
+        }
+
+        return hexesWithPath;
+
+    }
+
 
     public List<WorldHex> GetAttackableHexes(WorldUnit targetUnit)
     {
@@ -554,7 +644,7 @@ public class UnitData
     public int scoreForPlayer;
 
     [Header("Unit Stats")]
-    public int level;
+    public int level = 1;
     public int health;
     public int heal;
     public int attack;
@@ -562,6 +652,7 @@ public class UnitData
     public int defense;
     public int walkRange;
     public int attackRange;
+    public int roadModifier = 1;
 
     public int attackCharges;
     public int moveCharges;

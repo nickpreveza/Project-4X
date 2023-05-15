@@ -66,21 +66,33 @@ public class WorldHex : MonoBehaviour
         return isHidden;
     }
 
-    public bool CanBeWalked(WorldUnit unit)
+    public bool CanBeWalked(int playerIndex, bool canUnitFly)
     {
         if (hexData.occupied)
         {
             return false;
         }
 
+        if (canUnitFly)
+        {
+            if (hexData.type == TileType.ICE)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
         switch (hexData.type)
         {
             case TileType.MOUNTAIN:
-                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelMountain;
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelMountain;
             case TileType.SEA:
-                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelSea;
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelSea;
             case TileType.DEEPSEA:
-                return GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).abilities.travelOcean;
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelOcean;
             case TileType.SAND:
             case TileType.GRASS:
             case TileType.HILL:
@@ -156,8 +168,8 @@ public class WorldHex : MonoBehaviour
                 Invoke("HideFalse", 1f);
             }
 
-            
-            
+
+
         }
         else
         {
@@ -251,7 +263,7 @@ public class WorldHex : MonoBehaviour
                     {
                         cityView.SetCanvasGroupAlpha(1);
                     }
-                   
+
                 }
             }
 
@@ -260,7 +272,7 @@ public class WorldHex : MonoBehaviour
                 RandomizeVisualElevation();
             }
         }
-        
+
     }
 
     void HideBorder()
@@ -268,12 +280,12 @@ public class WorldHex : MonoBehaviour
         border?.SetActive(false);
     }
 
-   
+
 
     public void ShowHighlight(bool combat)
     {
         if (hexHighlight != null)
-        hexHighlight?.SetActive(true);
+            hexHighlight?.SetActive(true);
 
         //TODO: Visualize combat or blocked tiles.
         if (combat)
@@ -316,6 +328,18 @@ public class WorldHex : MonoBehaviour
 
         HideBorder();
         SetHiddenState(true, false);
+    }
+
+    public void AddPopulation()
+    {
+        cityData.population++;
+        cityView.AddPopulation();
+    }
+
+    public void RemovePopulation()
+    {
+        cityView.RemovePopulation();
+        cityData.population--;
     }
     public void SetElevationFromType()
     {
@@ -561,7 +585,9 @@ public class WorldHex : MonoBehaviour
             else
             {
                 cityData.levelPointsToNext++;
-
+                cityView.ToggleOnProgressPoint(false);
+                yield return new WaitForSeconds(1f);
+                
                 if (cityData.levelPointsToNext == cityData.targetLevelPoints)
                 {
                     cityData.level++;
@@ -591,7 +617,7 @@ public class WorldHex : MonoBehaviour
                                 popupDescr,
                              "+" + GameManager.Instance.data.unitReward.ToString() + " Unit",
                              () => PopUpCustomRewardUnit(),
-                             "+" + GameManager.Instance.data.visibilityReward + " Visibility",
+                             "Expand Visibility",
                              () => PopUpCustomRewardVisibility()
                              );
                         }
@@ -623,21 +649,13 @@ public class WorldHex : MonoBehaviour
                         {
                             if (hexData.occupied)
                             {
-                                WorldUnit unit = associatedUnit;
-                                if (associatedUnit.TryToMoveRandomly())
-                                {
-                                    UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
-                                }
-                                else
+                                if (!associatedUnit.TryToMoveRandomly())
                                 {
                                     associatedUnit.Death(false);
-                                    UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
                                 }
                             }
-                            else
-                            {
-                                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false);
-                            }
+
+                            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false, true);
                         }
                     }
 
@@ -696,21 +714,13 @@ public class WorldHex : MonoBehaviour
     {
         if (hexData.occupied)
         {
-            WorldUnit unit = associatedUnit;
-            if (associatedUnit.TryToMoveRandomly())
-            {
-                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
-            }
-            else
+            if (!associatedUnit.TryToMoveRandomly())
             {
                 associatedUnit.Death(false);
-                UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
             }
         }
-        else
-        {
-            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false);
-        }
+
+        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), GameManager.Instance.data.unitReward, this, true, false, true);
         UIManager.Instance.waitingForPopupReply = false;
     }
 
@@ -1284,6 +1294,11 @@ public class WorldHex : MonoBehaviour
             visualHelper.citySiegeEffect.SetActive(false);
         }
 
+        if (associatedUnit != null)
+        {
+            associatedUnit.originCity = this;
+            AddPopulation();
+        }
         GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
         FindCityResourcesThatCanBeWorked();
     }

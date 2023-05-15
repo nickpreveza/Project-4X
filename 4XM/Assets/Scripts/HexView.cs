@@ -25,6 +25,7 @@ public class HexView : MonoBehaviour
     public Sprite buildingBackground;
     public Sprite claimCityBackground;
     public Sprite destroyBackground;
+
     public void Refresh()
     {
         if (hex!=null)
@@ -215,7 +216,15 @@ public class HexView : MonoBehaviour
             }
             else
             {
-                hexDescription.text = "Buy more units to expand your empire";
+                if (hex.cityData.HasReachedMaxPopulation)
+                {
+                    hexDescription.text = "The population cap has been reached. Level up to create more units.";
+                }
+                else
+                {
+                    hexDescription.text = "Buy more units to expand your empire";
+                }
+              
             }
         }
         else
@@ -276,7 +285,7 @@ public class HexView : MonoBehaviour
             {
                 if (GameManager.Instance.CanPlayerHarvestResource(GameManager.Instance.activePlayerIndex, hex.hexData.resourceType))
                 {
-                    hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to upgrade your city";
+                    hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to add population to your city";
                     resourceButtonState = true;
                 }
                 else
@@ -365,7 +374,7 @@ public class HexView : MonoBehaviour
                     if (hex.parentCity != hex.associatedUnit.originCity)
                     {
                         GenerateTraderButton();
-                        hexDescription.text = "Trader with the city of " + hex.cityData.cityName + " for a reward";
+                        hexDescription.text = "Trade with the city of " + hex.cityData.cityName + " for a reward";
                     }
                 }
             }
@@ -549,7 +558,7 @@ public class HexView : MonoBehaviour
     void GenerateDestroyButton(bool isBuilding)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForDestory(this, hex, isBuilding);
+        obj.GetComponent<ActionButton>().SetDataForDestroy(this, hex, isBuilding);
     }
 
     void GenerateShipButton()
