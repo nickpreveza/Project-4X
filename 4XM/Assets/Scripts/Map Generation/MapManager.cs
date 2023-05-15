@@ -568,17 +568,17 @@ public class MapManager : MonoBehaviour
         {
             foreach (WorldHex hex in hexesToUnhide)
             {
-
-                if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                if (hex.Hidden())
                 {
-                    GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
+                    if (!GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Contains(hex))
+                    {
+                        GameManager.Instance.GetPlayerByIndex(playerIndex).clearedHexes.Add(hex);
+                    }
+
+                    hex.SetHiddenState(false, !isInstant);
+                    hex.SpawnParticle(GameManager.Instance.cloudInteractionParticle);
                 }
-
-                hex.SetHiddenState(false, !isInstant);
-
             }
-           
-           
         }
         else
         {
@@ -995,7 +995,7 @@ public class MapManager : MonoBehaviour
 
         //int dZ = (-dC - dR);
 
-        return Mathf.Max(dC, dR, Mathf.Abs(a.S - b.S));
+        return Mathf.Max(dC, dR);//, Mathf.Abs(a.S - b.S));
         //return Mathf.Max(Mathf.Max(Mathf.Abs(dR), Mathf.Abs(dC)), Mathf.Abs(dZ));
     }
 

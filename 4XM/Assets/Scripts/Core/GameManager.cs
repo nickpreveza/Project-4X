@@ -71,7 +71,7 @@ namespace SignedInitiative
 
         [SerializeField] GameObject waterInteractionParticle;
         [SerializeField] GameObject landInternactionParticle;
-        [SerializeField] GameObject cloudInteractionParticle;
+        public GameObject cloudInteractionParticle;
 
         public GameObject explosionParticle;
         public GameObject resourceHarvestParticle;

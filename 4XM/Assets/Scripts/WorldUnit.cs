@@ -358,7 +358,7 @@ public class WorldUnit : MonoBehaviour
 
     void UpdateMaterialColor(Color newColor)
     {
-        if (type == UnitType.Boat || isBoat)
+        if (type == UnitType.Ship || isShip)
         {
             
             VisualMaterialHelper helper = currentBoat.GetComponent<VisualMaterialHelper>();

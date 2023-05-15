@@ -66,9 +66,19 @@ public class WorldHex : MonoBehaviour
         return isHidden;
     }
 
-    public bool CanBeWalked(int playerIndex, bool canUnitFly)
+    public bool CanBeWalked(int playerIndex, bool canUnitFly, bool isEndTile = false)
     {
-        if (hexData.occupied)
+        if (Hidden())
+        {
+            return false;
+        }
+        if (hexData.occupied && associatedUnit.playerOwnerIndex != playerIndex)
+        {
+            return false;
+
+        }
+
+        if (isEndTile && hexData.occupied)
         {
             return false;
         }
@@ -269,6 +279,7 @@ public class WorldHex : MonoBehaviour
 
             if (!hiddenState)
             {
+                
                 RandomizeVisualElevation();
             }
         }
@@ -338,12 +349,16 @@ public class WorldHex : MonoBehaviour
 
     public void RemovePopulation()
     {
-        if (cityView != null)
+        if (cityData.population > 0)
         {
-            cityView.RemovePopulation();
+            if (cityView != null)
+            {
+
+                cityView.RemovePopulation();
+            }
+
+            cityData.population--;
         }
-      
-        cityData.population--;
     }
     public void SetElevationFromType()
     {
@@ -1450,9 +1465,10 @@ public class WorldHex : MonoBehaviour
     {
         if (isHidden)
         {
-            GameManager.Instance.
+            //GameManager.Instance.Spaw
             UnitManager.Instance.ClearHexSelectionMode();
             SI_CameraController.Instance.DeselectSelection();
+            SpawnParticle(GameManager.Instance.cloudInteractionParticle);
             wiggler?.Wiggle();
             return;
         }
