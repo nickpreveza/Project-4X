@@ -96,29 +96,7 @@ namespace SignedInitiative
             assetTest.SetActive(false);
         }
 
-        public bool SetPause
-        {
-            get
-            {
-                return isPaused;
-            }
-            set
-            {
-                isPaused = value;
-                if (isPaused)
-                {
-
-                    Time.timeScale = 0;
-                }
-                else
-                {
-
-                    Time.timeScale = 1;
-                }
-
-                UIManager.Instance.PauseChanged();
-            }
-        }
+        
 
         void OnSceneLoaded(Scene scene, LoadSceneMode mode)
         {

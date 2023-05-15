@@ -1,19 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelPoint : MonoBehaviour
 {
-    [SerializeField] Animator anim;
-    public GameObject levelActive;
+    //[SerializeField] Animator anim;
+    [SerializeField] GameObject levelActive;
     [SerializeField] GameObject unitActive;
-    public void InitState()
+
+    public void SetLevelPointColor(Color color)
     {
-        levelActive.SetActive(false);
-        unitActive.SetActive(false);
+        levelActive.GetComponent<Image>().color = color;
     }
-    public void SetPointActive(bool active)
+    public void SetLevelPoint(bool active)
     {
+        levelActive.SetActive(active);
+        /*
         if (active)
         {
             anim.SetTrigger("Active");
@@ -21,11 +24,11 @@ public class LevelPoint : MonoBehaviour
         else
         {
             anim.SetTrigger("Inactive");
-        }
+        }*/
        
     }
 
-    public void SetPointUnitActive(bool active)
+    public void SetUnitPoint(bool active)
     {
         unitActive.SetActive(active);
     }

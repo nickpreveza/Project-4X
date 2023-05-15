@@ -272,7 +272,7 @@ namespace SignedInitiative
 
         public void OpenMainMenu()
         {
-            GameManager.Instance.SetPause = false;
+            
             ClosePanels();
             menuActive = true;
             mainMenuPanel.Setup();

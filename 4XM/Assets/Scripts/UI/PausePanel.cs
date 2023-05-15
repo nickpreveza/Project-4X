@@ -51,7 +51,7 @@ public class PausePanel : UIPanel
 
     public void ActionResume()
     {
-        GameManager.Instance.SetPause = false;
+        //GameManager.Instance.SetPause = false;
     }
 
     public void ActionExit()
