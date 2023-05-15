@@ -5,7 +5,7 @@ using UnityEngine;
 public class CityVisualHelper : MonoBehaviour
 {
    public GameObject cityFlag;
-   public GameObject citySiegeEffect;
+   private GameObject citySiegeEffect;
    public GameObject cityLevelEffect;
 
 
@@ -13,5 +13,10 @@ public class CityVisualHelper : MonoBehaviour
     {
         citySiegeEffect.SetActive(false);
         cityLevelEffect.SetActive(false);
+    }
+
+    public void SetCityEffect(bool state)
+    {
+        citySiegeEffect.SetActive(state);
     }
 }

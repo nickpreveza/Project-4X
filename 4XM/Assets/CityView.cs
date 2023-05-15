@@ -136,7 +136,10 @@ public class CityView : MonoBehaviour
     {
 
         RemoveSiegeState();
-    
+        if (parentHex.hexData.playerOwnerIndex == -1)
+        {
+            SetDetailsAlpha(0);
+        }
         if (siegeCanHappenThisTurn)
         {
             cityCaptureIcon.SetActive(true);
@@ -148,7 +151,7 @@ public class CityView : MonoBehaviour
             cityCaptureIcon.GetComponent<Button>().onClick.RemoveAllListeners();
             captureUnavailable.SetActive(true);
             cityCaptureIcon.SetActive(false);
-          
+           
         }
     }
 

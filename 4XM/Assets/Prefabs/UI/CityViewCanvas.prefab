@@ -472,7 +472,7 @@ MonoBehaviour:
   captureUnavailable: {fileID: 3481722424774438193}
   capitalIcon: {fileID: 7716260141777165988}
   connectedIcon: {fileID: 2215203500323558293}
-  cityDetailsCanvasGroup: {fileID: 838328636486467235}
+  cityDetailsCanvasGroup: {fileID: 2126261408930388613}
   cityDetailsAnim: {fileID: 4761300750539342187}
 --- !u!225 &7739102788163557425
 CanvasGroup:
@@ -900,7 +900,7 @@ GameObject:
   - component: {fileID: 5664478760009330490}
   - component: {fileID: 4211322337719698531}
   m_Layer: 6
-  m_Name: Background
+  m_Name: DetailsCanvavs
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -924,8 +924,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -0.004299164, y: -0.6877}
-  m_SizeDelta: {x: -0.1355, y: -1.5208}
+  m_AnchoredPosition: {x: 0.003700018, y: -0.68770003}
+  m_SizeDelta: {x: -0.8709, y: -1.5208}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3480349804143288947
 CanvasRenderer:

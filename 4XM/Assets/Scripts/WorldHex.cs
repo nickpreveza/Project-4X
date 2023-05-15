@@ -444,13 +444,15 @@ public class WorldHex : MonoBehaviour
                 {
                     cityView.SetDetailsAlpha(0);
                 }
+                else
+                {
+                    if (visualHelper != null)
+                    {
+                        visualHelper.SetCityEffect(true);
+                    }
+                }
 
                 MapManager.Instance.SetHexUnderSiege(this);
-
-                if (visualHelper != null)
-                {
-                    visualHelper.citySiegeEffect.SetActive(false);
-                }
             }
         }
 
@@ -502,7 +504,7 @@ public class WorldHex : MonoBehaviour
 
                 if (visualHelper != null)
                 {
-                    visualHelper.citySiegeEffect.SetActive(false);
+                    visualHelper.SetCityEffect(false);
                 }
 
             }
@@ -1297,7 +1299,7 @@ public class WorldHex : MonoBehaviour
         visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
         Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
         visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
-        visualHelper.citySiegeEffect.SetActive(false);
+        visualHelper.SetCityEffect(false);
         border.SetActive(true);
         border.GetComponent<MeshRenderer>().materials[0].color = newColor;
        
@@ -1310,7 +1312,7 @@ public class WorldHex : MonoBehaviour
 
         if (visualHelper != null)
         {
-            visualHelper.citySiegeEffect.SetActive(false);
+            visualHelper.SetCityEffect(false);
         }
 
         if (associatedUnit != null)

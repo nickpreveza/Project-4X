@@ -155,6 +155,7 @@ public class WorldUnit : MonoBehaviour
         }
 
         ExhaustActions();
+        UpdateVisualsDirection(false);
         VisualUpdate();
         unitView.UpdateData();
     }
@@ -202,6 +203,7 @@ public class WorldUnit : MonoBehaviour
         }
 
         ExhaustActions();
+        UpdateVisualsDirection(false);
         VisualUpdate();
         unitView.UpdateData();
     }
