@@ -30,6 +30,7 @@ namespace SignedInitiative
         public bool isSinglePlayer;
 
         [Header("Debug Settings")]
+        public bool VisualizeAIMoves;
         public bool AIEnabled;
         public bool destroyResourcesToo;
         public bool useRandomSeed;
@@ -164,6 +165,7 @@ namespace SignedInitiative
             List<Player> playersToSort = new List<Player>(rankedPlayers);
             rankedPlayers = playersToSort.OrderByDescending(x => x.totalScore).ToList();
         }
+
         public void MonumentReward(int rewardIndex, WorldUnit unit)
         {
             string popupTitle = "Monument Claimed";
@@ -383,15 +385,18 @@ namespace SignedInitiative
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();
            
-            if (activePlayer.lastMovedUnit != null)
+            if (activePlayer.showAction())
             {
-                SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
+                if (activePlayer.lastMovedUnit != null)
+                {
+                    SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
+                }
+                else
+                {
+                    SI_CameraController.Instance.PanToHex(player.playerCities[0]);
+                }
             }
-            else
-            {
-                SI_CameraController.Instance.PanToHex(player.playerCities[0]);
-            }
-
+           
             MapManager.Instance.UpdateCloudView();
             UIManager.Instance.UpdateHUD();
             UIManager.Instance.UpdateResearchPanel(activePlayerIndex);

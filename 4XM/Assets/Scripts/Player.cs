@@ -57,6 +57,22 @@ public class Player
 
     public bool playerHasActions;
 
+    public bool showAction()
+    {
+        if (type == PlayerType.LOCAL)
+        {
+            return true;
+        }
+        else if (type == PlayerType.AI && GameManager.Instance.VisualizeAIMoves)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void SetupForNetworkPlay(NetworkedPlayer newNetworkPlayer)
     {
         networkedPlayer = newNetworkPlayer;
@@ -76,7 +92,7 @@ public class Player
 
         if (type == PlayerType.AI)
         {
-            UnitManager.Instance.PlayRandomTurnForAIUnits(this);
+           // UnitManager.Instance.PlayRandomTurnForAIUnits(this);
             //evaluate resoure purchases 
             //evalute ability purchases 
             //end  turn

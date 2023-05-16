@@ -32512,6 +32512,11 @@ PrefabInstance:
       propertyPath: cameraController
       value: 
       objectReference: {fileID: 1587133871}
+    - target: {fileID: 4395748060535445101, guid: 9426ea574818a784ba13c5db43b14d95,
+        type: 3}
+      propertyPath: skipMenuForNetworking
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4395748060535445107, guid: 9426ea574818a784ba13c5db43b14d95,
         type: 3}
       propertyPath: m_Name
@@ -34065,6 +34070,61 @@ PrefabInstance:
         type: 3}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
+      propertyPath: sessionPlayers.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[0].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[1].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].type
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].index
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].index
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].isAlive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].isAlive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].civilization
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].civilization
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
       propertyPath: gameCivilizations.Array.data[0].cityObject
       value: 
       objectReference: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
@@ -34133,6 +34193,16 @@ PrefabInstance:
         type: 3}
       propertyPath: gameCivilizations.Array.data[3].unitInactive.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].abilities.unitSwordsman
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].abilities.unitSwordsman
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293650, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}

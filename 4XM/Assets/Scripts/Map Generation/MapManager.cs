@@ -564,7 +564,7 @@ public class MapManager : MonoBehaviour
 
     public void UpdateCloudView()
     {
-        if (GameManager.Instance.activePlayer.type == PlayerType.LOCAL)
+        if (GameManager.Instance.activePlayer.showAction())
         {
             for (int column = 0; column < mapColumns; column++)
             {
