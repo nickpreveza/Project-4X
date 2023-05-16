@@ -32,7 +32,12 @@ public class InitializerPanel : UIPanel
         newGamePanel.SetActive(false);
         overviewGamesubPanel.SetActive(false);
         selectCivsubPanel.SetActive(false);
-        Initializer.Instance.setupPlayers.Clear();
+        Initializer.Instance.selectedCivs.Clear();
+
+        foreach(Player player in Initializer.Instance.setupPlayers)
+        {
+            player.activatedOnSetup = false;
+        }
     }
     public override void UpdateData()
     {
@@ -107,53 +112,53 @@ public class InitializerPanel : UIPanel
 
     public void SelectCiv(int playerIndex, Civilizations type, bool overrideCivSettings)
     {
-        if (overrideCivSettings)
+        Civilizations previousType = Initializer.Instance.setupPlayers[playerIndex].civilization;
+        Initializer.Instance.setupPlayers[playerIndex].civilization = type;
+
+        bool otherPlayerFound = false;
+        foreach (Player player in Initializer.Instance.setupPlayers)
         {
-            Civilizations previousType = Initializer.Instance.setupPlayers[playerIndex].civilization;
-            Initializer.Instance.setupPlayers[playerIndex].civilization = type;
+            if (player == Initializer.Instance.setupPlayers[playerIndex])
+            {
+                continue;
+            }
+            if (player.civilization == type && player.activatedOnSetup)
+            {
+                player.civilization = previousType;
+                otherPlayerFound = true;
+            }
+            if (player.civilization == previousType && player.activatedOnSetup)
+            {
+                otherPlayerFound = true;
+            }
+        }
 
-            bool otherPlayerFound = false;
-            foreach(Player player in Initializer.Instance.setupPlayers)
-            {
-                if (player == Initializer.Instance.setupPlayers[playerIndex])
-                {
-                    continue;
-                }
-                if (player.civilization == type)
-                {
-                    player.civilization = previousType;
-                    otherPlayerFound = true;
-                }
-            }
 
-            if (!otherPlayerFound)
+        if (!otherPlayerFound)
+        {
+            if (Initializer.Instance.selectedCivs.Contains(previousType))
             {
-                if (Initializer.Instance.selectedCivs.Contains(previousType))
-                {
-                    Initializer.Instance.selectedCivs.Remove(previousType);
-                }
+                Initializer.Instance.selectedCivs.Remove(previousType);
             }
-            if (!Initializer.Instance.selectedCivs.Contains(type))
-            {
-                Initializer.Instance.selectedCivs.Add(type);
-            }
+        }
+
+        if (!Initializer.Instance.selectedCivs.Contains(type))
+        {
+            Initializer.Instance.selectedCivs.Add(type);
+        }
+
+        if (playerIndex != 0)
+        {
+            Initializer.Instance.setupPlayers[playerIndex].type = PlayerType.AI;
         }
         else
         {
-            Initializer.Instance.selectedCivs.Add(type);
-            Initializer.Instance.setupPlayers[playerIndex].civilization = type;
-            if (playerIndex != 0)
-            {
-                Initializer.Instance.setupPlayers[playerIndex].type = PlayerType.AI;
-            }
-            
+            Initializer.Instance.setupPlayers[playerIndex].isFirstPlayer = true;
+
         }
 
         Initializer.Instance.setupPlayers[playerIndex].activatedOnSetup = true;
-        if (playerIndex == 0)
-        {
-            Initializer.Instance.setupPlayers[playerIndex].isFirstPlayer = true;
-        }
+
 
         CloseSelectCivPanel(true);
     }
@@ -177,21 +182,25 @@ public class InitializerPanel : UIPanel
         }
 
         int totalPlayers = 0;
-
+        List<Civilizations> typesFound = new List<Civilizations>();
         for (int i = 0; i < Initializer.Instance.setupPlayers.Count; i++)
         {
             if (Initializer.Instance.setupPlayers[i].activatedOnSetup)
             {
                 totalPlayers++;
                 GameObject obj = Instantiate(setupGameEntryPrefab, setupGameEntryParent);
+                typesFound.Add(Initializer.Instance.setupPlayers[i].civilization);
                 obj.GetComponent<CivSelectButton>().SetupAsOverview(this, Initializer.Instance.setupPlayers[i], i);
             }
         }
 
+        //work around for weird bug I can't solve that essentiall doesnt remove on from selected civs on remove
+        Initializer.Instance.selectedCivs = new List<Civilizations>(typesFound);
+
         if (totalPlayers < 4)
         {
             GameObject obj = Instantiate(plusPrefab, setupGameEntryParent);
-            obj.GetComponent<Button>().onClick.AddListener(()=>AddPlayer(totalPlayers));
+            obj.GetComponent<Button>().onClick.AddListener(()=>AddPlayer());
         }
 
         if (totalPlayers  > 1)
@@ -205,9 +214,19 @@ public class InitializerPanel : UIPanel
        
     }
 
-    void AddPlayer(int index)
+    void AddPlayer()
     {
-        SetupSelectYourCiv(index, false);
+        int foundIndex = 0;
+        for (int i = 0; i < Initializer.Instance.setupPlayers.Count; i++)
+        {
+            if (!Initializer.Instance.setupPlayers[i].activatedOnSetup)
+            {
+                foundIndex = i;
+                break;
+            }
+        }
+
+        SetupSelectYourCiv(foundIndex, false);
     }
 
     public void ToggleChanged(int playerIndex, bool togglevalue)
@@ -230,31 +249,6 @@ public class InitializerPanel : UIPanel
             Initializer.Instance.selectedCivs.Remove(Initializer.Instance.setupPlayers[playerIndex].civilization);
         }
         SetupOverviewSubPanel();
-    }
-
-    void SetupNewGamePanel()
-    {
-        //open panel for player 1. 
-        foreach(Civilization civ in GameManager.Instance.gameCivilizations)
-        {
-
-        }
-        /*
-        numberOfPlayers = 2;
-
-        foreach(Transform child in entriesParent)
-        {
-            Destroy(child.gameObject);
-        }
-
-        for(int i = 0; i < numberOfPlayers; i++)
-        {
-            GameObject obj = Instantiate(playerEntryPrefab, entriesParent);
-            
-            PlayerOverviewEntry entry = obj.GetComponent<PlayerOverviewEntry>();
-            //entry.SetPlayer(player);
-            //playerEntries.Add(entry);
-        }*/
     }
 
     public override void Setup()
