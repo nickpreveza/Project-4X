@@ -256,7 +256,7 @@ namespace SignedInitiative
                 unit.Death(false);
             }
 
-            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, true);
+            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, false);
 
         }
 

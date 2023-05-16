@@ -530,9 +530,7 @@ public class WorldHex : MonoBehaviour
     {
         RemoveResource(false, false);
 
-        GameObject obj = Instantiate(MapManager.Instance.cityPrefab, transform);
-        obj.transform.SetParent(resourceParent);
-        cityGameObject = obj;
+        cityGameObject = Instantiate(MapManager.Instance.cityPrefab, resourceParent);
         hexData.hasCity = true;
         hexData.hasBuilding = true; //maybe this will cause issues? It did. 
         hexData.buildingType = BuildingType.City;
@@ -1223,9 +1221,8 @@ public class WorldHex : MonoBehaviour
             return;
         }
 
-        Resource selectedResource = MapManager.Instance.GetResourceByType(resourceType);
-
-        GameObject obj = Instantiate(selectedResource.prefab, resourceParent);
+        GameObject resourcePrefab = MapManager.Instance.GetResourcePrefabByTileType(resourceType, hexData.type);
+        GameObject obj = Instantiate(resourcePrefab, resourceParent);
         hexData.resourceType = resourceType;
         hexData.hasResource = true;
 

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4845381341361641890}
   m_Layer: 10
-  m_Name: forestMaster
+  m_Name: G_ForestMaster
   m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

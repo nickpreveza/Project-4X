@@ -1,0 +1,316 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4395748060535445107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4395748060535445100}
+  - component: {fileID: 4395748060535445101}
+  m_Layer: 0
+  m_Name: Initializer  1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4395748060535445100
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4395748060535445107}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4395748060535445101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4395748060535445107}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc1a2510febcccd48901535963d1028f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkedPlayers: []
+  mapGenerator: {fileID: 0}
+  dataHandler: {fileID: 0}
+  playerManager: {fileID: 0}
+  cameraController: {fileID: 0}
+  networkedPlayersCount: 0
+  networkMenu: {fileID: 0}
+  networkLoading: {fileID: 0}
+  skipMenuForNetworking: 0
+  userSeed: 0
+  isSinglePlayer: 0
+  playerCount: 0
+  setupPlayers:
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 0
+    type: 0
+    civilization: 0
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 0
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 0
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    playerBorders: []
+    unitsWithActions: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+  selectedCivs: 

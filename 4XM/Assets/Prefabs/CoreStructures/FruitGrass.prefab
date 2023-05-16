@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2155160586094273887}
   m_Layer: 10
-  m_Name: FruitResource 1
+  m_Name: FruitGrass
   m_TagString: Structure
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

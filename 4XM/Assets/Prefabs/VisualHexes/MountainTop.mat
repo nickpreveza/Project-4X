@@ -297,7 +297,7 @@ Material:
     - _LightContribution: 1
     - _LightmapDirectionPitch: 0
     - _LightmapDirectionYaw: 0
-    - _Metallic: 0
+    - _Metallic: 0.417
     - _Mode: 0
     - _NoiseAmount: 0.5
     - _NoiseScale: 1

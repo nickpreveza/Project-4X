@@ -259,7 +259,42 @@ public class MapManager : MonoBehaviour
         return hexBuildings[0];
     }
 
+    public GameObject GetResourcePrefabByTileType(ResourceType resourceType, TileType tileType)
+    {
+        Resource resource = GetResourceByType(resourceType);
+        GameObject prefabToReturn = null;
 
+        switch (tileType)
+        {
+            case TileType.ICE:
+            case TileType.DEEPSEA:
+            case TileType.SEA:
+                prefabToReturn = resource.prefab[0];
+                break;
+            case TileType.SAND:
+                prefabToReturn = resource.prefab[1];
+                break;
+            case TileType.GRASS:
+                prefabToReturn = resource.prefab[2];
+                break;
+            case TileType.HILL:
+                prefabToReturn = resource.prefab[3];
+                break;
+            case TileType.MOUNTAIN:
+                prefabToReturn = resource.prefab[4];
+                break;
+        }
+
+        if (prefabToReturn == null)
+        {
+            return resource.prefab[0];
+        }
+        else
+        {
+            return prefabToReturn;
+        }
+        
+    }
     public Resource GetResourceByType(ResourceType type)
     {
 
@@ -712,6 +747,13 @@ public class MapManager : MonoBehaviour
                                     hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                                 }
                             }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+                            }
                             else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
                             {
                                 if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
@@ -719,6 +761,7 @@ public class MapManager : MonoBehaviour
                                     hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                                 }
                             }
+                          
                             break;
                         case TileType.GRASS:
                             if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
@@ -753,13 +796,12 @@ public class MapManager : MonoBehaviour
 
                             break;
                         case TileType.HILL:
-                            if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
+                            if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
                             {
                                 if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
                                 {
                                     hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                                 }
-
                             }
                             else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
                             {
@@ -768,13 +810,15 @@ public class MapManager : MonoBehaviour
                                     hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                                 }
                             }
-                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
                             {
                                 if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
                                 {
                                     hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                                 }
+
                             }
+
                             break;
                         case TileType.MOUNTAIN:
                             TryToPlantResource(hexesInRadius[x], ResourceType.MINE);
@@ -1191,7 +1235,7 @@ public struct TerrainType
 }
 
 [System.Serializable]
-public struct Resource
+public class Resource
 {
     public string resourceName;
     public string description;
@@ -1208,11 +1252,11 @@ public struct Resource
 
     public float[] spawnChanceRates;
 
-    public GameObject prefab;
+    public GameObject[] prefab;
 }
 
 [System.Serializable]
-public struct Building
+public class Building
 {
     public string buildingName;
     public string description;
