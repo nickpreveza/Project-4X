@@ -47,6 +47,11 @@ public class CityView : MonoBehaviour
         
     }
 
+    public void SetCapitalStatus(bool status)
+    {
+        capitalIcon.SetActive(status);
+    }
+
     public void CapitalConnectionStatus(bool connected)
     {
         connectedIcon.SetActive(connected);

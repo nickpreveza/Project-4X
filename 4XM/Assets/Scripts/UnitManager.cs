@@ -127,7 +127,7 @@ public class UnitManager : MonoBehaviour
             else
             {
                 //spanw a unit at the first city of each player
-                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false, false);
+                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false, true);
             }
         }
        

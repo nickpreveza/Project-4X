@@ -118,6 +118,10 @@ public class HexView : MonoBehaviour
         {
             if (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex || hex.hexData.playerOwnerIndex == -1)
             {
+                if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != GameManager.Instance.activePlayerIndex)
+                {
+                    return;
+                }
                 if (hex.hexData.type == TileType.GRASS || hex.hexData.type == TileType.SAND || hex.hexData.type == TileType.HILL)
                 {
                     GenerateRoadButton();

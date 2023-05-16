@@ -349,7 +349,7 @@ public class WorldUnit : MonoBehaviour
             Destroy(visualUnit);
         }
 
-        visualUnit = Instantiate(referenceData.GetPrefab(), this.transform);
+        visualUnit = Instantiate(referenceData.GetPrefab(), unitVisualLayer);
 
         visualAnim = visualUnit.transform.GetChild(0).GetChild(0).GetComponent<Animator>();
         visualAnim.SetTrigger("Idle");
@@ -505,8 +505,7 @@ public class WorldUnit : MonoBehaviour
             return;
         }
 
-        //more checks here to be double sure;
-        originCity.RemovePopulation();
+        originCity.RemoveAllPopulation();
         originCity = parentHex;
         GameManager.Instance.activePlayer.AddCity(parentHex);
         visualAnim.SetTrigger("Capture");

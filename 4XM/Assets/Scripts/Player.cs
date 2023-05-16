@@ -356,7 +356,7 @@ public class Player
         SI_EventManager.Instance.OnCityCaptured(index);
     }
 
-    public void RemoveCity(WorldHex cityHex)
+    public void RemoveCity(WorldHex cityHex, bool showPopup)
     {
         //probably master resources will not update
         if (playerCities.Contains(cityHex))
@@ -368,10 +368,9 @@ public class Player
         {
             RecalculateAbilityCosts();
         }
-
-        if (playerCities.Count == 0)
+        else if (playerCities.Count == 0)
         {
-            GameManager.Instance.RemovePlayerFromGame(this);
+            GameManager.Instance.RemovePlayerFromGame(this, showPopup);
         }
 
        

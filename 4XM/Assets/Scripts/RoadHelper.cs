@@ -32,7 +32,7 @@ public class RoadHelper : MonoBehaviour
                 {
                     int adjIndex = parentHex.adjacentHexes[i].hexData.playerOwnerIndex;
 
-                    if (adjIndex == parentHex.hexData.playerOwnerIndex || adjIndex != -1)
+                    if (adjIndex == parentHex.hexData.playerOwnerIndex || adjIndex == -1 || parentHex.hexData.playerOwnerIndex == -1)
                     {
                         Direction dir = MapManager.Instance.GetHexDirection(parentHex, parentHex.adjacentHexes[i]);
                         EnableRoadObjectByDir(dir);

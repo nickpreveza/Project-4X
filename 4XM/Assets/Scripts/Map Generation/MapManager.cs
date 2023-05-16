@@ -700,95 +700,99 @@ public class MapManager : MonoBehaviour
 
             for (int x = 0; x < hexesInRadius.Count; x++)
             {
-                switch (hexesInRadius[x].hexData.type)
+                if (!hexesInRadius[x].hexData.hasCity)
                 {
-                    case TileType.SAND:
-                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                    switch (hexesInRadius[x].hexData.type)
+                    {
+                        case TileType.SAND:
+                            if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
                             {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
                             }
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
                             {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
                             }
-                        }
-                        break;
-                    case TileType.GRASS:
-                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            break;
+                        case TileType.GRASS:
+                            if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
                             {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                            }
-                           
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
-                            {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                            }
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
-                            {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                            }
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
-                            {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                            }
-                        }
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
 
-                        break;
-                    case TileType.HILL:
-                        if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
-                        {
-                            if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                            }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FARM))
                             {
-                                hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+                            }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+                            }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
                             }
 
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
-                        {
+                            break;
+                        case TileType.HILL:
+                            if (TryToPlantResource(hexesInRadius[x], ResourceType.FRUIT))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+
+                            }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.FOREST))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+                            }
+                            else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
+                            {
+                                if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
+                                {
+                                    hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
+                                }
+                            }
+                            break;
+                        case TileType.MOUNTAIN:
+                            TryToPlantResource(hexesInRadius[x], ResourceType.MINE);
                             if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
                             {
                                 hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                             }
-                        }
-                        else if (TryToPlantResource(hexesInRadius[x], ResourceType.ANIMAL))
-                        {
+                            break;
+                        case TileType.SEA:
+                            TryToPlantResource(hexesInRadius[x], ResourceType.FISH);
                             if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
                             {
                                 hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
                             }
-                        }
-                        break;
-                    case TileType.MOUNTAIN:
-                        TryToPlantResource(hexesInRadius[x], ResourceType.MINE);
-                        if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
-                        {
-                            hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                        }
-                        break;
-                    case TileType.SEA:
-                        TryToPlantResource(hexesInRadius[x], ResourceType.FISH);
-                        if (hexesWhereMonumentsCanSpawn.Contains(hexesInRadius[x]))
-                        {
-                            hexesWhereMonumentsCanSpawn.Remove(hexesInRadius[x]);
-                        }
-                        break;
+                            break;
+                    }
                 }
+               
             }
         }
 
@@ -801,7 +805,7 @@ public class MapManager : MonoBehaviour
 
             //walkableTiles[randomTileIndex].SpawnCity(player.index, cityPrefab);
 
-            ClaimCityByPlayer(player, worldCitiesToAssign[randomCity]);
+            ClaimFirstCityAndCapital(player, worldCitiesToAssign[randomCity]);
             worldCitiesToAssign.RemoveAt(randomCity);
         }
 
@@ -846,7 +850,7 @@ public class MapManager : MonoBehaviour
 
     public bool TryToPlantResource(WorldHex hex, ResourceType type)
     {
-        if (hex.hexData.hasResource)
+        if (hex.hexData.hasResource || hex.hexData.hasBuilding)
         {
             return false;
         }
@@ -883,9 +887,10 @@ public class MapManager : MonoBehaviour
        
     }
 
-    void ClaimCityByPlayer(Player player, WorldHex city)
+    void ClaimFirstCityAndCapital(Player player, WorldHex city)
     {
         player.capitalCity = city;
+        city.cityData.isCapital = true;
         player.AddCity(city);
         
     }

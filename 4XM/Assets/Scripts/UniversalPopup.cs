@@ -65,6 +65,19 @@ public class UniversalPopup : UIPopup
 
     }
 
+    public void SetDataInformative(string newTitle, string newDescription, string option1name)
+    {
+        title.text = newTitle;
+        description.text = newDescription;
+        confirm.onClick.RemoveAllListeners();
+        cancel.onClick.RemoveAllListeners();
+        confirm.interactable = true;
+        cancel.gameObject.SetActive(false);
+        confirm.gameObject.SetActive(true);
+        confirmText.text = option1name;
+        confirm.onClick.AddListener(() => CloseWithDelay());
+    }
+
     public void SetDataForMonument(string newTitle, string newDescription, string option1name)
     {
         title.text = newTitle;
@@ -88,6 +101,7 @@ public class UniversalPopup : UIPopup
     {
         yield return new WaitForSeconds(0.1f);
         Close();
+        UIManager.Instance.waitingForPopupReply = false;
     }
 
     public override void Close()

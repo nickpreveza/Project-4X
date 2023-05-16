@@ -6,8 +6,7 @@ using UnityEngine;
 public class CityData
 {
     public string cityName;
-    public bool isCaptital;
-    public bool isConnectedToCapital;
+    public bool isCapital;
 
     public int level = 1;
     public int targetLevelPoints = 2; //also population cap

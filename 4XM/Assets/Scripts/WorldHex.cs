@@ -347,6 +347,13 @@ public class WorldHex : MonoBehaviour
         cityView.AddPopulation();
     }
 
+    public void RemoveAllPopulation()
+    {
+        for(int i = 0; i < cityData.population; i++)
+        {
+            RemovePopulation();
+        }
+    }
     public void RemovePopulation()
     {
         if (cityData.population > 0)
@@ -1111,8 +1118,7 @@ public class WorldHex : MonoBehaviour
         }
 
         hexData.hasRoad = true;
-        //UpdateVisuals();
-        //CalculateRoadConnections
+
         roadHelper.SetRoads();
 
         if (hexData.playerOwnerIndex != -1)
@@ -1123,6 +1129,39 @@ public class WorldHex : MonoBehaviour
         UIManager.Instance.ShowHexView(this);
     }
 
+    public void EvaluateConnections()
+    {
+        if (!hexData.hasRoad)
+        {
+            return;
+        }
+
+        int levelPointsToAdd = 0;
+
+        foreach (WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
+        {
+            if (city == GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity)
+            {
+                continue;
+            }
+
+            if (city.hexData.isConnectedToCapital)
+            {
+                List<WorldHex> attemptForRoad = MapManager.Instance.FindRoadPath(this, city, hexData.playerOwnerIndex);
+                if (attemptForRoad == null)
+                {
+                    city.SevereFromCapital();
+                }
+                else
+                {
+                    levelPointsToAdd++;
+                }
+            }
+        }
+
+        AddLevelPoint(levelPointsToAdd);
+        SearchForConnections();
+    }
     //to be used by capital to find connected cities;
     public void SearchForConnections()
     {
@@ -1230,6 +1269,17 @@ public class WorldHex : MonoBehaviour
         UIManager.Instance.ShowHexView(this);
     }
 
+    public void SetAsCapital()
+    {
+        if (hexData.isConnectedToCapital)
+        {
+            SevereFromCapital();
+        }
+        cityData.isCapital = true;
+        cityView.SetCapitalStatus(true);
+        EvaluateConnections();
+    }
+
     public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
     {
         if (!hexData.hasCity)
@@ -1242,14 +1292,50 @@ public class WorldHex : MonoBehaviour
 
         if (hexData.playerOwnerIndex > -1 && hexData.playerOwnerIndex != player.index)
         {
-            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).RemoveCity(this);
+            bool showPopup = false;
+            if (player == GameManager.Instance.activePlayer && player.type == PlayerType.LOCAL)
+            {
+                showPopup = true;
+            }
+
             isThisATakeOver = true;
+
+            if (cityData.isCapital)
+            {
+                cityView.SetCapitalStatus(false);
+                cityData.isCapital = false;
+                //remove the hex from the list, kill player if no more cities
+                GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).RemoveCity(this, showPopup);
+
+                if (GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities.Count > 0)
+                {
+                    WorldHex biggestCity = GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities[0];
+
+                    foreach (WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
+                    {
+                        if (city.cityData.targetLevelPoints > biggestCity.cityData.targetLevelPoints)
+                        {
+                            biggestCity = city;
+                        }
+
+                        if (city.hexData.isConnectedToCapital)
+                        {
+                            city.SevereFromCapital();
+                        }
+                    }
+
+                    GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity = biggestCity;
+                    GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SetAsCapital();
+                }
+               
+            }
+            else if (hexData.isConnectedToCapital)
+            {
+                SevereFromCapital();
+            }
         }
 
-        if (hexData.isConnectedToCapital)
-        {
-            SevereFromCapital();
-        }
+       
       
         //set player
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);

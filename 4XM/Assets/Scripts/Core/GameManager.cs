@@ -294,6 +294,8 @@ namespace SignedInitiative
                     return civ.uiColorActive;
                 case CivColorType.uiInactiveColor:
                     return civ.uiColorInactive;
+                case CivColorType.unitInactiveColor:
+                    return civ.unitInactive;
             }
 
            return civ.unitColor;
@@ -463,7 +465,7 @@ namespace SignedInitiative
             UIManager.Instance.GameOver(player);
         }
 
-        public void RemovePlayerFromGame(Player player)
+        public void RemovePlayerFromGame(Player player, bool showPopup)
         {
             List<WorldUnit> playerUnits = new List<WorldUnit>(player.playerUnits);
             foreach(WorldUnit unit in playerUnits)
@@ -472,6 +474,15 @@ namespace SignedInitiative
             }
 
             player.isAlive = false;
+
+            if (showPopup)
+            {
+                UIManager.Instance.OpenPopupInformative(
+              GetCivilizationByType(player.civilization) + " Defeated",
+              "All their cities have been captured",
+              "OK");
+            }
+          
         }
 
         public void OnDataReady()
