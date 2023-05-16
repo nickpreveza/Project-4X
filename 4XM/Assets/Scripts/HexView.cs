@@ -310,13 +310,17 @@ public class HexView : MonoBehaviour
             hexDescription.text = "This  " + hexName.text.ToLower() + " resource is outside of your empire's borders";
             GenerateResourceButton(false, ResourceType.EMPTY, false);
 
-            if (GameManager.Instance.activePlayer.abilities.destroyAbility)
+            if (GameManager.Instance.destroyResourcesToo)
             {
-                if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                if (GameManager.Instance.activePlayer.abilities.destroyAbility)
                 {
-                    GeneratePillageButton(hex.associatedUnit.buttonActionPossible, false);
+                    if (hex.hexData.occupied && !hex.hexData.hasCity && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                    {
+                        GeneratePillageButton(hex.associatedUnit.buttonActionPossible, false);
+                    }
                 }
             }
+           
                
         }
     }
@@ -393,7 +397,7 @@ public class HexView : MonoBehaviour
 
             if (GameManager.Instance.activePlayer.abilities.destroyAbility)
             {
-                if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
+                if (!hex.hexData.hasCity && hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
                 {
                     GeneratePillageButton(hex.associatedUnit.buttonActionPossible, true);
                 }
@@ -423,12 +427,15 @@ public class HexView : MonoBehaviour
             {
                 if (unit.parentHex.hexData.playerOwnerIndex != -1 && unit.playerOwnerIndex != unit.parentHex.hexData.playerOwnerIndex)
                 {
-                    if (unit.parentHex.hexData.hasResource)
+                    if (GameManager.Instance.destroyResourcesToo)
                     {
-                        GeneratePillageButton(unit.buttonActionPossible, false);
+                        if (unit.parentHex.hexData.hasResource && !unit.parentHex.hexData.hasCity)
+                        {
+                            GeneratePillageButton(unit.buttonActionPossible, false);
+                        }
                     }
-
-                    if (unit.parentHex.hexData.hasBuilding)
+                        
+                    if (unit.parentHex.hexData.hasBuilding && !unit.parentHex.hexData.hasCity)
                     {
                         GeneratePillageButton(unit.buttonActionPossible, true);
                     }

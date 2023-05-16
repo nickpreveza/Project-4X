@@ -5,18 +5,18 @@ using UnityEngine;
 public class CityVisualHelper : MonoBehaviour
 {
    public GameObject cityFlag;
-   private GameObject citySiegeEffect;
+   [SerializeField] GameObject citySiegeEffect;
    public GameObject cityLevelEffect;
 
 
     private void Start()
     {
-        citySiegeEffect.SetActive(false);
-        cityLevelEffect.SetActive(false);
+        citySiegeEffect?.SetActive(false);
+        cityLevelEffect?.SetActive(false);
     }
 
     public void SetCityEffect(bool state)
     {
-        citySiegeEffect.SetActive(state);
+        citySiegeEffect?.SetActive(state);
     }
 }

@@ -31,6 +31,7 @@ namespace SignedInitiative
 
         [Header("Debug Settings")]
         public bool AIEnabled;
+        public bool destroyResourcesToo;
         public bool useRandomSeed;
         public bool allAbilitiesUnlocked;
         public bool startWithALotOfMoney;

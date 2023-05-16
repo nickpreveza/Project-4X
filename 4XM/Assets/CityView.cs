@@ -31,6 +31,7 @@ public class CityView : MonoBehaviour
 
     CanvasGroup canvasGroup;
     [SerializeField] CanvasGroup cityDetailsCanvasGroup;
+    [SerializeField] CanvasGroup animatedElementesGroup;
     [SerializeField] Animator cityDetailsAnim;
 
     public void SetData(WorldHex hex)
@@ -108,6 +109,7 @@ public class CityView : MonoBehaviour
     public void SetDetailsAlpha(int alpha)
     {
         cityDetailsCanvasGroup.alpha = alpha;
+        animatedElementesGroup.alpha = alpha;
     }
 
     public void AddPopulation()

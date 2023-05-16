@@ -1299,7 +1299,6 @@ public class WorldHex : MonoBehaviour
         visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
         Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
         visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
-        visualHelper.SetCityEffect(false);
         border.SetActive(true);
         border.GetComponent<MeshRenderer>().materials[0].color = newColor;
        
