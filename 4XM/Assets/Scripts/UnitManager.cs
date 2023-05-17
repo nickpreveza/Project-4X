@@ -292,6 +292,108 @@ public class UnitManager : MonoBehaviour
 
     }
 
+    public List<WorldHex> FindMultiturnPath(WorldUnit unit, WorldHex end, out int turnsToTarget)
+    {
+        turnsToTarget = 0;
+        WorldHex start = unit.parentHex;
+        Player player = GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex);
+        List<WorldHex> openSet = new List<WorldHex>();
+        List<WorldHex> closedSet = new List<WorldHex>();
+
+        openSet.Add(start);
+
+        bool startedFromSea = false;
+        if (start.hexData.type == TileType.DEEPSEA || start.hexData.type == TileType.SEA)
+        {
+            startedFromSea = true;
+        }
+
+        start.hexData.gCost = 0;
+        start.hexData.hCost = 0;
+
+        while (openSet.Count > 0)
+        {
+            WorldHex current = openSet[0];
+
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].hexData.fCost < current.hexData.fCost ||
+                    openSet[i].hexData.fCost == current.hexData.fCost && openSet[i].hexData.hCost < openSet[i].hexData.hCost)
+                {
+                    current = openSet[i];
+                }
+            }
+
+            openSet.Remove(current);
+
+            closedSet.Add(current);
+
+            if (current == end)
+            {
+                List<WorldHex> path = new List<WorldHex>();
+                WorldHex retractCurrent = end;
+
+                while (retractCurrent != start)
+                {
+                    path.Add(retractCurrent);
+                    retractCurrent = retractCurrent.pathParent;
+                }
+
+                path.Reverse();
+                turnsToTarget = Mathf.RoundToInt((float)path.Count / (float)unit.unitReference.walkRange);
+                Debug.Log("Unit: " + unit.unitReference.name + "Tile: " + end.name + " Turns to target tile: " + turnsToTarget);
+                return path;
+            }
+
+            bool shouldSkipAdj = false;
+
+            if (!startedFromSea)
+            {
+                if (current.hexData.type == TileType.DEEPSEA || current.hexData.type == TileType.SEA)
+                {
+                    shouldSkipAdj = true;
+                }
+            }
+            else
+            {
+                if (current.hexData.type != TileType.DEEPSEA && current.hexData.type != TileType.SEA)
+                {
+                    shouldSkipAdj = true;
+                }
+            }
+
+            if (!shouldSkipAdj)
+            {
+                foreach (WorldHex adj in current.adjacentHexes)
+                {
+
+                    if (closedSet.Contains(adj) || !adj.CanBeWalked(unit.playerOwnerIndex, unit.unitReference.flyAbility, adj == end)) //can't afford to enter
+                    {
+                        continue;
+                    }
+
+                    //distance from this tile to the next 
+                    int distanceCost = MapManager.Instance.GetDistance(current, adj);
+                    int movementCostToAdj = current.hexData.gCost + distanceCost;
+                    if (movementCostToAdj < adj.hexData.gCost || !openSet.Contains(adj))
+                    {
+                        adj.hexData.gCost = movementCostToAdj;
+                        int distancCostforH = MapManager.Instance.GetDistance(adj, end);
+                        adj.hexData.hCost = distancCostforH;
+                        adj.pathParent = current;
+
+                        if (!openSet.Contains(adj))
+                        {
+                            openSet.Add(adj);
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return null;
+    }
     public List<WorldHex> FindPath(WorldUnit unit, WorldHex start, WorldHex end, bool roadCheck = false)
     {
         Player player = GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex);

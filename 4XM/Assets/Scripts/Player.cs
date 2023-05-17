@@ -33,19 +33,16 @@ public class Player
 
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
-    public List<WorldHex> playerBorders = new List<WorldHex>();
+
+    public List<WorldHex> hexesToCheck = new List<WorldHex>();
     public List<WorldUnit> unitsWithActions = new List<WorldUnit>();
     
-
-    List<TurnAction> activeTurnActions = new List<TurnAction>();
-
-    List<Turn> turns = new List<Turn>();
 
     public WorldUnit lastMovedUnit;
 
     public List<PlayerAbilityData> abilityDatabase = new List<PlayerAbilityData>();
     public Dictionary<Abilities, PlayerAbilityData> abilityDictionary = new Dictionary<Abilities, PlayerAbilityData>();
-
+   
     public List<WorldHex> clearedHexes = new List<WorldHex>();
     NetworkedPlayer networkedPlayer;
 
@@ -56,6 +53,10 @@ public class Player
     public bool playerCanPlaceResource;
 
     public bool playerHasActions;
+    public bool isAI()
+    {
+        return type == PlayerType.AI;
+    }
 
     public bool showAction()
     {
@@ -81,23 +82,16 @@ public class Player
     }
     public void StartTurn()
     {
-        List<TurnAction> activeTurnActions = new List<TurnAction>();
+        //List<TurnAction> activeTurnActions = new List<TurnAction>();
         turnCount++;
 
         unitsWithActions = new List<WorldUnit>(playerUnits);
 
-        CheckForAvailableUnitMoves();
-        CheckForAvailableResearch();
-        CheckForAvailableHexActions(false);
-
-        if (type == PlayerType.AI)
-        {
-           // UnitManager.Instance.PlayRandomTurnForAIUnits(this);
-            //evaluate resoure purchases 
-            //evalute ability purchases 
-            //end  turn
-        }
+        //CheckForAvailableUnitMoves();
+        //CheckForAvailableResearch();
+        // CheckForAvailableHexActions(false);
     }
+
 
     public void AddScore(int scoreType, int amount)
     {
@@ -346,11 +340,8 @@ public class Player
 
     public void EndTurn()
     {
-        Turn thisTurn = new Turn();
-        thisTurn.actions = activeTurnActions;
-        turns.Add(thisTurn);
-
-        activeTurnActions.Clear();
+      
+       
 
        // GameManager.Instance.EndTurn(this);
     }

@@ -374,7 +374,7 @@ public class ActionButton : MonoBehaviour
 
     public void SpawnUnit()
     {
-        GameManager.Instance.activePlayer.RemoveStars(actionCost);
+        //GameManager.Instance.activePlayer.RemoveStars(actionCost);
         UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true, true);
 
         UIManager.Instance.RefreshHexView();

@@ -2,38 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AIAction
-{
-    public AIActionType type;
-    public WorldHex associatedHex;
-    public int associatedCost;
-    public int value;
 
-    //AbilityData abilityData;
-  //  UnitData unitReferenceData;
 
-}
-
-public enum AIActionType
-{
-    canResearch,
-    canHarvest,
-    canBuild,
-    canMove,
-    canAttack,
-    canClaim
-}
-
-public class BuildingAction
-{
-    public BuildingType building;
-    public bool canBeBuild;
-}
-public class ResourceAction
-{
-    public ResourceType resource;
-    public bool canBeHarvested;
-}
 
 /*
  

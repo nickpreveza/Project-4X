@@ -330,6 +330,11 @@ namespace SignedInitiative
           
         }
 
+        public void UpdateOnlyPlayerAvatar()
+        {
+            gamePanel.GetComponent<GamePanel>().SetPlayerAvatar();
+        }
+
         public void UpdateGUIButtons()
         {
             gamePanel.GetComponent<GamePanel>().UpdateGUIButtons();
@@ -383,7 +388,7 @@ namespace SignedInitiative
 
         public void UpdateResearchPanel(int playerIndex)
         {
-            if (playerIndex == GameManager.Instance.activePlayerIndex)
+            if (playerIndex == GameManager.Instance.activePlayerIndex && GameManager.Instance.activePlayer.showAction())
             {
                 gamePanel.GetComponent<GamePanel>().UpdateResearchPanel();
             }

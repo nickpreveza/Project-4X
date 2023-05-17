@@ -38,7 +38,7 @@ public class WorldHex : MonoBehaviour
 
     bool isHidden = true;
     GameObject activeParticle;
-
+    public int aiScore;
     public int InteractivePenalty(WorldHex previousPos)
     {
         if (hexData.type == TileType.SEA || hexData.type == TileType.DEEPSEA)
@@ -66,6 +66,45 @@ public class WorldHex : MonoBehaviour
         return isHidden;
     }
 
+    public bool CanBeReached(int playerIndex, bool canUnitFly = false)
+    {
+        if (hexData.occupied && associatedUnit.playerOwnerIndex != playerIndex)
+        {
+            return false;
+
+        }
+
+        if (canUnitFly)
+        {
+            if (hexData.type == TileType.ICE)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        switch (hexData.type)
+        {
+            case TileType.MOUNTAIN:
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelMountain;
+            case TileType.SEA:
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelSea;
+            case TileType.DEEPSEA:
+                return GameManager.Instance.GetPlayerByIndex(playerIndex).abilities.travelOcean;
+            case TileType.SAND:
+            case TileType.GRASS:
+            case TileType.HILL:
+                return true;
+            case TileType.ICE:
+                return false;
+        }
+
+        return false;
+    }
+    
     public bool CanBeWalked(int playerIndex, bool canUnitFly, bool isEndTile = false)
     {
         if (Hidden())
@@ -587,7 +626,7 @@ public class WorldHex : MonoBehaviour
 
     bool progressPointsAddRunning = false;
 
-    public IEnumerator AddProgressPoint(int value, bool showQuests)
+    public IEnumerator AddProgressPoint(int value)
     {
         if (value == 0)
         {
@@ -629,60 +668,13 @@ public class WorldHex : MonoBehaviour
                     }
 
                     yield return new WaitForSeconds(1f);
-                    if (showQuests)
+                    if (!GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).isAI())
                     {
-                        string popupTitle = cityData.cityName + " Leved Up";
-                        string popupDescr = cityData.cityName + " has grown to level " + cityData.level + "\n\n Choose your reward: ";
-
-
-                        if (cityData.level == 2)
-                        {
-                            UIManager.Instance.waitingForPopupReply = true;
-                            UIManager.Instance.OpenPopupReward(
-                                popupTitle,
-                                popupDescr,
-                             "+" + GameManager.Instance.data.unitReward.ToString() + " Unit",
-                             () => PopUpCustomRewardUnit(),
-                             "Expand Visibility",
-                             () => PopUpCustomRewardVisibility()
-                             );
-                        }
-                        else if (cityData.level == 3)
-                        {
-                            UIManager.Instance.waitingForPopupReply = true;
-                            UIManager.Instance.OpenPopupReward(
-                                popupTitle,
-                                popupDescr,
-                              "Expand Borders",
-                             () => PopupCustomRewardBorders(),
-                             "+" + GameManager.Instance.data.currencyReward + " Stars",
-                             () => PopupCustomRewardStars()
-                             );
-                        }
-                        else if (cityData.level == 4)
-                        {
-                            UIManager.Instance.waitingForPopupReply = true;
-                            UIManager.Instance.OpenPopupReward(
-                                popupTitle,
-                                popupDescr,
-                             "+" + GameManager.Instance.data.populationReward + " Population",
-                             () => PopupCustomRewardPopulation(),
-                             "+" + GameManager.Instance.data.productionReward + " Output",
-                             () => PopupCustomRewardProduction()
-                             );
-                        }
-                        else if (cityData.level > 4)
-                        {
-                            if (hexData.occupied)
-                            {
-                                if (!associatedUnit.TryToMoveRandomly())
-                                {
-                                    associatedUnit.Death(false);
-                                }
-                            }
-
-                            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false, true);
-                        }
+                        PopupLevelRewards(cityData.level);
+                    }
+                    else
+                    {
+                        InstantLevelRewards(cityData.level);
                     }
 
 
@@ -729,6 +721,116 @@ public class WorldHex : MonoBehaviour
 
     }
 
+    public void InstantLevelRewards(int cityLevel)
+    {
+        float randomChoice = Random.Range(0f, 1f);
+        bool chooseLeft = false;
+        if (randomChoice > 0.5)
+        {
+            chooseLeft = true;
+        }
+        if (cityData.level == 2)
+        {
+            if (chooseLeft)
+            {
+                PopUpCustomRewardUnit();
+            }
+            else
+            {
+                PopUpCustomRewardVisibility();
+            }
+            
+        }
+        else if (cityData.level == 3)
+        {
+            if (chooseLeft)
+            {
+                PopupCustomRewardBorders();
+            }
+            else
+            {
+                PopupCustomRewardStars();
+            }
+        }
+        else if (cityData.level == 4)
+        {
+            if (chooseLeft)
+            {
+                PopupCustomRewardPopulation();
+            }
+            else
+            {
+                PopupCustomRewardProduction();
+            }
+        }
+        else if (cityData.level > 4)
+        {
+            if (hexData.occupied)
+            {
+                if (!associatedUnit.TryToMoveRandomly())
+                {
+                    associatedUnit.Death(false);
+                }
+            }
+
+            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false, true);
+        }
+    }
+
+    public void PopupLevelRewards(int cityLevel)
+    {
+        string popupTitle = cityData.cityName + " Leved Up";
+        string popupDescr = cityData.cityName + " has grown to level " + cityData.level + "\n\n Choose your reward: ";
+
+        if (cityData.level == 2)
+        {
+            UIManager.Instance.waitingForPopupReply = true;
+            UIManager.Instance.OpenPopupReward(
+                popupTitle,
+                popupDescr,
+             "+" + GameManager.Instance.data.unitReward.ToString() + " Unit",
+             () => PopUpCustomRewardUnit(),
+             "Expand Visibility",
+             () => PopUpCustomRewardVisibility()
+             );
+        }
+        else if (cityData.level == 3)
+        {
+            UIManager.Instance.waitingForPopupReply = true;
+            UIManager.Instance.OpenPopupReward(
+                popupTitle,
+                popupDescr,
+              "Expand Borders",
+             () => PopupCustomRewardBorders(),
+             "+" + GameManager.Instance.data.currencyReward + " Stars",
+             () => PopupCustomRewardStars()
+             );
+        }
+        else if (cityData.level == 4)
+        {
+            UIManager.Instance.waitingForPopupReply = true;
+            UIManager.Instance.OpenPopupReward(
+                popupTitle,
+                popupDescr,
+             "+" + GameManager.Instance.data.populationReward + " Population",
+             () => PopupCustomRewardPopulation(),
+             "+" + GameManager.Instance.data.productionReward + " Output",
+             () => PopupCustomRewardProduction()
+             );
+        }
+        else if (cityData.level > 4)
+        {
+            if (hexData.occupied)
+            {
+                if (!associatedUnit.TryToMoveRandomly())
+                {
+                    associatedUnit.Death(false);
+                }
+            }
+
+            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex), UnitType.Knight, this, true, false, true);
+        }
+    }
 
     void PopUpCustomRewardVisibility()
     {
@@ -823,7 +925,7 @@ public class WorldHex : MonoBehaviour
 
     void AddLevelPoint(int points)
     {
-        StartCoroutine(AddProgressPoint(points, true));
+        StartCoroutine(AddProgressPoint(points));
     }
 
     void RemoveLevelPoint(int points)
@@ -1339,9 +1441,12 @@ public class WorldHex : MonoBehaviour
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
         cityData.isUnderSiege = false;
+        cityData.population = 0;
+       
 
         if (isThisATakeOver)
         {
+            cityView.ResetPopulation();
             foreach (WorldHex newHex in cityData.cityHexes)
             {
                 newHex.SetAsOccupiedByCity(this);
@@ -1547,6 +1652,10 @@ public class WorldHex : MonoBehaviour
 
     public void Select(bool isRepeat)
     {
+        if (GameManager.Instance.activePlayer.isAI())
+        {
+            return;
+        }
         if (isHidden)
         {
             //GameManager.Instance.Spaw

@@ -128,7 +128,7 @@ public class MapManager : MonoBehaviour
 
     void OnTurnStarted(int playerIndex)
     {
-        if (playerIndex == GameManager.Instance.activePlayerIndex)
+        if (playerIndex == GameManager.Instance.activePlayerIndex) //this check is stupid 
         {
             if (toEnableSiegeIconOn.Count > 0)
             {
@@ -612,10 +612,15 @@ public class MapManager : MonoBehaviour
 
                     hex.SetHiddenState(false, !isInstant);
                     hex.SpawnParticle(GameManager.Instance.cloudInteractionParticle);
+
+                    if (!GameManager.Instance.GetPlayerByIndex(playerIndex).hexesToCheck.Contains(hex))
+                    {
+                        GameManager.Instance.GetPlayerByIndex(playerIndex).hexesToCheck.Add(hex);
+                    }
                 }
             }
         }
-        else
+        else //maybe we will never go into this one 
         {
             foreach (WorldHex hex in hexesToUnhide)
             {
@@ -659,16 +664,35 @@ public class MapManager : MonoBehaviour
             for (int row = 0; row < mapRows; row++)
             {
                 WorldHex hex = hexes[column, row];
-                if (hex.hexData.type != TileType.ICE)
+                List<WorldHex> hexesToAdd = GetHexesListWithinRadius(hex.hexData, 1);
+                if (hexesToAdd.Contains(hex))
                 {
-                    List<WorldHex> hexesToAdd = GetHexesListWithinRadius(hex.hexData, 1);
-                    if (hexesToAdd.Contains(hex))
-                    {
-                        hexesToAdd.Remove(hex);
-                    }
-                    hex.adjacentHexes = hexesToAdd;
+                    hexesToAdd.Remove(hex);
                 }
-               
+
+                hex.adjacentHexes = hexesToAdd;
+
+                if (hexesWhereCityCanSpawn.Contains(hex))
+                {
+                    int seaCount = 0;
+                    foreach (WorldHex adjHex in hexesToAdd)
+                    {
+                        if (adjHex.hexData.type == TileType.SEA || adjHex.hexData.type == TileType.DEEPSEA)
+                        {
+                            seaCount++;
+                        }
+                    }
+
+                    if (seaCount > 4)
+                    {
+                        if (hexesWhereCityCanSpawn.Contains(hex))
+                        {
+                            hexesWhereCityCanSpawn.Remove(hex);
+                        }
+
+                    }
+                }
+                        
             }
         }
     }

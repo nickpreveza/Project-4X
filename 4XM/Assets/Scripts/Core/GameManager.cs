@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 using System.Linq;
+using System.Collections;
 
 namespace SignedInitiative
 {
@@ -83,7 +84,7 @@ namespace SignedInitiative
 
         [SerializeField] GameObject assetTest;
         [SerializeField] GameObject menuObjects;
-
+        [SerializeField] Brain brain;
 
 
         void Awake()
@@ -98,6 +99,7 @@ namespace SignedInitiative
             }
 
             assetTest.SetActive(false);
+            brain = GetComponent<Brain>();
         }
 
         
@@ -170,73 +172,103 @@ namespace SignedInitiative
         {
             string popupTitle = "Monument Claimed";
             string popupDescr = "You received a reward";
-
-            switch (rewardIndex)
+            if (!activePlayer.isAI())
             {
-                case 0:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "+" + data.currencyReward.ToString() + " Stars",
-                     () => PopupCustomRewardCurrency()
-                     );
-                    break;
-                case 1:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "Extra Sight",
-                     () => PopupCustomRewardVisibility(unit)
-                     );
-                    break;
-                case 2:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "Warrior Recruited",
-                     () => PopupCustomRewardUnit(unit, UnitType.Melee)
-                     );
-                    break;
-                case 3:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "Archer Recruited",
-                     () => PopupCustomRewardUnit(unit, UnitType.Ranged)
-                     );
-                    break;
-                case 4:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                   "Cavalry Recruited",
-                     () => PopupCustomRewardUnit(unit, UnitType.Cavalry)
-                     );
-                    break;
-                case 5:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "+" + data.currencyReward.ToString() + " Stars",
-                     () => PopupCustomRewardCurrency()
-                     );
-                    break;
-                case 6:
-                    UIManager.Instance.waitingForPopupReply = true;
-                    UIManager.Instance.OpenPopUpMonument(
-                        popupTitle,
-                        popupDescr,
-                     "+" + data.currencyReward.ToString() + " Stars",
-                     () => PopupCustomRewardCurrency()
-                     );
-                    break;
+                switch (rewardIndex)
+                {
+                    case 0:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "+" + data.currencyReward.ToString() + " Stars",
+                         () => PopupCustomRewardCurrency()
+                         );
+                        break;
+                    case 1:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "Extra Sight",
+                         () => PopupCustomRewardVisibility(unit)
+                         );
+                        break;
+                    case 2:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "Warrior Recruited",
+                         () => PopupCustomRewardUnit(unit, UnitType.Melee)
+                         );
+                        break;
+                    case 3:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "Archer Recruited",
+                         () => PopupCustomRewardUnit(unit, UnitType.Ranged)
+                         );
+                        break;
+                    case 4:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                       "Cavalry Recruited",
+                         () => PopupCustomRewardUnit(unit, UnitType.Cavalry)
+                         );
+                        break;
+                    case 5:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "+" + data.currencyReward.ToString() + " Stars",
+                         () => PopupCustomRewardCurrency()
+                         );
+                        break;
+                    case 6:
+                        UIManager.Instance.waitingForPopupReply = true;
+                        UIManager.Instance.OpenPopUpMonument(
+                            popupTitle,
+                            popupDescr,
+                         "+" + data.currencyReward.ToString() + " Stars",
+                         () => PopupCustomRewardCurrency()
+                         );
+                        break;
+                }
             }
+            else
+            {
+                switch (rewardIndex)
+                {
+                    case 0:
+                        PopupCustomRewardCurrency();
+                        break;
+                    case 1:
+                        PopupCustomRewardVisibility(unit);
+                        break;
+                    case 2:
+                        PopupCustomRewardUnit(unit, UnitType.Melee);
+                        break;
+                    case 3:
+                        PopupCustomRewardUnit(unit, UnitType.Ranged);
+                        break;
+                    case 4:
+                        PopupCustomRewardUnit(unit, UnitType.Cavalry);
+                        break;
+                    case 5:
+                        PopupCustomRewardCurrency();
+                        break;
+                    case 6:
+                        PopupCustomRewardCurrency();
+                        break;
+                }
+            }
+          
         }
 
         public void PopupCustomRewardCurrency()
@@ -384,7 +416,7 @@ namespace SignedInitiative
             activePlayer.StartTurn();
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();
-           
+
             if (activePlayer.showAction())
             {
                 if (activePlayer.lastMovedUnit != null)
@@ -395,16 +427,39 @@ namespace SignedInitiative
                 {
                     SI_CameraController.Instance.PanToHex(player.playerCities[0]);
                 }
+
+                MapManager.Instance.UpdateCloudView();
+                UIManager.Instance.UpdateHUD();
+                UIManager.Instance.UpdateResearchPanel(activePlayerIndex);
             }
+            else
+            {
+                UIManager.Instance.UpdateOnlyPlayerAvatar();
+            }
+            
            
-            MapManager.Instance.UpdateCloudView();
-            UIManager.Instance.UpdateHUD();
-            UIManager.Instance.UpdateResearchPanel(activePlayerIndex);
             UIManager.Instance.StartTurnAnim();
             SI_EventManager.Instance.OnTurnStarted(activePlayerIndex);
+
+            if (activePlayer.isAI())
+            {
+                brain.StartEvaluation(activePlayer);
+            }
+          
         }
 
-      
+        public void SpawnUnitAction(int actionCost, UnitType unitType, WorldHex cityHex)
+        {
+            UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, cityHex, true, true, true);
+
+            if (activePlayer.showAction())
+            {
+                UIManager.Instance.RefreshHexView();
+                UIManager.Instance.UpdateHUD();
+            }
+        }
+
+       
         public void LocalEndTurn()
         {
             UIManager.Instance.EndTurn();

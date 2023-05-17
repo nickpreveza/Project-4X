@@ -119,6 +119,10 @@ public class CityView : MonoBehaviour
 
     public void AddPopulation()
     {
+        if (levelHolder.transform.childCount < parentHex.cityData.population)
+        {
+            Debug.LogError("thats the level holder bug you smuck");
+        }
         levelHolder.transform.GetChild(parentHex.cityData.population-1).GetComponent<LevelPoint>().SetUnitPoint(true);
     }
 

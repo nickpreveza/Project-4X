@@ -72,7 +72,7 @@ public class WorldUnit : MonoBehaviour
 
     public bool shouldHealThisTurn;
     WorldHex tempPathParent;
-
+    public WorldHex assignedPathTarget;
     public int PathfindingActionPoints //a normal move actions will cost 2.
     {
         get
@@ -504,8 +504,6 @@ public class WorldUnit : MonoBehaviour
             Debug.LogError("Unit was not interactable but tried to capture a city");
             return;
         }
-
-        originCity.RemoveAllPopulation();
         originCity = parentHex;
         GameManager.Instance.activePlayer.AddCity(parentHex);
         visualAnim.SetTrigger("Capture");
@@ -859,6 +857,8 @@ public class WorldUnit : MonoBehaviour
         if (path == null)
         {
             Debug.LogError("Invalid tile - no path could be found");
+            SI_CameraController.Instance.animationsRunning = false;
+            yield break;
         }
         tempPathParent = parentHex;
         float moveAnimationLenght = 1f;
@@ -1016,7 +1016,7 @@ public class WorldUnit : MonoBehaviour
             UnitManager.Instance.SelectUnit(this);
             SI_CameraController.Instance.animationsRunning = false;
 
-        }      
+        }
     }
 
     public void Select()
