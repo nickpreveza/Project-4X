@@ -162,6 +162,12 @@ public class Brain : MonoBehaviour
             if (!city.hexData.isConnectedToCapital)
             {
                 List<WorldHex> pathFromCapital = MapManager.Instance.FindPathForRoadGeneration(player.index, player.capitalCity, city);
+
+                if (pathFromCapital == null)
+                {
+                    continue;
+                }
+
                 int costForPath = pathFromCapital.Count * GameManager.Instance.data.roadCost;
 
                 if (GameManager.Instance.CanPlayerAfford(player.index, costForPath))

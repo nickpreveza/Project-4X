@@ -827,10 +827,15 @@ public class WorldUnit : MonoBehaviour
             enemyUnit.parentHex.HideHighlight();
             enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
             enemyUnit.Deselect();
-            if (enemyUnit.originCity.cityData.population > 0)
-             {           
-                enemyUnit.originCity.RemovePopulation();
-             }
+
+            if (enemyUnit.originCity != null)
+            {
+                if (enemyUnit.originCity.cityData.population > 0)
+                {
+                    enemyUnit.originCity.RemovePopulation();
+                }
+            }
+            
       
             GameManager.Instance.sessionPlayers[enemyUnit.playerOwnerIndex].playerUnits.Remove(this);
             enemyUnit.parentHex.UnitOut(this, true);
@@ -912,11 +917,15 @@ public class WorldUnit : MonoBehaviour
     public void InstantDeath(bool affectstats)
     {
         Deselect();
-        if (originCity.cityData.population > 0)
-        {           
-            originCity.RemovePopulation();
+
+        if (originCity != null)
+        {
+            if (originCity.cityData.population > 0)
+            {
+                originCity.RemovePopulation();
+            }
         }
-      
+
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
         parentHex.UnitOut(this, true);
         Destroy(this.gameObject);
