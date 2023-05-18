@@ -25372,40 +25372,6 @@ MonoBehaviour:
   oneMoreTurn: {fileID: 607107297}
   oneMoreTurnText: {fileID: 1256192572}
   winnerText: {fileID: 732061617}
---- !u!1 &1820759755 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8911852278046293655, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-    type: 3}
-  m_PrefabInstance: {fileID: 8911852279030341444}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1820759756
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1820759755}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 676a7ba8e2cfadb47ba8336ac5881b60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  state: 4
-  cityScore: 20
-  monumentScore: 15
-  adjCityScore: 10
-  adjToEnemyScore: 0
-  adjHiddenScore: 5
-  adjMonument: 5
-  adjUnreachable: -5
-  unitsWithPaths: []
-  assignedHexes: []
-  knownPlayerHexes: []
-  upgradingCities: 0
-  lookingForResearch: 0
-  checkForActions: 0
-  checkForPaths: 0
-  assignPaths: 0
 --- !u!1 &1831433055
 GameObject:
   m_ObjectHideFlags: 0
@@ -32880,7 +32846,7 @@ PrefabInstance:
     - target: {fileID: 4395748060535445101, guid: 9426ea574818a784ba13c5db43b14d95,
         type: 3}
       propertyPath: skipMenuForNetworking
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4395748060535445107, guid: 9426ea574818a784ba13c5db43b14d95,
         type: 3}
@@ -34557,16 +34523,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
-      propertyPath: noFog
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: AIEnabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
       propertyPath: assetTest
       value: 
       objectReference: {fileID: 1142379689}
@@ -34575,183 +34531,6 @@ PrefabInstance:
       propertyPath: menuObjects
       value: 
       objectReference: {fileID: 13258767}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: useRandomSeed
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: isSinglePlayer
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: VisualizeAIMoves
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: data.destroyCost
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: allAbilitiesUnlocked
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: startWithALotOfMoney
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: data.productionReward
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: cloudInteractionParticle
-      value: 
-      objectReference: {fileID: 1612655853807616, guid: 30f3b2139dd4ab24f8332e5f2cf4c3de,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[0].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[1].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[2].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[3].type
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[2].index
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[3].index
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[2].isAlive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[3].isAlive
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[2].civilization
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[3].civilization
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].cityObject
-      value: 
-      objectReference: {fileID: 6995895175278294341, guid: 1fce23eae35dcd3478d3b4a7eb124855,
-        type: 3}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].unitInactive.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].unitInactive.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[0].unitInactive.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[1].unitInactive.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[1].unitInactive.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[1].unitInactive.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[2].unitInactive.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[2].unitInactive.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[2].unitInactive.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[3].unitInactive.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[3].unitInactive.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[3].unitInactive.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: gameCivilizations.Array.data[3].unitInactive.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[2].abilities.unitSwordsman
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: sessionPlayers.Array.data[3].abilities.unitSwordsman
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293650, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: m_RootOrder
@@ -34811,11 +34590,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: GameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 8911852278046293655, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2dcaba713d87e58438acfe0d9fe7ecd1, type: 3}

@@ -170,7 +170,7 @@ Material:
     - _SelfShadingSize: 0.477
     - _ShadowStrength: 1
     - _Shininess: 0
-    - _Smoothness: 0.5
+    - _Smoothness: 0.06
     - _SmoothnessSource: 0
     - _SmoothnessTextureChannel: 0
     - _SpecSource: 0

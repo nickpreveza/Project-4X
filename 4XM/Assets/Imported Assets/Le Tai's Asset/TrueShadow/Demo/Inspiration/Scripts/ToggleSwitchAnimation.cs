@@ -17,12 +17,12 @@ public class ToggleSwitchAnimation : MonoBehaviour
 
     Coroutine anim;
 
-    void Start()
-    {
-        var isOn = GetComponent<Toggle>().isOn;
+    public void Setup(){
+         var isOn = GetComponent<Toggle>().isOn;
         background.color = isOn ? onColor : offColor;
         handle.SetInsetAndSizeFromParentEdge(isOn ? Right : Left, handleInset, handle.rect.width);
-    }
+
+    } 
 
     IEnumerator Animate(float fromX, Color fromColor)
     {

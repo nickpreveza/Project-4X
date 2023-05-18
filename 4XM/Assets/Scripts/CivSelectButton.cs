@@ -51,13 +51,25 @@ public class CivSelectButton : MonoBehaviour
         select.onClick.AddListener(() => handler.SetupSelectYourCiv(playerIndex, true));
         if (Initializer.Instance.setupPlayers[playerIndex].type == PlayerType.AI)
         {
+            isLocal.isOn = false;
+
            // isLocal.isOn = false;
-           // isLocal.GetComponent<ToggleSwitchAnimation>().Toggle(isLocal.isOn);
+           ToggleSwitchAnimation anim = isLocal.GetComponent<ToggleSwitchAnimation>();
+            anim.Setup();
+
+            isLocal.onValueChanged.AddListener(ToggleChanged);
+            isLocal.onValueChanged.AddListener(anim.Toggle);
         }
         else
         {
-           // isLocal.isOn = true;
-           // isLocal.GetComponent<ToggleSwitchAnimation>().Toggle(isLocal.isOn);
+          isLocal.isOn = true;
+          
+           ToggleSwitchAnimation anim = isLocal.GetComponent<ToggleSwitchAnimation>();
+            anim.Setup();
+
+            isLocal.onValueChanged.AddListener(ToggleChanged);
+            isLocal.onValueChanged.AddListener(anim.Toggle);
+            
         }
         if (playerIndex > 1)
         {

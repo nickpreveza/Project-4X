@@ -84,7 +84,7 @@ namespace SignedInitiative
 
         [SerializeField] GameObject assetTest;
         [SerializeField] GameObject menuObjects;
-        [SerializeField] Brain brain;
+        public Brain brain;
 
         public List<Abilities> abilityPath = new List<Abilities>();
         void Awake()
@@ -287,7 +287,7 @@ namespace SignedInitiative
             WorldHex targetHex = unit.parentHex;
             if (!unit.TryToMoveRandomly())
             {
-                unit.Death(false);
+                unit.InstantDeath(false);
             }
 
             UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, false);
@@ -454,7 +454,10 @@ namespace SignedInitiative
 
             if (activePlayer.showAction())
             {
-                UIManager.Instance.RefreshHexView();
+                if (!activePlayer.isAI())
+                {
+                    UIManager.Instance.RefreshHexView();
+                }
                 UIManager.Instance.UpdateHUD();
             }
         }
@@ -530,7 +533,11 @@ namespace SignedInitiative
             List<WorldUnit> playerUnits = new List<WorldUnit>(player.playerUnits);
             foreach(WorldUnit unit in playerUnits)
             {
-                unit.Death(false);
+                if (unit != null)
+                {
+                    unit.InstantDeath(false);
+                }
+              
             }
 
             player.isAlive = false;
@@ -722,6 +729,8 @@ namespace SignedInitiative
             if (updateUI)
             {
                 UIManager.Instance.UpdateResearchPanel(playerIndex);
+
+                if (!activePlayer.isAI())
                 UIManager.Instance.RefreshHexView();
             }
            
@@ -840,6 +849,9 @@ namespace SignedInitiative
         //hard coded unfortunatelly, but alas, time is our master
         public Abilities GetAbilityPath(int playerIndex, Abilities abilityID)
         {
+            if (abilityID == Abilities.NONE){
+                return abilityID;
+            }
             if (IsAbilityPurchased(playerIndex, abilityID))
             {
                 return abilityID;

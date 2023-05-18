@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 8911852278046293650}
   - component: {fileID: 8911852278046293649}
   - component: {fileID: 8911852278046293648}
+  - component: {fileID: 1820759756}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -65,7 +66,7 @@ MonoBehaviour:
     civType: 0
     unitOverrides: []
     unitColor: {r: 0.29966182, g: 0.60020804, b: 0.6981132, a: 1}
-    unitInactive: {r: 0, g: 0.31309974, b: 0.41509432, a: 1}
+    unitInactive: {r: 0, g: 0, b: 0, a: 1}
     uiColorActive: {r: 0.12322002, g: 0.53514403, b: 0.6698113, a: 1}
     uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.7294118}
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
@@ -84,7 +85,7 @@ MonoBehaviour:
     civType: 2
     unitOverrides: []
     unitColor: {r: 0.7921569, g: 0.7000085, b: 0.34901962, a: 1}
-    unitInactive: {r: 0.509434, g: 0.43305507, b: 0.16100036, a: 0.8235294}
+    unitInactive: {r: 0, g: 0, b: 0, a: 0.8235294}
     uiColorActive: {r: 0.6509434, g: 0.5778223, b: 0.29169634, a: 1}
     uiColorInactive: {r: 0.3962264, g: 0.34874994, b: 0.16634032, a: 0.74509805}
     borderColor: {r: 0.79215693, g: 0.7019608, b: 0.34901962, a: 0.6392157}
@@ -104,7 +105,7 @@ MonoBehaviour:
     civType: 1
     unitOverrides: []
     unitColor: {r: 0.7364821, g: 0.3476326, b: 0.7924528, a: 1}
-    unitInactive: {r: 0.5720125, g: 0.22027412, b: 0.6226415, a: 0.8235294}
+    unitInactive: {r: 0, g: 0, b: 0, a: 0.8235294}
     uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
     uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.74509805}
     borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
@@ -124,7 +125,7 @@ MonoBehaviour:
     civType: 3
     unitOverrides: []
     unitColor: {r: 0.8490566, g: 0.21472621, b: 0.16420433, a: 1}
-    unitInactive: {r: 0.509434, g: 0.24012178, b: 0.21867214, a: 0.8235294}
+    unitInactive: {r: 0, g: 0, b: 0, a: 1}
     uiColorActive: {r: 0.6603774, g: 0.2593355, b: 0.22739409, a: 1}
     uiColorInactive: {r: 0.4811321, g: 0.20996511, b: 0.18836774, a: 0.74509805}
     borderColor: {r: 0.745283, g: 0.22784366, b: 0.18632075, a: 0.6392157}
@@ -139,16 +140,17 @@ MonoBehaviour:
     startingAbility: 0
   data:
     roadCost: 2
-    destroyCost: 0
+    destroyCost: 2
     visibilityReward: 3
     unitReward: 0
     currencyReward: 5
-    productionReward: 1
+    productionReward: 2
     populationReward: 3
     rangeReward: 2
     startCityOutput: 2
     traderActionReward: 10
     startCurrencyAmount: 10
+    pillageCost: 3
     itchURL: https://nickpreveza.itch.io/project-4x
     websiteURL: 
     discordURL: 
@@ -157,8 +159,9 @@ MonoBehaviour:
   isPaused: 0
   menuActive: 0
   isSinglePlayer: 0
-  oneMoreTurn: 0
-  AIEnabled: 0
+  VisualizeAIMoves: 1
+  AIEnabled: 1
+  destroyResourcesToo: 0
   useRandomSeed: 0
   allAbilitiesUnlocked: 0
   startWithALotOfMoney: 0
@@ -222,8 +225,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -232,6 +233,10 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   - isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 0
@@ -286,8 +291,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -296,11 +299,15 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   sessionPlayers:
   - isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 1
-    type: 1
+    type: 3
     civilization: 0
     abilities:
       travelMountain: 0
@@ -351,8 +358,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -361,10 +366,14 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   - isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 1
-    type: 1
+    type: 3
     civilization: 1
     abilities:
       travelMountain: 0
@@ -415,8 +424,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -425,12 +432,148 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
+    type: 3
+    civilization: 2
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 1
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 2
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
+  - isFirstPlayer: 0
+    activatedOnSetup: 0
+    isAlive: 1
+    type: 3
+    civilization: 3
+    abilities:
+      travelMountain: 0
+      travelSea: 0
+      travelOcean: 0
+      unitSwordsman: 1
+      unitArcher: 0
+      unitHorserider: 0
+      unitTrebucet: 0
+      unitShield: 0
+      unitKnight: 0
+      unitLance: 0
+      unitTrader: 0
+      unitDiplomat: 0
+      fishHarvest: 0
+      fruitHarvest: 0
+      farmHarvest: 0
+      mineHarvest: 0
+      animalHarvest: 0
+      forestHarvest: 0
+      roads: 0
+      destroyAbility: 0
+      forestCut: 0
+      createFish: 0
+      createFruit: 0
+      createForest: 0
+      createFarm: 0
+      createAnimals: 0
+      createMine: 0
+      shipUpgrade: 0
+      forestMasterBuilding: 0
+      mineMasterBuilding: 0
+      farmMasterBuilding: 0
+      fishMasterBuilding: 0
+      fishBuilding: 0
+      portBuilding: 0
+      guildBuilding: 0
+    index: 3
+    totalScore: 0
+    developmentScore: 0
+    researchScore: 0
+    militaryScore: 0
+    turnCount: 0
+    stars: 0
+    expectedStars: 0
+    unlockedAbiltiesCount: 0
+    currentRank: 0
+    capitalCity: {fileID: 0}
+    playerUnits: []
+    playerCities: []
+    lastMovedUnit: {fileID: 0}
+    abilityDatabase: []
+    clearedHexes: []
+    clientID: 0
+    playerCanBuyAbility: 0
+    playerCanMoveUnit: 0
+    playerCanPlaceResource: 0
+    playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   rankedPlayers: []
   activePlayer:
     isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 1
-    type: 0
+    type: 3
     civilization: 0
     abilities:
       travelMountain: 0
@@ -481,8 +624,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -491,6 +632,10 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   singlePlayer:
     isFirstPlayer: 0
     activatedOnSetup: 0
@@ -546,8 +691,6 @@ MonoBehaviour:
     capitalCity: {fileID: 0}
     playerUnits: []
     playerCities: []
-    playerBorders: []
-    unitsWithActions: []
     lastMovedUnit: {fileID: 0}
     abilityDatabase: []
     clearedHexes: []
@@ -556,6 +699,10 @@ MonoBehaviour:
     playerCanMoveUnit: 0
     playerCanPlaceResource: 0
     playerHasActions: 0
+    cityUnderSiege: 0
+    unitsWithPaths: []
+    assignedHexes: []
+    unitsWithActions: []
   activePlayerIndex: 0
   abilities:
   - abilityID: 0
@@ -742,6 +889,8 @@ MonoBehaviour:
     type: 3}
   landInternactionParticle: {fileID: 8748687995501502678, guid: 62334a566bbfe3945bc7bd0c02ca1c9e,
     type: 3}
+  cloudInteractionParticle: {fileID: 1612655853807616, guid: 30f3b2139dd4ab24f8332e5f2cf4c3de,
+    type: 3}
   explosionParticle: {fileID: 5410931681460609965, guid: c991286e10b6b4cb9a9f020e809118ac,
     type: 3}
   resourceHarvestParticle: {fileID: 1597686569084602476, guid: 78ee1fc7beb65da41ad23fc1c2e427b9,
@@ -751,3 +900,34 @@ MonoBehaviour:
     type: 3}
   assetTest: {fileID: 0}
   menuObjects: {fileID: 0}
+  brain: {fileID: 0}
+  abilityPath: 
+--- !u!114 &1820759756
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8911852278046293655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 676a7ba8e2cfadb47ba8336ac5881b60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  state: 4
+  cityScore: 30
+  monumentScore: 25
+  enemyHexScore: 20
+  adjCityScore: 10
+  adjToEnemyScore: 15
+  adjHiddenScore: 5
+  adjMonument: 5
+  adjUnreachable: -5
+  assignedHexes: []
+  knownPlayerHexes: []
+  upgradingCities: 0
+  lookingForResearch: 0
+  checkForActions: 0
+  checkForPaths: 0
+  assignPaths: 0
+  combatRunning: 0

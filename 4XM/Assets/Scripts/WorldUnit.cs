@@ -254,6 +254,14 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator DeathWithDelay()
     {
+        Deselect();
+        if (originCity.cityData.population > 0)
+        {           
+            originCity.RemovePopulation();
+        }
+      
+        GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
+        parentHex.UnitOut(this, true);
         yield return new WaitForSeconds(.1f);
         Death(false); //switch this to consume or something, different animation probably. It still is death. 
     }
@@ -781,6 +789,7 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
+        GameManager.Instance.brain.combatRunning = true;
         SI_CameraController.Instance.animationsRunning = true;
         VisualAttack(enemyUnit.parentHex);
         yield return new WaitForSeconds(.7f);
@@ -789,14 +798,31 @@ public class WorldUnit : MonoBehaviour
         {
             enemyUnit.visualAnim.SetTrigger("Die");
             enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
-
-            yield return new WaitForSeconds(1f);
+            enemyUnit.Deselect();
+            if (enemyUnit.originCity.cityData.population > 0)
+             {           
+                enemyUnit.originCity.RemovePopulation();
+             }
+      
+            GameManager.Instance.sessionPlayers[enemyUnit.playerOwnerIndex].playerUnits.Remove(this);
+            enemyUnit.parentHex.UnitOut(this, true);
+            yield return new WaitForSeconds(.5f);
             enemyUnit.Death(true);
 
             if (!attackIsRanged)
             {
                 yield return new WaitForSeconds(0.2f);
                 SetMoveTarget(enemyHex, true, true, true);
+                yield return new WaitForSeconds(1f);
+
+                GameManager.Instance.brain.combatRunning = false;
+
+            }
+            else
+            {
+                
+                 GameManager.Instance.brain.combatRunning = false;
+
             }
 
         }
@@ -811,8 +837,18 @@ public class WorldUnit : MonoBehaviour
                 {
                     visualAnim.SetTrigger("Die");
                     SpawnParticle(UnitManager.Instance.unitDeathParticle);
+                     SI_CameraController.Instance.animationsRunning = false;
+                    Deselect();
+                    if (originCity.cityData.population > 0)
+                     {           
+                         originCity.RemovePopulation();
+                     }
+      
+                    GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
+                    parentHex.UnitOut(this, true);
+                   
                     yield return new WaitForSeconds(1f);
-                    SI_CameraController.Instance.animationsRunning = false;
+                     GameManager.Instance.brain.combatRunning = false;
                     Death(true);
                     yield break;
                 }
@@ -828,20 +864,24 @@ public class WorldUnit : MonoBehaviour
         isAttacking = false;
         UnitManager.Instance.SelectUnit(this);
         SI_CameraController.Instance.animationsRunning = false;
+        GameManager.Instance.brain.combatRunning = false;
     }
 
     public void Death(bool affectStats)
     {
+        
+        Destroy(this.gameObject);
+    }
+
+    public void InstantDeath(bool affectstats)
+    {
         Deselect();
         if (originCity.cityData.population > 0)
-        {
+        {           
             originCity.RemovePopulation();
         }
       
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
-        //Do some cool UI stuff
-        //Maybe particles
-        //def sound
         parentHex.UnitOut(this, true);
         Destroy(this.gameObject);
     }

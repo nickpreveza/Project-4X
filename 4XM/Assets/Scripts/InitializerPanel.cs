@@ -183,6 +183,7 @@ public class InitializerPanel : UIPanel
 
         int totalPlayers = 0;
         List<Civilizations> typesFound = new List<Civilizations>();
+        Initializer.Instance.setupPlayers[0].type = PlayerType.LOCAL;
         for (int i = 0; i < Initializer.Instance.setupPlayers.Count; i++)
         {
             if (Initializer.Instance.setupPlayers[i].activatedOnSetup)

@@ -11,6 +11,8 @@ public class Brain : MonoBehaviour
     [Header("Hex Evaluation Scores")]
     public int cityScore;
     public int monumentScore;
+
+    public int enemyHexScore;
     public int adjCityScore;
     public int adjToEnemyScore;
     public int adjHiddenScore;
@@ -18,8 +20,6 @@ public class Brain : MonoBehaviour
     public int adjUnreachable; //use this to avoid being stuck 
 
     Player player;
-
-    public List<WorldUnit> unitsWithPaths = new List<WorldUnit>(); //retain these to reach target
     public List<WorldHex> assignedHexes = new List<WorldHex>(); //store unit targets in order to not assign them again
     public List<WorldHex> knownPlayerHexes = new List<WorldHex>(); //get hexes to check 
     Dictionary<Abilities, int> abilitiesTargetToUnlock = new Dictionary<Abilities, int>();
@@ -29,6 +29,8 @@ public class Brain : MonoBehaviour
     public bool checkForActions;
     public bool checkForPaths;
     public bool assignPaths;
+
+    public bool combatRunning;
     public void StartEvaluation(Player _player)
     {
         player = _player;
@@ -48,7 +50,7 @@ public class Brain : MonoBehaviour
         //13. Assign new paths by evaluating the known tiles 
         //14. if any units remain without paths, assign a tile of its adjacent ones 
         //15 combat check for all the units 
-        unitsWithPaths = new List<WorldUnit>(player.unitsWithPaths);
+    
         knownPlayerHexes = new List<WorldHex>(player.clearedHexes);
         assignedHexes = new List<WorldHex>(player.assignedHexes);
 
@@ -90,6 +92,7 @@ public class Brain : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
         }
+        
         //For units with actions, do them actions
 
         checkForPaths = true;
@@ -110,13 +113,16 @@ public class Brain : MonoBehaviour
         List<WorldUnit> remainingUnits = new List<WorldUnit>(player.playerUnits);
         foreach (WorldUnit unit in remainingUnits)
         {
+            if (unit == null) { continue; }
             unit.ValidateRemainigActions();
 
             if (unit.currentAttackCharges > 0)
             {
                 if (CanUnitEngageInCombat(unit))
                 {
-                    yield return new WaitForSeconds(1f);
+                    while(combatRunning){
+                        yield return new WaitForEndOfFrame();
+                    }
                     continue;
                 }
             }
@@ -207,17 +213,25 @@ public class Brain : MonoBehaviour
     void FindAssignedHexes()
     {
         assignedHexes.Clear();
-
-        foreach(WorldUnit unit in player.unitsWithPaths)
+        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(player.unitsWithPaths);
+        foreach(WorldUnit unit in unitsWithPathsTemp)
         {
-            if (unit.assignedPathTarget != null)
+            if (unit == null)
             {
-                assignedHexes.Add(unit.assignedPathTarget);
+                player.unitsWithPaths.Remove(unit);
             }
             else
             {
-                unitsWithPaths.Remove(unit);
+                if (unit.assignedPathTarget != null)
+                {
+                    assignedHexes.Add(unit.assignedPathTarget);
+                }
+                else
+                {
+                    player.unitsWithPaths.Remove(unit);
+                }
             }
+            
         }
 
         foreach (WorldHex assignedHex in assignedHexes)
@@ -360,6 +374,17 @@ public class Brain : MonoBehaviour
             }
         }
 
+        if (!GameManager.Instance.IsAbilityPurchased(player.index, Abilities.Climbing))
+        {
+            if (abilitiesTargetToUnlock.ContainsKey(Abilities.Climbing))
+            {
+                abilitiesTargetToUnlock[Abilities.Climbing] += 2;
+            }
+            else
+            {
+                abilitiesTargetToUnlock.Add(Abilities.Climbing, 2);
+            }   
+        }
         //force the port purchase
         if (player.turnCount > 5)
         {
@@ -405,7 +430,7 @@ public class Brain : MonoBehaviour
         }
 
         Debug.Log("Ability AI decided to buy is: " + abilityToBuy);
-
+        //TODO: somehow tried to buy a NONE ability
         if (abilityToBuy != Abilities.NONE)
         {
             if (GameManager.Instance.CanPlayerAfford(player.index, player.abilityDictionary[abilityToBuy].calculatedAbilityCost))
@@ -473,6 +498,7 @@ public class Brain : MonoBehaviour
         List<WorldUnit> remainingUnits = new List<WorldUnit>(player.unitsWithActions);
         foreach (WorldUnit unit in remainingUnits)
         {
+            if (unit == null) { continue; }
             if (CanUnitDoButtonAction(unit))
             {
                 player.unitsWithActions.Remove(unit);
@@ -482,7 +508,9 @@ public class Brain : MonoBehaviour
             else if (CanUnitEngageInCombat(unit))
             {
                 player.unitsWithActions.Remove(unit);
-                yield return new WaitForSeconds(1f);
+                while(combatRunning){
+                    yield return new WaitForEndOfFrame();
+                }
                 continue;
             }
         }
@@ -495,21 +523,27 @@ public class Brain : MonoBehaviour
     {
         checkForPaths = true;
 
-        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(unitsWithPaths);
+        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(player.unitsWithPaths);
 
         foreach (WorldUnit unit in unitsWithPathsTemp)
         {
+            if (unit == null)
+            {
+                player.unitsWithPaths.Remove(unit);
+                continue;
+            }
+            if (unit.assignedPathTarget == null)
+            {
+                player.unitsWithPaths.Remove(unit);
+                continue;
+            }
             unit.ValidateRemainigActions();
 
             if (unit.currentMovePoints <= 0 || !unit.isInteractable)
             {
                 continue;
             }
-            if (unit.assignedPathTarget == null)
-            {
-                unitsWithPaths.Remove(unit);
-                continue;
-            }
+          
 
             int turnsToTarget;
             //check if path is still valid
@@ -552,6 +586,10 @@ public class Brain : MonoBehaviour
    
     public bool CanUnitEngageInCombat(WorldUnit unit)
     {
+        combatRunning = true;
+        if (unit == null){
+            return false;
+        }
         if (unit.currentAttackCharges <= 0)
         {
             return false;
@@ -560,6 +598,8 @@ public class Brain : MonoBehaviour
         List<WorldHex> attackableHexes = UnitManager.Instance.GetAttackableHexes(unit);
         WorldUnit selectedUnitToAttack = null;
         int leastHealth = 0;
+        //TODO: More logic here for different types of units 
+        //TODO: avoid combat if necessary 
         if (attackableHexes != null && attackableHexes.Count > 0)
         {
             foreach (WorldHex hex in attackableHexes)
@@ -572,17 +612,18 @@ public class Brain : MonoBehaviour
             }
         }
 
-        if (selectedUnitToAttack != null)
+        if (selectedUnitToAttack != null && unit != null)
         {
             unit.Attack(selectedUnitToAttack.parentHex);
+            
             return true;
         }
-
+        combatRunning = false;
         return false;
-      
     }
     public bool CanUnitDoButtonAction(WorldUnit unit)
     {
+         if (unit == null) { return false; }
         if (unit.parentHex.hexData.hasCity && unit.parentHex.hexData.playerOwnerIndex != unit.playerOwnerIndex)
         {
             if (unit.buttonActionPossible)
@@ -681,6 +722,7 @@ public class Brain : MonoBehaviour
             {
                 continue;
             }
+            if (unit == null) { continue; }
             int newDistance = MapManager.Instance.GetDistance(unit.parentHex, hex);
             if (newDistance < distance)
             {
@@ -751,6 +793,11 @@ public class Brain : MonoBehaviour
         if (hex.hexData.hasCity && !hex.hexData.cityHasBeenClaimed)
         {
             hexBaseValue += cityScore;
+        }
+
+        if (hex.hexData.playerOwnerIndex != -1 && hex.hexData.playerOwnerIndex != player.index)
+        {
+            hexBaseValue += enemyHexScore;
         }
 
         if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)

@@ -1205,7 +1205,7 @@ public class MapManager : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("GetHexAt: Value outside of grid bounds");
+            //Debug.LogWarning("GetHexAt: Value outside of grid bounds");
             return null;
         }
     }

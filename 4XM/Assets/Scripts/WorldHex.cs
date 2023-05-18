@@ -778,7 +778,7 @@ public class WorldHex : MonoBehaviour
             {
                 if (!associatedUnit.TryToMoveRandomly())
                 {
-                    associatedUnit.Death(false);
+                    associatedUnit.InstantDeath(false);
                 }
             }
 
@@ -833,7 +833,7 @@ public class WorldHex : MonoBehaviour
             {
                 if (!associatedUnit.TryToMoveRandomly())
                 {
-                    associatedUnit.Death(false);
+                    associatedUnit.InstantDeath(false);
                 }
             }
 
@@ -853,7 +853,7 @@ public class WorldHex : MonoBehaviour
         {
             if (!associatedUnit.TryToMoveRandomly())
             {
-                associatedUnit.Death(false);
+                associatedUnit.InstantDeath(false);
             }
         }
 

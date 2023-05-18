@@ -368,7 +368,7 @@ public class UnitManager : MonoBehaviour
                 foreach (WorldHex adj in current.adjacentHexes)
                 {
 
-                    if (closedSet.Contains(adj) || !adj.CanBeWalked(unit.playerOwnerIndex, unit.unitReference.flyAbility, adj == end)) //can't afford to enter
+                    if (closedSet.Contains(adj) || !adj.CanBeWalked(unit.playerOwnerIndex, unit.unitReference.flyAbility, true))//adj == end)) //can't afford to enter
                     {
                         continue;
                     }
