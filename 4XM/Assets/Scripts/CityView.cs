@@ -260,7 +260,6 @@ public class CityView : MonoBehaviour
             levelPointCreated.SetLevelPoint(false);
             levelPointCreated.SetUnitPoint(false);
             generatedLevelPoints.Add(levelPointCreated);
-            Debug.Log("Created " + i + " level Point for " + parentHex.cityData.cityName);
         }
 
         for(int i = 0; i < parentHex.cityData.population; i++)

@@ -34,8 +34,7 @@ public class Player
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
     public List<WorldHex> playerCities = new List<WorldHex>();
 
-    public List<WorldHex> hexesToCheck = new List<WorldHex>();
-    public List<WorldUnit> unitsWithActions = new List<WorldUnit>();
+   
     
 
     public WorldUnit lastMovedUnit;
@@ -53,6 +52,13 @@ public class Player
     public bool playerCanPlaceResource;
 
     public bool playerHasActions;
+    public bool cityUnderSiege;
+
+    public List<WorldUnit> unitsWithPaths = new List<WorldUnit>();
+    public List<WorldHex> assignedHexes = new List<WorldHex>();
+
+    public List<WorldUnit> unitsWithActions = new List<WorldUnit>();
+
     public bool isAI()
     {
         return type == PlayerType.AI;

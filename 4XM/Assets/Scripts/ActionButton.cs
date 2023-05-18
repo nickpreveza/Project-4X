@@ -20,10 +20,29 @@ public class ActionButton : MonoBehaviour
     Image backgroundImage;
     BuildingType masterBuildingType;
     WorldHex targetHex;
+    WorldUnit targetUnit;
     int actionCost;
     UnitType unitType;
 
- 
+    public void SetDataForHeal(HexView newHandler, WorldUnit newUnit)
+    {
+        backgroundImage = GetComponent<Image>();
+        parentHandler = newHandler;
+        targetUnit = newUnit;
+        buttonAction.onClick.RemoveAllListeners();
+        researchVisual.SetActive(false);
+
+        buttonName.text = "Heal";
+        actionCost = 0;
+        actionCostText.text = actionCost.ToString();
+        costVisual.SetActive(false);
+        backgroundImage.sprite = parentHandler.actionBackground;
+
+        buttonAction.interactable = true;
+        buttonAction.onClick.AddListener(() => HealUnit());
+
+    }
+
     public void SetDataForPillage(HexView newHandler, WorldHex newHex, bool isBuilding, bool isEnabled)
     {
         backgroundImage = GetComponent<Image>();
@@ -357,6 +376,11 @@ public class ActionButton : MonoBehaviour
     public void TraderAction()
     {
         targetHex.associatedUnit.TraderAction();
+    }
+
+    public void HealUnit()
+    {
+        targetUnit.HealAction();
     }
 
     public void HarvestResource()

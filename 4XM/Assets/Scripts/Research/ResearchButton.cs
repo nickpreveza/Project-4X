@@ -26,19 +26,19 @@ public class ResearchButton: MonoBehaviour
     public void FetchData()
     {
         buttonText.text = GameManager.Instance.abilitiesDictionary[abilityID].abilityName;
-        fetchedAbilityCost = GameManager.Instance.GetCurrentPlayerAbilityCost(abilityID);
+        fetchedAbilityCost = GameManager.Instance.GetAbilityCost(GameManager.Instance.activePlayer.index, abilityID);
         buttonCost.text = fetchedAbilityCost.ToString();
 
-        if (GameManager.Instance.IsAbilityUnlocked(abilityID))
+        if (GameManager.Instance.IsAbilityUnlocked(GameManager.Instance.activePlayer.index, abilityID))
         {
-            if (GameManager.Instance.isAbilityPurchased(abilityID))
+            if (GameManager.Instance.IsAbilityPurchased(GameManager.Instance.activePlayer.index, abilityID))
             {
                 SetAsPurchased();
                 return;
             }
 
             //mmove this to somethingi like CanActivePlayerAfford(value)
-            if (GameManager.Instance.CanActivePlayerAffordAbility(abilityID))
+            if (GameManager.Instance.CanPlayerAffordAbility(GameManager.Instance.activePlayer.index, abilityID))
             {
                 SetAsAvailable();
             }

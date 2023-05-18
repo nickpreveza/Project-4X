@@ -155,7 +155,10 @@ public class UnitManager : MonoBehaviour
 
     public void SelectUnit(WorldUnit newUnit)
     {
-        
+        if (GameManager.Instance.activePlayer.isAI())
+        {
+            return;
+        }
         if (selectedUnit != null)
         {
             selectedUnit.Deselect();
@@ -210,15 +213,8 @@ public class UnitManager : MonoBehaviour
                 }
             }
 
-            if (selectedUnit.isBoat || selectedUnit.isShip)
-            {
-                selectedUnit.ValidateRemainigActions(selectedUnit.boatReference);
-            }
-            else
-            {
-                selectedUnit.ValidateRemainigActions(selectedUnit.unitReference);
-            }
-          
+            selectedUnit.ValidateRemainigActions();
+
 
             if (selectedUnit.isInteractable)
             {
@@ -340,8 +336,13 @@ public class UnitManager : MonoBehaviour
                 }
 
                 path.Reverse();
-                turnsToTarget = Mathf.RoundToInt((float)path.Count / (float)unit.unitReference.walkRange);
-                Debug.Log("Unit: " + unit.unitReference.name + "Tile: " + end.name + " Turns to target tile: " + turnsToTarget);
+                int walkRange = unit.currentWalkRange;
+                if (walkRange < 1)
+                {
+                    walkRange = 1;
+                }
+                turnsToTarget = Mathf.CeilToInt((float)path.Count / (float)walkRange);
+                //Debug.Log("Unit: " + unit.unitReference.name + "Tile: " + end.name + " Turns to target tile: (" + path.Count + "/" + unit.currentWalkRange + ") " + turnsToTarget);
                 return path;
             }
 

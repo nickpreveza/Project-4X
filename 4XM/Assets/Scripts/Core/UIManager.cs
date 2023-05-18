@@ -165,6 +165,11 @@ namespace SignedInitiative
         {
             gamePanel.GetComponent<GamePanel>().HideResearchPanel();
         }
+
+        public void HideOverviewPanel()
+        {
+            gamePanel.GetComponent<GamePanel>().HideOverviewPanel();
+        }
         public void OpenResearchPanel()
         {
             gamePanel.GetComponent<GamePanel>().OpenResearchPanel();
@@ -238,6 +243,13 @@ namespace SignedInitiative
                 allPanelsList.Add(newPanel);
             }
         }
+
+        
+        public void AIisPlayingTurn(bool activate)
+        {
+            gamePanel.GetComponent<GamePanel>().AIisPlayingTurn(activate);
+        }
+
 
         public void EndTurn()
         {

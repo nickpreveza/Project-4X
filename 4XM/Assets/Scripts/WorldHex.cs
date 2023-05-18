@@ -68,11 +68,6 @@ public class WorldHex : MonoBehaviour
 
     public bool CanBeReached(int playerIndex, bool canUnitFly = false)
     {
-        if (hexData.occupied && associatedUnit.playerOwnerIndex != playerIndex)
-        {
-            return false;
-
-        }
 
         if (canUnitFly)
         {
@@ -527,6 +522,20 @@ public class WorldHex : MonoBehaviour
             if (associatedUnit.isBoat || associatedUnit.isShip)
             {
                 associatedUnit.DisableBoats();
+            }
+        }
+
+        if (GameManager.Instance.GetPlayerByIndex(associatedUnit.playerOwnerIndex).assignedHexes.Contains(this))
+        {
+            GameManager.Instance.GetPlayerByIndex(associatedUnit.playerOwnerIndex).assignedHexes.Remove(this);
+        }
+
+        if (associatedUnit.assignedPathTarget == this)
+        {
+            associatedUnit.assignedPathTarget = null;
+            if (GameManager.Instance.GetPlayerByIndex(associatedUnit.playerOwnerIndex).unitsWithPaths.Contains(associatedUnit))
+            {
+                GameManager.Instance.GetPlayerByIndex(associatedUnit.playerOwnerIndex).unitsWithPaths.Remove(associatedUnit);
             }
         }
     }

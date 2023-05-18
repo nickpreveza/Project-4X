@@ -8,218 +8,56 @@ public class Brain : MonoBehaviour
 {
     public AIState state = AIState.Start;
 
-    [Header("Tile Type Score")]
-    public int unexploredTileValue = 1;
-    public int occupiedTileValue = 1;
-
-
-    [Header("Adjacent Score")]
-    public int playerOwnerIndex = -1;
-
+    [Header("Hex Evaluation Scores")]
+    public int cityScore;
+    public int monumentScore;
+    public int adjCityScore;
+    public int adjToEnemyScore;
+    public int adjHiddenScore;
+    public int adjMonument;
+    public int adjUnreachable; //use this to avoid being stuck 
 
     Player player;
 
     public List<WorldUnit> unitsWithPaths = new List<WorldUnit>(); //retain these to reach target
     public List<WorldHex> assignedHexes = new List<WorldHex>(); //store unit targets in order to not assign them again
-
-    public List<WorldUnit> playerUnitsToMove = new List<WorldUnit>(); // get player units
-  
-    public List<WorldHex> unexploredHexesOfInterest = new List<WorldHex>(); //get hexes to check 
-    Dictionary<ResourceType, int> bestResearchToUnlockDictionary = new Dictionary<ResourceType, int>();
+    public List<WorldHex> knownPlayerHexes = new List<WorldHex>(); //get hexes to check 
+    Dictionary<Abilities, int> abilitiesTargetToUnlock = new Dictionary<Abilities, int>();
+    
     public bool upgradingCities;
+    public bool lookingForResearch;
+    public bool checkForActions;
+    public bool checkForPaths;
+    public bool assignPaths;
     public void StartEvaluation(Player _player)
     {
         player = _player;
 
-        //all the units start as unmoved
-        playerUnitsToMove = new List<WorldUnit>(player.playerUnits);
-        //hexes to check become that as they are uncovered
-        unexploredHexesOfInterest = new List<WorldHex>(player.clearedHexes);
-        bestResearchToUnlockDictionary.Clear();
+        //1. get the player units
+        //2. get the player units with assigned paths
+        //3. get the cleared hexes 
+        //4. clear the research goal 
+        //5. find the assigned hexes
+        //6. remove them from the cleared hexes 
+        //7. Start upgrading cities - Upgrade resources, spawn units 
+        //8. Find the research to buy - Find the tech tree paths, and also infuse things you might want 
+        //9: TODO: Force Guild and Port lookups
+        //10. Upgrade cities again, with the newfound research you've gained 
+        //11. Foreach unit, check if you can do an action first: City capture, monument capture 
+        //12. Check for active paths, move on the paths
+        //13. Assign new paths by evaluating the known tiles 
+        //14. if any units remain without paths, assign a tile of its adjacent ones 
+        //15 combat check for all the units 
+        unitsWithPaths = new List<WorldUnit>(player.unitsWithPaths);
+        knownPlayerHexes = new List<WorldHex>(player.clearedHexes);
+        assignedHexes = new List<WorldHex>(player.assignedHexes);
+
+        abilitiesTargetToUnlock.Clear();
+
+        FindAssignedHexes();
+
+       
         StartCoroutine(NormalTurn());
-    }
-
-    public bool lookingForResearch;
-    void FindResearch()
-    {
-        lookingForResearch = true;
-        foreach (WorldHex city in player.playerCities)
-        {
-            foreach (WorldHex cityHex in city.cityData.cityHexes)
-            {
-                if (cityHex.hexData.hasResource)
-                {
-                    if (!GameManager.Instance.CanPlayerHarvestResource(player.index, cityHex.hexData.resourceType))
-                    {
-                        if (bestResearchToUnlockDictionary.ContainsKey(cityHex.hexData.resourceType))
-                        {
-                            bestResearchToUnlockDictionary[cityHex.hexData.resourceType]++;
-                        }
-                        else
-                        {
-                            bestResearchToUnlockDictionary.Add(cityHex.hexData.resourceType, 1);
-                        }
-                    }
-                }
-                if (cityHex.hexData.hasBuilding)
-                {
-                    //todo: find reserach for master
-                }
-            }
-        }
-
-        //find resource to buy - TODO: applicable to all types of research 
-        ResourceType resourceType = ResourceType.EMPTY;
-        int mostWanted = 0;
-        foreach (ResourceType foundType in bestResearchToUnlockDictionary.Keys)
-        {
-            if (bestResearchToUnlockDictionary[foundType] > mostWanted)
-            {
-                resourceType = foundType;
-                mostWanted = bestResearchToUnlockDictionary[foundType];
-            }
-        }
-
-        Debug.Log("Resource to buy ability for: " + resourceType);
-
-        //that's probably not being stopped from unnlcoking abilities that are not available to the player.
-        Abilities ability = GameManager.Instance.GetAbilityAssociation(resourceType);
-        if (ability != Abilities.NONE)
-        {
-            if (GameManager.Instance.CanPlayerAfford(player.index, player.abilityDictionary[ability].calculatedAbilityCost))
-            {
-                GameManager.Instance.UnlockAbility(player.index, ability, player.showAction(), true);
-            }
-        }
-
-        lookingForResearch = false;
-
-    }
-
-    IEnumerator UpgradeCities()
-    {
-        upgradingCities = true;
-        foreach (WorldHex city in player.playerCities)
-        {
-            int unitCost;
-            UnitType unitToSpawn = SelectUnitTypeToSpawn(out unitCost);
-
-            if (!city.hexData.occupied && !city.cityData.HasReachedMaxPopulation)
-            {
-                if (GameManager.Instance.CanActivePlayerAfford(unitCost))
-                {
-                    GameManager.Instance.SpawnUnitAction(unitCost, unitToSpawn, city);
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-
-            foreach (WorldHex cityHex in city.cityData.cityHexes)
-            {
-                if (cityHex.hexData.hasResource)
-                {
-                    if (cityHex.hexData.occupied && cityHex.associatedUnit.playerOwnerIndex != player.index)
-                    {
-                        continue;
-                    }
-
-                    Resource resource = MapManager.Instance.GetResourceByType(cityHex.hexData.resourceType);
-
-                    if (GameManager.Instance.CanPlayerHarvestResource(player.index, cityHex.hexData.resourceType))
-                    {
-                        if (GameManager.Instance.CanPlayerAfford(player.index, resource.harvestCost))
-                        {
-                            GameManager.Instance.RemoveStars(player.index, resource.harvestCost);
-                            cityHex.HarvestResource();
-                            yield return new WaitForSeconds(3f);
-                        }
-
-                    }
-                }
-            }
-        }
-
-        upgradingCities = false;
-
-    }
-
-    public bool checkForActions = false;
-    IEnumerator CheckForActionsAndCombatFirst()
-    {
-        checkForActions = true;
-        List<WorldUnit> remainingUnits = new List<WorldUnit>(playerUnitsToMove);
-        foreach (WorldUnit unit in remainingUnits)
-        {
-            if (CanUnitDoButtonAction(unit))
-            {
-                playerUnitsToMove.Remove(unit);
-                if (unitsWithPaths.Contains(unit))
-                {
-                    unitsWithPaths.Remove(unit);
-                }
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-            if (CanUnitEngageInCombat(unit))
-            {
-                playerUnitsToMove.Remove(unit);
-                if (unitsWithPaths.Contains(unit))
-                {
-                    unitsWithPaths.Remove(unit);
-                }
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-        }
-
-        checkForActions = false;
-    }
-
-    public bool checkForPaths = false;
-    IEnumerator CheckForActivePaths()
-    {
-        checkForPaths = true;
-
-        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(unitsWithPaths);
-        foreach (WorldUnit unit in unitsWithPathsTemp)
-        {
-            if (unit.assignedPathTarget == null)
-            {
-                unitsWithPaths.Remove(unit);
-                continue;
-            }
-
-            int turnsToTarget;
-            //check if path is still valid
-            List<WorldHex> path = UnitManager.Instance.FindMultiturnPath(unit, unit.assignedPathTarget, out turnsToTarget);
-
-            if (path != null && path.Count > 0)
-            {
-                if (turnsToTarget <= 1)
-                {
-                    unitsWithPaths.Remove(unit);
-                }
-
-                if (unit.currentWalkRange > path.Count)
-                {
-                    unit.SetMoveTarget(path[path.Count - 1], true, true, false);
-                    playerUnitsToMove.Remove(unit);
-                }
-                else
-                {
-                    unit.SetMoveTarget(path[unit.currentWalkRange - 1], true, true, false); ;
-                    unit.assignedPathTarget = null;
-                    playerUnitsToMove.Remove(unit);
-                }
-            }
-            else
-            {
-                unitsWithPaths.Remove(unit);
-                unit.assignedPathTarget = null;
-            }
-            yield return new WaitForSeconds(1f);
-        }
-
-        checkForPaths = false;
     }
 
     IEnumerator NormalTurn()
@@ -260,57 +98,58 @@ public class Brain : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
         }
+
+        assignPaths = true;
+        StartCoroutine(AssignPathsToUnits());
+        while (assignPaths)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
        
+        //last check for combat 
+        List<WorldUnit> remainingUnits = new List<WorldUnit>(player.playerUnits);
+        foreach (WorldUnit unit in remainingUnits)
+        {
+            unit.ValidateRemainigActions();
+
+            if (unit.currentAttackCharges > 0)
+            {
+                if (CanUnitEngageInCombat(unit))
+                {
+                    yield return new WaitForSeconds(1f);
+                    continue;
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(1f);
+        GameManager.Instance.LocalEndTurn();
+    }
+
+    IEnumerator AssignPathsToUnits()
+    {
+        assignPaths = true;
 
         List<WorldHex> hexesToReach = new List<WorldHex>();
         List<WorldHex> hexesToGoClose = new List<WorldHex>();
-        List<WorldHex> hexesToAssign = new List<WorldHex>();
-        foreach (WorldHex hex in unexploredHexesOfInterest)
-        {
 
-            int hexScore;
-            EvaluateHex(hex, out hexScore);
-            hex.aiScore = hexScore;
+        foreach (WorldHex hex in knownPlayerHexes)
+        {
+            hex.aiScore = EvaluateHex(hex);
 
             if (assignedHexes.Contains(hex))
             {
                 continue;
             }
-            if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != player.index)
-            {
-                hexesToReach.Add(hex);
-            }
-            else if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != player.index)
+          
+            if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != player.index)
             {
                 hexesToGoClose.Add(hex);
-                player.hexesToCheck.Remove(hex);
             }
-            else if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
+           
+            if (hex.aiScore > 0)
             {
                 hexesToReach.Add(hex);
-            }
-            else if (hex.aiScore > 0)
-            {
-                hexesToReach.Add(hex);
-            }
-            else
-            {
-                player.hexesToCheck.Remove(hex);
-            }
-
-        }
-
-        foreach(WorldHex hex in hexesToReach)
-        {
-            WorldUnit unitToAssignToHex = FindClosestUnit(hex);
-            if (unitToAssignToHex != null)
-            {
-                if (TryAssignUnit(unitToAssignToHex, hex))
-                {
-                    //unit will be removed from playerUnitsToMove
-                    //hex will be added to hexesWithpaths
-                    yield return new WaitForSeconds(1f);
-                }
             }
         }
 
@@ -323,72 +162,394 @@ public class Brain : MonoBehaviour
 
                 if (TryAssignUnit(unitToAssignToHex, adjHex))
                 {
-                    if (player.hexesToCheck.Contains(hex))
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+            else
+            {
+                break;
+            }
+        }
+        List<WorldUnit> remainingUnits = new List<WorldUnit>(player.unitsWithActions);
+        if (remainingUnits.Count > 0)
+        {
+            List<WorldHex> hexesToSort = new List<WorldHex>(hexesToReach);
+
+
+            hexesToReach = hexesToSort.OrderByDescending(x => x.aiScore).ToList();
+
+
+            //choose how many units to send to where
+            foreach (WorldHex hex in hexesToReach)
+            {
+                WorldUnit unitToAssignToHex = FindClosestUnit(hex);
+                if (unitToAssignToHex != null)
+                {
+                    if (TryAssignUnit(unitToAssignToHex, hex))
                     {
-                        player.hexesToCheck.Remove(hex);
+                        //unit will be removed from playerUnitsToMove
+                        //hex will be added to hexesWithpaths
+                        yield return new WaitForSeconds(1f);
                     }
-
-                    yield return new WaitForSeconds(1f);
                 }
+                else
+                {
+                    break;
+                }
+            }
+
+        }
+
+        assignPaths = false;
+    }
+
+
+    void FindAssignedHexes()
+    {
+        assignedHexes.Clear();
+
+        foreach(WorldUnit unit in player.unitsWithPaths)
+        {
+            if (unit.assignedPathTarget != null)
+            {
+                assignedHexes.Add(unit.assignedPathTarget);
+            }
+            else
+            {
+                unitsWithPaths.Remove(unit);
             }
         }
 
-        List<WorldUnit> remainingUnits = new List<WorldUnit>(playerUnitsToMove);
-        foreach (WorldUnit unit in remainingUnits)
+        foreach (WorldHex assignedHex in assignedHexes)
         {
-            List<WorldHex> possibleMovesForUnit = UnitManager.Instance.GetWalkableHexes(unit);
-
-            int highestRating = -1;
-            WorldHex selectedHex = null;
-
-            foreach (WorldHex hex in possibleMovesForUnit)
+            if (knownPlayerHexes.Contains(assignedHex))
             {
-                if (hex.hexData.occupied)
-                {
-                    continue;
-                }
-
-                int hexRating;
-                EvaluateHex(hex, out hexRating);
-
-                if (hexRating > highestRating)
-                {
-                    selectedHex = hex;
-                }
-            }
-
-            if (selectedHex != null)
-            {
-                Debug.Log("Selected Hex was: " + selectedHex + ", rating of: " + highestRating);
-                if (TryAssignUnit(unit, selectedHex))
-                {
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-
-            if (CanUnitEngageInCombat(unit))
-            {
-                yield return new WaitForSeconds(1f);
-            }
-        }
-
-        foreach (WorldUnit unit in player.playerUnits)
-        {
-            unit.ValidateRemainigActions(unit.unitReference);
-
-            if (unit.currentAttackCharges > 0)
-            {
-                if (CanUnitEngageInCombat(unit))
-                {
-                    unitsWithPaths.Remove(unit);
-                    playerUnitsToMove.Remove(unit);
-                    yield return new WaitForSeconds(2f);
-                    continue;
-                }
+                knownPlayerHexes.Remove(assignedHex);
             }
         }
     }
 
+    
+    void FindResearch()
+    {
+        lookingForResearch = true;
+        List<WorldHex> playerCities = new List<WorldHex>(player.playerCities);
+        foreach (WorldHex city in playerCities)
+        {
+            List<WorldHex> cityHexes = new List<WorldHex>(city.cityData.cityHexes);
+            foreach (WorldHex cityHex in cityHexes)
+            {
+                if (cityHex.hexData.hasResource)
+                {
+                    if (!GameManager.Instance.CanPlayerHarvestResource(player.index, cityHex.hexData.resourceType))
+                    {
+                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, cityHex.hexData.resourceType);   
+                        if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                        {
+                            abilitiesTargetToUnlock[abilityTarget]++;
+                        }
+                        else
+                        {
+                            abilitiesTargetToUnlock.Add(abilityTarget, 1);
+                        }
+                    }
+                }
+                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding)
+                {
+                    int forestsWorked = 0;
+                    int minesWorked = 0;
+                    int farmsWorked = 0;
+                    foreach(WorldHex adj in cityHex.adjacentHexes)
+                    {
+                        if (adj.hexData.hasBuilding && adj.hexData.playerOwnerIndex == GameManager.Instance.activePlayer.index)
+                        {
+                            if (adj.hexData.buildingType == BuildingType.ForestWorked)
+                            {
+                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                                {
+                                    forestsWorked++;
+                                }
+                            }
+                            else if (adj.hexData.buildingType == BuildingType.FarmWorked)
+                            {
+                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
+                                {
+                                    farmsWorked++;
+                                }
+                            }
+                            else if (adj.hexData.buildingType == BuildingType.MineWorked)
+                            {
+                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.MineMaster))
+                                {
+                                    minesWorked++;
+                                }
+                            }
+                        }
+                    }
+
+                    if (player.turnCount > 15)
+                    {
+                        if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
+                        {
+                            Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.Guild);
+                            if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                            {
+                                if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                                {
+                                    abilitiesTargetToUnlock[abilityTarget]++;
+                                }
+                                else
+                                {
+                                    abilitiesTargetToUnlock.Add(abilityTarget, 1);
+                                }
+                            }
+                        }
+                    }
+                   
+
+                    if (forestsWorked > 0)
+                    {
+                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.ForestMaster);
+                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                        {
+                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                            {
+                                abilitiesTargetToUnlock[abilityTarget] += forestsWorked;
+                            }
+                            else
+                            {
+                                abilitiesTargetToUnlock.Add(abilityTarget, forestsWorked);
+                            }
+                        }
+                    }
+
+                    if (minesWorked > 0)
+                    {
+                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.MineMaster);
+                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                        {
+                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                            {
+                                abilitiesTargetToUnlock[abilityTarget] += minesWorked;
+                            }
+                            else
+                            {
+                                abilitiesTargetToUnlock.Add(abilityTarget, minesWorked);
+                            }
+                        }
+                    }
+
+                    if (farmsWorked > 0)
+                    {
+                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.FarmMaster);
+                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                        {
+                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                            {
+                                abilitiesTargetToUnlock[abilityTarget] += farmsWorked;
+                            }
+                            else
+                            {
+                                abilitiesTargetToUnlock.Add(abilityTarget, farmsWorked);
+                            }
+                        }
+                    }
+
+                   
+                }
+            }
+        }
+
+        //force the port purchase
+        if (player.turnCount > 5)
+        {
+            if (!GameManager.Instance.IsAbilityPurchased(player.index, Abilities.Port))
+            {
+                if (abilitiesTargetToUnlock.ContainsKey(Abilities.Port))
+                {
+                    abilitiesTargetToUnlock[Abilities.Port] += 5;
+                }
+                else
+                {
+                    abilitiesTargetToUnlock.Add(Abilities.Port, 5);
+                }
+            }
+        }
+
+        //force to expand into ocean
+        if (player.turnCount > 10 && GameManager.Instance.IsAbilityPurchased(player.index, Abilities.Port))
+        {
+            if (!GameManager.Instance.IsAbilityPurchased(player.index, Abilities.Ocean))
+            {
+                if (abilitiesTargetToUnlock.ContainsKey(Abilities.Ocean))
+                {
+                    abilitiesTargetToUnlock[Abilities.Ocean] += 5;
+                }
+                else
+                {
+                    abilitiesTargetToUnlock.Add(Abilities.Ocean, 5);
+                }
+            }
+        }
+
+        //find resource to buy - TODO: applicable to all types of research 
+        Abilities abilityToBuy = Abilities.NONE;
+        int mostWanted = 0;
+        foreach (Abilities foundType in abilitiesTargetToUnlock.Keys)
+        {
+            if (abilitiesTargetToUnlock[foundType] > mostWanted)
+            {
+                abilityToBuy = foundType;
+                mostWanted = abilitiesTargetToUnlock[foundType];
+            }
+        }
+
+        Debug.Log("Ability AI decided to buy is: " + abilityToBuy);
+
+        if (abilityToBuy != Abilities.NONE)
+        {
+            if (GameManager.Instance.CanPlayerAfford(player.index, player.abilityDictionary[abilityToBuy].calculatedAbilityCost))
+            {
+                GameManager.Instance.UnlockAbility(player.index, abilityToBuy, player.showAction(), true);
+            }
+        }
+
+        lookingForResearch = false;
+
+    }
+
+    IEnumerator UpgradeCities()
+    {
+        upgradingCities = true;
+        List<WorldHex> playerCities = new List<WorldHex>(player.playerCities);
+        foreach (WorldHex city in playerCities)
+        {
+            int unitCost;
+            UnitType unitToSpawn = SelectUnitTypeToSpawn(out unitCost);
+
+            if (!city.hexData.occupied && !city.cityData.HasReachedMaxPopulation)
+            {
+                if (GameManager.Instance.CanActivePlayerAfford(unitCost))
+                {
+                    GameManager.Instance.SpawnUnitAction(unitCost, unitToSpawn, city);
+                    yield return new WaitForSeconds(1f);
+                }
+            }
+
+            List<WorldHex> cityHexes = new List<WorldHex>(city.cityData.cityHexes);
+            foreach (WorldHex cityHex in cityHexes)
+            {
+                if (cityHex.hexData.hasResource)
+                {
+                    if (cityHex.hexData.occupied && cityHex.associatedUnit.playerOwnerIndex != player.index)
+                    {
+                        continue;
+                    }
+
+                    Resource resource = MapManager.Instance.GetResourceByType(cityHex.hexData.resourceType);
+
+                    if (GameManager.Instance.CanPlayerHarvestResource(player.index, cityHex.hexData.resourceType))
+                    {
+                        if (GameManager.Instance.CanPlayerAfford(player.index, resource.harvestCost))
+                        {
+                            GameManager.Instance.RemoveStars(player.index, resource.harvestCost);
+                            cityHex.HarvestResource();
+                            yield return new WaitForSeconds(3f);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        upgradingCities = false;
+
+    }
+
+  
+    IEnumerator CheckForActionsAndCombatFirst()
+    {
+        checkForActions = true;
+        List<WorldUnit> remainingUnits = new List<WorldUnit>(player.unitsWithActions);
+        foreach (WorldUnit unit in remainingUnits)
+        {
+            if (CanUnitDoButtonAction(unit))
+            {
+                player.unitsWithActions.Remove(unit);
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+            else if (CanUnitEngageInCombat(unit))
+            {
+                player.unitsWithActions.Remove(unit);
+                yield return new WaitForSeconds(1f);
+                continue;
+            }
+        }
+
+        checkForActions = false;
+    }
+
+
+    IEnumerator CheckForActivePaths()
+    {
+        checkForPaths = true;
+
+        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(unitsWithPaths);
+
+        foreach (WorldUnit unit in unitsWithPathsTemp)
+        {
+            unit.ValidateRemainigActions();
+
+            if (unit.currentMovePoints <= 0 || !unit.isInteractable)
+            {
+                continue;
+            }
+            if (unit.assignedPathTarget == null)
+            {
+                unitsWithPaths.Remove(unit);
+                continue;
+            }
+
+            int turnsToTarget;
+            //check if path is still valid
+            List<WorldHex> path = UnitManager.Instance.FindMultiturnPath(unit, unit.assignedPathTarget, out turnsToTarget);
+
+            if (path != null && path.Count > 0)
+            {
+                if (!assignedHexes.Contains(path[path.Count - 1]))
+                {
+                    assignedHexes.Add(path[path.Count - 1]);
+                }
+
+                if (player.unitsWithActions.Contains(unit))
+                {
+                    player.unitsWithActions.Remove(unit);
+                }
+
+                int pathSteps = path.Count - 1;
+
+                if (turnsToTarget > 1)
+                {
+                    if (!player.unitsWithPaths.Contains(unit))
+                    {
+                        player.unitsWithPaths.Add(unit);
+                    }
+
+                    pathSteps = unit.currentWalkRange - 1;
+                }
+
+
+                unit.assignedPathTarget = path[path.Count - 1];
+                unit.SetMoveTarget(path[pathSteps], true, true, false);
+                yield return new WaitForSeconds(1f);
+            } 
+        }
+
+        checkForPaths = false;
+    }
+
+   
     public bool CanUnitEngageInCombat(WorldUnit unit)
     {
         if (unit.currentAttackCharges <= 0)
@@ -406,6 +567,7 @@ public class Brain : MonoBehaviour
                 if (hex.associatedUnit.localHealth > leastHealth)
                 {
                     selectedUnitToAttack = hex.associatedUnit;
+                    leastHealth = hex.associatedUnit.localHealth;
                 }
             }
         }
@@ -426,14 +588,9 @@ public class Brain : MonoBehaviour
             if (unit.buttonActionPossible)
             {
                 unit.CityCaptureAction();
-                if (playerUnitsToMove.Contains(unit))
+                if (player.unitsWithActions.Contains(unit))
                 {
-                    playerUnitsToMove.Remove(unit);
-                }
-
-                if (player.hexesToCheck.Contains(unit.parentHex))
-                {
-                    player.hexesToCheck.Remove(unit.parentHex);
+                    player.unitsWithActions.Remove(unit);
                 }
 
                 if (assignedHexes.Contains(unit.parentHex))
@@ -450,14 +607,9 @@ public class Brain : MonoBehaviour
             {
                 unit.parentHex.HarvestResource();
 
-                if (playerUnitsToMove.Contains(unit))
+                if (player.unitsWithActions.Contains(unit))
                 {
-                    playerUnitsToMove.Remove(unit);
-                }
-
-                if (player.hexesToCheck.Contains(unit.parentHex))
-                {
-                    player.hexesToCheck.Remove(unit.parentHex);
+                    player.unitsWithActions.Remove(unit);
                 }
 
                 if (assignedHexes.Contains(unit.parentHex))
@@ -499,187 +651,6 @@ public class Brain : MonoBehaviour
         //UnitData selectedUnitToSpawn = UnitManager.Instance.GetUnitDataByType(randomType, player.civilization);
     }
 
-    
-   
-    IEnumerator TurnMasterEnum()
-    {
-        List<WorldUnit> unitsWithPathsTemp = new List<WorldUnit>(unitsWithPaths);
-
-        foreach (WorldUnit unit in unitsWithPathsTemp)
-        {
-            if (CanUnitDoButtonAction(unit))
-            {
-                unitsWithPaths.Remove(unit);
-                playerUnitsToMove.Remove(unit);
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-            if (CanUnitEngageInCombat(unit))
-            {
-                unitsWithPaths.Remove(unit);
-                playerUnitsToMove.Remove(unit);
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-            if (unit.assignedPathTarget == null)
-            {
-                unitsWithPaths.Remove(unit);
-                continue;
-            }
-
-           // MoveUnitWithPath(unit);
-            yield return new WaitForSeconds(1f);
-        }
-
-        List<WorldHex> hexesToReach = new List<WorldHex>();
-        List<WorldHex> hexesToGoClose = new List<WorldHex>();
-        //from the new tiles we've found, sort them 
-        foreach (WorldHex hex in unexploredHexesOfInterest)
-        {
-            if (assignedHexes.Contains(hex))
-            {
-                continue;
-            }
-            if (hex.hexData.hasCity && hex.hexData.playerOwnerIndex != player.index)
-            {
-                hexesToReach.Add(hex);
-            }
-            else if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != player.index)
-            {
-                hexesToGoClose.Add(hex);
-                player.hexesToCheck.Remove(hex);
-            }
-            else if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
-            {
-                hexesToReach.Add(hex);
-            }
-            else
-            {
-                player.hexesToCheck.Remove(hex);
-            }
-        }
-
-        foreach(WorldHex hex in hexesToReach)
-        {
-            WorldUnit unitToAssignToHex = FindClosestUnit(hex);
-            if (unitToAssignToHex != null)
-            {
-                if (TryAssignUnit(unitToAssignToHex, hex))
-                {
-                    //unit will be removed from playerUnitsToMove
-                    //hex will be added to hexesWithpaths
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-        }
-
-        foreach(WorldHex hex in hexesToGoClose)
-        {
-            WorldUnit unitToAssignToHex = FindClosestUnit(hex);
-            if (unitToAssignToHex != null)
-            {
-                WorldHex adjHex = FindAdjacentOfEnemyUnit(unitToAssignToHex, hex);
-
-                if (TryAssignUnit(unitToAssignToHex, adjHex))
-                {
-                    if (player.hexesToCheck.Contains(hex))
-                    {
-                        player.hexesToCheck.Remove(hex);
-                    }
-
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-        }
-
-        foreach (WorldHex city in player.playerCities)
-        {
-            upgradingCities = true;
-            //StartCoroutine(CityCheck(city));
-
-            while (upgradingCities)
-            {
-                yield return new WaitForSeconds(0.1f);
-            }
-        }
-        List<WorldUnit> remainingUnits = new List<WorldUnit>(playerUnitsToMove);
-        foreach (WorldUnit unit in remainingUnits)
-        {
-            if (CanUnitDoButtonAction(unit))
-            {
-                playerUnitsToMove.Remove(unit);
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-            if (CanUnitEngageInCombat(unit))
-            {
-                playerUnitsToMove.Remove(unit);
-                yield return new WaitForSeconds(1f);
-                continue;
-            }
-        }
-
-        remainingUnits = new List<WorldUnit>(playerUnitsToMove);
-
-        foreach (WorldUnit unit in remainingUnits)
-        {
-            List<WorldHex> possibleMovesForUnit = UnitManager.Instance.GetWalkableHexes(unit);
-
-            int highestRating = -1;
-            WorldHex selectedHex = null;
-
-            foreach (WorldHex hex in possibleMovesForUnit)
-            {
-                if (hex.hexData.occupied)
-                {
-                    continue;
-                }
-
-                int hexRating;
-                EvaluateHex(hex, out hexRating);
-
-                if (hexRating > highestRating)
-                {
-                    selectedHex = hex;
-                }
-            }
-
-            if (selectedHex != null)
-            {
-                Debug.Log("Selected Hex was: " + selectedHex + ", rating of: " + highestRating);
-                if (TryAssignUnit(unit, selectedHex))
-                {
-                    yield return new WaitForSeconds(1f);
-                }
-            }
-
-            if (CanUnitEngageInCombat(unit))
-            {
-                yield return new WaitForSeconds(1f);
-            }
-        }
-
-        foreach (WorldUnit unit in player.playerUnits)
-        {
-            unit.ValidateRemainigActions(unit.unitReference);
-
-            if (unit.currentAttackCharges > 0)
-            {
-                if (CanUnitEngageInCombat(unit))
-                {
-                    unitsWithPaths.Remove(unit);
-                    playerUnitsToMove.Remove(unit);
-                    yield return new WaitForSeconds(2f);
-                    continue;
-                }
-            }
-        }
-
-
-    }
-
-
-
     public WorldHex FindAdjacentOfEnemyUnit(WorldUnit unit, WorldHex hex)
     {
         WorldHex selectedhex = null;
@@ -702,8 +673,14 @@ public class Brain : MonoBehaviour
     {
         WorldUnit closestUnit = null;
         int distance = 1000;
-        foreach(WorldUnit unit in playerUnitsToMove)
+        List<WorldUnit> remainingUnits = new List<WorldUnit>(player.unitsWithActions);
+
+        foreach(WorldUnit unit in remainingUnits)
         {
+            if (player.unitsWithPaths.Contains(unit))
+            {
+                continue;
+            }
             int newDistance = MapManager.Instance.GetDistance(unit.parentHex, hex);
             if (newDistance < distance)
             {
@@ -729,19 +706,30 @@ public class Brain : MonoBehaviour
                 assignedHexes.Add(hex);
             }
 
-            playerUnitsToMove.Remove(unit);
-
-            if (turnsToTarget > 1)
+            if (player.unitsWithActions.Contains(unit))
             {
-                if (!unitsWithPaths.Contains(unit))
-                {
-                    unitsWithPaths.Add(unit);
-                }
-             
-                unit.assignedPathTarget = hex;
+                player.unitsWithActions.Remove(unit);
             }
 
-            unit.SetMoveTarget(path[unit.currentWalkRange - 1], true, true, false);
+            int pathSteps = path.Count - 1;
+            if (turnsToTarget > 1)
+            {
+                if (!player.unitsWithPaths.Contains(unit))
+                {
+                    player.unitsWithPaths.Add(unit);
+                }
+                
+                if (!player.assignedHexes.Contains(hex))
+                {
+                    player.assignedHexes.Add(hex);
+                }
+
+                pathSteps = unit.currentWalkRange - 1;
+            }
+
+
+            unit.assignedPathTarget = hex;
+            unit.SetMoveTarget(path[pathSteps], true, true, false);
             return true;
         }
         else
@@ -751,66 +739,52 @@ public class Brain : MonoBehaviour
     }
  
 
-    public void EvaluateHex(WorldHex hex, out int hexRating)
+    public int EvaluateHex(WorldHex hex)
     {
         int hexBaseValue = 0;
-        int adjScore = 0;
+
         foreach (WorldHex adj in hex.adjacentHexes)
         {
-            adjScore += ScoreAdjHex(hex);
+            hexBaseValue += ScoreAdjHex(adj);
         }
-
-        hexBaseValue += adjScore;
 
         if (hex.hexData.hasCity && !hex.hexData.cityHasBeenClaimed)
         {
-            hexBaseValue += 10;
+            hexBaseValue += cityScore;
         }
 
         if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
         {
-            hexBaseValue += 10;
+            hexBaseValue += monumentScore;
         }
 
-        if (assignedHexes.Contains(hex))
-        {
-            hexRating = 0;
-        }
-        else
-        {
-            hexRating = hexBaseValue;
-        }
-       
+        return hexBaseValue;
     }
 
     public int ScoreAdjHex(WorldHex hex)
     {
         int hexBaseValue = 0;
-        bool canBeWalked = hex.CanBeWalked(player.index, false, false);
-        if (canBeWalked && !hex.Hidden())
-        {
-            hexBaseValue += 0;
-        }
+
         if (!hex.CanBeReached(player.index))
         {
-            hexBaseValue += 0;
+            hexBaseValue += -1;
         }
         if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != player.index)
         {
-            hexBaseValue += 10;
+            hexBaseValue += adjToEnemyScore;
         }
         if (hex.hexData.hasCity && !hex.hexData.cityHasBeenClaimed)
         {
-            hexBaseValue += 10;
+            hexBaseValue += adjCityScore;
         }
 
         if (hex.hexData.hasResource && hex.hexData.resourceType == ResourceType.MONUMENT)
         {
-            hexBaseValue += 10;
+            hexBaseValue += adjMonument;
         }
-        if (hex.Hidden())
+        if (!player.clearedHexes.Contains(hex))
         {
-            hexBaseValue += 2;
+            hexBaseValue += adjHiddenScore;
         }
 
         return hexBaseValue;

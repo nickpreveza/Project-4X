@@ -356,6 +356,7 @@ public class WorldUnit : MonoBehaviour
         UpdateMaterialColor(civColor);
         SpawnParticle(UnitManager.Instance.unitSpawnParticle);
         UpdateVisualsDirection(false);
+        VisualUpdate();
     }
 
     void UpdateMaterialColor(Color newColor)
@@ -404,15 +405,7 @@ public class WorldUnit : MonoBehaviour
         hasMoved = true;
         hasAttacked = true;
 
-        if (isBoat || isShip)
-        {
-            ValidateRemainigActions(boatReference);
-        }
-        else
-        {
-            ValidateRemainigActions(unitReference);
-        }
-
+        ValidateRemainigActions();
     }
 
     void ResetActions(bool isEndOfTurn, bool skipHeal = false)
@@ -485,16 +478,14 @@ public class WorldUnit : MonoBehaviour
         {
             currentAttackCharges = boatReference.attackCharges;
             currentMovePoints = boatReference.moveCharges;
-
-            ValidateRemainigActions(boatReference);
         }
         else
         {
             currentAttackCharges = unitReference.attackCharges;
             currentMovePoints = unitReference.moveCharges;
-
-            ValidateRemainigActions(unitReference);
         }
+
+        ValidateRemainigActions();
     }
 
     public void CityCaptureAction()
@@ -523,8 +514,13 @@ public class WorldUnit : MonoBehaviour
         UIManager.Instance.ShowHexView(this.parentHex, this);
     }
 
-    public void ValidateRemainigActions(UnitData unitDataToVerify)
+    public void ValidateRemainigActions()
     {
+        UnitData unitDataToVerify = unitReference;
+        if (isBoat || isShip)
+        {
+            unitDataToVerify = boatReference;
+        }
         if (hasMoved)
         {
             if (!unitDataToVerify.canAttackAfterMove)
@@ -718,6 +714,12 @@ public class WorldUnit : MonoBehaviour
         Heal(unitReference.heal);
     }
 
+    public void HealAction()
+    {
+        HealWithDefaultValue();
+        ExhaustActions();
+    }
+
     public void VisualAttack(WorldHex targetHex)
     {
         switch (type)
@@ -856,7 +858,12 @@ public class WorldUnit : MonoBehaviour
 
         if (path == null)
         {
-            Debug.LogError("Invalid tile - no path could be found");
+            Debug.LogWarning("Invalid tile - no path could be found");
+            assignedPathTarget = null;
+            if (GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithPaths.Contains(this))
+            {
+                GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithPaths.Remove(this);
+            }
             SI_CameraController.Instance.animationsRunning = false;
             yield break;
         }

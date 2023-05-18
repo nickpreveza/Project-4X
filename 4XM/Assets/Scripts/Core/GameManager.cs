@@ -86,7 +86,7 @@ namespace SignedInitiative
         [SerializeField] GameObject menuObjects;
         [SerializeField] Brain brain;
 
-
+        public List<Abilities> abilityPath = new List<Abilities>();
         void Awake()
         {
             if (Instance == null)
@@ -769,11 +769,11 @@ namespace SignedInitiative
                 return false;
             }
         }
-        public bool IsAbilityUnlocked(Abilities ability)
+        public bool IsAbilityUnlocked(int playerIndex, Abilities ability)
         {
-            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            if (GetPlayerByIndex(playerIndex).abilityDictionary.ContainsKey(ability))
             {
-                return activePlayer.abilityDictionary[ability].canBePurchased;
+                return GetPlayerByIndex(playerIndex).abilityDictionary[ability].canBePurchased;
             }
             else
             {
@@ -782,14 +782,15 @@ namespace SignedInitiative
 
         }
 
-        public bool isAbilityPurchased(Abilities ability)
+        public bool IsAbilityPurchased(int playerIndex, Abilities ability)
         {
-            return activePlayer.abilityDictionary[ability].hasBeenPurchased;
+            return GetPlayerByIndex(playerIndex).abilityDictionary[ability].hasBeenPurchased;
         }
 
-        public bool CanActivePlayerAffordAbility(Abilities ability)
+
+        public bool CanPlayerAffordAbility(int playerIndex, Abilities ability)
         {
-            if (GetCurrentPlayerAbilityCost(ability) <= activePlayer.stars)
+            if (GetAbilityCost(playerIndex, ability) <= GetPlayerByIndex(playerIndex).stars)
             {
                 return true;
             }
@@ -800,11 +801,11 @@ namespace SignedInitiative
 
         }
 
-        public int GetCurrentPlayerAbilityCost(Abilities ability)
+        public int GetAbilityCost(int playerIndex, Abilities ability)
         {
-            if (activePlayer.abilityDictionary.ContainsKey(ability))
+            if (GetPlayerByIndex(playerIndex).abilityDictionary.ContainsKey(ability))
             {
-                return activePlayer.abilityDictionary[ability].calculatedAbilityCost;
+                return GetPlayerByIndex(playerIndex).abilityDictionary[ability].calculatedAbilityCost;
             }
             return 9999;
 
@@ -835,26 +836,191 @@ namespace SignedInitiative
             return null;
         }
 
-        public bool CanPlayerDestoryResourceForReward(ResourceType type)
+        //find which ability to buy in order to get the ability you want 
+        //hard coded unfortunatelly, but alas, time is our master
+        public Abilities GetAbilityPath(int playerIndex, Abilities abilityID)
         {
-            switch (type)
+            if (IsAbilityPurchased(playerIndex, abilityID))
             {
-                case ResourceType.FOREST:
-                    return GameManager.Instance.activePlayer.abilities.forestCut;
+                return abilityID;
             }
-
-            //shouldn't really use this honestly.
-            return false;
-
-            if (CanPlayerHarvestResource(activePlayerIndex, type))
+            
+            if (IsAbilityUnlocked(playerIndex, abilityID))
             {
-                return MapManager.Instance.GetResourceByType(type).canBeDestroyedForReward;
+                return abilityID;
             }
             else
             {
-                return false;
+                switch (abilityID)
+                {
+                    case Abilities.Mining:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Climbing))
+                        {
+                            return Abilities.Climbing;
+                        }
+                        break;
+                    case Abilities.Shields:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Mining))
+                        {
+                            return Abilities.Mining;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Climbing))
+                        {
+                            return Abilities.Climbing;
+                        }
+                        break;
+                    case Abilities.Smithery:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Shields))
+                        {
+                            return Abilities.Shields;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Mining))
+                        {
+                            return Abilities.Mining;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Climbing))
+                        {
+                            return Abilities.Climbing;
+                        }
+                        break;
+                    case Abilities.Scout:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.FruitHarvest))
+                        {
+                            return Abilities.FruitHarvest;
+                        }
+                        break;
+                    case Abilities.Roads:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Scout))
+                        {
+                            return Abilities.Scout;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.FruitHarvest))
+                        {
+                            return Abilities.FruitHarvest;
+                        }
+                        break;
+                    case Abilities.Guild:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Roads))
+                        {
+                            return Abilities.Roads;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Scout))
+                        {
+                            return Abilities.Scout;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.FruitHarvest))
+                        {
+                            return Abilities.FruitHarvest;
+                        }
+                        break;
+                    case Abilities.Archery:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Forestry))
+                        {
+                            return Abilities.Forestry;
+                        }
+                        break;
+                    case Abilities.Engineering:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Archery))
+                        {
+                            return Abilities.Archery;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Forestry))
+                        {
+                            return Abilities.Forestry;
+                        }
+                        break;
+                    case Abilities.ForestMaster:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Engineering))
+                        {
+                            return Abilities.Engineering;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Archery))
+                        {
+                            return Abilities.Archery;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Forestry))
+                        {
+                            return Abilities.Forestry;
+                        }
+                        break;
+                    case Abilities.Port:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Fishing))
+                        {
+                            return Abilities.Fishing;
+                        }
+                        break;
+                    case Abilities.Ocean:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Port))
+                        {
+                            return Abilities.Port;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Fishing))
+                        {
+                            return Abilities.Fishing;
+                        }
+                        break;
+                    case Abilities.Ship:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Ocean))
+                        {
+                            return Abilities.Ocean;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Port))
+                        {
+                            return Abilities.Port;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Fishing))
+                        {
+                            return Abilities.Fishing;
+                        }
+                        break;
+                    case Abilities.Horserider:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Husbandry))
+                        {
+                            return Abilities.Husbandry;
+                        }
+                        break;
+                    case Abilities.Farming:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Horserider))
+                        {
+                            return Abilities.Horserider;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Husbandry))
+                        {
+                            return Abilities.Husbandry;
+                        }
+                        break;
+                    case Abilities.Windmill:
+                        if (IsAbilityUnlocked(playerIndex, Abilities.Farming))
+                        {
+                            return Abilities.Farming;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Horserider))
+                        {
+                            return Abilities.Horserider;
+                        }
+                        else if (IsAbilityUnlocked(playerIndex, Abilities.Husbandry))
+                        {
+                            return Abilities.Husbandry;
+                        }
+                        break;
+                }
             }
 
+            Debug.LogError("Catastrophic error: AbilityID was not matched to a path");
+            return abilityID;
+
+        }
+
+        public Abilities GetAbilityOrPreviousTarget(int playerIndex, BuildingType buildingType)
+        {
+            Abilities ability = GetAbilityPath(playerIndex, GetAbilityAssociation(buildingType));
+            return ability;
+        }
+
+        public Abilities GetAbilityOrPreviousTarget(int playerIndex, ResourceType resourceType)
+        {
+            Abilities ability = GetAbilityPath(playerIndex, GetAbilityAssociation(resourceType));
+            return ability;
         }
 
         public Abilities GetAbilityAssociation(BuildingType type)
@@ -867,6 +1033,8 @@ namespace SignedInitiative
                     return Abilities.ForestMaster;
                 case BuildingType.MineMaster:
                     return Abilities.Smithery;
+                case BuildingType.Guild:
+                    return Abilities.Guild;
             }
 
             return Abilities.NONE;
@@ -890,6 +1058,26 @@ namespace SignedInitiative
             }
 
             return Abilities.NONE;
+        }
+
+        //does not apply to resources that transform to buildilngs 
+        public bool CanPlayerCreateBuilding(int playerIndex, BuildingType type)
+        {
+            switch (type)
+            {
+                case BuildingType.FarmMaster:
+                    return IsAbilityUnlocked(playerIndex, Abilities.Windmill);
+                case BuildingType.ForestMaster:
+                    return IsAbilityUnlocked(playerIndex, Abilities.ForestMaster);
+                case BuildingType.MineMaster:
+                    return IsAbilityUnlocked(playerIndex, Abilities.Smithery);
+                case BuildingType.Guild:
+                    return IsAbilityPurchased(playerIndex, Abilities.Guild);
+                case BuildingType.Port:
+                    return IsAbilityPurchased(playerIndex, Abilities.Port);
+            }
+
+            return false;
         }
 
         public bool CanPlayerHarvestResource(int playerIndex, ResourceType type)

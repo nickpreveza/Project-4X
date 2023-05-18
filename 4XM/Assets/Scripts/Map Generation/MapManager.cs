@@ -612,11 +612,6 @@ public class MapManager : MonoBehaviour
 
                     hex.SetHiddenState(false, !isInstant);
                     hex.SpawnParticle(GameManager.Instance.cloudInteractionParticle);
-
-                    if (!GameManager.Instance.GetPlayerByIndex(playerIndex).hexesToCheck.Contains(hex))
-                    {
-                        GameManager.Instance.GetPlayerByIndex(playerIndex).hexesToCheck.Add(hex);
-                    }
                 }
             }
         }
@@ -1155,9 +1150,7 @@ public class MapManager : MonoBehaviour
 
     //this probably won't return the correct values for edge hexes 
     public Direction GetHexDirection(WorldHex hexOrigin, WorldHex hexTarget)
-    {
-        Debug.Log("Hex Origin: " + hexOrigin.hexData.C + "," + hexOrigin.hexData.R + " to " + "Hex Target: " + hexTarget.hexData.C + "," + hexTarget.hexData.R);
-        
+    { 
         if (hexOrigin.hexData.C == hexTarget.hexData.C)
         {
             if (hexTarget.hexData.R > hexOrigin.hexData.R)

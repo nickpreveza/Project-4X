@@ -9,6 +9,8 @@ public class HexView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI hexName;
     [SerializeField] TextMeshProUGUI hexDescription;
+    [SerializeField] TextMeshProUGUI hexDescriptionSmall;
+    [SerializeField] Image hexIcon;
     [SerializeField] Image hexDescriptionBackground;
     [SerializeField] Image hexAvatar;
 
@@ -26,6 +28,10 @@ public class HexView : MonoBehaviour
     public Sprite claimCityBackground;
     public Sprite destroyBackground;
 
+    [SerializeField] GameObject attackStat;
+    [SerializeField] GameObject defenseStat;
+    [SerializeField] TextMeshProUGUI attackStatText;
+    [SerializeField] TextMeshProUGUI defenseStatText;
     public void Refresh()
     {
         if (hex!=null)
@@ -59,8 +65,11 @@ public class HexView : MonoBehaviour
         }
         else
         {
+            attackStat.SetActive(false);
+            defenseStat.SetActive(false);
+            hexIcon.gameObject.SetActive(false);
             bool isOwner = (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex);
-
+            hexDescriptionSmall.text = SetName(hex.hexData.type) + " with";
             if (hex.hexData.hasCity)
             {
                 ShowCity(isOwner);
@@ -137,6 +146,7 @@ public class HexView : MonoBehaviour
         if (isOwner)
         {
             hexName.text = SetName(hex.hexData.type);
+            hexDescriptionSmall.text = "";
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex in your empire";
@@ -207,7 +217,7 @@ public class HexView : MonoBehaviour
         if (isOwner)
         {
             hexName.text = hex.cityData.cityName;
-
+            hexDescription.text = "CITY OF";
             hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
 
             GenerateUnitButtons();
@@ -236,6 +246,7 @@ public class HexView : MonoBehaviour
 
             if (hex.hexData.playerOwnerIndex == -1)
             {
+                hexDescription.text = "CITY HEX";
                 hexName.text = "Unclaimed City";
                 hexDescription.text = "Move a unit here to claim this city";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
@@ -413,11 +424,21 @@ public class HexView : MonoBehaviour
     {
         hexName.text = unit.unitReference.name;
         hexAvatar.color = Color.white; //TODO: change avatar with related icon
+        hexIcon.gameObject.SetActive(true);
+        hexIcon.sprite = unit.unitReference.icon;
+        attackStat.SetActive(true);
+        defenseStat.SetActive(true);
+        attackStatText.text = unit.currentAttack.ToString();
+        defenseStatText.text = unit.currentDefense.ToString();
 
         if (unit.playerOwnerIndex == GameManager.Instance.activePlayer.index)
         {
             if (unit.isInteractable || unit.buttonActionPossible)
             {
+                if (unit.buttonActionPossible)
+                {
+                    GenerateHealButton(unit);
+                }
                 hexDescription.text = "This " + unit.unitReference.name + " unit has available actions";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             }
@@ -608,6 +629,12 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForResource(this, hex, type, shouldBeInteractable, shouldOpenResearchPanel);
     }
 
+    public void GenerateHealButton(WorldUnit unit)
+    {
+        GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
+        obj.GetComponent<ActionButton>().SetDataForHeal(this, unit);
+    }
+
     public void GenerateCityCaptureButton(bool doesUnitHaveActions)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
@@ -625,19 +652,19 @@ public class HexView : MonoBehaviour
         switch (type)
         {
             case TileType.DEEPSEA:
-                return "Ocean";
+                return "OCEAN";
             case TileType.SEA:
-                return "Sea";
+                return "SEA";
             case TileType.SAND:
-                return "Sand";
+                return "SAND";
             case TileType.GRASS:
-                return "Grasslands";
+                return "FIELD";
             case TileType.HILL:
-                return "Hills";
+                return "HILL";
             case TileType.MOUNTAIN:
-                return "Mountains";
+                return "MOUNTAIN";
             case TileType.ICE:
-                return "Icecaps";
+                return "ICECAP";
         }
 
         return null;

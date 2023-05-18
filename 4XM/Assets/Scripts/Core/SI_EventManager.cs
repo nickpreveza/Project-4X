@@ -81,7 +81,6 @@ public class SI_EventManager : MonoBehaviour
 
     public void OnCameraMoved()
     {
-        Debug.Log("Camera Moved");
         onCameraMoved?.Invoke();
     }
 

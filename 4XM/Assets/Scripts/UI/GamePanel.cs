@@ -47,6 +47,10 @@ public class GamePanel : UIPanel
     [SerializeField] GameObject playerAvatarParent;
     [SerializeField] ScrollRect scrollRect;
     [SerializeField] Animator getMoneyAnim;
+
+    [SerializeField] Button researchButton;
+    [SerializeField] Button endTurnButton;
+    [SerializeField] Button overviewButton;
     void Start()
     {
       
@@ -93,6 +97,27 @@ public class GamePanel : UIPanel
                  "cancel",
                  () => GameManager.Instance.ReloadScene(), true);
        
+    }
+
+    public void AIisPlayingTurn(bool activate)
+    {
+        if (activate)
+        {
+            researchButton.interactable = false;
+            endTurnButton.interactable = false;
+            overviewButton.interactable = false;
+
+
+           endTurnButtonImage.color = noActionsColor;
+        }
+        else
+        {
+            researchButton.interactable = true;
+            endTurnButton.interactable = true;
+            overviewButton.interactable = true;
+
+            endTurnButtonImage.color = hasActionsColor;
+        }
     }
 
     public void UpdateGUIButtons()

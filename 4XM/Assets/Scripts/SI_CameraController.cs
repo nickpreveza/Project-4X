@@ -486,6 +486,7 @@ public class SI_CameraController : MonoBehaviour
                 Debug.Log("Mouse is over Tile");
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                 UIManager.Instance.HideResearchPanel();
+                UIManager.Instance.HideOverviewPanel();
                 SelectTile(newTile);
                 //PanToHex(newTile);
             }
