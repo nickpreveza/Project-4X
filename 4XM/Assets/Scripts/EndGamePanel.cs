@@ -11,9 +11,8 @@ public class EndGamePanel : UIPanel
     [SerializeField] OverviewPanel overviewEnd;
     Player player;
     Color civColor;
-    [SerializeField] Button oneMoreTurn;
-    [SerializeField] TextMeshProUGUI oneMoreTurnText;
     [SerializeField] TextMeshProUGUI winnerText;
+    [SerializeField] Image logoImageToColor;
     public override void Activate()
     {
         base.Activate();
@@ -38,24 +37,12 @@ public class EndGamePanel : UIPanel
     {
         SI_CameraController.Instance.GameEnded();
         civColor = GameManager.Instance.GetCivilizationByType(player.civilization).uiColorActive;
-        oneMoreTurn.gameObject.GetComponent<Image>().color = civColor;
+        logoImageToColor.color = civColor;
         overviewEnd.gameObject.SetActive(true);
         overviewEnd.OverviewSetup(true);
-        winnerText.text = GameManager.Instance.GetCivilizationByType(player.civilization).name + " WIN";
-        if (isWinner)
-        {
-            oneMoreTurn.gameObject.SetActive(true);
-            oneMoreTurn.onClick.RemoveAllListeners();
-            oneMoreTurn.onClick.AddListener(OneMoreTurnButton);
-            oneMoreTurnText.text = "ONE MORE TURN...";
 
-        }
-        else
-        {
-            oneMoreTurn.gameObject.SetActive(false);
-            oneMoreTurn.onClick.AddListener(MainMenuButton);
-            oneMoreTurnText.text = "TRY AGAIN";
-        }
+        winnerText.text = GameManager.Instance.GetCivilizationByType(player.civilization).name + " WIN";
+        
     }
 
     public void OneMoreTurnButton()

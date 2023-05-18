@@ -217,7 +217,7 @@ public class HexView : MonoBehaviour
         if (isOwner)
         {
             hexName.text = hex.cityData.cityName;
-            hexDescription.text = "CITY OF";
+            hexDescriptionSmall.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization).name + " CITY";
             hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
 
             GenerateUnitButtons();
@@ -430,12 +430,12 @@ public class HexView : MonoBehaviour
         defenseStat.SetActive(true);
         attackStatText.text = unit.currentAttack.ToString();
         defenseStatText.text = unit.currentDefense.ToString();
-
+        hexDescriptionSmall.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex).civilization).name;
         if (unit.playerOwnerIndex == GameManager.Instance.activePlayer.index)
         {
             if (unit.isInteractable || unit.buttonActionPossible)
             {
-                if (unit.buttonActionPossible)
+                if (unit.buttonActionPossible && unit.HealPossible())
                 {
                     GenerateHealButton(unit);
                 }

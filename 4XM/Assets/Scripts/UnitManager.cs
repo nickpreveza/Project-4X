@@ -57,7 +57,7 @@ public class UnitManager : MonoBehaviour
 
     public void OnAbilityUnlockUpdate(int playerIndex)
     {
-        if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))
+        if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex) && !GameManager.Instance.activePlayer.isAI())
         {
             if (hexSelectMode)
             SelectUnit(selectedUnit);
@@ -222,7 +222,11 @@ public class UnitManager : MonoBehaviour
                 hexSelectMode = true;
             }
 
-            UIManager.Instance.ShowHexView(newUnit.parentHex, newUnit);
+            if (!GameManager.Instance.activePlayer.isAI())
+            {
+                UIManager.Instance.ShowHexView(newUnit.parentHex, newUnit);
+            }
+           
         }
     }
 

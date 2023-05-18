@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using SignedInitiative;
+using System.Linq;
 
 public class OverviewPanel : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class OverviewPanel : MonoBehaviour
 
         if (rankInScoreOrder)
         {
+            GameManager.Instance.CalculateRanks();
             foreach (Player player in GameManager.Instance.rankedPlayers)
             {
                 GameObject obj = Instantiate(prefab, entriesParent);

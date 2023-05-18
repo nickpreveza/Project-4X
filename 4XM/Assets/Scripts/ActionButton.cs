@@ -381,6 +381,7 @@ public class ActionButton : MonoBehaviour
     public void HealUnit()
     {
         targetUnit.HealAction();
+        UIManager.Instance.RefreshHexView();
     }
 
     public void HarvestResource()

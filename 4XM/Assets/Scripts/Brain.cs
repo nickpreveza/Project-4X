@@ -26,10 +26,10 @@ public class Brain : MonoBehaviour
     
     public bool upgradingCities;
     public bool lookingForResearch;
+    public bool createRoads;
     public bool checkForActions;
     public bool checkForPaths;
     public bool assignPaths;
-
     public bool combatRunning;
     public void StartEvaluation(Player _player)
     {
@@ -65,6 +65,14 @@ public class Brain : MonoBehaviour
     IEnumerator NormalTurn()
     {
         yield return new WaitForSeconds(1f);
+        checkForActions = true;
+        StartCoroutine(CheckForActionsAndCombatFirst());
+        while (checkForActions)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        yield return new WaitForSeconds(1f);
         upgradingCities = true;
         StartCoroutine(UpgradeCities());
         while (upgradingCities)
@@ -86,14 +94,12 @@ public class Brain : MonoBehaviour
             yield return new WaitForSeconds(0.1f);
         }
 
-        checkForActions = true;
-        StartCoroutine(CheckForActionsAndCombatFirst());
-        while (checkForActions)
+        createRoads = true;
+        StartCoroutine(CreateRoads());
+        while (createRoads)
         {
             yield return new WaitForSeconds(0.1f);
         }
-        
-        //For units with actions, do them actions
 
         checkForPaths = true;
         StartCoroutine(CheckForActivePaths());
@@ -108,7 +114,8 @@ public class Brain : MonoBehaviour
         {
             yield return new WaitForSeconds(0.1f);
         }
-       
+
+      
         //last check for combat 
         List<WorldUnit> remainingUnits = new List<WorldUnit>(player.playerUnits);
         foreach (WorldUnit unit in remainingUnits)
@@ -126,10 +133,55 @@ public class Brain : MonoBehaviour
                     continue;
                 }
             }
+
         }
 
         yield return new WaitForSeconds(1f);
+
+
+        //check for combat again
         GameManager.Instance.LocalEndTurn();
+    }
+
+    IEnumerator CreateRoads()
+    {
+        if (!GameManager.Instance.IsAbilityUnlocked(player.index, Abilities.Roads))
+        {
+            createRoads = false;
+            yield break;
+        }
+
+        List<WorldHex> playerCities = player.playerCities;
+        if (playerCities.Contains(player.capitalCity))
+        {
+            playerCities.Remove(player.capitalCity);
+        }
+
+        foreach(WorldHex city in playerCities)
+        {
+            if (!city.hexData.isConnectedToCapital)
+            {
+                List<WorldHex> pathFromCapital = MapManager.Instance.FindPathForRoadGeneration(player.index, player.capitalCity, city);
+                int costForPath = pathFromCapital.Count * GameManager.Instance.data.roadCost;
+
+                if (GameManager.Instance.CanPlayerAfford(player.index, costForPath))
+                {
+                    foreach(WorldHex hex in pathFromCapital)
+                    {
+                        if (!hex.hexData.hasCity && !hex.hexData.hasRoad)
+                        {
+                            hex.CreateRoad(false);
+                            yield return new WaitForSeconds(1f);
+                        }
+                    }
+                }
+            }
+           
+        }
+
+        player.capitalCity.SearchForConnections();
+
+        createRoads = false;
     }
 
     IEnumerator AssignPathsToUnits()
@@ -275,7 +327,7 @@ public class Brain : MonoBehaviour
                     int farmsWorked = 0;
                     foreach(WorldHex adj in cityHex.adjacentHexes)
                     {
-                        if (adj.hexData.hasBuilding && adj.hexData.playerOwnerIndex == GameManager.Instance.activePlayer.index)
+                        if (adj.parentCity == cityHex.parentCity && adj.hexData.hasBuilding)
                         {
                             if (adj.hexData.buildingType == BuildingType.ForestWorked)
                             {
@@ -299,6 +351,7 @@ public class Brain : MonoBehaviour
                                 }
                             }
                         }
+                       
                     }
 
                     if (player.turnCount > 15)
@@ -462,15 +515,23 @@ public class Brain : MonoBehaviour
             }
 
             List<WorldHex> cityHexes = new List<WorldHex>(city.cityData.cityHexes);
+
+            int mostForest = 0;
+            WorldHex forestMasterCandidate = null;
+            int mostFarms = 0;
+            WorldHex farmMasterCandidate = null;
+            int mostMines = 0;
+            WorldHex mineMasterCandidate = null;
+
             foreach (WorldHex cityHex in cityHexes)
             {
+                if (cityHex.hexData.occupied && cityHex.associatedUnit.playerOwnerIndex != player.index)
+                {
+                    continue;
+                }
+
                 if (cityHex.hexData.hasResource)
                 {
-                    if (cityHex.hexData.occupied && cityHex.associatedUnit.playerOwnerIndex != player.index)
-                    {
-                        continue;
-                    }
-
                     Resource resource = MapManager.Instance.GetResourceByType(cityHex.hexData.resourceType);
 
                     if (GameManager.Instance.CanPlayerHarvestResource(player.index, cityHex.hexData.resourceType))
@@ -483,6 +544,104 @@ public class Brain : MonoBehaviour
                         }
 
                     }
+                }
+                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding)
+                {
+                    int forestsAround = 0;
+                    int farmsAround = 0;
+                    int minesAround = 0;
+                    foreach (WorldHex adj in cityHex.adjacentHexes)
+                    {
+                        if (adj.parentCity == cityHex.parentCity && adj.hexData.hasBuilding)
+                        {
+                            if (adj.hexData.buildingType == BuildingType.ForestWorked)
+                            {
+                                forestsAround++;
+                            }
+                            if (adj.hexData.buildingType == BuildingType.FarmWorked)
+                            {
+                                farmsAround++;
+                            }
+                            if (adj.hexData.buildingType == BuildingType.MineWorked)
+                            {
+                                minesAround++;
+                            }
+                        }
+                    }
+
+                    if (GameManager.Instance.CanPlayerCreateBuilding(player.index, BuildingType.ForestMaster) &&
+                        !city.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                    {
+                        if (forestsAround > mostForest)
+                        {
+                            forestMasterCandidate = cityHex;
+                            mostForest = forestsAround ;
+                        }
+                    }
+                    if (GameManager.Instance.CanPlayerCreateBuilding(player.index, BuildingType.FarmMaster) &&
+                         !city.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
+                    {
+                        if (farmsAround > mostFarms)
+                        {
+                            farmMasterCandidate = cityHex;
+                            mostFarms = farmsAround;
+                        }
+                    }
+                    if (GameManager.Instance.CanPlayerCreateBuilding(player.index, BuildingType.MineMaster) &&
+                         !city.cityData.masterBuildings.Contains(BuildingType.MineMaster))
+                    {
+                        if (minesAround > mostMines)
+                        {
+                            mineMasterCandidate = cityHex;
+                            mostMines = minesAround;
+                        }
+                    }
+
+                }
+            }
+
+            if (forestMasterCandidate != null && mostForest >= 2)
+            {
+                int buildCost = MapManager.Instance.GetBuildingByType(BuildingType.ForestMaster).cost;
+                if (GameManager.Instance.CanPlayerAfford(player.index, buildCost))
+                {
+                    if (!forestMasterCandidate.hexData.hasBuilding && !forestMasterCandidate.hexData.hasResource)
+                    {
+                        GameManager.Instance.RemoveStars(player.index, buildCost);
+                        forestMasterCandidate.CreateBuilding(BuildingType.ForestMaster);
+                        yield return new WaitForSeconds(3f);
+                    }
+                 
+                }
+            }
+
+            if (farmMasterCandidate != null && mostFarms >= 2)
+            {
+                int buildCost = MapManager.Instance.GetBuildingByType(BuildingType.FarmMaster).cost;
+                if (GameManager.Instance.CanPlayerAfford(player.index, buildCost))
+                {
+                    if (!farmMasterCandidate.hexData.hasBuilding && !farmMasterCandidate.hexData.hasResource)
+                    {
+                        GameManager.Instance.RemoveStars(player.index, buildCost);
+                        farmMasterCandidate.CreateBuilding(BuildingType.FarmMaster);
+                        yield return new WaitForSeconds(3f);
+                    }
+
+                }
+            }
+
+            if (mineMasterCandidate != null && mostMines >= 2)
+            {
+                int buildCost = MapManager.Instance.GetBuildingByType(BuildingType.MineMaster).cost;
+                if (GameManager.Instance.CanPlayerAfford(player.index, buildCost))
+                {
+                    if (!mineMasterCandidate.hexData.hasBuilding && !mineMasterCandidate.hexData.hasResource)
+                    {
+                        GameManager.Instance.RemoveStars(player.index, buildCost);
+                        mineMasterCandidate.CreateBuilding(BuildingType.MineMaster);
+                        yield return new WaitForSeconds(3f);
+                    }
+
                 }
             }
         }

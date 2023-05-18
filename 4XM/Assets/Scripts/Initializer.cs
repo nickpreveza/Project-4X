@@ -161,23 +161,17 @@ namespace SignedInitiative
                     playersPassSetup.Add(player);
                 }
             }
+
             GameManager.Instance.sessionPlayers = new List<Player>(playersPassSetup);
-            List<Player> playersToSort = new List<Player>(GameManager.Instance.sessionPlayers);
+            GameManager.Instance.sessionPlayers = GameManager.Instance.sessionPlayers.OrderBy(x => x.type).ToList();
 
             foreach (Player player in GameManager.Instance.sessionPlayers)
             {
                 player.index = GameManager.Instance.sessionPlayers.IndexOf(player);
 
-                if (!GameManager.Instance.AIEnabled)
-                {
-                    player.type = PlayerType.LOCAL;
-                }
-
                 player.isAlive = true;
                 player.abilities.unitSwordsman = true;
             }
-
-            GameManager.Instance.sessionPlayers = playersToSort.OrderByDescending(x => x.type).ToList();
 
             dataHandler.FetchData();
             processing = true;

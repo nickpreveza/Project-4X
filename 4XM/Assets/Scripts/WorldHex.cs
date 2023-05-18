@@ -100,6 +100,43 @@ public class WorldHex : MonoBehaviour
         return false;
     }
     
+    public bool CanRoadBeCreated(int playerIndex, bool isEndTile)
+    {
+        if (Hidden())
+        {
+            return false;
+        }
+        if (hexData.occupied && associatedUnit.playerOwnerIndex != playerIndex)
+        {
+            return false;
+        }
+        if (parentCity != null)
+        {
+            if (parentCity.hexData.playerOwnerIndex != playerIndex)
+            {
+                return false;
+            }
+        }
+        if (isEndTile)
+        {
+            return true;
+        }
+
+        switch (hexData.type)
+        {
+            case TileType.ICE:
+            case TileType.MOUNTAIN:     
+            case TileType.SEA:
+            case TileType.DEEPSEA:
+                return false;
+            case TileType.SAND:
+            case TileType.GRASS:
+            case TileType.HILL:
+                return true;
+        }
+
+        return false;
+    }
     public bool CanBeWalked(int playerIndex, bool canUnitFly, bool isEndTile = false)
     {
         if (Hidden())
@@ -1143,7 +1180,11 @@ public class WorldHex : MonoBehaviour
         }
 
         SI_CameraController.Instance.animationsRunning = false;
-        UIManager.Instance.ShowHexView(this);
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UIManager.Instance.ShowHexView(this);
+        }
+      
     }
 
     public void DestroyAction(bool isBuilding)
@@ -1201,7 +1242,10 @@ public class WorldHex : MonoBehaviour
             Destroy(resourceObj);
         }
        
-        UIManager.Instance.ShowHexView(this);
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UIManager.Instance.ShowHexView(this);
+        }
     }
 
     int FindPointsToRemoveFromMasters(Building building)
@@ -1218,7 +1262,7 @@ public class WorldHex : MonoBehaviour
         return 0;
     }
 
-    public void CreateRoad()
+    public void CreateRoad(bool searchForConnections = true)
     {
         if (hexData.hasRoad)
         {
@@ -1230,12 +1274,15 @@ public class WorldHex : MonoBehaviour
 
         roadHelper.SetRoads();
 
-        if (hexData.playerOwnerIndex != -1)
+        if (hexData.playerOwnerIndex != -1 && searchForConnections)
         {
             GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
         }
-     
-        UIManager.Instance.ShowHexView(this);
+
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UIManager.Instance.ShowHexView(this);
+        }
     }
 
     public void EvaluateConnections()
@@ -1373,8 +1420,11 @@ public class WorldHex : MonoBehaviour
 
         hexData.resourceType = ResourceType.EMPTY;
 
-        if (updateUI)
-        UIManager.Instance.ShowHexView(this);
+        if (updateUI && !GameManager.Instance.activePlayer.isAI())
+        {
+              UIManager.Instance.ShowHexView(this);
+        }
+      
     }
 
     public void SetAsCapital()
@@ -1443,15 +1493,12 @@ public class WorldHex : MonoBehaviour
             }
         }
 
-       
-      
         //set player
         hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
         hexData.cityHasBeenClaimed = true;
         cityData.playerIndex = hexData.playerOwnerIndex;
         cityData.isUnderSiege = false;
         cityData.population = 0;
-       
 
         if (isThisATakeOver)
         {

@@ -395,7 +395,7 @@ public class Player
 
 public enum PlayerType
 {
-    LOCAL = 1,
-    ONLINE = 2,
-    AI  = 3
+    LOCAL = 0,
+    ONLINE = 1,
+    AI  = 2
 }

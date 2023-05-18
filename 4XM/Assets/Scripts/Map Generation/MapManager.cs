@@ -1043,6 +1043,74 @@ public class MapManager : MonoBehaviour
         return null;
     }
 
+    public List<WorldHex> FindPathForRoadGeneration(int playerIndex, WorldHex start, WorldHex end)
+    {
+        List<WorldHex> openSet = new List<WorldHex>();
+        List<WorldHex> closedSet = new List<WorldHex>();
+        openSet.Add(start);
+
+        while (openSet.Count > 0)
+        {
+            WorldHex current = openSet[0];
+
+            for (int i = 1; i < openSet.Count; i++)
+            {
+                if (openSet[i].hexData.fCost < current.hexData.fCost ||
+                    openSet[i].hexData.fCost == current.hexData.fCost && openSet[i].hexData.hCost < openSet[i].hexData.hCost)
+                {
+                    current = openSet[i];
+                }
+            }
+
+            openSet.Remove(current);
+            closedSet.Add(current);
+
+            if (current == end)
+            {
+                List<WorldHex> path = new List<WorldHex>();
+                WorldHex retractCurrent = end;
+
+                while (retractCurrent != start)
+                {
+                    path.Add(retractCurrent);
+                    retractCurrent = retractCurrent.pathParent;
+                }
+
+                path.Reverse();
+                return path;
+            }
+
+            foreach (WorldHex adj in current.adjacentHexes)
+            {
+                if (closedSet.Contains(adj) || !adj.CanRoadBeCreated(playerIndex, adj == end))
+                {
+                    continue;
+                }
+
+                if (adj.hexData.playerOwnerIndex != playerIndex && adj.hexData.playerOwnerIndex != -1)
+                {
+                    continue;
+                }
+
+                int movementCostToAdj = current.hexData.gCost + MapManager.Instance.GetDistance(current, adj);
+                if (movementCostToAdj < adj.hexData.gCost || !openSet.Contains(adj))
+                {
+                    adj.hexData.gCost = movementCostToAdj;
+                    adj.hexData.hCost = MapManager.Instance.GetDistance(adj, end);
+                    adj.pathParent = current;
+
+                    if (!openSet.Contains(adj))
+                    {
+                        openSet.Add(adj);
+                    }
+                }
+            }
+
+        }
+
+        return null;
+    }
+
     public int GetDistance(WorldHex start, WorldHex end)
     {
         Hex a = start.hexData;

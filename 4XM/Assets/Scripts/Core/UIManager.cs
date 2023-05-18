@@ -86,6 +86,11 @@ namespace SignedInitiative
             ClosePopup();
         }
 
+        public void ToggleEndTurn(bool status)
+        {
+            gamePanel.GetComponent<GamePanel>().ToggleEndTurn(status);
+        }
+
         public void OpenPopup(string title, string description, bool available, string option1name, string option2name, popupFunction  newFunction, bool showButtons)
         {
             confirmAction = newFunction;

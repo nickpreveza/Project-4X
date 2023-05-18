@@ -51,6 +51,8 @@ public class GamePanel : UIPanel
     [SerializeField] Button researchButton;
     [SerializeField] Button endTurnButton;
     [SerializeField] Button overviewButton;
+
+    [SerializeField] GameObject controlsGroup;
     void Start()
     {
       
@@ -68,6 +70,10 @@ public class GamePanel : UIPanel
         //textbox.EndTextbox();
     }
 
+    public void ToggleEndTurn(bool status)
+    {
+        controlsGroup.SetActive(status);
+    }
     public void ToggleSettingsPanel()
     {
         settingsPanel.SetActive(!settingsPanel.activeSelf);

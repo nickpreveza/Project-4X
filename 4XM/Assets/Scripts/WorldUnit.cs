@@ -73,6 +73,18 @@ public class WorldUnit : MonoBehaviour
     public bool shouldHealThisTurn;
     WorldHex tempPathParent;
     public WorldHex assignedPathTarget;
+
+    public bool HealPossible()
+    {
+        if (isBoat || isShip)
+        {
+            return localHealth < boatReference.health;
+        }
+        else
+        {
+            return localHealth < unitReference.health;
+        }
+    }
     public int PathfindingActionPoints //a normal move actions will cost 2.
     {
         get
@@ -388,7 +400,7 @@ public class WorldUnit : MonoBehaviour
             {
                 foreach (GameObject obj in helper.objectsToChangeMaterials)
                 {
-                    obj.GetComponent<MeshRenderer>().materials[0].color = newColor;
+                    obj.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
                 }
             }
         }
@@ -518,8 +530,12 @@ public class WorldUnit : MonoBehaviour
 
     void OnActionEnded() //not really an event, but treated as one
     {
-        UnitManager.Instance.SelectUnit(this);
-        UIManager.Instance.ShowHexView(this.parentHex, this);
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UnitManager.Instance.SelectUnit(this);
+            UIManager.Instance.ShowHexView(this.parentHex, this);
+        }
+     
     }
 
     public void ValidateRemainigActions()
@@ -665,7 +681,7 @@ public class WorldUnit : MonoBehaviour
         if (hexesInRadius.Count > 0)
         {
             WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
-            SetMoveTarget(selecedHex, true, true, false);
+            SetMoveTarget(selecedHex, true, true, true);
             return true;
         }
         else
@@ -730,6 +746,7 @@ public class WorldUnit : MonoBehaviour
 
     public void VisualAttack(WorldHex targetHex)
     {
+     
         switch (type)
         {
             case UnitType.Defensive:
@@ -748,7 +765,7 @@ public class WorldUnit : MonoBehaviour
             case UnitType.Siege:
             case UnitType.Ship:
                 targetHex.SpawnParticle(GameManager.Instance.explosionParticle);
-                visualAnim.SetTrigger("AttackShield");
+                //visualAnim.SetTrigger("AttackShield");
                 break;
         }
     }
@@ -789,14 +806,25 @@ public class WorldUnit : MonoBehaviour
 
     IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
     {
+        if (GameManager.Instance.activePlayer.isAI())
+        {
+            parentHex.ShowHighlight(false);
+            yield return new WaitForSeconds(0.5f);
+        }
+       
         GameManager.Instance.brain.combatRunning = true;
         SI_CameraController.Instance.animationsRunning = true;
         VisualAttack(enemyUnit.parentHex);
+        if (GameManager.Instance.activePlayer.isAI())
+        {
+            enemyUnit.parentHex.ShowHighlight(true);
+        }
         yield return new WaitForSeconds(.7f);
 
         if (enemyUnit.ReceiveDamage(currentAttack))
         {
             enemyUnit.visualAnim.SetTrigger("Die");
+            enemyUnit.parentHex.HideHighlight();
             enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
             enemyUnit.Deselect();
             if (enemyUnit.originCity.cityData.population > 0)
@@ -830,11 +858,16 @@ public class WorldUnit : MonoBehaviour
         {
             if (UnitManager.Instance.isUnitInAttackRange(enemyUnit, this))
             {
+                
                 yield return new WaitForSeconds(.5f);
+                parentHex.ShowHighlight(true);
+                enemyUnit.parentHex.ShowHighlight(false);
                 enemyUnit.VisualAttack(parentHex);
                 yield return new WaitForSeconds(0.5f);
                 if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
                 {
+                    this.parentHex.HideHighlight();
+                    enemyUnit.parentHex.HideHighlight();
                     visualAnim.SetTrigger("Die");
                     SpawnParticle(UnitManager.Instance.unitDeathParticle);
                      SI_CameraController.Instance.animationsRunning = false;
@@ -856,6 +889,8 @@ public class WorldUnit : MonoBehaviour
                 {
                     SpawnParticle(UnitManager.Instance.unitHitParticle, true);
                     visualAnim.SetTrigger("Evade");
+                    this.parentHex.HideHighlight();
+                    enemyUnit.parentHex.HideHighlight();
                 }
             }
        
@@ -865,11 +900,12 @@ public class WorldUnit : MonoBehaviour
         UnitManager.Instance.SelectUnit(this);
         SI_CameraController.Instance.animationsRunning = false;
         GameManager.Instance.brain.combatRunning = false;
+        this.parentHex.HideHighlight();
     }
 
     public void Death(bool affectStats)
     {
-        
+        this.parentHex.HideHighlight();
         Destroy(this.gameObject);
     }
 

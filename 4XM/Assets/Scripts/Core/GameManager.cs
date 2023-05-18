@@ -32,7 +32,6 @@ namespace SignedInitiative
 
         [Header("Debug Settings")]
         public bool VisualizeAIMoves;
-        public bool AIEnabled;
         public bool destroyResourcesToo;
         public bool useRandomSeed;
         public bool allAbilitiesUnlocked;
@@ -166,6 +165,11 @@ namespace SignedInitiative
         {
             List<Player> playersToSort = new List<Player>(rankedPlayers);
             rankedPlayers = playersToSort.OrderByDescending(x => x.totalScore).ToList();
+            string debug = "Current ranks: ";
+            foreach(Player player in rankedPlayers)
+            {
+                debug += "\n" + rankedPlayers.IndexOf(player) + ": " + player.civilization + " with " + player.totalScore + ".";
+            }
         }
 
         public void MonumentReward(int rewardIndex, WorldUnit unit)
@@ -290,7 +294,7 @@ namespace SignedInitiative
                 unit.InstantDeath(false);
             }
 
-            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, false);
+            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, false, false, false);
 
         }
 
@@ -436,8 +440,9 @@ namespace SignedInitiative
             {
                 UIManager.Instance.UpdateOnlyPlayerAvatar();
             }
-            
-           
+
+            UIManager.Instance.ToggleEndTurn(!activePlayer.isAI());
+
             UIManager.Instance.StartTurnAnim();
             SI_EventManager.Instance.OnTurnStarted(activePlayerIndex);
 
