@@ -287,7 +287,6 @@ public class UnitManager : MonoBehaviour
                 switch (enemyUnit.type)
                 {
                     case UnitType.Defensive:
-                    case UnitType.Trader:
                     case UnitType.Diplomat:
                     case UnitType.Melee:
                     case UnitType.Boat:
@@ -299,11 +298,17 @@ public class UnitManager : MonoBehaviour
                     case UnitType.Cavalry:
                         enemyUnit.visualAnim.SetTrigger("AttackHorse");
                         break;
+                    case UnitType.Lance:
+                        enemyUnit.visualAnim.SetTrigger("AttackLance");
+                        break;
                     case UnitType.Siege:
                     case UnitType.Ship:
                         // yield return new WaitForSeconds(0.5f);
                         //enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
                         //visualAnim.SetTrigger("AttackShield");
+                        break;
+                   case UnitType.Trader:
+                        enemyUnit.visualAnim.SetTrigger("AttackScout");
                         break;
                 }
 

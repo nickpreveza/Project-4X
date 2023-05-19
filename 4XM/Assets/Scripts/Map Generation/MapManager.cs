@@ -638,6 +638,12 @@ public class MapManager : MonoBehaviour
                     yield return new WaitForEndOfFrame();
                 }
             }
+
+            if (city.hexData.playerOwnerIndex > -1)
+            {
+                GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).RemoveCity(city, showPopup);
+            }
+
         }
 
         //set player
@@ -1383,6 +1389,8 @@ public class MapManager : MonoBehaviour
     {
         player.capitalCity = city;
         city.cityData.isCapital = true;
+        city.hexData.playerOwnerIndex = player.index;
+        city.cityData.playerIndex = player.index;
         player.AddCity(city);
         
     }

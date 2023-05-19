@@ -363,7 +363,10 @@ public class Player
         //TODO: Some security checks to make sure this is the correct tile;
         playerCities.Add(cityHex);
         MapManager.Instance.OccupyCityByPlayer(this, cityHex);
+        while (MapManager.Instance.occupyingCity)
+        {
 
+        }
         RecalculateAbilityCosts();
         CalculateExpectedStars();
         SI_EventManager.Instance.OnCityCaptured(index);
