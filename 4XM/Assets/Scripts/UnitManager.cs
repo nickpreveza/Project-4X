@@ -330,6 +330,7 @@ public class UnitManager : MonoBehaviour
                     originUnit.visualAnim.SetTrigger("Die");
                     yield return new WaitForSeconds(0.5f);
                     originUnit.parentHex.HideHighlight();
+                    enemyUnit.parentHex.HideHighlight();
                     originUnit.SpawnParticle(unitDeathParticle);
                     originUnit.Deselect();
 
@@ -360,6 +361,8 @@ public class UnitManager : MonoBehaviour
             }
         }
 
+        originUnit?.parentHex.HideHighlight();
+        enemyUnit?.parentHex.HideHighlight();
         runningCombatSequence = false;
     }
 
@@ -464,6 +467,15 @@ public class UnitManager : MonoBehaviour
         WorldUnit unit = obj.GetComponent<WorldUnit>();
         player.AddUnit(unit);
         unit.SpawnSetup(targetHex, player.index, unitData, exhaustMoves, addTocityPopulation);
+    }
+
+    public void RefresetSelection()
+    {
+        if (selectedUnit != null)
+        {
+            SelectUnit(selectedUnit);
+        }
+       
     }
 
     public void SelectUnit(WorldUnit newUnit)

@@ -335,109 +335,113 @@ public class Brain : MonoBehaviour
                         }
                     }
                 }
-                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding)
+                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding )
                 {
-                    int forestsWorked = 0;
-                    int minesWorked = 0;
-                    int farmsWorked = 0;
-                    foreach(WorldHex adj in cityHex.adjacentHexes)
+                    if (city.hexData.type == TileType.SAND || city.hexData.type == TileType.GRASS || city.hexData.type == TileType.HILL)
                     {
-                        if (adj.parentCity == cityHex.parentCity && adj.hexData.hasBuilding)
+                        int forestsWorked = 0;
+                        int minesWorked = 0;
+                        int farmsWorked = 0;
+                        foreach (WorldHex adj in cityHex.adjacentHexes)
                         {
-                            if (adj.hexData.buildingType == BuildingType.ForestWorked)
+                            if (adj.parentCity == cityHex.parentCity && adj.hexData.hasBuilding)
                             {
-                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                                if (adj.hexData.buildingType == BuildingType.ForestWorked)
                                 {
-                                    forestsWorked++;
+                                    if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.ForestMaster))
+                                    {
+                                        forestsWorked++;
+                                    }
+                                }
+                                else if (adj.hexData.buildingType == BuildingType.FarmWorked)
+                                {
+                                    if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
+                                    {
+                                        farmsWorked++;
+                                    }
+                                }
+                                else if (adj.hexData.buildingType == BuildingType.MineWorked)
+                                {
+                                    if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.MineMaster))
+                                    {
+                                        minesWorked++;
+                                    }
                                 }
                             }
-                            else if (adj.hexData.buildingType == BuildingType.FarmWorked)
+
+                        }
+
+                        if (player.turnCount > 15)
+                        {
+                            if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
                             {
-                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.FarmMaster))
+                                Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.Guild);
+                                if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
                                 {
-                                    farmsWorked++;
-                                }
-                            }
-                            else if (adj.hexData.buildingType == BuildingType.MineWorked)
-                            {
-                                if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.MineMaster))
-                                {
-                                    minesWorked++;
+                                    if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                                    {
+                                        abilitiesTargetToUnlock[abilityTarget]++;
+                                    }
+                                    else
+                                    {
+                                        abilitiesTargetToUnlock.Add(abilityTarget, 1);
+                                    }
                                 }
                             }
                         }
-                       
-                    }
 
-                    if (player.turnCount > 15)
-                    {
-                        if (!cityHex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
+
+                        if (forestsWorked > 0)
                         {
-                            Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.Guild);
+                            Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.ForestMaster);
                             if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
                             {
                                 if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
                                 {
-                                    abilitiesTargetToUnlock[abilityTarget]++;
+                                    abilitiesTargetToUnlock[abilityTarget] += forestsWorked;
                                 }
                                 else
                                 {
-                                    abilitiesTargetToUnlock.Add(abilityTarget, 1);
+                                    abilitiesTargetToUnlock.Add(abilityTarget, forestsWorked);
                                 }
                             }
                         }
-                    }
-                   
 
-                    if (forestsWorked > 0)
-                    {
-                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.ForestMaster);
-                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                        if (minesWorked > 0)
                         {
-                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                            Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.MineMaster);
+                            if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
                             {
-                                abilitiesTargetToUnlock[abilityTarget] += forestsWorked;
-                            }
-                            else
-                            {
-                                abilitiesTargetToUnlock.Add(abilityTarget, forestsWorked);
+                                if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                                {
+                                    abilitiesTargetToUnlock[abilityTarget] += minesWorked;
+                                }
+                                else
+                                {
+                                    abilitiesTargetToUnlock.Add(abilityTarget, minesWorked);
+                                }
                             }
                         }
-                    }
 
-                    if (minesWorked > 0)
-                    {
-                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.MineMaster);
-                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
+                        if (farmsWorked > 0)
                         {
-                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                            Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.FarmMaster);
+                            if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
                             {
-                                abilitiesTargetToUnlock[abilityTarget] += minesWorked;
-                            }
-                            else
-                            {
-                                abilitiesTargetToUnlock.Add(abilityTarget, minesWorked);
+                                if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
+                                {
+                                    abilitiesTargetToUnlock[abilityTarget] += farmsWorked;
+                                }
+                                else
+                                {
+                                    abilitiesTargetToUnlock.Add(abilityTarget, farmsWorked);
+                                }
                             }
                         }
+
                     }
 
-                    if (farmsWorked > 0)
-                    {
-                        Abilities abilityTarget = GameManager.Instance.GetAbilityOrPreviousTarget(player.index, BuildingType.FarmMaster);
-                        if (!GameManager.Instance.IsAbilityPurchased(player.index, abilityTarget))
-                        {
-                            if (abilitiesTargetToUnlock.ContainsKey(abilityTarget))
-                            {
-                                abilitiesTargetToUnlock[abilityTarget] += farmsWorked;
-                            }
-                            else
-                            {
-                                abilitiesTargetToUnlock.Add(abilityTarget, farmsWorked);
-                            }
-                        }
-                    }
 
-                   
                 }
             }
         }
@@ -544,6 +548,11 @@ public class Brain : MonoBehaviour
                 {
                     continue;
                 }
+                
+                if (cityHex.hexData.type == TileType.DEEPSEA || cityHex.hexData.type == TileType.ICE)
+                {
+                    continue;
+                }
 
                 if (cityHex.hexData.hasResource)
                 {
@@ -564,11 +573,13 @@ public class Brain : MonoBehaviour
 
                     }
                 }
-                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding)
+                else if (!cityHex.hexData.hasResource && !cityHex.hexData.hasBuilding &&
+                     (cityHex.hexData.type == TileType.SAND || cityHex.hexData.type == TileType.GRASS || cityHex.hexData.type == TileType.HILL))
                 {
                     int forestsAround = 0;
                     int farmsAround = 0;
                     int minesAround = 0;
+
                     foreach (WorldHex adj in cityHex.adjacentHexes)
                     {
                         if (adj.parentCity == cityHex.parentCity && adj.hexData.hasBuilding)
@@ -594,7 +605,7 @@ public class Brain : MonoBehaviour
                         if (forestsAround > mostForest)
                         {
                             forestMasterCandidate = cityHex;
-                            mostForest = forestsAround ;
+                            mostForest = forestsAround;
                         }
                     }
                     if (GameManager.Instance.CanPlayerCreateBuilding(player.index, BuildingType.FarmMaster) &&

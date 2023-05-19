@@ -336,15 +336,12 @@ namespace SignedInitiative
         public void UpdateHUD()
         {
             GamePanel panel = gamePanel.GetComponent<GamePanel>();
+            
+            panel.UpdateCurrencies();
+            panel.UpdateOverview();
+            //TODO: optimize this to only update when turn changes
+            panel.SetPlayerAvatar();
 
-            if (GameManager.Instance.activePlayer.showAction())
-            {
-                panel.UpdateCurrencies();
-                panel.UpdateOverview();
-                //TODO: optimize this to only update when turn changes
-                panel.SetPlayerAvatar();
-            }
-          
         }
 
         public void UpdateOnlyPlayerAvatar()

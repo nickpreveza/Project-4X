@@ -73,7 +73,7 @@ MonoBehaviour:
   - type: 5
     height: 0.7
   - type: 6
-    height: 0.85
+    height: 0.88
   tileParent: {fileID: 0}
   hexBasePrefab: {fileID: 4283572920935952471, guid: 1ef965df57d649f468ccff87fb43604e,
     type: 3}

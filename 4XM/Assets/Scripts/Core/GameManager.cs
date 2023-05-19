@@ -500,7 +500,7 @@ namespace SignedInitiative
                     activePlayerIndex = 0;
                 }
 
-                if (GetPlayerByIndex(activePlayerIndex).isAlive)
+                if (GetPlayerByIndex(activePlayerIndex).isAlive && GetPlayerByIndex(activePlayerIndex).playerCities.Count > 0)
                 {
                     foundPlayer = true;
                     break;
@@ -512,10 +512,11 @@ namespace SignedInitiative
                 GameOver(activePlayer);
                 return;
             }
-
-            SI_CameraController.Instance.animationsRunning = false;
-            StartTurn(sessionPlayers[activePlayerIndex]);
-
+            else
+            {
+                SI_CameraController.Instance.animationsRunning = false;
+                StartTurn(sessionPlayers[activePlayerIndex]);
+            }
         }
 
         public void EndTurn(Player player)

@@ -35293,6 +35293,7 @@ MonoBehaviour:
     cityCreatedUnits: []
     cityHexesThatCanBeWorked: []
   hexGameObject: {fileID: 0}
+  wiggler: {fileID: 0}
   associatedUnit: {fileID: 0}
   unitParent: {fileID: 0}
   resourceParent: {fileID: 0}
@@ -35303,6 +35304,8 @@ MonoBehaviour:
   cityGameObject: {fileID: 0}
   parentCity: {fileID: 0}
   cityView: {fileID: 0}
+  visualHelper: {fileID: 0}
+  roadHelper: {fileID: 0}
   adjacentHexes: []
   pathParent: {fileID: 0}
   aiScore: 0
@@ -35816,12 +35819,12 @@ PrefabInstance:
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: sessionPlayers.Array.size
-      value: 2
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
       propertyPath: sessionPlayers.Array.data[0].type
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
@@ -35840,6 +35843,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
+      propertyPath: sessionPlayers.Array.data[2].index
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].index
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
       propertyPath: abilities.Array.data[5].abilityCost
       value: 4
       objectReference: {fileID: 0}
@@ -35855,6 +35868,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
+      propertyPath: sessionPlayers.Array.data[1].isAlive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].isAlive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].isAlive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
       propertyPath: abilities.Array.data[5].scoreForPlayer
       value: 20
       objectReference: {fileID: 0}
@@ -35862,6 +35890,16 @@ PrefabInstance:
         type: 3}
       propertyPath: abilities.Array.data[6].scoreForPlayer
       value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].civilization
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].civilization
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}
@@ -35933,6 +35971,16 @@ PrefabInstance:
       propertyPath: gameCivilizations.Array.data[0].civilizationIntro
       value: By the Bay of Lions rises Ikaria Empire. A great and prideful nation,
         they arose from the strife between multiple small city states.
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[2].abilities.unitSwordsman
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8911852278046293648, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
+        type: 3}
+      propertyPath: sessionPlayers.Array.data[3].abilities.unitSwordsman
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8911852278046293650, guid: 2dcaba713d87e58438acfe0d9fe7ecd1,
         type: 3}

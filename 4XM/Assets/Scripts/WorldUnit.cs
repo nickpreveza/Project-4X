@@ -376,7 +376,14 @@ public class WorldUnit : MonoBehaviour
         UpdateMaterialColor(civColor);
         SpawnParticle(UnitManager.Instance.unitSpawnParticle);
         UpdateVisualsDirection(false);
+        ValidateRemainigActions();
         VisualUpdate();
+
+        if (!GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).isAI())
+        {
+            UnitManager.Instance.SelectUnit(this);
+        }
+     
     }
 
     void UpdateMaterialColor(Color newColor)
@@ -426,6 +433,7 @@ public class WorldUnit : MonoBehaviour
         hasAttacked = true;
 
         ValidateRemainigActions();
+        UnitManager.Instance.RefresetSelection();
     }
 
     void ResetActions(bool isEndOfTurn, bool skipHeal = false)
@@ -515,6 +523,15 @@ public class WorldUnit : MonoBehaviour
             Debug.LogError("Unit was not interactable but tried to capture a city");
             return;
         }
+
+        if (originCity != null)
+        {
+            if (originCity.cityData.population > 0)
+            {
+                originCity.RemovePopulation();
+            }
+        }
+
         originCity = parentHex;
         GameManager.Instance.activePlayer.AddCity(parentHex);
         visualAnim.SetTrigger("Capture");

@@ -162,7 +162,7 @@ public class HexView : MonoBehaviour
                 case TileType.SEA:
                     if (GameManager.Instance.activePlayer.abilities.portBuilding)
                     {
-                        GeneratePortButton(isOccupied);
+                        GeneratePortButton(!isOccupied);
                     }
                     if (GameManager.Instance.activePlayer.abilities.createFish)
                     {
@@ -179,7 +179,7 @@ public class HexView : MonoBehaviour
                     {
                         if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
                         {
-                            GenerateGuildButton(isOccupied);
+                            GenerateGuildButton(!isOccupied);
                         }
                     }
 
@@ -609,16 +609,16 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForShipButton(this, hex);
     }
 
-    void GeneratePortButton(bool isOccupied)
+    void GeneratePortButton(bool shouldBeActive)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Port, isOccupied, false);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Port, shouldBeActive, false);
     }
 
-    void GenerateGuildButton(bool isOccupied)
+    void GenerateGuildButton(bool shouldBeActive)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Guild, isOccupied, false);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Guild, shouldBeActive, false);
     }
 
     void GenerateRoadButton()
