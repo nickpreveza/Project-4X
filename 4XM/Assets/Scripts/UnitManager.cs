@@ -229,6 +229,9 @@ public class UnitManager : MonoBehaviour
                 //enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
                 //visualAnim.SetTrigger("AttackShield");
                 break;
+            case UnitType.Lance:
+                originUnit.visualAnim.SetTrigger("AttackLance");
+                break;
         }
 
         if (GameManager.Instance.activePlayer.isAI())
@@ -273,6 +276,12 @@ public class UnitManager : MonoBehaviour
             }
 
             originUnit.parentHex.Deselect();
+
+            originUnit.ValidateRemainigActions();
+            if (!GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).isAI())
+            {
+                SelectUnit(originUnit);
+            }
         }
         else
         {
@@ -355,11 +364,18 @@ public class UnitManager : MonoBehaviour
                 {
                     originUnit.SpawnParticle(UnitManager.Instance.unitHitParticle, true);
                     originUnit.visualAnim.SetTrigger("Evade");
+                   
+                    originUnit.ValidateRemainigActions();
+                    if (!GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).isAI())
+                    {
+                        SelectUnit(originUnit);
+                    }
                     originUnit.parentHex.HideHighlight();
                     enemyUnit.parentHex.HideHighlight();
                 }
             }
         }
+
 
         originUnit?.parentHex.HideHighlight();
         enemyUnit?.parentHex.HideHighlight();
@@ -619,6 +635,11 @@ public class UnitManager : MonoBehaviour
 
     public List<WorldHex> FindMultiturnPath(WorldUnit unit, WorldHex end, out int turnsToTarget)
     {
+        if (unit == null || end == null)
+        {
+            turnsToTarget = 0;
+            return null; 
+        }
         turnsToTarget = 0;
         WorldHex start = unit.parentHex;
         Player player = GameManager.Instance.GetPlayerByIndex(unit.playerOwnerIndex);

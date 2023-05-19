@@ -162,7 +162,11 @@ public class HexView : MonoBehaviour
                 case TileType.SEA:
                     if (GameManager.Instance.activePlayer.abilities.portBuilding)
                     {
-                        GeneratePortButton(!isOccupied);
+                        if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Port))
+                        {
+                            GeneratePortButton(!isOccupied);
+                        }
+                      
                     }
                     if (GameManager.Instance.activePlayer.abilities.createFish)
                     {
@@ -222,7 +226,7 @@ public class HexView : MonoBehaviour
         if (isOwner)
         {
             hexName.text = hex.cityData.cityName;
-            hexDescriptionSmall.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization).name + " CITY";
+            hexDescriptionSmall.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization).name.ToUpper() + " CITY";
             hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);
 
             GenerateUnitButtons();
@@ -251,8 +255,8 @@ public class HexView : MonoBehaviour
 
             if (hex.hexData.playerOwnerIndex == -1)
             {
-                hexDescription.text = "CITY HEX";
-                hexName.text = "Unclaimed City";
+                hexDescriptionSmall.text = "UNCLAIMED CITY";
+                hexName.text = "VILLAGE";
                 hexDescription.text = "Move a unit here to claim this city";
                 hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
 
@@ -260,7 +264,8 @@ public class HexView : MonoBehaviour
             else
             {
                 hexName.text = hex.cityData.cityName;
-                hexDescription.text = "This city belongs to the " +
+                hexDescriptionSmall.text = GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization).name.ToUpper() + " CITY";
+                hexDescription.text = "This city belongs to " +
                     GameManager.Instance.GetCivilizationByType(GameManager.Instance.GetPlayerByIndex(hex.hexData.playerOwnerIndex).civilization);
 
                 hexDescriptionBackground.color = GameManager.Instance.GetCivilizationColor(hex.hexData.playerOwnerIndex, CivColorType.uiActiveColor);

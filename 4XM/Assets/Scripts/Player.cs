@@ -32,10 +32,8 @@ public class Player
     public Dictionary<UnitType, bool> gameUnitsDictionary = new Dictionary<UnitType, bool>();
 
     public List<WorldUnit> playerUnits = new List<WorldUnit>();
-    public List<WorldHex> playerCities = new List<WorldHex>();
 
-   
-    
+    public List<WorldHex> playerCities = new List<WorldHex>();    
 
     public WorldUnit lastMovedUnit;
 
@@ -361,24 +359,25 @@ public class Player
     {
         cityHex.cityData.isUnderSiege = false;
         //TODO: Some security checks to make sure this is the correct tile;
-        playerCities.Add(cityHex);
-        MapManager.Instance.OccupyCityByPlayer(this, cityHex);
-        while (MapManager.Instance.occupyingCity)
+        if (!playerCities.Contains(cityHex))
         {
-
+            playerCities.Add(cityHex);
+            Debug.Log("Added " + cityHex.cityData.cityName + " to " + this.civilization.ToString());
         }
-        RecalculateAbilityCosts();
-        CalculateExpectedStars();
-        SI_EventManager.Instance.OnCityCaptured(index);
+       
+        MapManager.Instance.OccupyCityByPlayer(this, cityHex);
+ 
     }
 
     public void RemoveCity(WorldHex cityHex, bool showPopup)
     {
+        Debug.Log("Removed " + cityHex.cityData.cityName + " from " + this.civilization.ToString());
         //probably master resources will not update
         if (playerCities.Contains(cityHex))
         {
             playerCities.Remove(cityHex);
         }
+
         if(cityHex == capitalCity)
         {
             capitalCity = null;
@@ -392,8 +391,8 @@ public class Player
             GameManager.Instance.RemovePlayerFromGame(this, showPopup);
         }
 
-       
 
+      
     }
 
 }

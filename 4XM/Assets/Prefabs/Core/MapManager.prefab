@@ -10233,7 +10233,7 @@ MonoBehaviour:
     slaveBuilding: 9
     masterBuilding: 9
     matchingResource: 6
-    isMaster: 0
+    isMaster: 1
     scoreForPlayer: 0
     cost: 5
     output: 2

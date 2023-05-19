@@ -377,9 +377,11 @@ public class WorldUnit : MonoBehaviour
         SpawnParticle(UnitManager.Instance.unitSpawnParticle);
         UpdateVisualsDirection(false);
         ValidateRemainigActions();
-        VisualUpdate();
 
-        if (!GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).isAI())
+        UnitManager.Instance.ClearHexSelectionMode();
+        UIManager.Instance.HideHexView();   
+
+        if (isInteractable && !GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).isAI())
         {
             UnitManager.Instance.SelectUnit(this);
         }
@@ -533,10 +535,13 @@ public class WorldUnit : MonoBehaviour
         }
 
         originCity = parentHex;
-        GameManager.Instance.activePlayer.AddCity(parentHex);
+
         visualAnim.SetTrigger("Capture");
         ExhaustActions();
         OnActionEnded();
+
+        Debug.Log("Unit from " + GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).civilization.ToString() + " captured " + parentHex.cityData.cityName);
+        GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).AddCity(parentHex);
     }
 
     public void MonumentCapture()
@@ -613,6 +618,7 @@ public class WorldUnit : MonoBehaviour
         {
             GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithActions.Remove(this);
         }
+
         VisualUpdate();
     }
 

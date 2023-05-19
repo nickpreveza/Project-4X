@@ -361,7 +361,6 @@ public class ActionButton : MonoBehaviour
 
     public void CaptureCityButton()
     {
-        if (SI_CameraController.Instance.animationsRunning) { return; }
         UIManager.Instance.OpenPopup(
             "Capture city", 
             "Add this city to your empire", 

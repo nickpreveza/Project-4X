@@ -150,7 +150,7 @@ public class Brain : MonoBehaviour
             yield break;
         }
 
-        List<WorldHex> playerCities = player.playerCities;
+        List<WorldHex> playerCities = new List<WorldHex>(player.playerCities);
         if (playerCities.Contains(player.capitalCity))
         {
             playerCities.Remove(player.capitalCity);

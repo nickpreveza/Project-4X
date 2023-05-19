@@ -579,6 +579,8 @@ public class MapManager : MonoBehaviour
         if (city.hexData.playerOwnerIndex > -1 && city.hexData.playerOwnerIndex != player.index)
         {
             bool showPopup = false;
+            GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).RemoveCity(city, showPopup);
+           
 
             if (player == GameManager.Instance.activePlayer && player.type == PlayerType.LOCAL)
             {
@@ -592,7 +594,6 @@ public class MapManager : MonoBehaviour
                 city.cityView.SetCapitalStatus(false);
                 city.cityData.isCapital = false;
                 //remove the hex from the list, kill player if no more cities
-                GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).RemoveCity(city, showPopup);
 
                 if (GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).playerCities.Count > 0)
                 {
@@ -639,17 +640,14 @@ public class MapManager : MonoBehaviour
                 }
             }
 
-            if (city.hexData.playerOwnerIndex > -1)
-            {
-                GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).RemoveCity(city, showPopup);
-            }
+
 
         }
 
         //set player
-        city.hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
+        city.hexData.playerOwnerIndex = player.index;
         city.hexData.cityHasBeenClaimed = true;
-        city.cityData.playerIndex = GameManager.Instance.GetPlayerIndex(player);
+        city.cityData.playerIndex = player.index;
         city.cityData.isUnderSiege = false;
         city.cityData.population = 0;
 
@@ -727,6 +725,9 @@ public class MapManager : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
+        player.RecalculateAbilityCosts();
+        player.CalculateExpectedStars();
+        SI_EventManager.Instance.OnCityCaptured(player.index);
         occupyingCity = false;
     }
 
@@ -1409,7 +1410,6 @@ public class MapManager : MonoBehaviour
         {
             //hex.GenerateResources();
         }
-
     }
 
     public List<WorldHex> FindRoadPath(WorldHex start, WorldHex end, int playerOwnerIndex)

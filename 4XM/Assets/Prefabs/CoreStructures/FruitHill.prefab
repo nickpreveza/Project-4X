@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9098927252026979373}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: FruitHill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -47,7 +47,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1763817136346132, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4228012861393828, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_RootOrder
@@ -96,7 +96,7 @@ PrefabInstance:
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
@@ -129,7 +129,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1763817136346132, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4228012861393828, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_RootOrder
@@ -178,7 +178,7 @@ PrefabInstance:
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
@@ -211,7 +211,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1763817136346132, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_Layer
-      value: 12
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 4228012861393828, guid: 0f3575c567ebe8241a4a6ad511fd7017, type: 3}
       propertyPath: m_RootOrder
@@ -260,7 +260,7 @@ PrefabInstance:
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
       propertyPath: m_Materials.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 23141340258673082, guid: 0f3575c567ebe8241a4a6ad511fd7017,
         type: 3}
