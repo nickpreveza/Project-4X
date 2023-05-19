@@ -32,6 +32,10 @@ public class UnitManager : MonoBehaviour
     public GameObject unitWalkParticle;
     public GameObject unitSelectParticle;
 
+    public bool runningMoveSequence;
+    public bool runningCombatSequence;
+
+    public float moveAnimationLenght;
     void Awake()
     {
         if (Instance == null)
@@ -48,6 +52,310 @@ public class UnitManager : MonoBehaviour
     {
         SI_EventManager.Instance.onAutopanCompleted += OnAutopanCompletedCallback;
         SI_EventManager.Instance.onAbilityUnlocked += OnAbilityUnlockUpdate;
+    }
+
+    public void StartMoveSequence(WorldUnit originUnit, WorldHex targetHex, bool followCamera, bool afterAttack)
+    {
+        runningMoveSequence = true;
+        StartCoroutine(MoveSequence(originUnit, targetHex, followCamera, afterAttack));
+    }
+
+    IEnumerator MoveSequence(WorldUnit originUnit, WorldHex targetHex, bool followCamera, bool afterAttack)
+    {
+        List<WorldHex> path = UnitManager.Instance.FindPath(originUnit, originUnit.parentHex, targetHex);
+       
+        if (path == null)
+        {
+            path = UnitManager.Instance.FindPath(originUnit, originUnit.parentHex, targetHex, true);
+        }
+
+        if (path == null)
+        {
+            Debug.LogWarning("Tried to move to tile with no path. Aborted");
+            originUnit.assignedPathTarget = null;
+            if (GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).unitsWithPaths.Contains(originUnit))
+            {
+                GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).unitsWithPaths.Remove(originUnit);
+            }
+
+            runningMoveSequence = false;
+            yield break;
+        }
+
+        originUnit.Deselect();
+        originUnit.parentHex.UnitOut(originUnit);
+
+        hexSelectMode = false;
+
+        if (!originUnit.unitReference.canAttackAfterMove)
+        {
+            originUnit.currentAttackCharges--;
+        }
+
+        GameManager.Instance.activePlayer.lastMovedUnit = originUnit;
+        WorldHex tempPathParent = originUnit.parentHex;
+        originUnit.parentHex.SpawnParticle(UnitManager.Instance.unitWalkParticle);
+
+        if (!afterAttack)
+        {
+            originUnit.hasMoved = true;
+            originUnit.currentMovePoints--;
+        }
+
+        if (!originUnit.isBoat && !originUnit.isShip)
+        {
+            originUnit.visualAnim.SetTrigger("Walk");
+        }
+
+
+        foreach (WorldHex pathStep in path)
+        {
+            if (pathStep == originUnit.parentHex)
+            {
+                continue;
+            }
+
+            originUnit.UpdateDirection(tempPathParent, pathStep, false);
+            originUnit.oldPosition = tempPathParent.hexData.PositionFromCamera();
+            originUnit.newPosition = pathStep.hexData.PositionFromCamera();
+
+            if (pathStep.hexData.type == TileType.MOUNTAIN)
+            {
+                originUnit.newPosition.y = MapManager.Instance.mountainTileUnitOffsetY;
+            }
+
+            if (moveAnimationLenght > 0)
+            {
+                float elapsedTime = 0;
+
+                while (elapsedTime < moveAnimationLenght)
+                {
+                    originUnit.transform.position = Vector3.Lerp(originUnit.oldPosition, originUnit.newPosition, (elapsedTime / moveAnimationLenght));
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+            }
+
+
+            if (pathStep == targetHex)
+            {
+                originUnit.parentHex = pathStep;
+                originUnit.parentHex.UnitIn(originUnit);
+                originUnit.transform.SetParent(originUnit.parentHex.unitParent);
+                originUnit.transform.localPosition = Vector3.zero;
+
+                originUnit.c = originUnit.parentHex.hexData.C;
+                originUnit.r = originUnit.parentHex.hexData.R;
+
+                originUnit.visualAnim.SetTrigger("Idle");
+
+                if (!GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).isAI())
+                {
+                    UnitManager.Instance.SelectUnit(originUnit);
+                }
+                runningMoveSequence = false;
+                yield break;
+
+            }
+
+            pathStep.SpawnParticle(UnitManager.Instance.unitWalkParticle);
+            pathStep.Wiggle();
+            tempPathParent = pathStep;
+
+        }
+    }
+
+
+    public void StartAttackSequence(WorldUnit originUnit, WorldHex enemyHex)
+    {
+        runningCombatSequence = true;
+        StartCoroutine(AttackSequence(originUnit, enemyHex));
+    }
+
+
+    IEnumerator AttackSequence(WorldUnit originUnit, WorldHex enemyHex)
+    {
+        WorldUnit enemyUnit = enemyHex.associatedUnit;
+
+        if (enemyUnit == null)
+        {
+            runningCombatSequence = false;
+            yield break;
+        }
+
+        originUnit.currentAttackCharges--;
+        originUnit.hasAttacked = true;
+
+        if (!originUnit.isBoat && !originUnit.isShip)
+        {
+            if (originUnit.unitReference.canMoveAfterAttack && originUnit.hasMoved)
+            {
+                originUnit.currentMovePoints++;
+            }
+        }
+        else
+        {
+            if (originUnit.boatReference.canMoveAfterAttack && originUnit.hasMoved)
+            {
+                originUnit.currentMovePoints++;
+            }
+        }
+
+        if(GameManager.Instance.activePlayer.isAI())
+        {
+            originUnit.parentHex.ShowHighlight(false);
+            yield return new WaitForSeconds(0.3f);
+        }
+
+        switch (originUnit.type)
+        {
+            case UnitType.Defensive:
+            case UnitType.Trader:
+            case UnitType.Diplomat:
+            case UnitType.Melee:
+            case UnitType.Boat:
+            case UnitType.Knight:
+                originUnit.visualAnim.SetTrigger("AttackSword");
+                break;
+            case UnitType.Ranged:
+                originUnit.visualAnim.SetTrigger("AttackBow");
+                break;
+            case UnitType.Cavalry:
+                originUnit.visualAnim.SetTrigger("AttackHorse");
+                break;
+            case UnitType.Siege:
+            case UnitType.Ship:
+               // yield return new WaitForSeconds(0.5f);
+                //enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
+                //visualAnim.SetTrigger("AttackShield");
+                break;
+        }
+
+        if (GameManager.Instance.activePlayer.isAI())
+        {
+            yield return new WaitForSeconds(0.5f);
+            enemyUnit.parentHex.ShowHighlight(true);
+        }
+
+        yield return new WaitForSeconds(.7f);
+
+        if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
+        {
+            enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
+        }
+
+        if (enemyUnit.ReceiveDamage(originUnit.currentAttack))
+        {
+            enemyUnit.visualAnim.SetTrigger("Die");
+            yield return new WaitForSeconds(0.5f);
+            enemyUnit.parentHex.HideHighlight();
+            enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
+            enemyUnit.Deselect();
+
+            if (enemyUnit.originCity != null)
+            {
+                if (enemyUnit.originCity.cityData.population > 0)
+                {
+                    enemyUnit.originCity.RemovePopulation();
+                }
+            }
+
+            GameManager.Instance.GetPlayerByIndex(enemyUnit.playerOwnerIndex).playerUnits.Remove(enemyUnit);
+            enemyUnit.parentHex.UnitOut(enemyUnit, true);
+            enemyUnit.parentHex.Deselect();
+            yield return new WaitForSeconds(.5f);
+            enemyUnit.Death(true);
+
+            if (!originUnit.attackIsRanged)
+            {
+                yield return new WaitForSeconds(0.2f);
+                StartMoveSequence(originUnit, enemyHex, true, true);     
+            }
+
+            originUnit.parentHex.Deselect();
+        }
+        else
+        {
+            if (isUnitInAttackRange(enemyUnit, originUnit))
+            {
+                if (GameManager.Instance.activePlayer.isAI())
+                {
+                    enemyUnit.parentHex.ShowHighlight(false);
+                    yield return new WaitForSeconds(0.3f);
+                }
+
+                switch (enemyUnit.type)
+                {
+                    case UnitType.Defensive:
+                    case UnitType.Trader:
+                    case UnitType.Diplomat:
+                    case UnitType.Melee:
+                    case UnitType.Boat:
+                        enemyUnit.visualAnim.SetTrigger("AttackSword");
+                        break;
+                    case UnitType.Ranged:
+                        enemyUnit.visualAnim.SetTrigger("AttackBow");
+                        break;
+                    case UnitType.Cavalry:
+                        enemyUnit.visualAnim.SetTrigger("AttackHorse");
+                        break;
+                    case UnitType.Siege:
+                    case UnitType.Ship:
+                        // yield return new WaitForSeconds(0.5f);
+                        //enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
+                        //visualAnim.SetTrigger("AttackShield");
+                        break;
+                }
+
+                if (GameManager.Instance.activePlayer.isAI())
+                {
+                    yield return new WaitForSeconds(0.5f);
+                    originUnit.parentHex.ShowHighlight(true);
+                }
+
+                yield return new WaitForSeconds(.7f);
+
+                if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
+                {
+                    originUnit.SpawnParticle(GameManager.Instance.explosionParticle);
+                }
+
+                if (originUnit.ReceiveDamage(enemyUnit.unitReference.counterAttack))
+                {
+                    originUnit.visualAnim.SetTrigger("Die");
+                    yield return new WaitForSeconds(0.5f);
+                    originUnit.parentHex.HideHighlight();
+                    originUnit.SpawnParticle(unitDeathParticle);
+                    originUnit.Deselect();
+
+                    if (originUnit.originCity != null)
+                    {
+                        if (originUnit.originCity.cityData.population > 0)
+                        {
+                            originUnit.originCity.RemovePopulation();
+                        }
+                    }
+
+                    GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).playerUnits.Remove(originUnit);
+                    originUnit.parentHex.UnitOut(originUnit, true);
+                    originUnit.parentHex.Deselect();
+                    yield return new WaitForSeconds(.5f);
+                    originUnit.Death(true);
+                    runningCombatSequence = false;
+                    yield break;
+
+                }
+                else
+                {
+                    originUnit.SpawnParticle(UnitManager.Instance.unitHitParticle, true);
+                    originUnit.visualAnim.SetTrigger("Evade");
+                    originUnit.parentHex.HideHighlight();
+                    enemyUnit.parentHex.HideHighlight();
+                }
+            }
+        }
+
+        runningCombatSequence = false;
     }
 
     public void OnUnitMovedCallback(WorldHex oldHex, WorldHex newHex)
@@ -179,7 +487,7 @@ public class UnitManager : MonoBehaviour
                 }
                 else
                 {
-                    selectedWalkList = GetWalkableHexes(newUnit, newUnit.currentWalkRange);
+                    selectedWalkList = GetWalkableHexes(newUnit);
                     if (selectedWalkList.Count == 0)
                     {
                         selectedUnit.noWalkHexInRange = true;
@@ -533,10 +841,13 @@ public class UnitManager : MonoBehaviour
         int range = targetUnit.currentWalkRange;
         startHex = targetUnit.parentHex;
         int roadModifier = targetUnit.unitReference.roadModifier; // this should probably be in the unit reference, but alas, don't think we're gonna change it. 
-
+        bool ignoreRoads = false;
+        
         if (customRange != -1)
         {
             range = customRange;
+            roadModifier = 0;
+            ignoreRoads = true;
         }
 
         List<WorldHex> hexesInGeneralRange = MapManager.Instance.GetHexesListWithinRadius(startHex.hexData, range);
@@ -583,7 +894,7 @@ public class UnitManager : MonoBehaviour
             }
         }
 
-        if (targetUnit.parentHex.hexData.hasRoad)
+        if (targetUnit.parentHex.hexData.hasRoad && !ignoreRoads)
         {
             List<WorldHex> roadConnectedHexes = GetRoadPaths(targetUnit, checkedHexes);
 
@@ -725,14 +1036,14 @@ public class UnitManager : MonoBehaviour
     {
         ClearFoundHexes();
         hexSelectMode = false;
-        selectedUnit.SetMoveTarget(hex, true, false, false);
+        StartMoveSequence(selectedUnit, hex, true, false);
     }
 
     public void AttackTargetUnitInHex(WorldHex hex)
     {
         ClearFoundHexes();
         hexSelectMode = false;
-        selectedUnit.Attack(hex);
+        StartAttackSequence(selectedUnit, hex);
     }
 
    

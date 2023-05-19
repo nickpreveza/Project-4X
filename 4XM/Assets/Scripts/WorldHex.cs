@@ -11,19 +11,19 @@ public class WorldHex : MonoBehaviour
     public Hex hexData;
     public CityData cityData;
     public GameObject hexGameObject;
-    Wiggler wiggler;
+    public Wiggler wiggler;
     public WorldUnit associatedUnit;
     public Transform unitParent;
     public Transform resourceParent;
     [SerializeField] GameObject hexHighlight;
     [SerializeField] GameObject cloud;
-    [SerializeField] GameObject border;
+    public GameObject border;
     [SerializeField] Transform particleParent;
-    [SerializeField] GameObject cityGameObject;
+    public GameObject cityGameObject;
     public WorldHex parentCity;
     public CityView cityView;
-    CityVisualHelper visualHelper;
-    RoadHelper roadHelper;
+    public CityVisualHelper visualHelper;
+    public RoadHelper roadHelper;
     public List<WorldHex> adjacentHexes = new List<WorldHex>();
     public WorldHex pathParent;
     //0 - Visual Layer 
@@ -633,140 +633,6 @@ public class WorldHex : MonoBehaviour
         cityView.gameObject.SetActive(false);
     }
 
-    public IEnumerator RemoveProgressPoint(int value)
-    {
-        SI_CameraController.Instance.animationsRunning = true;
-        for (int i = 0; i < value; i++)
-        {
-            if (cityData.levelPointsToNext > 0)
-            {
-                cityView.ToggleOffProgressPoint(false);
-                cityData.levelPointsToNext--;
-               
-                yield return new WaitForSeconds(0.3f);
-            }
-            else
-            {
-                if (cityData.negativeLevelPoints >= cityData.targetLevelPoints  || cityData.output == 0)
-                {
-                    continue;
-                }
-
-                cityData.negativeLevelPoints++;
-                cityData.output--;
-
-                cityView.ToggleOnProgressPoint(true);
-                yield return new WaitForSeconds(0.3f);
-            }
-
-        }
-
-        if (GameManager.Instance.IsIndexOfActivePlayer(hexData.playerOwnerIndex))
-        {
-            GameManager.Instance.activePlayer.CalculateExpectedStars();
-            UIManager.Instance.UpdateHUD();
-        }
-
-         SI_CameraController.Instance.animationsRunning = false;
-    }
-
-    bool progressPointsAddRunning = false;
-
-    public IEnumerator AddProgressPoint(int value)
-    {
-        if (value == 0)
-        {
-             
-            yield break;
-        }
-
-        SI_CameraController.Instance.animationsRunning = true;
-        progressPointsAddRunning = true;
-
-        for(int i = 0; i < value; i++)
-        {          
-            wiggler?.Wiggle();
-            if (cityData.negativeLevelPoints > 0)
-            {
-                cityView.ToggleOffProgressPoint(true);
-                cityData.negativeLevelPoints--;
-                cityData.output++;        
-                continue;
-            }
-            else
-            {
-                cityData.levelPointsToNext++;
-                cityView.ToggleOnProgressPoint(false);
-                yield return new WaitForSeconds(1f);
-                
-                if (cityData.levelPointsToNext == cityData.targetLevelPoints)
-                {
-                    cityData.level++;
-                    cityData.targetLevelPoints = cityData.level + 1;
-                    cityData.levelPointsToNext = 0;
-                    cityData.output++;
-
-                    cityView.LevelUp();
-
-                    if (visualHelper != null)
-                    {
-                        visualHelper.cityLevelEffect.SetActive(true);
-                    }
-
-                    yield return new WaitForSeconds(1f);
-                    if (!GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).isAI())
-                    {
-                        PopupLevelRewards(cityData.level);
-                    }
-                    else
-                    {
-                        InstantLevelRewards(cityData.level);
-                    }
-
-
-                    while (UIManager.Instance.waitingForPopupReply)
-                    {
-                        yield return new WaitForSeconds(0.1f);
-                    }
-
-                    yield return new WaitForSeconds(.5f);
-                    if (visualHelper != null)
-                    {
-                        visualHelper.cityLevelEffect.SetActive(false);
-                    }
-                    else
-                    {
-
-                        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
-                        visualHelper.cityLevelEffect.SetActive(false);
-                    }
-
-
-                }
-                else
-                {
-                    cityView.ToggleOnProgressPoint(false);
-                }
-            }
-            
-            yield return new WaitForSeconds(.5f);
-           
-        }
-
-        cityView.UpdateData();
-
-        if (GameManager.Instance.IsIndexOfActivePlayer(hexData.playerOwnerIndex))
-        {
-            GameManager.Instance.activePlayer.CalculateExpectedStars();
-            GameManager.Instance.activePlayer.CalculateDevelopmentScore(false);
-            UIManager.Instance.UpdateHUD();
-        }
-
-        SI_CameraController.Instance.animationsRunning = false;
-        progressPointsAddRunning = false;
-
-    }
-
     public void InstantLevelRewards(int cityLevel)
     {
         float randomChoice = Random.Range(0f, 1f);
@@ -912,17 +778,17 @@ public class WorldHex : MonoBehaviour
 
     IEnumerator WaitForProgressPointsToAddProgressPoints(int amount)
     {
-        while (progressPointsAddRunning)
+        while (MapManager.Instance.upgradingCity)
         {
             yield return new WaitForFixedUpdate();
         }
 
-        AddLevelPoint(amount);
+        MapManager.Instance.AddLevelPoint(this, amount);
     }
 
     IEnumerator WaitForProgressPointsToAddBorders()
     {
-        while (progressPointsAddRunning)
+        while (MapManager.Instance.upgradingCity)
         {
             yield return new WaitForFixedUpdate();
         }
@@ -969,16 +835,6 @@ public class WorldHex : MonoBehaviour
         cityView.UpdateData();
     }
 
-    void AddLevelPoint(int points)
-    {
-        StartCoroutine(AddProgressPoint(points));
-    }
-
-    void RemoveLevelPoint(int points)
-    {
-        StartCoroutine(RemoveProgressPoint(points));
-    }
-
     public void CreateResource(ResourceType type)
     {
         GenerateResource(type);
@@ -987,6 +843,8 @@ public class WorldHex : MonoBehaviour
 
     public void HarvestResource()
     {
+        UIManager.Instance.HideHexView();
+        MapManager.Instance.cityIsWorking = true;
         //for some reason this didnt work inside the enum
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
@@ -996,7 +854,8 @@ public class WorldHex : MonoBehaviour
 
     IEnumerator HarvestResourceEnum()
     {
-        SI_CameraController.Instance.animationsRunning = true;
+       
+        MapManager.Instance.cityIsWorking = true;
 
         Resource resource = MapManager.Instance.GetResourceByType(hexData.resourceType);
 
@@ -1012,23 +871,45 @@ public class WorldHex : MonoBehaviour
            
             hexData.hasBuilding = true;
             hexData.buildingType = MapManager.Instance.GetBuildingByResourceType(hexData.resourceType);
-
             GameObject obj = Instantiate(MapManager.Instance.GetBuildingByType(hexData.buildingType).levelPrefabs[0], resourceParent);
+
+            if (!GameManager.Instance.activePlayer.isAI())
+            {
+                UIManager.Instance.RefreshHexView();
+            }
 
             if (resource.output > 0)
             {
-                parentCity.AddLevelPoint(resource.output);
+                MapManager.Instance.AddLevelPoint(parentCity, resource.output);
             }
 
-            yield return new WaitForSeconds(.5f);
-            FindMaster();
+            while (MapManager.Instance.upgradingCity)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            foreach (WorldHex adjHex in adjacentHexes)
+            {
+                if (adjHex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
+                {
+                    adjHex.AddLevelToMaster();
+                    while (MapManager.Instance.upgradingCity)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+                }
+            }
 
         }
         else
         {
             if (resource.output > 0)
             {
-                parentCity.AddLevelPoint(resource.output);
+                MapManager.Instance.AddLevelPoint(parentCity, resource.output);
+                while (MapManager.Instance.upgradingCity)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
             }
 
         }
@@ -1036,46 +917,26 @@ public class WorldHex : MonoBehaviour
         hexData.hasResource = false;
         hexData.resourceType = ResourceType.EMPTY;
 
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UIManager.Instance.RefreshHexView();
+        }
+
         if (parentCity != null)
         {
             if (parentCity.cityData.cityHexesThatCanBeWorked.Contains(this))
             {
                 parentCity.cityData.cityHexesThatCanBeWorked.Remove(this);
             }
-
         }
 
-        Select(false);
-        SI_CameraController.Instance.animationsRunning = false;
-
-    }
-
-
-
-    
-
-    void FindMaster()
-    {
-        foreach(WorldHex adjHex in adjacentHexes)
-        {
-            if (adjHex.hexData.hasCity)
-            {
-                continue;
-            }
-            if (adjHex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).masterBuilding)
-            {
-                adjHex.AddLevelToMaster();
-                break;
-            }
-            
-            
-        }
+        MapManager.Instance.cityIsWorking = false;
     }
 
     void AddLevelToMaster()
     {
         hexData.buildingLevel++;
-        parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+        MapManager.Instance.AddLevelPoint(parentCity, MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
     }
 
     public void SetAsOccupiedByCity(WorldHex parentCityHex)
@@ -1104,17 +965,18 @@ public class WorldHex : MonoBehaviour
 
     public void CreateBuilding(BuildingType type)
     {
+        UIManager.Instance.HideHexView();
         StartCoroutine(CreateMaster(type));
     }
 
     IEnumerator CreateMaster(BuildingType type)
     {
-       
-        SI_CameraController.Instance.animationsRunning = true;
-        if (hexData.hasBuilding)
+        MapManager.Instance.cityIsWorking = true;
+
+        if (hexData.hasBuilding || parentCity.cityData.masterBuildings.Contains(type))
         {
-            Debug.LogWarning("Tried to place building on top of building");
-            SI_CameraController.Instance.animationsRunning = false;
+            Debug.LogWarning("Invalid master placement: Either has building, or parentCity already has master");
+            MapManager.Instance.cityIsWorking = false;
             yield break;
         }
 
@@ -1123,8 +985,8 @@ public class WorldHex : MonoBehaviour
             RemoveResource(false, false);
         }
 
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
         parentCity.cityData.masterBuildings.Add(type);
-
         Building building = MapManager.Instance.GetBuildingByType(type);
 
         hexData.hasBuilding = true;
@@ -1132,20 +994,33 @@ public class WorldHex : MonoBehaviour
         hexData.buildingLevel = 0;
         int buildingLevelPrefab = 0;
 
+        int levelPointToAdd = 0;
+
+        if (!GameManager.Instance.activePlayer.isAI())
+        {
+            UIManager.Instance.RefreshHexView();
+        }
+
         if (type != BuildingType.Guild && type != BuildingType.Port)
         {
             hexData.buildingLevel++;
             List<WorldHex> hexesToGainLevelFrom = new List<WorldHex>();
             GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
 
+            MapManager.Instance.AddLevelPoint(parentCity, MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+
+            while (MapManager.Instance.upgradingCity)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
             foreach (WorldHex hex in adjacentHexes)
             {
-                if (hex.hexData.hasBuilding && hex.parentCity == this.parentCity)
+                if (hex.hexData.hasBuilding && hex.hexData.playerOwnerIndex == hexData.playerOwnerIndex)
                 {
                     if (hex.hexData.buildingType == MapManager.Instance.GetBuildingByType(hexData.buildingType).slaveBuilding)
                     {
                         hexesToGainLevelFrom.Add(hex);
-                        
                     }
                 }
     
@@ -1153,25 +1028,31 @@ public class WorldHex : MonoBehaviour
 
             foreach(WorldHex hex in hexesToGainLevelFrom)
             {
-                yield return new WaitForSeconds(0.5f);
                 hexData.buildingLevel++;
                 hex.wiggler.Wiggle();
-                parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
-            }
-            /*
-            if (building.levelPrefabs.Length > hexData.buildingLevel)
-            {
-                buildingLevelPrefab = hexData.buildingLevel-1;
-            }*/
 
+                MapManager.Instance.AddLevelPoint(parentCity, MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+
+                while (MapManager.Instance.upgradingCity)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+            }
         }
         else
         {
             hexData.buildingLevel = 1;
             buildingLevelPrefab = 0;
-
-            parentCity.AddLevelPoint(MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
             GameObject obj = Instantiate(building.levelPrefabs[buildingLevelPrefab], resourceParent);
+
+            MapManager.Instance.AddLevelPoint(parentCity, MapManager.Instance.GetBuildingByType(hexData.buildingType).output);
+
+            while (MapManager.Instance.upgradingCity)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+
+            
         }
 
         if (parentCity.cityData.cityHexesThatCanBeWorked.Contains(this))
@@ -1179,24 +1060,26 @@ public class WorldHex : MonoBehaviour
             parentCity.cityData.cityHexesThatCanBeWorked.Remove(this);
         }
 
-        SI_CameraController.Instance.animationsRunning = false;
-        if (!GameManager.Instance.activePlayer.isAI())
-        {
-            UIManager.Instance.ShowHexView(this);
-        }
+
+        MapManager.Instance.cityIsWorking = false;
       
     }
 
     public void DestroyAction(bool isBuilding)
     {
+        SpawnParticle(GameManager.Instance.explosionParticle);
+        if (hexData.hasBuilding)
+        {
+            //override because I don't know why I wasn't 
+            isBuilding = true;
+        }
+
         if (isBuilding)
         {
-            SpawnParticle(GameManager.Instance.explosionParticle);
             RemoveBuilding();
         }
         else
         {
-            SpawnParticle(GameManager.Instance.explosionParticle);
             RemoveResource(true, true);
         }
     }
@@ -1204,34 +1087,46 @@ public class WorldHex : MonoBehaviour
     {
         wiggler?.Wiggle();
     }
+
     void RemoveBuilding()
     {
+        MapManager.Instance.cityIsWorking = true;
+        StartCoroutine(BuildingRemovalEnum());
+    }
+    IEnumerator BuildingRemovalEnum()
+    {
+        MapManager.Instance.cityIsWorking = true;
+
         Building building = MapManager.Instance.GetBuildingByType(hexData.buildingType);
 
         //recalculate master buildings surrounding this;
         //remove level point from city
-
+        int levelPointsToRemove = 0;
+        bool lookForMasters = false;
+        BuildingType masterBuilding = BuildingType.Empty;
         if (building.isMaster)
         {
             parentCity.cityData.masterBuildings.Remove(building.type);
 
-            if (building.type == BuildingType.Guild)
+            if (building.type == BuildingType.Guild || building.type == BuildingType.Port)
             {
-                parentCity.RemoveLevelPoint(building.output);
+                levelPointsToRemove = building.output;
+               
             }
             else
             {
-                parentCity.RemoveLevelPoint(hexData.buildingLevel);
+                levelPointsToRemove = hexData.buildingLevel;
             }
            
         }
         else
         {
-            int pointsToRemove = MapManager.Instance.GetResourceByType(building.matchingResource).output;
-            pointsToRemove += FindPointsToRemoveFromMasters(building);
-            parentCity.RemoveLevelPoint(pointsToRemove);
+            levelPointsToRemove = MapManager.Instance.GetResourceByType(building.matchingResource).output;
+            lookForMasters = true;
+            masterBuilding = building.masterBuilding;
         }
-      
+
+        
 
         hexData.hasBuilding = false;
         hexData.buildingType = BuildingType.Empty;
@@ -1239,27 +1134,40 @@ public class WorldHex : MonoBehaviour
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         if (resourceObj != null)
         {
-            Destroy(resourceObj);
+           Destroy(resourceObj);
         }
        
         if (!GameManager.Instance.activePlayer.isAI())
         {
             UIManager.Instance.ShowHexView(this);
         }
-    }
 
-    int FindPointsToRemoveFromMasters(Building building)
-    {
-        foreach (WorldHex hex in parentCity.cityData.cityHexes)
+        MapManager.Instance.RemoveLevelPoint(parentCity, levelPointsToRemove);
+
+        while (MapManager.Instance.upgradingCity)
         {
-            if (hex.hexData.buildingType == building.masterBuilding)
-            {
-                hex.hexData.buildingLevel--;
-                return MapManager.Instance.GetBuildingByType(building.masterBuilding).output;
-            }
+            yield return new WaitForFixedUpdate();
         }
 
-        return 0;
+        if (lookForMasters && masterBuilding != BuildingType.Empty)
+        {
+            foreach (WorldHex hex in adjacentHexes)
+            {
+                if (hex.hexData.buildingType == building.masterBuilding)
+                {
+                    hex.hexData.buildingLevel--;
+                    MapManager.Instance.RemoveLevelPoint(hex.parentCity, 1);
+                    while (MapManager.Instance.upgradingCity)
+                    {
+                        yield return new WaitForFixedUpdate();
+                    }
+
+                }
+            }
+
+        }
+
+        MapManager.Instance.cityIsWorking = false;
     }
 
     public void CreateRoad(bool searchForConnections = true)
@@ -1276,7 +1184,7 @@ public class WorldHex : MonoBehaviour
 
         if (hexData.playerOwnerIndex != -1 && searchForConnections)
         {
-            GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
+            MapManager.Instance.SearchForConnections(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex));
         }
 
         if (!GameManager.Instance.activePlayer.isAI())
@@ -1285,80 +1193,6 @@ public class WorldHex : MonoBehaviour
         }
     }
 
-    public void EvaluateConnections()
-    {
-        if (!hexData.hasRoad)
-        {
-            return;
-        }
-
-        int levelPointsToAdd = 0;
-
-        foreach (WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
-        {
-            if (city == GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity)
-            {
-                continue;
-            }
-
-            if (city.hexData.isConnectedToCapital)
-            {
-                List<WorldHex> attemptForRoad = MapManager.Instance.FindRoadPath(this, city, hexData.playerOwnerIndex);
-                if (attemptForRoad == null)
-                {
-                    city.SevereFromCapital();
-                }
-                else
-                {
-                    levelPointsToAdd++;
-                }
-            }
-        }
-
-        AddLevelPoint(levelPointsToAdd);
-        SearchForConnections();
-    }
-    //to be used by capital to find connected cities;
-    public void SearchForConnections()
-    {
-        if (!hexData.hasRoad)
-        {
-            return;
-        }
-
-        foreach(WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
-        {
-            if (city == GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity)
-            {
-                continue;
-            }
-
-            if (!city.hexData.isConnectedToCapital)
-            {
-               List<WorldHex> attemptForRoad = MapManager.Instance.FindRoadPath(this, city, hexData.playerOwnerIndex);
-               if (attemptForRoad != null)
-               {
-                    city.ConnectToCapital();
-                    this.AddLevelPoint(1);
-               }
-            }
-        }
-    }
-
-    public void ConnectToCapital()
-    {
-        hexData.isConnectedToCapital = true;
-        cityView.CapitalConnectionStatus(true);
-        AddLevelPoint(1);
-    }
-
-    public void SevereFromCapital()
-    {
-        hexData.isConnectedToCapital = false;
-        cityView.CapitalConnectionStatus(false);
-        RemoveLevelPoint(1);
-        GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.RemoveLevelPoint(1);
-    }
 
     public void AdjacentRoadChanged(WorldHex adjHex)
     {
@@ -1425,146 +1259,6 @@ public class WorldHex : MonoBehaviour
               UIManager.Instance.ShowHexView(this);
         }
       
-    }
-
-    public void SetAsCapital()
-    {
-        if (hexData.isConnectedToCapital)
-        {
-            SevereFromCapital();
-        }
-        cityData.isCapital = true;
-        cityView.SetCapitalStatus(true);
-        EvaluateConnections();
-    }
-
-    public void OccupyCityByPlayer(Player player, bool spawnUnit = false)
-    {
-        if (!hexData.hasCity)
-        {
-            Debug.LogError("Hex does not have a city");
-            return;
-        }
-
-        bool isThisATakeOver = false;
-
-        if (hexData.playerOwnerIndex > -1 && hexData.playerOwnerIndex != player.index)
-        {
-            bool showPopup = false;
-            if (player == GameManager.Instance.activePlayer && player.type == PlayerType.LOCAL)
-            {
-                showPopup = true;
-            }
-
-            isThisATakeOver = true;
-
-            if (cityData.isCapital)
-            {
-                cityView.SetCapitalStatus(false);
-                cityData.isCapital = false;
-                //remove the hex from the list, kill player if no more cities
-                GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).RemoveCity(this, showPopup);
-
-                if (GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities.Count > 0)
-                {
-                    WorldHex biggestCity = GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities[0];
-
-                    foreach (WorldHex city in GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).playerCities)
-                    {
-                        if (city.cityData.targetLevelPoints > biggestCity.cityData.targetLevelPoints)
-                        {
-                            biggestCity = city;
-                        }
-
-                        if (city.hexData.isConnectedToCapital)
-                        {
-                            city.SevereFromCapital();
-                        }
-                    }
-
-                    GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity = biggestCity;
-                    GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SetAsCapital();
-                }
-               
-            }
-            else if (hexData.isConnectedToCapital)
-            {
-                SevereFromCapital();
-            }
-        }
-
-        //set player
-        hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
-        hexData.cityHasBeenClaimed = true;
-        cityData.playerIndex = hexData.playerOwnerIndex;
-        cityData.isUnderSiege = false;
-        cityData.population = 0;
-
-        if (isThisATakeOver)
-        {
-            cityView.ResetPopulation();
-            foreach (WorldHex newHex in cityData.cityHexes)
-            {
-                newHex.SetAsOccupiedByCity(this);
-            }
-        }
-        else
-        {
-            List<WorldHex> newCityHexes = new List<WorldHex>(adjacentHexes);
-            foreach (WorldHex hex in adjacentHexes)
-            {
-                if (hex.hexData.isOwnedByCity)
-                {
-                    //Remove hexes that already belong to other cities 
-                    newCityHexes.Remove(hex);
-                }
-            }
-
-            cityData.cityHexes = newCityHexes;
-            cityData.output = GameManager.Instance.data.startCityOutput;
-
-            foreach (WorldHex newHex in cityData.cityHexes)
-            {
-                newHex.SetAsOccupiedByCity(this);
-            }
-        }
-
-
-        if (cityGameObject != null)
-        {
-            Destroy(cityGameObject);
-        }
-
-        hexData.hasRoad = true;
-        roadHelper.SetRoads();
-
-        //visual
-        cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, resourceParent);
-        visualHelper = cityGameObject.GetComponent<CityVisualHelper>();
-        Color newColor = GameManager.Instance.GetCivilizationColor(hexData.playerOwnerIndex, CivColorType.borderColor);
-        visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
-        border.SetActive(true);
-        border.GetComponent<MeshRenderer>().materials[0].color = newColor;
-       
-
-        cityView.gameObject.SetActive(true);
-        cityView.OccupyCity(!isThisATakeOver);
-        MapManager.Instance.UnhideHexes(player.index, this, cityData.range + 1, true);
-        GameManager.Instance.RecalculatePlayerExpectedStars(hexData.playerOwnerIndex);
-        //UIManager.Instance.UpdateResearchPanel(player.index); causes null error because too early when called from map manager
-
-        if (visualHelper != null)
-        {
-            visualHelper.SetCityEffect(false);
-        }
-
-        if (associatedUnit != null)
-        {
-            associatedUnit.originCity = this;
-            AddPopulation();
-        }
-        GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex).capitalCity.SearchForConnections();
-        FindCityResourcesThatCanBeWorked();
     }
 
     public void CityHexChanged(WorldHex hex)

@@ -62,11 +62,11 @@ MonoBehaviour:
   gameCivilizations:
   - name: Ikaria
     civilizationIntro: By the Bay of Lions rises Ikaria Empire. A great and prideful
-      nation, Kalimarda arose from the strife between multiple small city states.
+      nation, they arose from the strife between multiple small city states.
     civType: 0
     unitOverrides: []
     unitColor: {r: 0.29966182, g: 0.60020804, b: 0.6981132, a: 1}
-    unitInactive: {r: 0, g: 0, b: 0, a: 1}
+    unitInactive: {r: 0, g: 0.19161142, b: 0.41509432, a: 1}
     uiColorActive: {r: 0.12322002, g: 0.53514403, b: 0.6698113, a: 1}
     uiColorInactive: {r: 0.23789605, g: 0.4425334, b: 0.509434, a: 0.7294118}
     borderColor: {r: 0, g: 0.6117647, b: 0.8117647, a: 0.6392157}
@@ -85,7 +85,7 @@ MonoBehaviour:
     civType: 2
     unitOverrides: []
     unitColor: {r: 0.7921569, g: 0.7000085, b: 0.34901962, a: 1}
-    unitInactive: {r: 0, g: 0, b: 0, a: 0.8235294}
+    unitInactive: {r: 0.3773585, g: 0.30055106, b: 0, a: 1}
     uiColorActive: {r: 0.6509434, g: 0.5778223, b: 0.29169634, a: 1}
     uiColorInactive: {r: 0.3962264, g: 0.34874994, b: 0.16634032, a: 0.74509805}
     borderColor: {r: 0.79215693, g: 0.7019608, b: 0.34901962, a: 0.6392157}
@@ -105,7 +105,7 @@ MonoBehaviour:
     civType: 1
     unitOverrides: []
     unitColor: {r: 0.7364821, g: 0.3476326, b: 0.7924528, a: 1}
-    unitInactive: {r: 0, g: 0, b: 0, a: 0.8235294}
+    unitInactive: {r: 0.3561128, g: 0.0057404665, b: 0.4056604, a: 0.8235294}
     uiColorActive: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 1}
     uiColorInactive: {r: 0.377921, g: 0.115521535, b: 0.41509432, a: 0.74509805}
     borderColor: {r: 0.75686276, g: 0.28627452, b: 0.8235294, a: 0.6392157}
@@ -125,7 +125,7 @@ MonoBehaviour:
     civType: 3
     unitOverrides: []
     unitColor: {r: 0.8490566, g: 0.21472621, b: 0.16420433, a: 1}
-    unitInactive: {r: 0, g: 0, b: 0, a: 1}
+    unitInactive: {r: 0.3584906, g: 0.026630728, b: 0, a: 1}
     uiColorActive: {r: 0.6603774, g: 0.2593355, b: 0.22739409, a: 1}
     uiColorInactive: {r: 0.4811321, g: 0.20996511, b: 0.18836774, a: 0.74509805}
     borderColor: {r: 0.745283, g: 0.22784366, b: 0.18632075, a: 0.6392157}
@@ -160,7 +160,6 @@ MonoBehaviour:
   menuActive: 0
   isSinglePlayer: 0
   VisualizeAIMoves: 1
-  AIEnabled: 1
   destroyResourcesToo: 0
   useRandomSeed: 0
   allAbilitiesUnlocked: 0
@@ -307,7 +306,7 @@ MonoBehaviour:
   - isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 1
-    type: 3
+    type: 0
     civilization: 0
     abilities:
       travelMountain: 0
@@ -373,7 +372,7 @@ MonoBehaviour:
   - isFirstPlayer: 0
     activatedOnSetup: 0
     isAlive: 1
-    type: 3
+    type: 2
     civilization: 1
     abilities:
       travelMountain: 0
@@ -412,138 +411,6 @@ MonoBehaviour:
       portBuilding: 0
       guildBuilding: 0
     index: 1
-    totalScore: 0
-    developmentScore: 0
-    researchScore: 0
-    militaryScore: 0
-    turnCount: 0
-    stars: 0
-    expectedStars: 0
-    unlockedAbiltiesCount: 0
-    currentRank: 0
-    capitalCity: {fileID: 0}
-    playerUnits: []
-    playerCities: []
-    lastMovedUnit: {fileID: 0}
-    abilityDatabase: []
-    clearedHexes: []
-    clientID: 0
-    playerCanBuyAbility: 0
-    playerCanMoveUnit: 0
-    playerCanPlaceResource: 0
-    playerHasActions: 0
-    cityUnderSiege: 0
-    unitsWithPaths: []
-    assignedHexes: []
-    unitsWithActions: []
-  - isFirstPlayer: 0
-    activatedOnSetup: 0
-    isAlive: 1
-    type: 3
-    civilization: 2
-    abilities:
-      travelMountain: 0
-      travelSea: 0
-      travelOcean: 0
-      unitSwordsman: 1
-      unitArcher: 0
-      unitHorserider: 0
-      unitTrebucet: 0
-      unitShield: 0
-      unitKnight: 0
-      unitLance: 0
-      unitTrader: 0
-      unitDiplomat: 0
-      fishHarvest: 0
-      fruitHarvest: 0
-      farmHarvest: 0
-      mineHarvest: 0
-      animalHarvest: 0
-      forestHarvest: 0
-      roads: 0
-      destroyAbility: 0
-      forestCut: 0
-      createFish: 0
-      createFruit: 0
-      createForest: 0
-      createFarm: 0
-      createAnimals: 0
-      createMine: 0
-      shipUpgrade: 0
-      forestMasterBuilding: 0
-      mineMasterBuilding: 0
-      farmMasterBuilding: 0
-      fishMasterBuilding: 0
-      fishBuilding: 0
-      portBuilding: 0
-      guildBuilding: 0
-    index: 2
-    totalScore: 0
-    developmentScore: 0
-    researchScore: 0
-    militaryScore: 0
-    turnCount: 0
-    stars: 0
-    expectedStars: 0
-    unlockedAbiltiesCount: 0
-    currentRank: 0
-    capitalCity: {fileID: 0}
-    playerUnits: []
-    playerCities: []
-    lastMovedUnit: {fileID: 0}
-    abilityDatabase: []
-    clearedHexes: []
-    clientID: 0
-    playerCanBuyAbility: 0
-    playerCanMoveUnit: 0
-    playerCanPlaceResource: 0
-    playerHasActions: 0
-    cityUnderSiege: 0
-    unitsWithPaths: []
-    assignedHexes: []
-    unitsWithActions: []
-  - isFirstPlayer: 0
-    activatedOnSetup: 0
-    isAlive: 1
-    type: 3
-    civilization: 3
-    abilities:
-      travelMountain: 0
-      travelSea: 0
-      travelOcean: 0
-      unitSwordsman: 1
-      unitArcher: 0
-      unitHorserider: 0
-      unitTrebucet: 0
-      unitShield: 0
-      unitKnight: 0
-      unitLance: 0
-      unitTrader: 0
-      unitDiplomat: 0
-      fishHarvest: 0
-      fruitHarvest: 0
-      farmHarvest: 0
-      mineHarvest: 0
-      animalHarvest: 0
-      forestHarvest: 0
-      roads: 0
-      destroyAbility: 0
-      forestCut: 0
-      createFish: 0
-      createFruit: 0
-      createForest: 0
-      createFarm: 0
-      createAnimals: 0
-      createMine: 0
-      shipUpgrade: 0
-      forestMasterBuilding: 0
-      mineMasterBuilding: 0
-      farmMasterBuilding: 0
-      fishMasterBuilding: 0
-      fishBuilding: 0
-      portBuilding: 0
-      guildBuilding: 0
-    index: 3
     totalScore: 0
     developmentScore: 0
     researchScore: 0
@@ -752,8 +619,8 @@ MonoBehaviour:
     abilityDescription: "Allows you to create Scouts. \n\nMove a Scout to a guild
       of a different city to claim a reward. "
     abilityIcon: {fileID: 0}
-    abilityCost: 6
-    scoreForPlayer: 30
+    abilityCost: 4
+    scoreForPlayer: 20
     isUnlocked: 0
     abilityToUnlock: 5
   - abilityID: 5
@@ -761,8 +628,8 @@ MonoBehaviour:
     abilityDescription: Allows you to build roads. Use roads to traverse faster and
       connect cities to your Capital.
     abilityIcon: {fileID: 0}
-    abilityCost: 4
-    scoreForPlayer: 20
+    abilityCost: 6
+    scoreForPlayer: 30
     isUnlocked: 0
     abilityToUnlock: 6
   - abilityID: 6
@@ -771,7 +638,7 @@ MonoBehaviour:
       to destroy buildings and resources. \n\nMove a Scout to a guild of a different
       city to claim a reward. "
     abilityIcon: {fileID: 0}
-    abilityCost: 6
+    abilityCost: 8
     scoreForPlayer: 40
     isUnlocked: 0
     abilityToUnlock: 20
@@ -927,7 +794,7 @@ MonoBehaviour:
   knownPlayerHexes: []
   upgradingCities: 0
   lookingForResearch: 0
+  createRoads: 0
   checkForActions: 0
   checkForPaths: 0
   assignPaths: 0
-  combatRunning: 0

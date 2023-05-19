@@ -84,7 +84,7 @@ MonoBehaviour:
   - {fileID: 4568251101785535392, guid: 06f16bffb44a4d148bc4e0daf9176924, type: 3}
   - {fileID: 4568251101785535392, guid: 3fd01ef59e3f5a940a7c2009f7b3166e, type: 3}
   - {fileID: 4568251101785535392, guid: 912839591bccfb34291db9edfd3fbaa4, type: 3}
-  - {fileID: 368566061742258048, guid: 17aa9164747d6c841beabfbd08f4c207, type: 3}
+  - {fileID: 4592972144238047778, guid: 17aa9164747d6c841beabfbd08f4c207, type: 3}
   cityPrefab: {fileID: 2139847254330076987, guid: f19c564955d564e41b68050c2c5c262c,
     type: 3}
   mapTiles:
@@ -9999,11 +9999,11 @@ MonoBehaviour:
     - 0.2
     - 0
     prefab:
-    - {fileID: 0}
     - {fileID: 8776497687700742841, guid: 69f3ccd323cff994c88b062324f9d332, type: 3}
     - {fileID: 1601550562444364952, guid: 59d27a569ca9751459336eb64cf3c1bd, type: 3}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 8776497687700742841, guid: 69f3ccd323cff994c88b062324f9d332, type: 3}
+    - {fileID: 1900847966132024267, guid: 187c6c18dbf1f0644b22966b83e4044f, type: 3}
+    - {fileID: 8776497687700742841, guid: 69f3ccd323cff994c88b062324f9d332, type: 3}
   - resourceName: Forest
     description: 
     type: 1
@@ -10017,14 +10017,16 @@ MonoBehaviour:
     output: 1
     spawnChanceRates:
     - 0
-    - 0.1
+    - 0.3
     - 0.5
-    - 0.6
+    - 0.5
     - 0
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 6857895734843874092, guid: af896932151b85e4baf00c8abbefe856, type: 3}
+    - {fileID: 1970944922219517788, guid: 682a72b15ed56c04ebe7f9de3649f667, type: 3}
+    - {fileID: 6857895734843874092, guid: af896932151b85e4baf00c8abbefe856, type: 3}
+    - {fileID: 6857895734843874092, guid: af896932151b85e4baf00c8abbefe856, type: 3}
+    - {fileID: 6857895734843874092, guid: af896932151b85e4baf00c8abbefe856, type: 3}
   - resourceName: Animal
     description: 
     type: 2
@@ -10040,12 +10042,14 @@ MonoBehaviour:
     - 0
     - 0.2
     - 0.3
-    - 0.5
+    - 0.4
     - 0
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33, type: 3}
+    - {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33, type: 3}
+    - {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33, type: 3}
+    - {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33, type: 3}
+    - {fileID: 1444908027288098624, guid: 7740cac3f5e32554d9e87618e740bc33, type: 3}
   - resourceName: Farm
     description: 
     type: 5
@@ -10064,9 +10068,11 @@ MonoBehaviour:
     - 0.2
     - 0
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 8015087989849987131, guid: fb2d7eca571c52e4b812d027206bc490, type: 3}
+    - {fileID: 8015087989849987131, guid: fb2d7eca571c52e4b812d027206bc490, type: 3}
+    - {fileID: 8015087989849987131, guid: fb2d7eca571c52e4b812d027206bc490, type: 3}
+    - {fileID: 8015087989849987131, guid: fb2d7eca571c52e4b812d027206bc490, type: 3}
+    - {fileID: 8015087989849987131, guid: fb2d7eca571c52e4b812d027206bc490, type: 3}
   - resourceName: Gold
     description: 
     type: 3
@@ -10085,9 +10091,11 @@ MonoBehaviour:
     - 0
     - 0.5
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0, type: 3}
+    - {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0, type: 3}
+    - {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0, type: 3}
+    - {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0, type: 3}
+    - {fileID: 5383725951236156394, guid: 51f55ec58e2551b4aa2d8b7f2afa98b0, type: 3}
   - resourceName: Fish
     description: 
     type: 4
@@ -10106,9 +10114,11 @@ MonoBehaviour:
     - 0
     - 0
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9, type: 3}
+    - {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9, type: 3}
+    - {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9, type: 3}
+    - {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9, type: 3}
+    - {fileID: 8896001896266731585, guid: 0951818df89643143be8f391617da8b9, type: 3}
   - resourceName: Monument
     description: 
     type: 7
@@ -10127,9 +10137,11 @@ MonoBehaviour:
     - 0
     - 0
     prefab:
-    - {fileID: 0}
-    - {fileID: 0}
-    - {fileID: 0}
+    - {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
+    - {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
+    - {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
+    - {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
+    - {fileID: 413662021292186510, guid: a09d4e37583b94f4e882256138784b4a, type: 3}
   hexBuildings:
   - buildingName: Cabin
     description: 
@@ -10214,7 +10226,7 @@ MonoBehaviour:
     cost: 5
     output: 2
     levelPrefabs:
-    - {fileID: 5500443943348759301, guid: a98aca1be264a4af2a0afd193da01917, type: 3}
+    - {fileID: 3468418161980136510, guid: a98aca1be264a4af2a0afd193da01917, type: 3}
   - buildingName: Port
     description: 
     type: 7
@@ -10269,3 +10281,6 @@ MonoBehaviour:
     prefab:
     - {fileID: 0}
   mountainTileUnitOffsetY: 0.5
+  upgradingCity: 0
+  cityIsWorking: 0
+  occupyingCity: 0

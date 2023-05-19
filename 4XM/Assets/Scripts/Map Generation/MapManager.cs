@@ -99,6 +99,10 @@ public class MapManager : MonoBehaviour
 
     List<WorldHex> toEnableSiegeIconOn = new List<WorldHex>();
     public float mountainTileUnitOffsetY = 0.4f;
+
+    public bool upgradingCity;
+    public bool cityIsWorking;
+    public bool occupyingCity;
     void Awake()
     {
         if (Instance == null)
@@ -112,8 +116,6 @@ public class MapManager : MonoBehaviour
 
         falloffMap = FalloffGenerator.GenerateFallofMap(mapRows, mapColumns);
         availableCityNames = new List<string>(cityNames);
-
-       
     }
 
     private void Start()
@@ -295,6 +297,433 @@ public class MapManager : MonoBehaviour
         }
         
     }
+
+    public void AddLevelPoint(WorldHex cityHex, int points)
+    {
+        upgradingCity = true;
+        StartCoroutine(AddPointsToCity(points, cityHex));
+    }
+
+    IEnumerator AddPointsToCity(int points, WorldHex city)
+    {
+        if (points == 0 || !city.hexData.hasCity)
+        {
+            upgradingCity = false;
+            yield break;
+        }
+
+        for (int i = 0; i < points; i++)
+        {
+            city.wiggler?.Wiggle();
+
+            if (city.cityData.negativeLevelPoints > 0)
+            {
+                city.cityView.ToggleOffProgressPoint(true);
+                city.cityData.negativeLevelPoints--;
+                city.cityData.output++;
+                continue;
+            }
+            else
+            {
+                city.cityData.levelPointsToNext++;
+                city.cityView.ToggleOnProgressPoint(false);
+                yield return new WaitForSeconds(.1f);
+
+                if (city.cityData.levelPointsToNext == city.cityData.targetLevelPoints)
+                {
+                    city.cityData.level++;
+                    city.cityData.targetLevelPoints = city.cityData.level + 1;
+                    city.cityData.levelPointsToNext = 0;
+                    city.cityData.output++;
+
+                    city.cityView.LevelUp();
+
+                    if (city.visualHelper != null)
+                    {
+                        city.visualHelper.cityLevelEffect.SetActive(true);
+                    }
+
+                    yield return new WaitForSeconds(1f);
+                    if (!GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).isAI())
+                    {
+                        city.PopupLevelRewards(city.cityData.level);
+                    }
+                    else
+                    {
+                        city.InstantLevelRewards(city.cityData.level);
+                    }
+
+
+                    while (UIManager.Instance.waitingForPopupReply)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+
+                    yield return new WaitForSeconds(.5f);
+                    if (city.visualHelper != null)
+                    {
+                        city.visualHelper.cityLevelEffect.SetActive(false);
+                    }
+                    else
+                    {
+
+                        city.visualHelper = city.cityGameObject.GetComponent<CityVisualHelper>();
+                        city.visualHelper.cityLevelEffect.SetActive(false);
+                    }
+
+
+                }
+            }
+
+            yield return new WaitForSeconds(.5f);
+
+        }
+
+        city.cityView.UpdateData();
+
+        if (GameManager.Instance.IsIndexOfActivePlayer(city.hexData.playerOwnerIndex))
+        {
+            GameManager.Instance.activePlayer.CalculateExpectedStars();  
+            UIManager.Instance.UpdateHUD();
+        }
+
+        GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).CalculateDevelopmentScore(false);
+
+        upgradingCity = false;
+    }
+
+    public void RemoveLevelPoint(WorldHex cityHex, int points)
+    {
+        upgradingCity = true;
+        StartCoroutine(RemovePointsFromCity(cityHex, points));
+    }
+
+    IEnumerator RemovePointsFromCity(WorldHex city, int value)
+    {
+        upgradingCity = true;
+
+        for (int i = 0; i < value; i++)
+        {
+            if (city.cityData.levelPointsToNext > 0)
+            {
+                city.cityView.ToggleOffProgressPoint(false);
+                city.cityData.levelPointsToNext--;
+
+                yield return new WaitForSeconds(0.3f);
+            }
+            else
+            {
+                if (city.cityData.negativeLevelPoints >= city.cityData.targetLevelPoints || city.cityData.output == 0)
+                {
+                    continue;
+                }
+
+                city.cityData.negativeLevelPoints++;
+                city.cityData.output--;
+
+                city.cityView.ToggleOnProgressPoint(true);
+                yield return new WaitForSeconds(0.3f);
+            }
+
+        }
+
+        if (GameManager.Instance.IsIndexOfActivePlayer(city.hexData.playerOwnerIndex))
+        {
+            GameManager.Instance.activePlayer.CalculateExpectedStars();
+            UIManager.Instance.UpdateHUD();
+        }
+
+        upgradingCity = false;
+    }
+
+    public void SetAsCapital(WorldHex city)
+    {
+        cityIsWorking = true;
+        StartCoroutine(CapitalSetup(city));
+    }
+
+    public void ConnectToCapital(WorldHex city)
+    {
+        city.hexData.isConnectedToCapital = true;
+        city.cityView.CapitalConnectionStatus(true);
+        AddLevelPoint(city, 1);
+    }
+
+
+    IEnumerator CapitalSetup(WorldHex city)
+    {
+        cityIsWorking = true;
+
+        if (city.hexData.isConnectedToCapital)
+        {
+            city.hexData.isConnectedToCapital = false;
+            city.cityView.CapitalConnectionStatus(false);
+            RemoveLevelPoint(city, 1);
+            while (upgradingCity)
+            {
+                yield return new WaitForEndOfFrame();
+            }
+        }
+
+        city.cityData.isCapital = true;
+        city.cityView.SetCapitalStatus(true);
+
+        if (GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).capitalCity != city)
+        {
+            GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).capitalCity = city;
+        }
+
+        int levelPointsToAdd = 0;
+
+        foreach (WorldHex subCity in GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).playerCities)
+        {
+            if (subCity == GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).capitalCity)
+            {
+                continue;
+            }
+
+            if (subCity.hexData.isConnectedToCapital)
+            {
+                List<WorldHex> attemptForRoad = MapManager.Instance.FindRoadPath(city, subCity, city.hexData.playerOwnerIndex);
+                if (attemptForRoad == null)
+                {
+                    subCity.hexData.isConnectedToCapital = false;
+                    subCity.cityView.CapitalConnectionStatus(false);
+                    RemoveLevelPoint(subCity, 1);
+                    while (upgradingCity)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+                }
+                else
+                {
+                    levelPointsToAdd++;
+                }
+            }
+        }
+
+        
+        AddLevelPoint(city, levelPointsToAdd);
+        while (upgradingCity)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        StartCoroutine(SearchForCapitalConnections(city));
+    }
+
+    public void SearchForConnections(Player player)
+    {
+        cityIsWorking = true;
+        StartCoroutine(SearchForCapitalConnections(player.capitalCity));
+    }
+
+    IEnumerator SearchForCapitalConnections(WorldHex capital)
+    {
+        cityIsWorking = true;
+
+        foreach (WorldHex city in GameManager.Instance.GetPlayerByIndex(capital.hexData.playerOwnerIndex).playerCities)
+        {
+            if (city == GameManager.Instance.GetPlayerByIndex(capital.hexData.playerOwnerIndex).capitalCity)
+            {
+                continue;
+            }
+
+            if (!city.hexData.isConnectedToCapital)
+            {
+                List<WorldHex> attemptForRoad = FindRoadPath(capital, city, capital.hexData.playerOwnerIndex);
+                if (attemptForRoad != null)
+                {
+                    city.hexData.isConnectedToCapital = true;
+                    city.cityView.CapitalConnectionStatus(true);
+                    AddLevelPoint(city, 1);
+                    while (upgradingCity)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+
+                    AddLevelPoint(GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).capitalCity, 1);
+
+                    while (upgradingCity)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+
+                }
+            }
+        }
+
+        cityIsWorking = false;
+    }
+
+
+    public void OccupyCityByPlayer(Player player, WorldHex city, bool spawnUnit = false)
+    {
+        occupyingCity = true;
+        StartCoroutine(OccupyCityEnum(player, city, spawnUnit));
+    }
+
+    IEnumerator OccupyCityEnum(Player player, WorldHex city, bool spawnUnit = false)
+    {
+        occupyingCity = true;
+
+        if (!city.hexData.hasCity)
+        {
+            Debug.LogError("Hex does not have a city");
+            occupyingCity = false;
+            yield break;
+        }
+
+        bool isThisATakeOver = false;
+
+        if (city.hexData.playerOwnerIndex > -1 && city.hexData.playerOwnerIndex != player.index)
+        {
+            bool showPopup = false;
+
+            if (player == GameManager.Instance.activePlayer && player.type == PlayerType.LOCAL)
+            {
+                showPopup = true;
+            }
+
+            isThisATakeOver = true;
+
+            if (city.cityData.isCapital)
+            {
+                city.cityView.SetCapitalStatus(false);
+                city.cityData.isCapital = false;
+                //remove the hex from the list, kill player if no more cities
+                GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).RemoveCity(city, showPopup);
+
+                if (GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).playerCities.Count > 0)
+                {
+                    WorldHex biggestCity = GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).playerCities[0];
+
+                    foreach (WorldHex subCity in GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).playerCities)
+                    {
+                        if (subCity.cityData.targetLevelPoints > biggestCity.cityData.targetLevelPoints)
+                        {
+                            biggestCity = subCity;
+                        }
+
+                        if (subCity.hexData.isConnectedToCapital)
+                        {
+                            subCity.hexData.isConnectedToCapital = false;
+                            subCity.cityView.CapitalConnectionStatus(false);
+                            RemoveLevelPoint(subCity, 1);
+                            while (upgradingCity)
+                            {
+                                yield return new WaitForEndOfFrame();
+                            }
+                        }
+                    }
+
+                    GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).capitalCity = biggestCity;
+                    SetAsCapital(biggestCity);
+                    Debug.Log("New Capital Found for Player " + GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex).civilization + " :" + biggestCity.cityData.cityName);
+
+                    while (cityIsWorking)
+                    {
+                        yield return new WaitForEndOfFrame();
+                    }
+                }
+
+            }
+            else if (city.hexData.isConnectedToCapital)
+            {
+                city.hexData.isConnectedToCapital = false;
+                city.cityView.CapitalConnectionStatus(false);
+                RemoveLevelPoint(city, 1);
+                while (upgradingCity)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+            }
+        }
+
+        //set player
+        city.hexData.playerOwnerIndex = GameManager.Instance.GetPlayerIndex(player);
+        city.hexData.cityHasBeenClaimed = true;
+        city.cityData.playerIndex = GameManager.Instance.GetPlayerIndex(player);
+        city.cityData.isUnderSiege = false;
+        city.cityData.population = 0;
+
+        if (isThisATakeOver)
+        {
+            city.cityView.ResetPopulation();
+            foreach (WorldHex newHex in city.cityData.cityHexes)
+            {
+                newHex.SetAsOccupiedByCity(city);
+            }
+        }
+        else
+        {
+            List<WorldHex> newCityHexes = new List<WorldHex>(city.adjacentHexes);
+            foreach (WorldHex hex in city.adjacentHexes)
+            {
+                if (hex.hexData.isOwnedByCity)
+                {
+                    //Remove hexes that already belong to other cities 
+                    newCityHexes.Remove(hex);
+                }
+            }
+
+            city.cityData.cityHexes = newCityHexes;
+            city.cityData.output = GameManager.Instance.data.startCityOutput;
+
+            foreach (WorldHex newHex in city.cityData.cityHexes)
+            {
+                newHex.SetAsOccupiedByCity(city);
+            }
+        }
+
+
+        if (city.cityGameObject != null)
+        {
+            Destroy(city.cityGameObject);
+        }
+
+        city.hexData.hasRoad = true;
+        city.roadHelper.SetRoads();
+
+        //visual
+        city.cityGameObject = Instantiate(GameManager.Instance.GetCivilizationByType(GameManager.Instance.activePlayer.civilization).cityObject, city.resourceParent);
+        city.visualHelper = city.cityGameObject.GetComponent<CityVisualHelper>();
+        Color newColor = GameManager.Instance.GetCivilizationColor(city.hexData.playerOwnerIndex, CivColorType.borderColor);
+        city.visualHelper.cityFlag.GetComponent<MeshRenderer>().materials[0].SetColor("_ColorShift", newColor);
+        city.border.SetActive(true);
+        city.border.GetComponent<MeshRenderer>().materials[0].color = newColor;
+
+
+        city.cityView.gameObject.SetActive(true);
+        city.cityView.OccupyCity(!isThisATakeOver);
+        UnhideHexes(player.index, city, city.cityData.range + 1, true);
+        GameManager.Instance.RecalculatePlayerExpectedStars(city.hexData.playerOwnerIndex);
+        //UIManager.Instance.UpdateResearchPanel(player.index); causes null error because too early when called from map manager
+
+        if (city.visualHelper != null)
+        {
+            city.visualHelper.SetCityEffect(false);
+        }
+
+        if (city.associatedUnit != null)
+        {
+            city.associatedUnit.originCity = city;
+            city.AddPopulation();
+        }
+
+         
+        city.FindCityResourcesThatCanBeWorked();
+
+        SearchForConnections(GameManager.Instance.GetPlayerByIndex(city.hexData.playerOwnerIndex));
+
+        while (cityIsWorking)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        occupyingCity = false;
+    }
+
     public Resource GetResourceByType(ResourceType type)
     {
 

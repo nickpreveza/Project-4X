@@ -362,7 +362,7 @@ public class Player
         cityHex.cityData.isUnderSiege = false;
         //TODO: Some security checks to make sure this is the correct tile;
         playerCities.Add(cityHex);
-        cityHex.OccupyCityByPlayer(this);
+        MapManager.Instance.OccupyCityByPlayer(this, cityHex);
 
         RecalculateAbilityCosts();
         CalculateExpectedStars();
@@ -376,7 +376,10 @@ public class Player
         {
             playerCities.Remove(cityHex);
         }
-
+        if(cityHex == capitalCity)
+        {
+            capitalCity = null;
+        }
         if (playerCities.Count > 0)
         {
             RecalculateAbilityCosts();

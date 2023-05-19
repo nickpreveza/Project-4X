@@ -30,7 +30,6 @@ public class Brain : MonoBehaviour
     public bool checkForActions;
     public bool checkForPaths;
     public bool assignPaths;
-    public bool combatRunning;
     public void StartEvaluation(Player _player)
     {
         player = _player;
@@ -127,7 +126,7 @@ public class Brain : MonoBehaviour
             {
                 if (CanUnitEngageInCombat(unit))
                 {
-                    while(combatRunning){
+                    while(UnitManager.Instance.runningCombatSequence || UnitManager.Instance.runningMoveSequence){
                         yield return new WaitForEndOfFrame();
                     }
                     continue;
@@ -185,7 +184,12 @@ public class Brain : MonoBehaviour
            
         }
 
-        player.capitalCity.SearchForConnections();
+        MapManager.Instance.SearchForConnections(player);
+
+        while (MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+        {
+            yield return new WaitForEndOfFrame();
+        }
 
         createRoads = false;
     }
@@ -226,7 +230,11 @@ public class Brain : MonoBehaviour
 
                 if (TryAssignUnit(unitToAssignToHex, adjHex))
                 {
-                    yield return new WaitForSeconds(1f);
+                    while (UnitManager.Instance.runningMoveSequence)
+                    {
+                        yield return new WaitForSeconds(.1f);
+                    }
+                   
                 }
             }
             else
@@ -251,9 +259,10 @@ public class Brain : MonoBehaviour
                 {
                     if (TryAssignUnit(unitToAssignToHex, hex))
                     {
-                        //unit will be removed from playerUnitsToMove
-                        //hex will be added to hexesWithpaths
-                        yield return new WaitForSeconds(1f);
+                        while (UnitManager.Instance.runningMoveSequence)
+                        {
+                            yield return new WaitForSeconds(.1f);
+                        }
                     }
                 }
                 else
@@ -546,7 +555,11 @@ public class Brain : MonoBehaviour
                         {
                             GameManager.Instance.RemoveStars(player.index, resource.harvestCost);
                             cityHex.HarvestResource();
-                            yield return new WaitForSeconds(3f);
+                            while(MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+                            {
+                                yield return new WaitForEndOfFrame();
+                            }
+                           
                         }
 
                     }
@@ -615,7 +628,10 @@ public class Brain : MonoBehaviour
                     {
                         GameManager.Instance.RemoveStars(player.index, buildCost);
                         forestMasterCandidate.CreateBuilding(BuildingType.ForestMaster);
-                        yield return new WaitForSeconds(3f);
+                        while (MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+                        {
+                            yield return new WaitForEndOfFrame();
+                        }
                     }
                  
                 }
@@ -630,7 +646,10 @@ public class Brain : MonoBehaviour
                     {
                         GameManager.Instance.RemoveStars(player.index, buildCost);
                         farmMasterCandidate.CreateBuilding(BuildingType.FarmMaster);
-                        yield return new WaitForSeconds(3f);
+                        while (MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+                        {
+                            yield return new WaitForEndOfFrame();
+                        }
                     }
 
                 }
@@ -645,7 +664,10 @@ public class Brain : MonoBehaviour
                     {
                         GameManager.Instance.RemoveStars(player.index, buildCost);
                         mineMasterCandidate.CreateBuilding(BuildingType.MineMaster);
-                        yield return new WaitForSeconds(3f);
+                        while (MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+                        {
+                            yield return new WaitForEndOfFrame();
+                        }
                     }
 
                 }
@@ -668,12 +690,17 @@ public class Brain : MonoBehaviour
             {
                 player.unitsWithActions.Remove(unit);
                 yield return new WaitForSeconds(1f);
+                while (MapManager.Instance.cityIsWorking || MapManager.Instance.upgradingCity || MapManager.Instance.occupyingCity)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
                 continue;
             }
             else if (CanUnitEngageInCombat(unit))
             {
                 player.unitsWithActions.Remove(unit);
-                while(combatRunning){
+                while(UnitManager.Instance.runningCombatSequence || UnitManager.Instance.runningMoveSequence)
+                {
                     yield return new WaitForEndOfFrame();
                 }
                 continue;
@@ -740,8 +767,11 @@ public class Brain : MonoBehaviour
 
 
                 unit.assignedPathTarget = path[path.Count - 1];
-                unit.SetMoveTarget(path[pathSteps], true, true, false);
-                yield return new WaitForSeconds(1f);
+                UnitManager.Instance.StartMoveSequence(unit, path[pathSteps], true, false);
+                while(UnitManager.Instance.runningCombatSequence || UnitManager.Instance.runningMoveSequence)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
             } 
         }
 
@@ -751,7 +781,6 @@ public class Brain : MonoBehaviour
    
     public bool CanUnitEngageInCombat(WorldUnit unit)
     {
-        combatRunning = true;
         if (unit == null){
             return false;
         }
@@ -779,16 +808,15 @@ public class Brain : MonoBehaviour
 
         if (selectedUnitToAttack != null && unit != null)
         {
-            unit.Attack(selectedUnitToAttack.parentHex);
+            UnitManager.Instance.StartAttackSequence(unit, selectedUnitToAttack.parentHex);
             
             return true;
         }
-        combatRunning = false;
         return false;
     }
     public bool CanUnitDoButtonAction(WorldUnit unit)
     {
-         if (unit == null) { return false; }
+        if (unit == null) { return false; }
         if (unit.parentHex.hexData.hasCity && unit.parentHex.hexData.playerOwnerIndex != unit.playerOwnerIndex)
         {
             if (unit.buttonActionPossible)
@@ -936,7 +964,7 @@ public class Brain : MonoBehaviour
 
 
             unit.assignedPathTarget = hex;
-            unit.SetMoveTarget(path[pathSteps], true, true, false);
+            UnitManager.Instance.StartMoveSequence(unit, path[pathSteps], true, false);
             return true;
         }
         else

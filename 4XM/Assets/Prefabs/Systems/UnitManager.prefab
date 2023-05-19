@@ -60,6 +60,7 @@ MonoBehaviour:
     defense: 2
     walkRange: 1
     attackRange: 1
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -85,6 +86,7 @@ MonoBehaviour:
     defense: 1
     walkRange: 1
     attackRange: 2
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -110,6 +112,7 @@ MonoBehaviour:
     defense: 1
     walkRange: 2
     attackRange: 1
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -135,6 +138,7 @@ MonoBehaviour:
     defense: 0
     walkRange: 2
     attackRange: 2
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -160,6 +164,7 @@ MonoBehaviour:
     defense: 3
     walkRange: 3
     attackRange: 3
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -171,7 +176,7 @@ MonoBehaviour:
     visualPrefab:
     - {fileID: 4265428486913421291, guid: ce378ae8a6ef89445b2f1828f1d1bb26, type: 3}
   - name: Scout
-    icon: {fileID: 21300000, guid: d756a7bcbb54b496aa528f21c3ddc7af, type: 3}
+    icon: {fileID: 21300000, guid: 44f2803dad0404cbeb9ee038d70da104, type: 3}
     defaultLockState: 0
     type: 5
     civType: 0
@@ -185,6 +190,7 @@ MonoBehaviour:
     defense: 2
     walkRange: 2
     attackRange: 1
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -210,6 +216,7 @@ MonoBehaviour:
     defense: 2
     walkRange: 1
     attackRange: 4
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -221,7 +228,7 @@ MonoBehaviour:
     visualPrefab:
     - {fileID: 2375571047086091372, guid: d301fc0f40dcc75478f4aefd4e6abf7c, type: 3}
   - name: Lance
-    icon: {fileID: 21300000, guid: c3189121f7e3342a3b2fcc2f495c9e31, type: 3}
+    icon: {fileID: 21300000, guid: b7dbac3d8b95448e487ae8ad3d230b2e, type: 3}
     defaultLockState: 0
     type: 9
     civType: 0
@@ -235,6 +242,7 @@ MonoBehaviour:
     defense: 3
     walkRange: 3
     attackRange: 1
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -260,6 +268,7 @@ MonoBehaviour:
     defense: 3
     walkRange: 1
     attackRange: 1
+    roadModifier: 1
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -291,3 +300,6 @@ MonoBehaviour:
     type: 3}
   unitSelectParticle: {fileID: 1850191631587626576, guid: 0451680ba2d465c43af550f02674d4b8,
     type: 3}
+  runningMoveSequence: 0
+  runningCombatSequence: 0
+  moveAnimationLenght: 0.5

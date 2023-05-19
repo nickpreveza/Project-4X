@@ -151,54 +151,59 @@ public class HexView : MonoBehaviour
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             hexDescription.text = "This is an empty " + hexName.text.ToLower() + " hex in your empire";
 
+            bool isOccupied = false;
+            if (hex.associatedUnit != null && hex.associatedUnit.playerOwnerIndex != hex.hexData.playerOwnerIndex)
+            {
+                isOccupied = true;
+            }
 
             switch (hex.hexData.type)
             {
                 case TileType.SEA:
                     if (GameManager.Instance.activePlayer.abilities.portBuilding)
                     {
-                        GeneratePortButton();
+                        GeneratePortButton(isOccupied);
                     }
                     if (GameManager.Instance.activePlayer.abilities.createFish)
                     {
-                        GenerateCreationButton(ResourceType.FISH);
+                        GenerateCreationButton(ResourceType.FISH, isOccupied);
                     }
                     break;
                 case TileType.GRASS:
                 case TileType.SAND:
                 case TileType.HILL:
 
-                    CheckMasterBuildingButtons();
+                    CheckMasterBuildingButtons(isOccupied);
 
                     if (GameManager.Instance.activePlayer.abilities.guildBuilding)
                     {
                         if (!hex.parentCity.cityData.masterBuildings.Contains(BuildingType.Guild))
                         {
-                            GenerateGuildButton();
+                            GenerateGuildButton(isOccupied);
                         }
                     }
 
                     if (GameManager.Instance.activePlayer.abilities.createAnimals)
                     {
-                        GenerateCreationButton(ResourceType.ANIMAL);
+                        GenerateCreationButton(ResourceType.ANIMAL, isOccupied);
                     }
                     if (GameManager.Instance.activePlayer.abilities.createForest)
                     {
-                        GenerateCreationButton(ResourceType.FOREST);
+                        GenerateCreationButton(ResourceType.FOREST, isOccupied);
                     }
                     if (GameManager.Instance.activePlayer.abilities.createFarm)
                     {
-                        GenerateCreationButton(ResourceType.FARM);
+                        GenerateCreationButton(ResourceType.FARM, isOccupied);
                     }
                     if (GameManager.Instance.activePlayer.abilities.createFruit)
                     {
-                        GenerateCreationButton(ResourceType.FRUIT);
+                        GenerateCreationButton(ResourceType.FRUIT, isOccupied);
                     }
                     break;
                 case TileType.MOUNTAIN:
                     if (GameManager.Instance.activePlayer.abilities.createMine)
                     {
-                        GenerateCreationButton(ResourceType.MINE);
+                        GenerateCreationButton(ResourceType.MINE, isOccupied);
                     }
                     break;
             }
@@ -290,7 +295,7 @@ public class HexView : MonoBehaviour
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
             bool resourceButtonState = false;
-
+            bool shouldOpenResearch = false;
             if (hex.hexData.occupied && hex.associatedUnit.playerOwnerIndex != hex.hexData.playerOwnerIndex)
             {
                 hexDescription.text = "You cannot harvest a resource while an enemy is occupying the hex";
@@ -307,14 +312,16 @@ public class HexView : MonoBehaviour
                 {
                     hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
                     resourceButtonState = false;
+                    shouldOpenResearch = true;
+                    
                 }
             }
 
-            GenerateResourceButton(resourceButtonState, hex.hexData.resourceType, true);
+            GenerateResourceButton(resourceButtonState, hex.hexData.resourceType, shouldOpenResearch);
 
             if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).canMasterBeCreateOnTop)
             {
-                CheckMasterBuildingButtons();
+                CheckMasterBuildingButtons(resourceButtonState);
             }
         }
         else
@@ -511,7 +518,7 @@ public class HexView : MonoBehaviour
         }
     }
 
-    void CheckMasterBuildingButtons()
+    void CheckMasterBuildingButtons(bool hexOccupied)
     {
         List<ResourceType> adjacentResources = new List<ResourceType>();
 
@@ -549,17 +556,20 @@ public class HexView : MonoBehaviour
 
         if (forestMaster)
         {
-            GenerateBuildingButton(BuildingType.ForestMaster, GameManager.Instance.activePlayer.abilities.forestMasterBuilding);
+            bool shouldBeInteractable = GameManager.Instance.activePlayer.abilities.forestMasterBuilding && !hexOccupied;
+            GenerateBuildingButton(BuildingType.ForestMaster, shouldBeInteractable, !GameManager.Instance.activePlayer.abilities.forestMasterBuilding);
         }
 
         if (farmMaster)
         {
-            GenerateBuildingButton(BuildingType.FarmMaster, GameManager.Instance.activePlayer.abilities.farmMasterBuilding);
+            bool shouldBeInteractable = GameManager.Instance.activePlayer.abilities.farmMasterBuilding && !hexOccupied;
+            GenerateBuildingButton(BuildingType.FarmMaster, shouldBeInteractable, !GameManager.Instance.activePlayer.abilities.farmMasterBuilding);
         }
 
         if (mineMaster)
         {
-            GenerateBuildingButton(BuildingType.MineMaster, GameManager.Instance.activePlayer.abilities.mineMasterBuilding);
+            bool shouldBeInteractable = GameManager.Instance.activePlayer.abilities.mineMasterBuilding && !hexOccupied;
+            GenerateBuildingButton(BuildingType.MineMaster, shouldBeInteractable, !GameManager.Instance.activePlayer.abilities.mineMasterBuilding);
         }
     }
 
@@ -599,16 +609,16 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForShipButton(this, hex);
     }
 
-    void GeneratePortButton()
+    void GeneratePortButton(bool isOccupied)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Port, true);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Port, isOccupied, false);
     }
 
-    void GenerateGuildButton()
+    void GenerateGuildButton(bool isOccupied)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Guild, true);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, BuildingType.Guild, isOccupied, false);
     }
 
     void GenerateRoadButton()
@@ -616,10 +626,10 @@ public class HexView : MonoBehaviour
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
         obj.GetComponent<ActionButton>().SetDataForRoad(this, hex);
     }
-    void GenerateBuildingButton(BuildingType type, bool shouldBeInteractable)
+    void GenerateBuildingButton(BuildingType type, bool shouldBeInteractable, bool shouldOpenResearch)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable);
+        obj.GetComponent<ActionButton>().SetDataForBuilding(this, hex, type, shouldBeInteractable, shouldOpenResearch);
     }
 
     void GenerateResourceButton(bool shouldBeInteractable, ResourceType type, bool shouldOpenResearchPanel) 
@@ -641,10 +651,10 @@ public class HexView : MonoBehaviour
         obj.GetComponent<ActionButton>().SetDataForCityCapture(this, hex, doesUnitHaveActions);
     }
 
-    void GenerateCreationButton(ResourceType type)
+    void GenerateCreationButton(ResourceType type, bool isOccupied)
     {
         GameObject obj = Instantiate(actionItemPrefab, horizontalScrollParent);
-        obj.GetComponent<ActionButton>().SetDataForResourceCreation(this, hex, type);
+        obj.GetComponent<ActionButton>().SetDataForResourceCreation(this, hex, type, isOccupied);
     }
 
     public string SetName(TileType type)

@@ -11,8 +11,8 @@ public class WorldUnit : MonoBehaviour
 
     public WorldHex parentHex;
     public WorldHex originCity;
-    Vector3 oldPosition;
-    Vector3 newPosition;
+    public Vector3 oldPosition;
+    public Vector3 newPosition;
     Vector3 currentVelocity;
     Vector3 currentRotationVelocity;
     float smoothTime = 0.5f;
@@ -53,14 +53,14 @@ public class WorldUnit : MonoBehaviour
     public Color civColor;
     Color inactiveColor;
 
-    bool attackIsRanged;
+    public bool attackIsRanged;
     UnitView unitView;
     GameObject visualUnit;
 
     [SerializeField] Direction unitDir = Direction.RightDown;
     bool shouldRotate;
     Vector3 targetRotation;
-    Animator visualAnim;
+    public Animator visualAnim;
 
     Transform particleLayer;
     Transform unitVisualLayer;
@@ -681,7 +681,7 @@ public class WorldUnit : MonoBehaviour
         if (hexesInRadius.Count > 0)
         {
             WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
-            SetMoveTarget(selecedHex, true, true, true);
+            UnitManager.Instance.StartMoveSequence(this, selecedHex, true, true);
             return true;
         }
         else
@@ -744,170 +744,6 @@ public class WorldUnit : MonoBehaviour
         ExhaustActions();
     }
 
-    public void VisualAttack(WorldHex targetHex)
-    {
-     
-        switch (type)
-        {
-            case UnitType.Defensive:
-            case UnitType.Trader:
-            case UnitType.Diplomat:
-            case UnitType.Melee:
-            case UnitType.Boat:
-                visualAnim.SetTrigger("AttackSword");
-                break;
-            case UnitType.Ranged:
-                visualAnim.SetTrigger("AttackBow");
-                break;
-            case UnitType.Cavalry:
-                visualAnim.SetTrigger("AttackHorse");
-                break;
-            case UnitType.Siege:
-            case UnitType.Ship:
-                targetHex.SpawnParticle(GameManager.Instance.explosionParticle);
-                //visualAnim.SetTrigger("AttackShield");
-                break;
-        }
-    }
-
-    bool isAttacking = false;
-    public void Attack(WorldHex enemyHex)
-    {
-        if (isAttacking)
-        {
-            Debug.LogWarning("Unit is currently attacking already");
-            return;
-        }
-
-        isAttacking = true;
-        WorldUnit enemyUnit = enemyHex.associatedUnit;
-
-        currentAttackCharges--;
-        hasAttacked = true;
-
-        if (!isBoat && !isShip)
-        {
-            if (unitReference.canMoveAfterAttack && hasMoved)
-            {
-                currentMovePoints++;
-            }
-        }
-        else
-        {
-            if (boatReference.canMoveAfterAttack && hasMoved)
-            {
-                currentMovePoints++;
-            }
-        }
-      
-        StartCoroutine(FightSequence(enemyHex, enemyUnit));
-        
-    }
-
-    IEnumerator FightSequence(WorldHex enemyHex, WorldUnit enemyUnit)
-    {
-        if (GameManager.Instance.activePlayer.isAI())
-        {
-            parentHex.ShowHighlight(false);
-            yield return new WaitForSeconds(0.5f);
-        }
-       
-        GameManager.Instance.brain.combatRunning = true;
-        SI_CameraController.Instance.animationsRunning = true;
-        VisualAttack(enemyUnit.parentHex);
-        if (GameManager.Instance.activePlayer.isAI())
-        {
-            enemyUnit.parentHex.ShowHighlight(true);
-        }
-        yield return new WaitForSeconds(.7f);
-
-        if (enemyUnit.ReceiveDamage(currentAttack))
-        {
-            enemyUnit.visualAnim.SetTrigger("Die");
-            enemyUnit.parentHex.HideHighlight();
-            enemyUnit.SpawnParticle(UnitManager.Instance.unitDeathParticle);
-            enemyUnit.Deselect();
-
-            if (enemyUnit.originCity != null)
-            {
-                if (enemyUnit.originCity.cityData.population > 0)
-                {
-                    enemyUnit.originCity.RemovePopulation();
-                }
-            }
-            
-      
-            GameManager.Instance.sessionPlayers[enemyUnit.playerOwnerIndex].playerUnits.Remove(this);
-            enemyUnit.parentHex.UnitOut(this, true);
-            yield return new WaitForSeconds(.5f);
-            enemyUnit.Death(true);
-
-            if (!attackIsRanged)
-            {
-                yield return new WaitForSeconds(0.2f);
-                SetMoveTarget(enemyHex, true, true, true);
-                yield return new WaitForSeconds(1f);
-
-                GameManager.Instance.brain.combatRunning = false;
-
-            }
-            else
-            {
-                
-                 GameManager.Instance.brain.combatRunning = false;
-
-            }
-
-        }
-        else
-        {
-            if (UnitManager.Instance.isUnitInAttackRange(enemyUnit, this))
-            {
-                
-                yield return new WaitForSeconds(.5f);
-                parentHex.ShowHighlight(true);
-                enemyUnit.parentHex.ShowHighlight(false);
-                enemyUnit.VisualAttack(parentHex);
-                yield return new WaitForSeconds(0.5f);
-                if (ReceiveDamage(enemyUnit.unitReference.counterAttack))
-                {
-                    this.parentHex.HideHighlight();
-                    enemyUnit.parentHex.HideHighlight();
-                    visualAnim.SetTrigger("Die");
-                    SpawnParticle(UnitManager.Instance.unitDeathParticle);
-                     SI_CameraController.Instance.animationsRunning = false;
-                    Deselect();
-                    if (originCity.cityData.population > 0)
-                     {           
-                         originCity.RemovePopulation();
-                     }
-      
-                    GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
-                    parentHex.UnitOut(this, true);
-                   
-                    yield return new WaitForSeconds(1f);
-                     GameManager.Instance.brain.combatRunning = false;
-                    Death(true);
-                    yield break;
-                }
-                else
-                {
-                    SpawnParticle(UnitManager.Instance.unitHitParticle, true);
-                    visualAnim.SetTrigger("Evade");
-                    this.parentHex.HideHighlight();
-                    enemyUnit.parentHex.HideHighlight();
-                }
-            }
-       
-        }
-
-        isAttacking = false;
-        UnitManager.Instance.SelectUnit(this);
-        SI_CameraController.Instance.animationsRunning = false;
-        GameManager.Instance.brain.combatRunning = false;
-        this.parentHex.HideHighlight();
-    }
-
     public void Death(bool affectStats)
     {
         this.parentHex.HideHighlight();
@@ -929,186 +765,6 @@ public class WorldUnit : MonoBehaviour
         GameManager.Instance.sessionPlayers[playerOwnerIndex].playerUnits.Remove(this);
         parentHex.UnitOut(this, true);
         Destroy(this.gameObject);
-    }
-
-    bool walkingAnimation = false;
-
-    IEnumerator WalkSteps(WorldHex end)
-    {
-        List<WorldHex> path = UnitManager.Instance.FindPath(this, parentHex, end);
-        if (path == null)
-        {
-            path = UnitManager.Instance.FindPath(this, parentHex, end, true);
-        }
-
-        if (path == null)
-        {
-            Debug.LogWarning("Invalid tile - no path could be found");
-            assignedPathTarget = null;
-            if (GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithPaths.Contains(this))
-            {
-                GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).unitsWithPaths.Remove(this);
-            }
-            SI_CameraController.Instance.animationsRunning = false;
-            yield break;
-        }
-        tempPathParent = parentHex;
-        float moveAnimationLenght = 1f;
-
-        if (path!= null)
-        {
-            foreach (WorldHex pathStep in path)
-            {
-                if (pathStep == parentHex)
-                {
-                    continue;
-                }
-                UpdateDirection(tempPathParent, pathStep, false);
-                oldPosition = tempPathParent.hexData.PositionFromCamera();
-                newPosition = pathStep.hexData.PositionFromCamera();
-
-                if (pathStep.hexData.type == TileType.MOUNTAIN)
-                {
-                    newPosition.y = MapManager.Instance.mountainTileUnitOffsetY;
-                }
-
-                float elapsedTime = 0;
-
-                if (!isBoat && !isShip) 
-                { 
-                    visualAnim.SetTrigger("Walk");
-                }
-               
-
-                while (elapsedTime < moveAnimationLenght)
-                {
-                    transform.position = Vector3.Lerp(oldPosition, newPosition, (elapsedTime / moveAnimationLenght));
-                    elapsedTime += Time.deltaTime;
-                    yield return null;
-                }
-
-                pathStep.Wiggle();
-                tempPathParent = pathStep;
-
-                if (pathStep == end)
-                {
-                    parentHex = pathStep;
-                    parentHex.UnitIn(this);
-                    transform.SetParent(parentHex.unitParent);
-                    transform.localPosition = Vector3.zero;
-                    UnitManager.Instance.SelectUnit(this);
-                    SI_CameraController.Instance.animationsRunning = false;
-                    visualAnim.SetTrigger("Idle");
-                    yield break;
-
-                }
-            }
-        }
-        else
-        {
-            Debug.LogError("Path could not be found for selected tile");
-        }
-
-        //visualAnim.SetTrigger("Walk");
-    }
-
-    /*
-     *     private void Update()
-    {
-        if (shouldMove)
-        {
-            this.transform.position = Vector3.SmoothDamp(this.transform.position, newPosition, ref currentVelocity, smoothTime);
-
-            if (Vector3.Distance(this.transform.position, newPosition) < 0.1)
-            {
-                shouldMove = false;
-                if (parentHex.hexData.type == TileType.MOUNTAIN)
-                {
-                    Vector3 modifiedTransform = this.transform.localPosition;
-                    modifiedTransform.y = MapManager.Instance.mountainTileUnitOffsetY;
-                    this.transform.localPosition = modifiedTransform;
-                }
-                else
-                {
-                    this.transform.localPosition = Vector3.zero;
-                }
-                currentVelocity = Vector3.zero;
-                visualAnim.SetTrigger("Idle");
-            }
-        }
-
-        if (shouldRotate)
-        {
-
-            visualUnit.transform.eulerAngles = Vector3.SmoothDamp(visualUnit.transform.eulerAngles, targetRotation, ref currentRotationVelocity, smoothTime);
-
-            if (isBoat || isShip)
-            {
-                currentBoat.transform.eulerAngles = targetRotation;
-            }
-
-            if (Vector3.Distance(visualUnit.transform.rotation.eulerAngles, targetRotation) < 0.1)
-            {
-                shouldRotate = false;
-                visualUnit.transform.eulerAngles = targetRotation;
-                currentRotationVelocity = Vector3.zero;
-            }
-
-
-        }
-    }
-     */
-
-
-
-    public void SetMoveTarget(WorldHex newHex, bool shouldStepAnimate, bool followCamera, bool afterAttack)
-    {
-        parentHex.SpawnParticle(UnitManager.Instance.unitWalkParticle);
-
-        Deselect();
-
-        c = newHex.hexData.C;
-        r = newHex.hexData.R;
-
-        parentHex.UnitOut(this);
-
-        if (!afterAttack)
-        {
-            hasMoved = true;
-            currentMovePoints--;
-        }
-
-        UnitManager.Instance.hexSelectMode = false;
-
-        if (!unitReference.canAttackAfterMove)
-        {
-            currentAttackCharges--;
-        }
-
-        GameManager.Instance.activePlayer.lastMovedUnit = this;
-
-        if (shouldStepAnimate)
-        {
-            SI_CameraController.Instance.animationsRunning = true;
-            StartCoroutine(WalkSteps(newHex));
-        }
-        else
-        {
-            visualAnim.SetTrigger("Walk");
-            parentHex = newHex;
-            parentHex.UnitIn(this);
-            transform.SetParent(parentHex.unitParent);
-            transform.localPosition = Vector3.zero;
-
-            if (followCamera)
-            {
-                SI_CameraController.Instance.PanToHex(newHex);
-            }
-
-            UnitManager.Instance.SelectUnit(this);
-            SI_CameraController.Instance.animationsRunning = false;
-
-        }
     }
 
     public void Select()

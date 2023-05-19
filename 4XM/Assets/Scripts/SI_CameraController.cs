@@ -84,10 +84,9 @@ public class SI_CameraController : MonoBehaviour
     Vector3 dir;
     Vector3 lastCameraPosition;
 
-    public bool animationsRunning;
-
     public LayerMask menuLayerMask;
     public LayerMask gameLayerMask;
+    public bool animationsRunning;
 
     void Awake()
     {
@@ -132,14 +131,12 @@ public class SI_CameraController : MonoBehaviour
         mainCamera.cullingMask = gameLayerMask;
         playerCamera.gameObject.SetActive(true);
         Update_CurrentFunction = Update_DetectModeStart;
-        animationsRunning = false;
     }
 
     public void GameEnded()
     {
         mainCamera.cullingMask = menuLayerMask;
         playerCamera.gameObject.SetActive(false);
-        animationsRunning = true;
     }
   
     private void Update()
@@ -147,6 +144,16 @@ public class SI_CameraController : MonoBehaviour
         if (!GameManager.Instance.gameReady)
         {
             return;
+        }
+
+        if (UnitManager.Instance.runningCombatSequence || UnitManager.Instance.runningMoveSequence
+        || MapManager.Instance.upgradingCity || MapManager.Instance.cityIsWorking || MapManager.Instance.occupyingCity)
+        {
+            animationsRunning = true;
+        }
+        else
+        {
+            animationsRunning = false;
         }
 
         if (autoMove)
@@ -471,7 +478,8 @@ public class SI_CameraController : MonoBehaviour
             return;
         }
 
-        if(animationsRunning){
+        if(animationsRunning)
+        {
             return;
         }
 

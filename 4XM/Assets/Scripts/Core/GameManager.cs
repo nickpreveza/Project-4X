@@ -141,7 +141,7 @@ namespace SignedInitiative
 
             foreach (Player player in sessionPlayers)
             {
-                if (startWithALotOfMoney)
+                if (startWithALotOfMoney && !player.isAI())
                 {
                     player.AddStars(1000);
                 }
@@ -389,11 +389,13 @@ namespace SignedInitiative
             {
                 foreach (Player player in sessionPlayers)
                 {
-                    foreach (AbilityData ability in abilities)
+                    if (!player.isAI())
                     {
-                        UnlockAbility(player.index, ability.abilityID, false, false);
+                        foreach (AbilityData ability in abilities)
+                        {
+                            UnlockAbility(player.index, ability.abilityID, false, false);
+                        }
                     }
-                  
                 }
             }
 

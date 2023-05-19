@@ -174,7 +174,7 @@ public class ActionButton : MonoBehaviour
         }
     }
 
-    public void SetDataForBuilding(HexView newHandler, WorldHex newHex, BuildingType type, bool shouldBeInteracable)
+    public void SetDataForBuilding(HexView newHandler, WorldHex newHex, BuildingType type, bool shouldBeInteracable, bool shouldOpenResearch)
     {
         backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
@@ -197,8 +197,12 @@ public class ActionButton : MonoBehaviour
         }
         else
         {
-            buttonAction.onClick.AddListener(()=>OpenResearchButton(type));
-            researchVisual.SetActive(true);
+            if (shouldOpenResearch)
+            {
+                buttonAction.onClick.AddListener(() => OpenResearchButton(type));
+                researchVisual.SetActive(true);
+            }
+            
             costVisual.SetActive(false);
             backgroundImage.color = UIManager.Instance.affordableColor;
             buttonAction.interactable = true;
@@ -264,7 +268,7 @@ public class ActionButton : MonoBehaviour
        
     }
 
-    public void SetDataForResourceCreation(HexView newHandler, WorldHex newHex, ResourceType type)
+    public void SetDataForResourceCreation(HexView newHandler, WorldHex newHex, ResourceType type, bool isOccupied)
     {
         backgroundImage = GetComponent<Image>();
         parentHandler = newHandler;
@@ -275,10 +279,19 @@ public class ActionButton : MonoBehaviour
         buttonName.text = "Create " + MapManager.Instance.GetResourceByType(type).resourceName;
         actionCost = MapManager.Instance.GetResourceByType(type).creationCost;
         actionCostText.text = actionCost.ToString();
-        //image also here 
-        buttonAction.onClick.AddListener(()=>CreateResourceButton(type));
         backgroundImage.sprite = parentHandler.actionBackground;
-        CheckIfAffordable();
+        //image also here 
+        if (isOccupied)
+        {
+            buttonAction.interactable = false;
+            backgroundImage.color = UIManager.Instance.unaffordableColor;
+        }
+        else
+        {
+            buttonAction.onClick.AddListener(() => CreateResourceButton(type));
+            CheckIfAffordable();
+        }
+       
 
     }
 
@@ -341,12 +354,14 @@ public class ActionButton : MonoBehaviour
 
     public void ShipCreationButton(WorldUnit unit)
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         unit.EnableShip();
     }
 
     public void CaptureCityButton()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         UIManager.Instance.OpenPopup(
             "Capture city", 
             "Add this city to your empire", 
@@ -358,6 +373,7 @@ public class ActionButton : MonoBehaviour
 
     public void CreateResourceButton(ResourceType type)
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         UIManager.Instance.OpenPopup(
             "Create",
             "Create a " + MapManager.Instance.GetResourceByType(type).resourceName + " resource",
@@ -369,23 +385,27 @@ public class ActionButton : MonoBehaviour
 
     public void CreateResource(ResourceType type)
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.CreateResource(type);
     }
 
     public void TraderAction()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         targetHex.associatedUnit.TraderAction();
     }
 
     public void HealUnit()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         targetUnit.HealAction();
         UIManager.Instance.RefreshHexView();
     }
 
     public void HarvestResource()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         //do a confirm pop up to avoid misclicks
         // UIManager.Instance.ShowConfirmationPopup();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
@@ -394,11 +414,13 @@ public class ActionButton : MonoBehaviour
 
     public void CreateMasterBuilding()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         targetHex.CreateBuilding(masterBuildingType);
     }
 
     public void SpawnUnit()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         //GameManager.Instance.activePlayer.RemoveStars(actionCost);
         UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true, true);
 
@@ -408,6 +430,7 @@ public class ActionButton : MonoBehaviour
 
     public void DestroyAction(bool isBuilding, bool fromUnit)
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         if (fromUnit)
         {
@@ -418,6 +441,7 @@ public class ActionButton : MonoBehaviour
     
     public void BuildRoadAction()
     {
+        if (SI_CameraController.Instance.animationsRunning) { return; }
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.CreateRoad();
     }
