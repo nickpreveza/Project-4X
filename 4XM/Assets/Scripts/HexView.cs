@@ -27,11 +27,14 @@ public class HexView : MonoBehaviour
     public Sprite buildingBackground;
     public Sprite claimCityBackground;
     public Sprite destroyBackground;
+    public Sprite resourceIconSprite;
+    public Sprite cityIconSprite;
 
     [SerializeField] GameObject attackStat;
     [SerializeField] GameObject defenseStat;
     [SerializeField] TextMeshProUGUI attackStatText;
     [SerializeField] TextMeshProUGUI defenseStatText;
+    [SerializeField] TextMeshProUGUI resourceRewardTtext;
     public void Refresh()
     {
         if (hex!=null)
@@ -68,6 +71,7 @@ public class HexView : MonoBehaviour
             attackStat.SetActive(false);
             defenseStat.SetActive(false);
             hexIcon.gameObject.SetActive(false);
+            resourceRewardTtext.gameObject.SetActive(false);
             bool isOwner = (hex.hexData.playerOwnerIndex == GameManager.Instance.activePlayerIndex);
             hexDescriptionSmall.text = SetName(hex.hexData.type) + " with";
             if (hex.hexData.hasCity)
@@ -145,6 +149,7 @@ public class HexView : MonoBehaviour
     {
         if (isOwner)
         {
+
             hexName.text = SetName(hex.hexData.type);
             hexDescriptionSmall.text = "";
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
@@ -296,6 +301,11 @@ public class HexView : MonoBehaviour
     {
         if (isOwner)
         {
+            hexIcon.gameObject.SetActive(false);
+           //hexIcon.sprite = resourceIconSprite;
+
+            resourceRewardTtext.gameObject.SetActive(true);
+            resourceRewardTtext.text = "+" + MapManager.Instance.GetResourceByType(hex.hexData.resourceType).output.ToString();
             hexName.text = MapManager.Instance.GetResourceByType(hex.hexData.resourceType).resourceName;
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
@@ -434,6 +444,7 @@ public class HexView : MonoBehaviour
 
     void ShowUnit()
     {
+        resourceRewardTtext.gameObject.SetActive(false);
         hexName.text = unit.unitReference.name;
         hexAvatar.color = Color.white; //TODO: change avatar with related icon
         hexIcon.gameObject.SetActive(true);
