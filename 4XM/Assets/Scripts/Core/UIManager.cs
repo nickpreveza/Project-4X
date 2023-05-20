@@ -84,10 +84,12 @@ namespace SignedInitiative
             SI_EventManager.Instance.onTransactionMade += OnTransactionMadeCallback;
 
             ClosePopup();
+
         }
 
         public void ToggleEndTurn(bool status)
         {
+
             gamePanel.GetComponent<GamePanel>().ToggleEndTurn(status);
         }
 
@@ -314,8 +316,8 @@ namespace SignedInitiative
             {
                 loadGame.interactable = false;
             }
+
             GameManager.Instance.menuActive = true;
-            SI_AudioManager.Instance.PlayTheme("menuTheme");
         }
 
         public void ActionLoadGame()

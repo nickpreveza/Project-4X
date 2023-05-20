@@ -151,7 +151,7 @@ public class UnitManager : MonoBehaviour
 
                 if (!GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).isAI())
                 {
-                    UnitManager.Instance.SelectUnit(originUnit);
+                    SelectUnit(originUnit);
                 }
                 runningMoveSequence = false;
                 yield break;
@@ -269,12 +269,18 @@ public class UnitManager : MonoBehaviour
             yield return new WaitForSeconds(.5f);
             enemyUnit.Death(true);
 
+            if (originUnit.unitReference.attackContinuisly)
+            {
+                originUnit.currentAttackCharges++;
+            }
+
             if (!originUnit.attackIsRanged)
             {
                 yield return new WaitForSeconds(0.2f);
                 StartMoveSequence(originUnit, enemyHex, true, true);     
             }
 
+           
             originUnit.parentHex.Deselect();
 
             originUnit.ValidateRemainigActions();

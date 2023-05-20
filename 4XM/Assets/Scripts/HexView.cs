@@ -35,6 +35,11 @@ public class HexView : MonoBehaviour
     [SerializeField] TextMeshProUGUI attackStatText;
     [SerializeField] TextMeshProUGUI defenseStatText;
     [SerializeField] TextMeshProUGUI resourceRewardTtext;
+
+    [SerializeField] GameObject cityView;
+    [SerializeField] TextMeshProUGUI currentLevelText;
+    [SerializeField] TextMeshProUGUI currentLevelProgress;
+    [SerializeField] TextMeshProUGUI currentUnitText;
     public void Refresh()
     {
         if (hex!=null)
@@ -61,6 +66,8 @@ public class HexView : MonoBehaviour
         {
             isUnitView = false;
         }
+
+        cityView.SetActive(false);
 
         if (isUnitView)
         {
@@ -219,6 +226,7 @@ public class HexView : MonoBehaviour
         }
         else
         {
+            hexDescriptionSmall.text = "";
             hexName.text = SetName(hex.hexData.type);
             hexDescriptionBackground.color = UIManager.Instance.hexViewDescriptionAvailable;
             hexAvatar.color = UIManager.Instance.GetHexColorByType(hex.hexData.type);
@@ -228,6 +236,11 @@ public class HexView : MonoBehaviour
 
     void ShowCity(bool isOwner)
     {
+        cityView.SetActive(true);
+        currentLevelText.text =  hex.cityData.level.ToString();
+        currentLevelProgress.text = hex.cityData.levelPointsToNext + "/" + hex.cityData.targetLevelPoints;
+        currentUnitText.text = hex.cityData.population.ToString() + "/" + hex.cityData.targetLevelPoints;
+
         if (isOwner)
         {
             hexName.text = hex.cityData.cityName;
@@ -504,7 +517,7 @@ public class HexView : MonoBehaviour
             {
                 if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
                 {
-                    if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
+                    if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip && hex.associatedUnit.buttonActionPossible)
                     {
                         GenerateShipButton();
                     }

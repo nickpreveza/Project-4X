@@ -31,6 +31,7 @@ namespace SignedInitiative
         public bool isSinglePlayer;
 
         [Header("Debug Settings")]
+        bool allowOnlyAIPlayersToPlayer;
         public bool VisualizeAIMoves;
         public bool destroyResourcesToo;
         public bool useRandomSeed;
@@ -415,7 +416,7 @@ namespace SignedInitiative
         public void StartTurn(Player player)
         {
             SI_CameraController.Instance.GameStarted();
-
+          
             activePlayer = player;
             activePlayerIndex = player.index;
             activePlayerClientID = player.clientID;
@@ -423,6 +424,7 @@ namespace SignedInitiative
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();
 
+            SI_AudioManager.Instance.PlayTheme(activePlayer.civilization);
             if (activePlayer.showAction())
             {
                 if (activePlayer.lastMovedUnit != null)
@@ -499,13 +501,32 @@ namespace SignedInitiative
                 {
                     activePlayerIndex = 0;
                 }
-
                 if (GetPlayerByIndex(activePlayerIndex).isAlive && GetPlayerByIndex(activePlayerIndex).playerCities.Count > 0)
                 {
                     foundPlayer = true;
                     break;
                 }
             }
+
+            if (!allowOnlyAIPlayersToPlayer)
+            {
+                bool foundHumanPlayer = false;
+                foreach(Player player in sessionPlayers)
+                {
+                    if (!player.isAI())
+                    {
+                        foundHumanPlayer = true;
+                        break;
+                    }
+                }
+
+                if (!foundHumanPlayer)
+                {
+                    GameOver(activePlayer);
+                    return;
+                }
+            }
+
 
             if (previousPlayerIndex == activePlayerIndex)
             {
@@ -514,9 +535,12 @@ namespace SignedInitiative
             }
             else
             {
+                        
                 SI_CameraController.Instance.animationsRunning = false;
                 StartTurn(sessionPlayers[activePlayerIndex]);
             }
+
+            
         }
 
         public void EndTurn(Player player)
@@ -598,13 +622,11 @@ namespace SignedInitiative
         {
             //ItemManager.Instance.InitializeItems();
             UIManager.Instance.OpenGamePanel();
-            SI_AudioManager.Instance.PlayTheme("theme");
         }
 
         public void NewGame()
         {
             //ItemManager.Instance.InitializeItems();
-            SI_AudioManager.Instance.PlayTheme("theme");
         }
        
       

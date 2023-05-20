@@ -115,6 +115,7 @@ public class ActionButton : MonoBehaviour
         actionCostText.text = actionCost.ToString();
         buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
         backgroundImage.sprite = parentHandler.actionBackground;
+        costVisual.SetActive(true);
         CheckIfAffordable();
     }
 
@@ -344,23 +345,27 @@ public class ActionButton : MonoBehaviour
 
     public void OpenResearchButton(ResourceType type)
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenResearchPanelWithHighlight(type);
     }
 
     public void OpenResearchButton(BuildingType type)
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenResearchPanelWithHighlight(type);
     }
 
     public void ShipCreationButton(WorldUnit unit)
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         unit.EnableShip();
     }
 
     public void CaptureCityButton()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
             "Capture city", 
             "Add this city to your empire", 
@@ -373,6 +378,7 @@ public class ActionButton : MonoBehaviour
     public void CreateResourceButton(ResourceType type)
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
             "Create",
             "Create a " + MapManager.Instance.GetResourceByType(type).resourceName + " resource",
@@ -392,12 +398,14 @@ public class ActionButton : MonoBehaviour
     public void TraderAction()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         targetHex.associatedUnit.TraderAction();
     }
 
     public void HealUnit()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         targetUnit.HealAction();
         UIManager.Instance.RefreshHexView();
     }
@@ -405,6 +413,7 @@ public class ActionButton : MonoBehaviour
     public void HarvestResource()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         //do a confirm pop up to avoid misclicks
         // UIManager.Instance.ShowConfirmationPopup();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
@@ -414,12 +423,14 @@ public class ActionButton : MonoBehaviour
     public void CreateMasterBuilding()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         targetHex.CreateBuilding(masterBuildingType);
     }
 
     public void SpawnUnit()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         //GameManager.Instance.activePlayer.RemoveStars(actionCost);
         UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true, true);
 
@@ -430,6 +441,7 @@ public class ActionButton : MonoBehaviour
     public void DestroyAction(bool isBuilding, bool fromUnit)
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         if (fromUnit)
         {
@@ -441,6 +453,7 @@ public class ActionButton : MonoBehaviour
     public void BuildRoadAction()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
+        SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.CreateRoad();
     }

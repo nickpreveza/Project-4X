@@ -15,7 +15,7 @@ public class SI_CameraController : MonoBehaviour
     Vector2 touchDeltaPosition;
     Vector2 touchZeroDelta;
     Vector2 touchOneDelta;
-    float editedScrollSpeed;
+
     float prevTouchDeltaMag = 0;
     float touchDeltaMag = 0;
     float deltaMagnitudeDiff = 0;
@@ -179,10 +179,7 @@ public class SI_CameraController : MonoBehaviour
 
         if (!IsPointerOverUIObject())
         {
-            if (keyboardControls)
-            {
-                KeyboardInput();
-            }
+            
 
             if (zoomEnabled)
             {
@@ -191,10 +188,160 @@ public class SI_CameraController : MonoBehaviour
 
         }
 
+        if (keyboardControls)
+        {
+            KeyboardInput();
+        }
+
+        if (touchControls)
+        {
+           // TouchInput();
+        }
 
         lastMousePosition = Input.mousePosition;
         lastMouseGroundPlanePosition = MouseToGroundPlane(Input.mousePosition);
         CheckifCameraMoved();
+    }
+
+    void TouchInput()
+    {
+        if (Input.touchCount > 0)
+        {
+            if (Input.touches[0].phase == TouchPhase.Began)
+            {
+                internalTouchTimer = 0f;
+                tapValid = true;
+            }
+
+            internalTouchTimer += 1 * Time.deltaTime;
+
+            if (Input.touchCount < 2 && Input.GetTouch(0).phase == TouchPhase.Moved)
+            {
+                tapValid = false;
+
+                touchDeltaPosition = Input.GetTouch(0).deltaPosition;
+                transform.Translate(-touchDeltaPosition.x * 1, -(touchDeltaPosition.y * 1), 0);
+
+                dragTemp = this.transform.position;
+                if (dragTemp.z < calculatedBounds.x)
+                {
+                    dragTemp.z = calculatedBounds.x;
+                }
+                if (dragTemp.z > calculatedBounds.y)
+                {
+                    dragTemp.z = calculatedBounds.y;
+                }
+
+                this.transform.position = dragTemp;
+
+                lastMouseGroundPlanePosition = hitPos = MouseToGroundPlane(Input.mousePosition);
+
+                OutOfBoundsCheck();
+            }
+
+            if (Input.touchCount == 2)
+            {
+                tapValid = false;
+
+                if (!IsMouseOverGameWindow)
+                {
+                    return;
+                }
+
+
+                Touch touchZero = Input.GetTouch(0);
+                Touch touchOne = Input.GetTouch(1);
+
+                touchZeroDelta = touchZero.position - touchZero.deltaPosition;
+                touchOneDelta = touchOne.position - touchOne.deltaPosition;
+
+                prevTouchDeltaMag = (touchZeroDelta - touchOneDelta).magnitude;
+                touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
+                deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+
+                // Zoom to scrollwheel
+                float scrollAmount = deltaMagnitudeDiff * 1;
+
+                dir = hitPos - this.transform.position;
+
+                zoomTemp = this.transform.position;
+
+                // Stop zooming out at a certain distance.
+                // TODO: Maybe you should still slide around at 20 zoom?
+                if (scrollAmount > 0 || zoomTemp.y < (maxHeight - 0.1f))
+                {
+                    cameraTargetOffset += dir * scrollAmount;
+                }
+
+                lastCameraPosition = this.transform.position;
+                this.transform.position = Vector3.Lerp(this.transform.position, this.transform.position + cameraTargetOffset, Time.deltaTime * 5f);
+                cameraTargetOffset -= this.transform.position - lastCameraPosition;
+
+
+                zoomTemp = this.transform.position;
+                if (zoomTemp.y < minHeight)
+                {
+                    zoomTemp.y = minHeight;
+                }
+                if (zoomTemp.y > maxHeight)
+                {
+                    zoomTemp.y = maxHeight;
+                }
+
+                int m = (19 - 33) / (20 - 10); // Calculate the slope (change in y / change in x)
+                int c = 33 - m * 10; // Calculate the y-intercept
+                calculatedBounds.y = m * zoomTemp.y + c;
+
+                if (zoomTemp.z < calculatedBounds.x)
+                {
+                    zoomTemp.z = calculatedBounds.x;
+                }
+                if (zoomTemp.z > calculatedBounds.y)
+                {
+                    zoomTemp.z = calculatedBounds.y;
+                }
+
+                this.transform.position = zoomTemp;
+
+                // Change camera angle
+                this.transform.rotation = Quaternion.Euler(
+                    Mathf.Lerp(60, 60, Camera.main.transform.position.y / maxHeight),
+                    Camera.main.transform.rotation.eulerAngles.y,
+                    Camera.main.transform.rotation.eulerAngles.z
+                );
+
+                OutOfBoundsCheck();
+
+            }
+
+            if (Input.touches[0].phase == TouchPhase.Ended && tapValid)
+            {
+                Update_Tap();
+            }
+
+            if (Input.touches[0].phase == TouchPhase.Stationary && tapValid)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
+                RaycastHit hit;
+
+                if (Physics.Raycast(ray, out hit))
+                {
+                    if (hit.transform.CompareTag("Tile"))
+                    {
+                        if (internalTouchTimer >= timeToRegisterHold)
+                        {
+                            selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
+                            if (selectedTile != null)
+                            {
+                                selectedTile.Hold();
+                                internalTouchTimer = 0;
+                                tapValid = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     void CancelUpdateFunction()
@@ -314,162 +461,6 @@ public class SI_CameraController : MonoBehaviour
 
         CheckifCameraMoved();
     }
-    /*
-     void TouchInput()
-     {
-         if (Input.touchCount > 0)
-         {
-             if (Input.touches[0].phase == TouchPhase.Began)
-             {
-                 internalTouchTimer = 0f;
-                 tapValid = true;
-             }
-
-             internalTouchTimer += 1 * Time.deltaTime;
-
-             if (Input.touchCount < 2 && Input.GetTouch(0).phase == TouchPhase.Moved)
-             {
-                 tapValid = false;
-
-                 if (outOfBoundsX || outOfBoundsY)
-                 {
-                     editedScrollSpeed = scrollSpeed * 0.1f;
-                 }
-                 else
-                 {
-                     editedScrollSpeed = scrollSpeed;
-                 }
-                 touchDeltaPosition = Input.GetTouch(0).deltaPosition;
-                 transform.Translate(-touchDeltaPosition.x * editedScrollSpeed, -(touchDeltaPosition.y * editedScrollSpeed), 0);
-                 editedPosition = transform.position;
-                 editedPosition.z = -5;
-                 transform.position = editedPosition;
-                 if (transform.position.x > internalBoundsX.y || transform.position.x < internalBoundsX.x)
-                 {
-                     outOfBoundsX = true;
-                 }
-
-                 if (transform.position.y > internalBoundsY.y || transform.position.y < internalBoundsY.x)
-                 {
-                     outOfBoundsY = true;
-                 }
-                 //editedPosition.x = Mathf.Clamp(transform.position.x, xBounds.x, xBounds.y);
-                 // editedPosition.y = Mathf.Clamp(transform.position.y, yBounds.x, yBounds.y);
-                 //editedPosition.z = 0;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
-                 //transform.position = editedPosition;
-             }
-
-             if (Input.touchCount == 2)
-             {
-                 tapValid = false;
-
-                 Touch touchZero = Input.GetTouch(0);
-                 Touch touchOne = Input.GetTouch(1);
-
-                 touchZeroDelta = touchZero.position - touchZero.deltaPosition;
-                 touchOneDelta = touchOne.position - touchOne.deltaPosition;
-
-                 prevTouchDeltaMag = (touchZeroDelta - touchOneDelta).magnitude;
-                 touchDeltaMag = (touchZero.position - touchOne.position).magnitude;
-                 deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
-
-                 mainCamera.orthographicSize += deltaMagnitudeDiff * zoomSpeed;
-                 mainCamera.orthographicSize = Mathf.Clamp(mainCamera.orthographicSize, orthoSizeBounds.x, orthoSizeBounds.y);
-                 playerCamera.orthographicSize = mainCamera.orthographicSize;
-
-             }
-
-             if (Input.touches[0].phase == TouchPhase.Ended && tapValid)
-             {
-                 Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-                 RaycastHit hit;
-
-                 if (Physics.Raycast(ray, out hit))
-                 {
-                     if (hit.transform.CompareTag("Tile"))
-                     {
-                         if (internalTouchTimer > timeToRegisterTap && internalTouchTimer < timeToRegisterHold)
-                         {
-                             WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
-                             SelectTile(newTile);
-                             return;
-                         }
-
-                         if (internalTouchTimer >= timeToRegisterHold)
-                         {
-                             selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
-                             if (selectedTile != null)
-                             {
-                                 selectedTile.Hold();
-                                 internalTouchTimer = 0;
-                                 tapValid = false;
-                             }
-                         }
-                     }
-                     else
-                     {
-                         layerAccessor = 0;
-                         selectedTile = null;
-                     }
-                 }
-                 else
-                 {
-                     layerAccessor = 0;
-                     selectedTile = null;
-                 }
-             }
-
-             if (Input.touches[0].phase == TouchPhase.Stationary && tapValid)
-             {
-                 Ray ray = Camera.main.ScreenPointToRay(Input.touches[0].position);
-                 RaycastHit hit;
-
-                 if (Physics.Raycast(ray, out hit))
-                 {
-                     if (hit.transform.CompareTag("Tile"))
-                     {
-                         if (internalTouchTimer >= timeToRegisterHold)
-                         {
-                             selectedTile = hit.transform.gameObject.GetComponentInParent<WorldHex>();
-                             if (selectedTile != null)
-                             {
-                                 selectedTile.Hold();
-                                 internalTouchTimer = 0;
-                                 tapValid = false;
-                             }
-                         }
-                     }
-                 }
-             }
-         }
-
-         if (Input.touchCount == 0 && !movingBack)
-         {
-             if (outOfBoundsX || outOfBoundsY)
-             {
-                 movingBack = true;
-                 //StartCoroutine(ReturnToBounds());
-             }
-         }
-
-         if (Input.touchCount == 0 && movingBack)
-         {
-             editedPosition.x = Mathf.Clamp(transform.position.x, internalBoundsX.x, internalBoundsX.y);
-             editedPosition.y = Mathf.Clamp(transform.position.y, internalBoundsY.x, internalBoundsY.y);
-             editedPosition.z = -5;// Mathf.Clamp(transform.position.z, zBounds.x, zBounds.y);
-
-             var step = scrollSpeed * Time.deltaTime;
-             transform.position = editedPosition; //= editedPosition;
-
-             if (transform.position == editedPosition)
-             {
-                 movingBack = false;
-                 outOfBoundsY = false;
-                 outOfBoundsX = false;
-             }
-
-         }
-     } */
     void Update_Tap()
     {
         if (IsPointerOverUIObject())

@@ -94,6 +94,7 @@ public class UniversalPopup : UIPopup
 
     public void CloseWithDelay()
     {
+        SI_AudioManager.Instance.PlayClick();
         StartCoroutine(CloseEnum());
     }
 

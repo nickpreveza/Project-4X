@@ -52,6 +52,13 @@ public class GamePanel : UIPanel
     [SerializeField] Button endTurnButton;
     [SerializeField] Button overviewButton;
 
+    [SerializeField] Image audioImage;
+    [SerializeField] Image musicImage;
+    [SerializeField] Sprite audioOn;
+    [SerializeField] Sprite audioOff;
+    [SerializeField] Sprite musicOn;
+    [SerializeField] Sprite musicOff;
+
     [SerializeField] GameObject controlsGroup;
     void Start()
     {
@@ -70,6 +77,36 @@ public class GamePanel : UIPanel
         //textbox.EndTextbox();
     }
 
+    public void ToggleMusic()
+    {
+        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.ToggleAudio();
+
+        if (SI_AudioManager.Instance.musicOn)
+        {
+            musicImage.sprite = musicOn;
+        }
+        else
+        {
+            musicImage.sprite = musicOff;
+        }
+
+    }
+
+    public void ToggleAudio()
+    {
+        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.ToggleMusic();
+
+        if (SI_AudioManager.Instance.audioOn)
+        {
+            audioImage.sprite = audioOn;
+        }
+        else
+        {
+            audioImage.sprite = audioOff;
+        }
+    }
     public void ToggleEndTurn(bool status)
     {
         controlsGroup.SetActive(status);
@@ -77,7 +114,27 @@ public class GamePanel : UIPanel
     public void ToggleSettingsPanel()
     {
         settingsPanel.SetActive(!settingsPanel.activeSelf);
+        SI_AudioManager.Instance.PlayClick();
+        if (settingsPanel.activeSelf)
+        {
+            if (SI_AudioManager.Instance.musicOn)
+            {
+                musicImage.sprite = musicOn;
+            }
+            else
+            {
+                musicImage.sprite = musicOff;
+            }
 
+            if (SI_AudioManager.Instance.audioOn)
+            {
+                audioImage.sprite = audioOn;
+            }
+            else
+            {
+                audioImage.sprite = audioOff;
+            }
+        }
     }
 
     public void MoneyChanged()
@@ -95,6 +152,7 @@ public class GamePanel : UIPanel
     }
     public void RestartAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
                  "Return to title",
                  "Are you sure you want to exit?",
@@ -150,6 +208,7 @@ public class GamePanel : UIPanel
 
     public void ExitAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
              "QUIT GAME",
              "Are you sure you want to exit?",
@@ -164,6 +223,7 @@ public class GamePanel : UIPanel
         playerAvatarBackground.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         turnImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         scoreImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
+        //starsImage.color = GameManager.Instance.CivOfActivePlayer().uiColorActive;
         civAvatar.sprite = GameManager.Instance.CivOfActivePlayer().civLogo;
     }
 
@@ -187,6 +247,7 @@ public class GamePanel : UIPanel
     }
     public void ToggleOverviewPanel()
     {
+        SI_AudioManager.Instance.PlayClick();
         if (overviewPanel.activeSelf)
         {
             overviewPanel.SetActive(false);
@@ -202,6 +263,7 @@ public class GamePanel : UIPanel
 
     public void ToggleResearchPanel()
     {
+        SI_AudioManager.Instance.PlayClick();
         if (researchPanel.activeSelf)
         {
             researchPanel.SetActive(false);
@@ -275,6 +337,7 @@ public class GamePanel : UIPanel
 
        
         GameManager.Instance.LocalEndTurn();
+        SI_AudioManager.Instance.PlayClick();
     }
 
 

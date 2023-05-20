@@ -10,11 +10,13 @@ public class PlayerOverviewEntry : MonoBehaviour
     Player associatedPlayer;
     [SerializeField] Image playerAvatar;
     [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] TextMeshProUGUI totalScore;
     [SerializeField] TextMeshProUGUI developmentScore;
     [SerializeField] TextMeshProUGUI researchScore;
     [SerializeField] TextMeshProUGUI militaryScore;
     [SerializeField] TextMeshProUGUI rank;
     [SerializeField] Image rankImage;
+    [SerializeField] GameObject deathImage;
     public void SetPlayer(Player player)
     {
         associatedPlayer = player;
@@ -41,6 +43,15 @@ public class PlayerOverviewEntry : MonoBehaviour
             rankImage.sprite = UIManager.Instance.rankedSecondImage;
         }
 
+        if (associatedPlayer.isAlive)
+        {
+            deathImage.SetActive(false);
+        }
+        else
+        {
+            deathImage.SetActive(true);
+        }
+        totalScore.text = associatedPlayer.totalScore.ToString();
         developmentScore.text = associatedPlayer.developmentScore.ToString(); 
         researchScore.text = associatedPlayer.researchScore.ToString();
         militaryScore.text = associatedPlayer.militaryScore.ToString();

@@ -83,6 +83,7 @@ public class InitializerPanel : UIPanel
 
     public void SetupSelectYourCiv(int playerIndex, bool existsAlready)
     {
+        SI_AudioManager.Instance.PlayClick();
         overviewGamesubPanel.SetActive(false);
         selectCivsubPanel.SetActive(true);
 
@@ -165,6 +166,7 @@ public class InitializerPanel : UIPanel
 
     public void CloseSelectCivPanel(bool openOverview)
     {
+        SI_AudioManager.Instance.PlayClick();
         selectCivsubPanel.SetActive(false);
 
         if (openOverview)
@@ -217,6 +219,7 @@ public class InitializerPanel : UIPanel
 
     void AddPlayer()
     {
+        SI_AudioManager.Instance.PlayClick();
         int foundIndex = 0;
         for (int i = 0; i < Initializer.Instance.setupPlayers.Count; i++)
         {
@@ -232,6 +235,7 @@ public class InitializerPanel : UIPanel
 
     public void ToggleChanged(int playerIndex, bool togglevalue)
     {
+        SI_AudioManager.Instance.PlayClick();
         if (togglevalue)
         {
             Initializer.Instance.setupPlayers[playerIndex].type = PlayerType.LOCAL;
@@ -244,6 +248,7 @@ public class InitializerPanel : UIPanel
 
     public void RemoveSetupPlayer(int playerIndex)
     {
+        SI_AudioManager.Instance.PlayClick();
         Initializer.Instance.setupPlayers[playerIndex].activatedOnSetup = false;
         if (Initializer.Instance.selectedCivs.Contains(Initializer.Instance.setupPlayers[playerIndex].civilization))
         {
@@ -262,21 +267,25 @@ public class InitializerPanel : UIPanel
 
     public void OpenLinkTreeAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         Application.OpenURL(GameManager.Instance.data.linktrURL);
     }
 
     public void StartGameAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         Initializer.Instance.LocalStart(true);
     }
 
     public void ToggleSettingsAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         settingsPanel.SetActive(!settingsPanel.activeSelf);
     }
 
     public void ExitAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
             "QUIT GAME", 
             "Are you sure you want to exit?", 

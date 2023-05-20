@@ -534,16 +534,18 @@ public class WorldHex : MonoBehaviour
             }
         }
 
+        int hexesRangeToReveal = 1;
         if(hexData.type != TileType.MOUNTAIN)
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 1, false);
+            hexesRangeToReveal = 2;
         }
-        else
+        
+        if (newUnit.type == UnitType.Ship || newUnit.type == UnitType.Knight)
         {
-            MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, 2, false);
+            hexesRangeToReveal = 2;
         }
 
-
+        MapManager.Instance.UnhideHexes(newUnit.playerOwnerIndex, this, hexesRangeToReveal, false);
         associatedUnit = newUnit;
 
         if (hexData.type == TileType.SEA || hexData.type == TileType.DEEPSEA)

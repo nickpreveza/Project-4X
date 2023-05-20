@@ -580,6 +580,7 @@ public class WorldUnit : MonoBehaviour
             if (!unitDataToVerify.canMoveAfterAttack)
             {
                 currentMovePoints = 0;
+                noWalkHexInRange = true;
             }
         }
 

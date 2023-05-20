@@ -12,8 +12,27 @@ public class SI_AudioManager : MonoBehaviour
 
     public AudioMixer masterMixer;
 
-    public HB_Sound[] sounds;
+
+    public bool musicOn;
+    public bool audioOn;
     string themeName;
+
+  
+
+    public string uiClick;
+    public string uiConfirm;
+    public string menuTheme;
+
+    public string greekTheme;
+    public string romeTheme;
+    public string egyptTheme;
+    public string celtsTheme;
+
+
+    //write new things above that pls <3 
+    public HB_Sound[] sounds;
+
+
     void Awake()
     {
         if (Instance == null)
@@ -40,9 +59,76 @@ public class SI_AudioManager : MonoBehaviour
 
         }
 
-        DontDestroyOnLoad(gameObject);
+        audioOn = true;
+        musicOn = true;
+        masterMixer.SetFloat("MusicVolume", 0f);
+        masterMixer.SetFloat("SfxVolume", 0f);
     }
 
+    private void Start()
+    {
+        PlayTheme(Civilizations.None);
+    }
+
+    public void PlayClick()
+    {
+        Play(uiClick);
+    }
+
+    public void PlayTheme(Civilizations civType)
+    {
+        string themeToPlay = menuTheme;
+        switch (civType)
+        {
+            case Civilizations.None:
+                themeToPlay = menuTheme;
+                break;
+            case Civilizations.Greeks:
+                themeToPlay = greekTheme;
+                break;
+            case Civilizations.Egyptians:
+                themeToPlay = egyptTheme;
+                break;
+            case Civilizations.Celts:
+                themeToPlay = celtsTheme;
+                break;
+            case Civilizations.Romans:
+                themeToPlay = romeTheme;
+                break;
+        }
+
+        PlayTheme(themeToPlay);
+    }
+
+
+    public void ToggleMusic()
+    {
+        musicOn = !musicOn;
+
+        if (musicOn)
+        {
+            masterMixer.SetFloat("MusicVolume", 0f);
+        }
+        else
+        {
+            masterMixer.SetFloat("MusicVolume", -80f);
+        }
+      
+    }
+
+    public void ToggleAudio()
+    {
+        audioOn = !audioOn;
+
+        if (audioOn)
+        {
+            masterMixer.SetFloat("SfxVolume", 0f);
+        }
+        else
+        {
+            masterMixer.SetFloat("SfxVolume", -80f);
+        }
+    }
     /// <summary>
     /// <paramref name="soundName"/> is case sensitive!
     /// </summary>
