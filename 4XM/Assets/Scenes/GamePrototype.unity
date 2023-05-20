@@ -2493,8 +2493,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4293911551
+  m_fontColor: {r: 1, g: 0.8915094, b: 0.9355837, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -9663,10 +9663,10 @@ MonoBehaviour:
   researchUnavailable: {r: 1, g: 0.7372549, b: 0.7254902, a: 1}
   hexViewDescriptionAvailable: {r: 0.9647059, g: 0.9411765, b: 1, a: 0.7294118}
   hexViewDescriptionUnavailable: {r: 0.94509804, g: 0.827451, b: 0.78431374, a: 0.7294118}
-  oceanHex: {r: 0.09019608, g: 0.38431376, b: 0.5294118, a: 1}
-  seaHex: {r: 0.38431376, g: 0.7607844, b: 0.73333335, a: 1}
-  sandHex: {r: 0.8490566, g: 0.8459541, b: 0.6287825, a: 1}
-  grassHex: {r: 0.47911477, g: 0.6415094, b: 0.19668922, a: 1}
+  oceanHex: {r: 0.026032386, g: 0.34639767, b: 0.6132076, a: 1}
+  seaHex: {r: 0.31038627, g: 0.80631316, b: 0.8773585, a: 1}
+  sandHex: {r: 0.8301887, g: 0.7798142, b: 0.55998576, a: 1}
+  grassHex: {r: 0.58026594, g: 0.7830189, b: 0.23268957, a: 1}
   hillhex: {r: 0.48211104, g: 0.49056602, b: 0.2707369, a: 1}
   mountainHex: {r: 0.43137258, g: 0.32941177, b: 0.3019608, a: 1}
   loadGame: {fileID: 0}
