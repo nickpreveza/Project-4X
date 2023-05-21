@@ -1,0 +1,420 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7915290139872948247
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7915290139872948329}
+  - component: {fileID: 7915290139872948246}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7915290139872948329
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915290139872948247}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7915290139872948246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7915290139872948247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 619b6931700f4004e8eb6e56defe02a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterMixer: {fileID: 24100000, guid: 7e984f512e89b60468e829489e8883e3, type: 2}
+  musicOn: 0
+  audioOn: 0
+  uiClick: click
+  characterSelected: characterSelect
+  researchUnlocked: researchUnlocked
+  endTurn: endTurn
+  startGame: startGame
+  menuTheme: mainTheme
+  greekTheme: greekTheme
+  romeTheme: romanTheme
+  egyptTheme: egyptTheme
+  celtsTheme: celticTheme
+  selectHexSound: selectHex
+  selectCloudSound: cloudReveal
+  selectSeaSound: enterWater
+  selectUnitSound: selectHex
+  cloudReveal: cloudReveal
+  harvestResourceSound: harvest
+  buildBuildingSound: harvest
+  createBuildingOrResourceSound: harvest
+  destroySound: attackCatapult
+  pillageSound: attackCatapult
+  cityPointUp: cityUp
+  cityPointDown: cityDown
+  cityLevelUp: cityLevel
+  cityCaptured: cityCapture
+  unitSpawn: unitSpawn
+  monumentCaptured: monumentCapture
+  traderAction: moneyReceived
+  expandBorder: expandBorder
+  receiveMoney: moneyReceived
+  unitMove: unitMove
+  attackSword: attackSword
+  attackArcher: attackArrow
+  attackCavarly: attackSword
+  attackCatapult: attackCatapult
+  unitHit: unitHit
+  unitDeflect: unitHit
+  unitHeal: unitHeal
+  unitDeath: unitDeath
+  sounds:
+  - name: ambience
+    clip: {fileID: 8300000, guid: fadc2eb37b784434caf192f5e6ac3113, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: mainTheme
+    clip: {fileID: 8300000, guid: dff9452462dd50646b0563f168fa1699, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.4
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 1
+    source: {fileID: 0}
+  - name: greekTheme
+    clip: {fileID: 8300000, guid: 1dc8df076df7efa449701dd0ad1d566d, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: romanTheme
+    clip: {fileID: 8300000, guid: ef54d151dfb10934e99d42cffdd3adb9, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: egyptTheme
+    clip: {fileID: 8300000, guid: 17ff823084e7e7b4fb7b46124f9acead, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: celticTheme
+    clip: {fileID: 8300000, guid: 9bd9a228e0ea3444ea44e1ef61b73289, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -2273146209696275378, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.7
+    pitch: 1
+    loop: 1
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: click
+    clip: {fileID: 8300000, guid: a2ccdba089f1c27468667ec74aa71dcf, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: attackArrow
+    clip: {fileID: 8300000, guid: 92a94d595d90c7b44b4441737455086d, type: 3}
+    clipVariants:
+    - {fileID: 8300000, guid: 92a94d595d90c7b44b4441737455086d, type: 3}
+    - {fileID: 8300000, guid: fe12a3137e0c25449b54012f204ff226, type: 3}
+    - {fileID: 8300000, guid: 1510060e6d9cca846b1f52c4bc6c2991, type: 3}
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: attackSword
+    clip: {fileID: 8300000, guid: c658e82701d0e6441987d3fbe2a0a27c, type: 3}
+    clipVariants:
+    - {fileID: 8300000, guid: c658e82701d0e6441987d3fbe2a0a27c, type: 3}
+    - {fileID: 8300000, guid: fb9097d4a2a94b84095dbabed1cedf6d, type: 3}
+    - {fileID: 8300000, guid: 984a29fd44085cd4694ec4a8a90f5d6c, type: 3}
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: attackCatapult
+    clip: {fileID: 8300000, guid: 190bb8e084c335a4eb4824c67676d09f, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: enterWater
+    clip: {fileID: 8300000, guid: 56a90fb47b669f14886278ab9ed8769e, type: 3}
+    clipVariants:
+    - {fileID: 8300000, guid: 56a90fb47b669f14886278ab9ed8769e, type: 3}
+    - {fileID: 8300000, guid: 4727484c10063eb46badaf8d7e445a30, type: 3}
+    - {fileID: 8300000, guid: a5a72c36f03dc8e4bb66796d62ff071a, type: 3}
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: unitMove
+    clip: {fileID: 8300000, guid: 562f787e838c2ba4db6df56a7e6b8003, type: 3}
+    clipVariants:
+    - {fileID: 8300000, guid: 562f787e838c2ba4db6df56a7e6b8003, type: 3}
+    - {fileID: 8300000, guid: 6272b978a5c025e418f1ca3fb1058af4, type: 3}
+    - {fileID: 8300000, guid: 6cce41ea48162a74a9ec059ba56a86af, type: 3}
+    - {fileID: 8300000, guid: 0bcc4eb996290f64eb52e372d8598e6f, type: 3}
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.25
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: cityCapture
+    clip: {fileID: 8300000, guid: cabfae866cab347928b74b7d0ca6bfa9, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.6
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: selectHex
+    clip: {fileID: 8300000, guid: a2ccdba089f1c27468667ec74aa71dcf, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: characterSelect
+    clip: {fileID: 8300000, guid: a2ccdba089f1c27468667ec74aa71dcf, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: endTurn
+    clip: {fileID: 8300000, guid: 072970569a6e99945bf7e4b988609b97, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: cityLevel
+    clip: {fileID: 8300000, guid: 50f4300307dbea54cb3e96e34faca8d3, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: cityUp
+    clip: {fileID: 8300000, guid: cc54a81080104ce4f9e30a136b86fcba, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: cityDown
+    clip: {fileID: 8300000, guid: 442fd117fc6c09e43ab3917e60ab28c8, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.3
+    pitch: 0.78
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: harvest
+    clip: {fileID: 8300000, guid: 2d72cd83cfe855c4a94142da3a91c202, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: unitHit
+    clip: {fileID: 8300000, guid: 7e943cddb8bdaef4786178553f41ff66, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1.15
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: researchUnlocked
+    clip: {fileID: 8300000, guid: 79e2d60a055921f48953a7a6eb7124f4, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: unitSpawn
+    clip: {fileID: 8300000, guid: 8e67e8801ad652648ac0a8a0e7ba7d38, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: cloudReveal
+    clip: {fileID: 8300000, guid: f793cec680cee104c9fa1f931f7efdc6, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: expandBorder
+    clip: {fileID: 8300000, guid: 6f4fa848272381045acc9f5ef24457a3, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.5
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: unitHeal
+    clip: {fileID: 8300000, guid: 331820c91ae3dc64aa88eb1396c60897, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: unitDeath
+    clip: {fileID: 8300000, guid: a64f2a0070a4af1428078ce18a59194d, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: moneyReceived
+    clip: {fileID: 8300000, guid: 6f4fa848272381045acc9f5ef24457a3, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.3
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}
+  - name: monumentCapture
+    clip: {fileID: 8300000, guid: 577a7a27e76b4ea4785b2ca6edbb98f1, type: 3}
+    clipVariants: []
+    mixerGroup: {fileID: -3165942800488051908, guid: 7e984f512e89b60468e829489e8883e3,
+      type: 2}
+    volume: 0.2
+    pitch: 1
+    loop: 0
+    mute: 0
+    playOnAwake: 0
+    source: {fileID: 0}

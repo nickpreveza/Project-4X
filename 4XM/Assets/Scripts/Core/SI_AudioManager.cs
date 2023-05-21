@@ -17,17 +17,55 @@ public class SI_AudioManager : MonoBehaviour
     public bool audioOn;
     string themeName;
 
-  
-
+    [Header("UI")]
     public string uiClick;
-    public string uiConfirm;
+    public string characterSelected;
+    public string researchUnlocked;
+    public string endTurn;
+    public string startGame;
+    [Header("THEMES")]
     public string menuTheme;
-
     public string greekTheme;
     public string romeTheme;
     public string egyptTheme;
     public string celtsTheme;
+    [Header("HEX")]
+    public string selectHexSound;
+    public string selectCloudSound;
+    public string selectSeaSound;
+    public string selectUnitSound;
+    public string cloudReveal;
 
+    [Header("RESOURCES")]
+    public string harvestResourceSound;
+    public string buildBuildingSound;
+    public string createBuildingOrResourceSound;
+    public string destroySound;
+    public string pillageSound;
+
+    [Header("CITY")]
+    public string cityPointUp;
+    public string cityPointDown;
+    public string cityLevelUp;
+    public string cityCaptured;
+    public string unitSpawn;
+
+    [Header("ACTIONS")]
+    public string monumentCaptured;
+    public string traderAction;
+    public string expandBorder;
+    public string receiveMoney;
+
+    [Header("UNIT")]
+    public string unitMove;
+    public string attackSword;
+    public string attackArcher; //also attackBoat
+    public string attackCavarly;
+    public string attackCatapult; //also attackShip
+    public string unitHit;
+    public string unitDeflect;
+    public string unitHeal;
+    public string unitDeath;
 
     //write new things above that pls <3 
     public HB_Sound[] sounds;
@@ -73,6 +111,11 @@ public class SI_AudioManager : MonoBehaviour
     public void PlayClick()
     {
         Play(uiClick);
+    }
+
+    private void Update()
+    {
+        
     }
 
     public void PlayTheme(Civilizations civType)

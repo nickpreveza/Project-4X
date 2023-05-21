@@ -114,7 +114,7 @@ public class UnitManager : MonoBehaviour
             {
                 continue;
             }
-
+           
             originUnit.UpdateDirection(tempPathParent, pathStep, false);
             originUnit.oldPosition = tempPathParent.hexData.PositionFromCamera();
             originUnit.newPosition = pathStep.hexData.PositionFromCamera();
@@ -122,6 +122,15 @@ public class UnitManager : MonoBehaviour
             if (pathStep.hexData.type == TileType.MOUNTAIN)
             {
                 originUnit.newPosition.y = MapManager.Instance.mountainTileUnitOffsetY;
+            }
+
+            if (pathStep.hexData.type == TileType.SEA || pathStep.hexData.type == TileType.DEEPSEA)
+            {
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.selectSeaSound);
+            }
+            else
+            {
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitMove);
             }
 
             if (moveAnimationLenght > 0)
@@ -207,20 +216,24 @@ public class UnitManager : MonoBehaviour
             yield return new WaitForSeconds(0.3f);
         }
 
+        originUnit.UpdateDirection(originUnit.parentHex, enemyHex, false);
+
         switch (originUnit.type)
         {
             case UnitType.Defensive:
-            case UnitType.Trader:
             case UnitType.Diplomat:
             case UnitType.Melee:
             case UnitType.Boat:
             case UnitType.Knight:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                 originUnit.visualAnim.SetTrigger("AttackSword");
                 break;
             case UnitType.Ranged:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackArcher);
                 originUnit.visualAnim.SetTrigger("AttackBow");
                 break;
             case UnitType.Cavalry:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCavarly);
                 originUnit.visualAnim.SetTrigger("AttackHorse");
                 break;
             case UnitType.Siege:
@@ -230,7 +243,12 @@ public class UnitManager : MonoBehaviour
                 //visualAnim.SetTrigger("AttackShield");
                 break;
             case UnitType.Lance:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                 originUnit.visualAnim.SetTrigger("AttackLance");
+                break;
+            case UnitType.Trader:
+                enemyUnit.visualAnim.SetTrigger("AttackScout");
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                 break;
         }
 
@@ -245,10 +263,13 @@ public class UnitManager : MonoBehaviour
         if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
         {
             enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCatapult);
         }
+
 
         if (enemyUnit.ReceiveDamage(originUnit.currentAttack))
         {
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitDeath);
             enemyUnit.visualAnim.SetTrigger("Die");
             yield return new WaitForSeconds(0.5f);
             enemyUnit.parentHex.HideHighlight();
@@ -291,6 +312,7 @@ public class UnitManager : MonoBehaviour
         }
         else
         {
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitDeflect);
             if (isUnitInAttackRange(enemyUnit, originUnit))
             {
                 if (GameManager.Instance.activePlayer.isAI())
@@ -299,22 +321,29 @@ public class UnitManager : MonoBehaviour
                     yield return new WaitForSeconds(0.3f);
                 }
 
+                yield return new WaitForSeconds(0.3f);
+
                 switch (enemyUnit.type)
                 {
                     case UnitType.Defensive:
                     case UnitType.Diplomat:
                     case UnitType.Melee:
                     case UnitType.Boat:
+                    case UnitType.Knight:
                         enemyUnit.visualAnim.SetTrigger("AttackSword");
+                        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                         break;
                     case UnitType.Ranged:
                         enemyUnit.visualAnim.SetTrigger("AttackBow");
+                        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackArcher);
                         break;
                     case UnitType.Cavalry:
                         enemyUnit.visualAnim.SetTrigger("AttackHorse");
+                        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCavarly);
                         break;
                     case UnitType.Lance:
                         enemyUnit.visualAnim.SetTrigger("AttackLance");
+                        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                         break;
                     case UnitType.Siege:
                     case UnitType.Ship:
@@ -324,6 +353,7 @@ public class UnitManager : MonoBehaviour
                         break;
                    case UnitType.Trader:
                         enemyUnit.visualAnim.SetTrigger("AttackScout");
+                        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackSword);
                         break;
                 }
 
@@ -338,10 +368,12 @@ public class UnitManager : MonoBehaviour
                 if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
                 {
                     originUnit.SpawnParticle(GameManager.Instance.explosionParticle);
+                    SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCatapult);
                 }
 
                 if (originUnit.ReceiveDamage(enemyUnit.unitReference.counterAttack))
                 {
+                    SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitDeath);
                     originUnit.visualAnim.SetTrigger("Die");
                     yield return new WaitForSeconds(0.5f);
                     originUnit.parentHex.HideHighlight();
@@ -368,7 +400,8 @@ public class UnitManager : MonoBehaviour
                 }
                 else
                 {
-                    originUnit.SpawnParticle(UnitManager.Instance.unitHitParticle, true);
+                    SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitDeflect);
+                    originUnit.SpawnParticle(unitHitParticle, true);
                     originUnit.visualAnim.SetTrigger("Evade");
                    
                     originUnit.ValidateRemainigActions();
@@ -380,6 +413,19 @@ public class UnitManager : MonoBehaviour
                     enemyUnit.parentHex.HideHighlight();
                 }
             }
+            else
+            {
+                originUnit.ValidateRemainigActions();
+                if (!GameManager.Instance.GetPlayerByIndex(originUnit.playerOwnerIndex).isAI())
+                {
+                    SelectUnit(originUnit);
+                }
+
+                originUnit.parentHex.HideHighlight();
+                enemyUnit.parentHex.HideHighlight();
+            }
+
+
         }
 
 
@@ -465,20 +511,26 @@ public class UnitManager : MonoBehaviour
             else
             {
                 //spanw a unit at the first city of each player
-                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false, true);
+                SpawnUnitAt(player, UnitType.Melee, player.playerCities[0], false, false, true, false);
             }
         }
        
         SI_EventManager.Instance.OnUnitsPlaced();
     }
 
-    public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost, bool addTocityPopulation)
+    public void SpawnUnitAt(Player player, UnitType newUnit, WorldHex targetHex, bool exhaustMoves, bool applyCost, bool addTocityPopulation, bool playSound = true)
     {
         UnitData unitData = GetUnitDataByType(newUnit, player.civilization);
 
         if (applyCost)
         {
+           
             GameManager.Instance.RemoveStars(player.index, unitData.cost);
+        }
+
+        if (playSound)
+        {
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitSpawn);
         }
         player.AddScore(3, unitData.scoreForPlayer);
 

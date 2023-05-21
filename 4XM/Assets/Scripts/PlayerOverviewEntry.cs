@@ -10,6 +10,7 @@ public class PlayerOverviewEntry : MonoBehaviour
     Player associatedPlayer;
     [SerializeField] Image playerAvatar;
     [SerializeField] TextMeshProUGUI playerName;
+    [SerializeField] Image playerIcon;
     [SerializeField] TextMeshProUGUI totalScore;
     [SerializeField] TextMeshProUGUI developmentScore;
     [SerializeField] TextMeshProUGUI researchScore;
@@ -22,6 +23,7 @@ public class PlayerOverviewEntry : MonoBehaviour
         associatedPlayer = player;
         playerName.text = GameManager.Instance.GetCivilizationByType(associatedPlayer.civilization).name;
         playerAvatar.color = GameManager.Instance.GetCivilizationColor(player.civilization, CivColorType.uiActiveColor);
+        playerIcon.sprite = GameManager.Instance.GetCivilizationByType(associatedPlayer.civilization).civLogo;
         UpdateData();
     }
     public void UpdateData()
@@ -45,10 +47,12 @@ public class PlayerOverviewEntry : MonoBehaviour
 
         if (associatedPlayer.isAlive)
         {
+            playerIcon.gameObject.SetActive(true);
             deathImage.SetActive(false);
         }
         else
         {
+            playerIcon.gameObject.SetActive(false);
             deathImage.SetActive(true);
         }
         totalScore.text = associatedPlayer.totalScore.ToString();

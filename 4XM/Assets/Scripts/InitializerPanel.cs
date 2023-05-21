@@ -273,7 +273,7 @@ public class InitializerPanel : UIPanel
 
     public void StartGameAction()
     {
-        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.startGame);
         Initializer.Instance.LocalStart(true);
     }
 

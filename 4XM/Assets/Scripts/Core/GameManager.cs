@@ -158,7 +158,8 @@ namespace SignedInitiative
             activePlayerIndex = 0;
             
             StartTurn(sessionPlayers[activePlayerIndex]);
-
+            SI_AudioManager.Instance.PlayTheme(sessionPlayers[activePlayerIndex].civilization);
+            SI_AudioManager.Instance.Play("ambience");
             UIManager.Instance.OpenGamePanel();
         }
 
@@ -423,8 +424,6 @@ namespace SignedInitiative
             activePlayer.StartTurn();
             activePlayer.CalculateDevelopmentScore(false);
             activePlayer.CalculateExpectedStars();
-
-            SI_AudioManager.Instance.PlayTheme(activePlayer.civilization);
             if (activePlayer.showAction())
             {
                 if (activePlayer.lastMovedUnit != null)
@@ -453,6 +452,10 @@ namespace SignedInitiative
             if (activePlayer.isAI())
             {
                 brain.StartEvaluation(activePlayer);
+            }
+            else
+            {
+                //SI_AudioManager.Instance.PlayTheme(sessionPlayers[activePlayerIndex].civilization);
             }
           
         }
@@ -557,6 +560,7 @@ namespace SignedInitiative
         public void GameOver(Player player)
         {
             SI_CameraController.Instance.animationsRunning = true;
+            SI_AudioManager.Instance.PlayTheme(Civilizations.None);
             UIManager.Instance.GameOver(player);
         }
 
@@ -761,7 +765,11 @@ namespace SignedInitiative
                 UIManager.Instance.UpdateResearchPanel(playerIndex);
 
                 if (!activePlayer.isAI())
-                UIManager.Instance.RefreshHexView();
+                {
+                    UIManager.Instance.RefreshHexView();
+                    SI_AudioManager.Instance.Play(SI_AudioManager.Instance.researchUnlocked);
+                }
+                
             }
            
         }

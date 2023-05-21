@@ -47,26 +47,31 @@ public class EndGamePanel : UIPanel
 
     public void OneMoreTurnButton()
     {
+        SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.ReloadScene();
     }
 
     public void MainMenuButton()
     {
+        SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.ReloadScene();
     }
 
     public void ItchButton()
     {
+        SI_AudioManager.Instance.PlayClick();
         Application.OpenURL(GameManager.Instance.data.itchURL);
     }
 
     public void FollowButton()
     {
+        SI_AudioManager.Instance.PlayClick();
         Application.OpenURL(GameManager.Instance.data.linktrURL);
     }
 
     public void ExitAction()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
             "QUIT GAME",
             "Are you sure you want to exit?",

@@ -314,8 +314,9 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < points; i++)
         {
+            yield return new WaitForSeconds(0.5f);
             city.wiggler?.Wiggle();
-
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.cityPointUp);
             if (city.cityData.negativeLevelPoints > 0)
             {
                 city.cityView.ToggleOffProgressPoint(true);
@@ -331,6 +332,7 @@ public class MapManager : MonoBehaviour
 
                 if (city.cityData.levelPointsToNext == city.cityData.targetLevelPoints)
                 {
+                    SI_AudioManager.Instance.Play(SI_AudioManager.Instance.cityLevelUp);
                     city.cityData.level++;
                     city.cityData.targetLevelPoints = city.cityData.level + 1;
                     city.cityData.levelPointsToNext = 0;
@@ -374,9 +376,6 @@ public class MapManager : MonoBehaviour
 
                 }
             }
-
-            yield return new WaitForSeconds(.5f);
-
         }
 
         city.cityView.UpdateData();
@@ -404,6 +403,7 @@ public class MapManager : MonoBehaviour
 
         for (int i = 0; i < value; i++)
         {
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.cityPointDown);
             if (city.cityData.levelPointsToNext > 0)
             {
                 city.cityView.ToggleOffProgressPoint(false);
@@ -1033,6 +1033,7 @@ public class MapManager : MonoBehaviour
 
     public void UnhideHexes(int playerIndex, WorldHex centerHex, int range, bool isInstant)
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.cloudReveal); 
         List<WorldHex> hexesToUnhide = GetHexesListWithinRadius(centerHex.hexData, range);
 
         if (GameManager.Instance.IsIndexOfActivePlayer(playerIndex))

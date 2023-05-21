@@ -110,7 +110,7 @@ public class ActionButton : MonoBehaviour
         buttonAction.onClick.RemoveAllListeners();
         researchVisual.SetActive(false);
 
-        buttonName.text = "Upgrade to Ship";
+        buttonName.text = "Ship Upgrade";
         actionCost = newHex.associatedUnit.boatReference.cost; 
         actionCostText.text = actionCost.ToString();
         buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
@@ -398,14 +398,14 @@ public class ActionButton : MonoBehaviour
     public void TraderAction()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
-        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.traderAction);
         targetHex.associatedUnit.TraderAction();
     }
 
     public void HealUnit()
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
-        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitHeal);
         targetUnit.HealAction();
         UIManager.Instance.RefreshHexView();
     }
@@ -431,8 +431,8 @@ public class ActionButton : MonoBehaviour
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
         SI_AudioManager.Instance.PlayClick();
-        //GameManager.Instance.activePlayer.RemoveStars(actionCost);
-        UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true, true);
+;       //GameManager.Instance.activePlayer.RemoveStars(actionCost);
+       UnitManager.Instance.SpawnUnitAt(GameManager.Instance.activePlayer, unitType, targetHex, true, true, true);
 
         UIManager.Instance.RefreshHexView();
         UIManager.Instance.UpdateHUD();

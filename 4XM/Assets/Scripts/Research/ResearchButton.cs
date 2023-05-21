@@ -118,6 +118,7 @@ public class ResearchButton: MonoBehaviour
 
     public void OpenPopupAlreadyPurchased()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
            GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
            GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
@@ -128,6 +129,7 @@ public class ResearchButton: MonoBehaviour
     }
     public void OpenPopup(bool available)
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
             GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
             GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,
@@ -143,6 +145,7 @@ public class ResearchButton: MonoBehaviour
     }
     public void OpenPopupLocked()
     {
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.OpenPopup(
            GameManager.Instance.abilitiesDictionary[abilityID].abilityName,
            GameManager.Instance.abilitiesDictionary[abilityID].abilityDescription,

@@ -768,6 +768,7 @@ public class WorldHex : MonoBehaviour
 
     void PopupCustomRewardStars()
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.receiveMoney);
         GameManager.Instance.AddStartsToActivePlayer(GameManager.Instance.data.currencyReward);
         UIManager.Instance.waitingForPopupReply = false;
     }
@@ -800,6 +801,7 @@ public class WorldHex : MonoBehaviour
 
     void ExpandBorders()
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.expandBorder);
         cityData.range = GameManager.Instance.data.rangeReward;
         List<WorldHex> hexesToAdd = MapManager.Instance.GetHexesListWithinRadius(this.hexData, cityData.range);
 
@@ -839,6 +841,7 @@ public class WorldHex : MonoBehaviour
 
     public void CreateResource(ResourceType type)
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.createBuildingOrResourceSound);
         GenerateResource(type);
         Select(false);
     }
@@ -851,6 +854,7 @@ public class WorldHex : MonoBehaviour
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
         Destroy(resourceObj);
         SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.harvestResourceSound);
         StartCoroutine(HarvestResourceEnum());
     }
 
@@ -1069,6 +1073,7 @@ public class WorldHex : MonoBehaviour
 
     public void DestroyAction(bool isBuilding)
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.destroySound);
         SpawnParticle(GameManager.Instance.explosionParticle);
         if (hexData.hasBuilding)
         {
@@ -1174,6 +1179,8 @@ public class WorldHex : MonoBehaviour
 
     public void CreateRoad(bool searchForConnections = true)
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.buildBuildingSound);
+
         if (hexData.hasRoad)
         {
             Debug.LogWarning("Tried to create road on an existing road");
@@ -1414,6 +1421,7 @@ public class WorldHex : MonoBehaviour
             UnitManager.Instance.ClearHexSelectionMode();
             SI_CameraController.Instance.DeselectSelection();
             SpawnParticle(GameManager.Instance.cloudInteractionParticle);
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.selectCloudSound);
             wiggler?.Wiggle();
             return;
         }
@@ -1452,6 +1460,7 @@ public class WorldHex : MonoBehaviour
                 associatedUnit.Select();
                 wiggler?.Wiggle();
                 UIManager.Instance.ShowHexView(this, associatedUnit);
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.selectUnitSound);
                 return;
             }
             else
@@ -1483,6 +1492,20 @@ public class WorldHex : MonoBehaviour
         hexGameObject.GetComponent<MeshRenderer>().materials = newMaterials; */
         ShowHighlight(false);
         SpawnParticle(GameManager.Instance.GetParticleInteractionByType(hexData.type));
+        switch (hexData.type)
+        {
+            case TileType.DEEPSEA:
+            case TileType.SEA:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.selectSeaSound);
+                break;
+            case TileType.SAND:
+            case TileType.GRASS:
+            case TileType.HILL:
+            case TileType.MOUNTAIN:
+            case TileType.ICE:
+                SI_AudioManager.Instance.Play(SI_AudioManager.Instance.selectHexSound);
+                break;
+        }
         wiggler?.Wiggle();
 
         if (hexData.isOwnedByCity)

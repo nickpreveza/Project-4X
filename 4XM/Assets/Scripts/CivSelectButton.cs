@@ -35,7 +35,7 @@ public class CivSelectButton : MonoBehaviour
 
     public void SelectWhenSelection()
     {
-        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.characterSelected);
         handler.SelectCiv(playerIndex, civType, overrideCivSettings);
     }
 

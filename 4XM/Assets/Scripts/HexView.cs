@@ -425,7 +425,7 @@ public class HexView : MonoBehaviour
                 if (hex.associatedUnit.type == UnitType.Trader && hex.associatedUnit.playerOwnerIndex == GameManager.Instance.activePlayerIndex)
                 {
                     //TODO check if ciy is traders origin city
-                    if (hex.parentCity != hex.associatedUnit.originCity)
+                    if (hex.parentCity != hex.associatedUnit.originCity && hex.associatedUnit.buttonActionPossible)
                     {
                         GenerateTraderButton();
                         hexDescription.text = "Trade with the city of " + hex.cityData.cityName + " for a reward";

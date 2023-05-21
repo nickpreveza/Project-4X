@@ -80,7 +80,7 @@ public class GamePanel : UIPanel
     public void ToggleMusic()
     {
         SI_AudioManager.Instance.PlayClick();
-        SI_AudioManager.Instance.ToggleAudio();
+        SI_AudioManager.Instance.ToggleMusic();
 
         if (SI_AudioManager.Instance.musicOn)
         {
@@ -96,7 +96,7 @@ public class GamePanel : UIPanel
     public void ToggleAudio()
     {
         SI_AudioManager.Instance.PlayClick();
-        SI_AudioManager.Instance.ToggleMusic();
+        SI_AudioManager.Instance.ToggleAudio();
 
         if (SI_AudioManager.Instance.audioOn)
         {
@@ -335,9 +335,9 @@ public class GamePanel : UIPanel
             return;
         }
 
-       
+        
         GameManager.Instance.LocalEndTurn();
-        SI_AudioManager.Instance.PlayClick();
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.endTurn);
     }
 
 

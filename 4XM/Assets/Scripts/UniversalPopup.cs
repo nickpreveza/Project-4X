@@ -94,15 +94,16 @@ public class UniversalPopup : UIPopup
 
     public void CloseWithDelay()
     {
-        SI_AudioManager.Instance.PlayClick();
         StartCoroutine(CloseEnum());
     }
 
     IEnumerator CloseEnum()
     {
         yield return new WaitForSeconds(0.1f);
-        Close();
+        SI_AudioManager.Instance.PlayClick();
         UIManager.Instance.waitingForPopupReply = false;
+        Close();
+        
     }
 
     public override void Close()

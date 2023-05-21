@@ -355,7 +355,7 @@ public class Player
         playerUnits.Add(newUnit);
     }
 
-    public void AddCity(WorldHex cityHex)
+    public void AddCity(WorldHex cityHex, bool playSound = false)
     {
         cityHex.cityData.isUnderSiege = false;
         //TODO: Some security checks to make sure this is the correct tile;
@@ -363,6 +363,11 @@ public class Player
         {
             playerCities.Add(cityHex);
             Debug.Log("Added " + cityHex.cityData.cityName + " to " + this.civilization.ToString());
+        }
+
+        if (playSound)
+        {
+            SI_AudioManager.Instance.Play(SI_AudioManager.Instance.cityCaptured);
         }
        
         MapManager.Instance.OccupyCityByPlayer(this, cityHex);

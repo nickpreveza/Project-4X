@@ -541,11 +541,12 @@ public class WorldUnit : MonoBehaviour
         OnActionEnded();
 
         Debug.Log("Unit from " + GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).civilization.ToString() + " captured " + parentHex.cityData.cityName);
-        GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).AddCity(parentHex);
+        GameManager.Instance.GetPlayerByIndex(playerOwnerIndex).AddCity(parentHex, true);
     }
 
     public void MonumentCapture()
     {
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.monumentCaptured);
         ExhaustActions();
         OnActionEnded();
     }
@@ -706,6 +707,7 @@ public class WorldUnit : MonoBehaviour
         {
             WorldHex selecedHex = hexesInRadius[Random.Range(0, hexesInRadius.Count)];
             UnitManager.Instance.StartMoveSequence(this, selecedHex, true, true);
+            UnitManager.Instance.ClearHexSelectionMode();
             return true;
         }
         else

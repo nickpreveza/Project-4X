@@ -184,13 +184,13 @@ MonoBehaviour:
     scoreForPlayer: 10
     level: 1
     health: 7
-    heal: 1
-    attack: 4
-    counterAttack: 4
+    heal: 2
+    attack: 5
+    counterAttack: 5
     defense: 2
     walkRange: 2
     attackRange: 1
-    roadModifier: 1
+    roadModifier: 2
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -206,16 +206,16 @@ MonoBehaviour:
     defaultLockState: 0
     type: 3
     civType: 0
-    cost: 5
+    cost: 7
     scoreForPlayer: 10
     level: 1
-    health: 15
+    health: 10
     heal: 2
     attack: 12
-    counterAttack: 5
+    counterAttack: 8
     defense: 2
     walkRange: 1
-    attackRange: 4
+    attackRange: 3
     roadModifier: 1
     attackCharges: 1
     moveCharges: 1
@@ -232,17 +232,17 @@ MonoBehaviour:
     defaultLockState: 0
     type: 9
     civType: 0
-    cost: 5
+    cost: 7
     scoreForPlayer: 10
     level: 1
     health: 15
     heal: 2
     attack: 12
-    counterAttack: 5
+    counterAttack: 4
     defense: 3
-    walkRange: 3
+    walkRange: 2
     attackRange: 1
-    roadModifier: 1
+    roadModifier: 2
     attackCharges: 1
     moveCharges: 1
     flyAbility: 0
@@ -264,7 +264,7 @@ MonoBehaviour:
     health: 25
     heal: 5
     attack: 15
-    counterAttack: 5
+    counterAttack: 10
     defense: 3
     walkRange: 1
     attackRange: 1
