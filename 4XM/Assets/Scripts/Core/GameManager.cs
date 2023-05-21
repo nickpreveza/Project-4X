@@ -31,7 +31,7 @@ namespace SignedInitiative
         public bool isSinglePlayer;
 
         [Header("Debug Settings")]
-        bool allowOnlyAIPlayersToPlayer;
+        public bool allowOnlyAIPlayersToPlayer;
         public bool VisualizeAIMoves;
         public bool destroyResourcesToo;
         public bool useRandomSeed;
@@ -296,7 +296,7 @@ namespace SignedInitiative
                 unit.InstantDeath(false);
             }
 
-            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, false, false, false);
+            UnitManager.Instance.SpawnUnitAt(activePlayer, type, targetHex, true, false, false, true);
 
         }
 
@@ -516,7 +516,7 @@ namespace SignedInitiative
                 bool foundHumanPlayer = false;
                 foreach(Player player in sessionPlayers)
                 {
-                    if (!player.isAI())
+                    if (!player.isAI() && player.isAlive)
                     {
                         foundHumanPlayer = true;
                         break;
@@ -1146,6 +1146,10 @@ namespace SignedInitiative
                     return sessionPlayers[playerIndex].abilities.mineHarvest;
                 case ResourceType.FISH:
                     return sessionPlayers[playerIndex].abilities.fishHarvest;
+                case ResourceType.EMPTY:
+                    return false;
+                case ResourceType.MONUMENT:
+                    return false;
 
             }
 

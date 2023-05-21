@@ -233,6 +233,9 @@ public class ActionButton : MonoBehaviour
                 case ResourceType.FISH:
                     buttonName.text = "Catch " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
                     break;
+                case ResourceType.MONUMENT:
+                    buttonName.text = "Claim " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+                    break;
             }
            
         }

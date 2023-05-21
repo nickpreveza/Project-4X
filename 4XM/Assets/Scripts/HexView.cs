@@ -388,25 +388,25 @@ public class HexView : MonoBehaviour
                 if (!hex.associatedUnit.hasMoved && !hex.associatedUnit.hasAttacked)
                 {
                     hexDescription.text = "Claim the " + hexName.text.ToLower() + " for a reward";
-                    GenerateResourceButton(true, ResourceType.EMPTY, false);
+                    GenerateResourceButton(true, ResourceType.MONUMENT, false);
                 }
                 else
                 {
                     hexDescription.text = "The" + hexName.text.ToLower() + " can be claimed on the next turn";
-                    GenerateResourceButton(false, ResourceType.EMPTY, false);
+                    GenerateResourceButton(false, ResourceType.MONUMENT, false);
                 }
             }
             else
             {
                 hexDescription.text = "The" + hexName.text.ToLower() + " will be claimed by the enemy on the next turn";
-                GenerateResourceButton(false, ResourceType.EMPTY, false);
+                GenerateResourceButton(false, ResourceType.MONUMENT, false);
             }
 
         }
         else
         {
             hexDescription.text = "Bring a unit to the  " + hexName.text.ToLower() + " to claim it for a reward";
-            GenerateResourceButton(false, ResourceType.EMPTY, false);
+            GenerateResourceButton(false, ResourceType.MONUMENT, false);
         }
     }
 

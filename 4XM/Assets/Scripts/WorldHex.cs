@@ -535,7 +535,7 @@ public class WorldHex : MonoBehaviour
         }
 
         int hexesRangeToReveal = 1;
-        if(hexData.type != TileType.MOUNTAIN)
+        if(hexData.type == TileType.MOUNTAIN)
         {
             hexesRangeToReveal = 2;
         }
@@ -848,11 +848,22 @@ public class WorldHex : MonoBehaviour
 
     public void HarvestResource()
     {
-        UIManager.Instance.HideHexView();
         MapManager.Instance.cityIsWorking = true;
+        if (!hexData.hasResource)
+        {
+            MapManager.Instance.cityIsWorking = false;
+            return;
+        }
+      
         //for some reason this didnt work inside the enum
         GameObject resourceObj = resourceParent.GetChild(0).gameObject;
-        Destroy(resourceObj);
+
+        if (resourceObj != null)
+        {
+            Destroy(resourceObj);
+        }
+
+        UIManager.Instance.HideHexView();
         SpawnParticle(GameManager.Instance.resourceHarvestParticle);
         SI_AudioManager.Instance.Play(SI_AudioManager.Instance.harvestResourceSound);
         StartCoroutine(HarvestResourceEnum());
