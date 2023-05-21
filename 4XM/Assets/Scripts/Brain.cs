@@ -994,7 +994,7 @@ public class Brain : MonoBehaviour
             hexBaseValue += ScoreAdjHex(adj);
         }
 
-        if (hex.hexData.hasCity && !hex.hexData.cityHasBeenClaimed)
+        if (hex.hexData.hasCity && (hex.hexData.playerOwnerIndex != player.index))
         {
             hexBaseValue += cityScore;
         }
