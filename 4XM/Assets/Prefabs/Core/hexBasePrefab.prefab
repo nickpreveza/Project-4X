@@ -195,8 +195,7 @@ MonoBehaviour:
     rndVisualElevation: 0
   cityData:
     cityName: 
-    isCaptital: 0
-    isConnectedToCapital: 0
+    isCapital: 0
     level: 1
     targetLevelPoints: 2
     levelPointsToNext: 0
@@ -211,6 +210,7 @@ MonoBehaviour:
     cityCreatedUnits: []
     cityHexesThatCanBeWorked: []
   hexGameObject: {fileID: 0}
+  wiggler: {fileID: 0}
   associatedUnit: {fileID: 0}
   unitParent: {fileID: 0}
   resourceParent: {fileID: 0}
@@ -221,8 +221,11 @@ MonoBehaviour:
   cityGameObject: {fileID: 0}
   parentCity: {fileID: 0}
   cityView: {fileID: 0}
+  visualHelper: {fileID: 0}
+  roadHelper: {fileID: 0}
   adjacentHexes: []
   pathParent: {fileID: 0}
+  aiScore: 0
 --- !u!1 &6450743226876587110
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,6 +376,16 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.99
+      objectReference: {fileID: 0}
+    - target: {fileID: 5459507964701331413, guid: ce07966a271c5ec468076194e873fe18,
+        type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -464,7 +477,7 @@ PrefabInstance:
     - target: {fileID: 6797393229617359494, guid: e61fdffd11d668248abe65df1c322529,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.9951405
+      value: 0.999
       objectReference: {fileID: 0}
     - target: {fileID: 6797393229617359494, guid: e61fdffd11d668248abe65df1c322529,
         type: 3}
@@ -474,7 +487,7 @@ PrefabInstance:
     - target: {fileID: 6797393229617359494, guid: e61fdffd11d668248abe65df1c322529,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.9951405
+      value: 0.999
       objectReference: {fileID: 0}
     - target: {fileID: 6797393229617359494, guid: e61fdffd11d668248abe65df1c322529,
         type: 3}

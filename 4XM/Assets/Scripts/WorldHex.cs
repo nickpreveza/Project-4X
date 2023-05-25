@@ -213,12 +213,17 @@ public class WorldHex : MonoBehaviour
         HideHighlight();
     }
 
-    public void SpawnParticle(GameObject particlePrefab)
+    public void SpawnParticle(GameObject particlePrefab, bool overridePriority = false)
     {
         if (activeParticle == null && particlePrefab != null)
         {
             activeParticle = Instantiate(particlePrefab, particleParent);
             Invoke("DestroyParticle", 1f);
+        }
+        else if (overridePriority && particlePrefab != null)
+        {
+            DestroyParticle();
+            activeParticle = Instantiate(particlePrefab, particleParent);
         }
     }
 
@@ -864,7 +869,8 @@ public class WorldHex : MonoBehaviour
         }
 
         UIManager.Instance.HideHexView();
-        SpawnParticle(GameManager.Instance.resourceHarvestParticle);
+        SI_CameraController.Instance.DeselectSelection();
+        SpawnParticle(GameManager.Instance.resourceHarvestParticle, true);
         SI_AudioManager.Instance.Play(SI_AudioManager.Instance.harvestResourceSound);
         StartCoroutine(HarvestResourceEnum());
     }
@@ -983,6 +989,7 @@ public class WorldHex : MonoBehaviour
     public void CreateBuilding(BuildingType type)
     {
         UIManager.Instance.HideHexView();
+        SI_CameraController.Instance.DeselectSelection();
         StartCoroutine(CreateMaster(type));
     }
 
