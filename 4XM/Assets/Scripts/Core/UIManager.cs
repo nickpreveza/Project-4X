@@ -182,6 +182,11 @@ namespace SignedInitiative
             gamePanel.GetComponent<GamePanel>().OpenResearchPanel();
         }
 
+        public void HideSettingsPanel()
+        {
+            gamePanel.GetComponent<GamePanel>().HideSettingsPanel();
+        }
+
         public void OpenResearchPanelWithHighlight(ResourceType type)
         {
             

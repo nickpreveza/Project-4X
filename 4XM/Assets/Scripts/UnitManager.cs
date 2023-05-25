@@ -260,7 +260,7 @@ public class UnitManager : MonoBehaviour
 
         yield return new WaitForSeconds(.7f);
 
-        if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
+        if (originUnit.type == UnitType.Siege || originUnit.isShip)
         {
             enemyHex.SpawnParticle(GameManager.Instance.explosionParticle);
             SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCatapult);
@@ -365,7 +365,7 @@ public class UnitManager : MonoBehaviour
 
                 yield return new WaitForSeconds(.7f);
 
-                if (originUnit.type == UnitType.Siege || originUnit.type == UnitType.Boat)
+                if (enemyUnit.type == UnitType.Siege || enemyUnit.isShip)
                 {
                     originUnit.SpawnParticle(GameManager.Instance.explosionParticle);
                     SI_AudioManager.Instance.Play(SI_AudioManager.Instance.attackCatapult);

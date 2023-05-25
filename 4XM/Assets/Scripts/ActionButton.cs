@@ -110,13 +110,25 @@ public class ActionButton : MonoBehaviour
         buttonAction.onClick.RemoveAllListeners();
         researchVisual.SetActive(false);
 
-        buttonName.text = "Ship Upgrade";
-        actionCost = newHex.associatedUnit.boatReference.cost; 
+        buttonName.text = "Upgrade to Ship";
+        actionCost = UnitManager.Instance.GetUnitDataByType(UnitType.Ship, newHex.associatedUnit.civilization).cost;
         actionCostText.text = actionCost.ToString();
-        buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
+       
         backgroundImage.sprite = parentHandler.actionBackground;
-        costVisual.SetActive(true);
-        CheckIfAffordable();
+
+        if (targetHex.associatedUnit.buttonActionPossible)
+        {
+            buttonAction.interactable = true;
+            buttonAction.onClick.AddListener(() => ShipCreationButton(newHex.associatedUnit));
+            costVisual.SetActive(true);
+            CheckIfAffordable();
+        }
+        else
+        {
+            costVisual.SetActive(true);
+            buttonAction.interactable = false;
+        }
+       
     }
 
     public void SetDataForRoad(HexView newHandler, WorldHex newHex)
@@ -220,7 +232,8 @@ public class ActionButton : MonoBehaviour
 
         if (MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).transformToBuilding)
         {
-            buttonName.text = "Build " + MapManager.Instance.GetResourceByType(targetHex.hexData.resourceType).resourceName;
+            string buildingName = MapManager.Instance.GetBuildingByType(MapManager.Instance.GetBuildingByResourceType(targetHex.hexData.resourceType)).buildingName;
+            buttonName.text = "Build " + buildingName;
         }
         else
         {
@@ -363,6 +376,7 @@ public class ActionButton : MonoBehaviour
         if (SI_CameraController.Instance.animationsRunning) { return; }
         SI_AudioManager.Instance.PlayClick();
         GameManager.Instance.activePlayer.RemoveStars(actionCost);
+        SI_AudioManager.Instance.Play(SI_AudioManager.Instance.unitSpawn);
         unit.EnableShip();
     }
 

@@ -426,14 +426,7 @@ namespace SignedInitiative
             activePlayer.CalculateExpectedStars();
             if (activePlayer.showAction())
             {
-                if (activePlayer.lastMovedUnit != null)
-                {
-                    SI_CameraController.Instance.PanToHex(activePlayer.lastMovedUnit.parentHex);
-                }
-                else
-                {
-                    SI_CameraController.Instance.PanToHex(player.playerCities[0]);
-                }
+                SI_CameraController.Instance.PanToHex(player.playerCities[0]);
 
                 MapManager.Instance.UpdateCloudView();
                 UIManager.Instance.UpdateHUD();

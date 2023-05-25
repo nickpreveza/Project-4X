@@ -331,14 +331,34 @@ public class HexView : MonoBehaviour
             }
             else
             {
+                string actionVerb = "Harvest";
+                if (MapManager.Instance.GetResourceByType(hex.hexData.resourceType).transformToBuilding)
+                {
+                    actionVerb = "Build";
+                }
+                else
+                {
+
+                    switch (hex.hexData.resourceType)
+                    {
+                        case ResourceType.ANIMAL:
+                            actionVerb = "Tame";
+                            break;
+                        case ResourceType.FISH:
+                            actionVerb = "Catch";
+                            break;
+                    }
+
+                }
+
                 if (GameManager.Instance.CanPlayerHarvestResource(GameManager.Instance.activePlayerIndex, hex.hexData.resourceType))
                 {
-                    hexDescription.text = "Harvest this  " + hexName.text.ToLower() + " resource to add population to your city";
+                    hexDescription.text = actionVerb + " this  " + hexName.text.ToLower() + " resource to add population to your city";
                     resourceButtonState = true;
                 }
                 else
                 {
-                    hexDescription.text = "Research more technologies to harvest  " + hexName.text.ToLower() + "  resources";
+                    hexDescription.text = "Research more technologies to " + actionVerb.ToLower() + " " + hexName.text.ToLower() + "  resources";
                     resourceButtonState = false;
                     shouldOpenResearch = true;
                     
@@ -517,7 +537,7 @@ public class HexView : MonoBehaviour
             {
                 if (hex.hexData.hasBuilding && hex.hexData.buildingType == BuildingType.Port) //change this to port
                 {
-                    if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip && hex.associatedUnit.buttonActionPossible)
+                    if (hex.associatedUnit.isBoat && !hex.associatedUnit.isShip)
                     {
                         GenerateShipButton();
                     }

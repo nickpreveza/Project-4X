@@ -486,6 +486,7 @@ public class SI_CameraController : MonoBehaviour
                 WorldHex newTile = hit.transform.parent.parent.gameObject.GetComponent<WorldHex>();
                 UIManager.Instance.HideResearchPanel();
                 UIManager.Instance.HideOverviewPanel();
+                UIManager.Instance.HideSettingsPanel();
                 SelectTile(newTile);
                 //PanToHex(newTile);
             }

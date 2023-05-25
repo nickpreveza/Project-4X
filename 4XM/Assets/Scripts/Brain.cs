@@ -132,7 +132,6 @@ public class Brain : MonoBehaviour
                     continue;
                 }
             }
-
         }
 
         yield return new WaitForSeconds(1f);

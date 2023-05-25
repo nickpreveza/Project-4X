@@ -111,6 +111,12 @@ public class GamePanel : UIPanel
     {
         controlsGroup.SetActive(status);
     }
+
+    public void HideSettingsPanel()
+    {
+        settingsPanel.SetActive(false);
+    }
+
     public void ToggleSettingsPanel()
     {
         settingsPanel.SetActive(!settingsPanel.activeSelf);

@@ -540,7 +540,7 @@ public class WorldHex : MonoBehaviour
             hexesRangeToReveal = 2;
         }
         
-        if (newUnit.type == UnitType.Ship || newUnit.type == UnitType.Knight)
+        if (newUnit.isShip)
         {
             hexesRangeToReveal = 2;
         }

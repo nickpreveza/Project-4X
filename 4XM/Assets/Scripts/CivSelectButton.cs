@@ -19,7 +19,13 @@ public class CivSelectButton : MonoBehaviour
     InitializerPanel handler;
     Civilizations civType;
     bool overrideCivSettings;
-   public void SetUpAsSelection(InitializerPanel master, Civilization civ, int _playerIndex, bool _overrideCivSettings)
+
+    public static string SplitCamelCase(string input)
+    {
+        return System.Text.RegularExpressions.Regex.Replace(input, "([A-Z])", " $1", System.Text.RegularExpressions.RegexOptions.Compiled).Trim();
+    }
+
+    public void SetUpAsSelection(InitializerPanel master, Civilization civ, int _playerIndex, bool _overrideCivSettings)
     {
         overrideCivSettings = _overrideCivSettings;
         select = GetComponent<Button>();
@@ -28,7 +34,7 @@ public class CivSelectButton : MonoBehaviour
         civLogo.sprite= civ.civLogo;
         civName.text = civ.name;
         civType = civ.civType;
-        civDescription.text = civ.civilizationIntro + "\n\nStarts with the " + civ.startingAbility.ToString() + " ability. ";
+        civDescription.text = civ.civilizationIntro + "\n\nStarts with the " + SplitCamelCase(civ.startingAbility.ToString()) + " ability. ";
         civBackground.color = GameManager.Instance.GetCivilizationColor(civ.civType, CivColorType.uiActiveColor);
         //select.onClick.AddListener(SelectWhenSelection);
     }
