@@ -727,6 +727,7 @@ public class MapManager : MonoBehaviour
 
         player.RecalculateAbilityCosts();
         player.CalculateExpectedStars();
+        UIManager.Instance.UpdateHUD();
         SI_EventManager.Instance.OnCityCaptured(player.index);
         occupyingCity = false;
     }

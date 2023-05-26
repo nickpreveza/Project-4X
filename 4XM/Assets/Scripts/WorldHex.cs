@@ -1209,9 +1209,9 @@ public class WorldHex : MonoBehaviour
 
         roadHelper.SetRoads();
 
-        if (hexData.playerOwnerIndex != -1 && searchForConnections)
+        if (searchForConnections)
         {
-            MapManager.Instance.SearchForConnections(GameManager.Instance.GetPlayerByIndex(hexData.playerOwnerIndex));
+            MapManager.Instance.SearchForConnections(GameManager.Instance.activePlayer);
         }
 
         if (!GameManager.Instance.activePlayer.isAI())
