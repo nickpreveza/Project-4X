@@ -441,6 +441,7 @@ public class ActionButton : MonoBehaviour
     {
         if (SI_CameraController.Instance.animationsRunning) { return; }
         SI_AudioManager.Instance.PlayClick();
+        GameManager.Instance.activePlayer.RemoveStars(actionCost);
         targetHex.CreateBuilding(masterBuildingType);
     }
 
